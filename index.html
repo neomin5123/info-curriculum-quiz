@@ -313,6 +313,91 @@
 
 <script>
 
+  const subjectAreas = {
+
+    "all": [
+      "전체"
+    ],
+
+    "middle-info": [
+      "전체",
+      "컴퓨팅 시스템",
+      "데이터",
+      "알고리즘과 프로그래밍",
+      "인공지능",
+      "디지털 문화"
+    ],
+
+    "high-info": [
+      "전체",
+      "컴퓨팅 시스템",
+      "데이터",
+      "알고리즘과 프로그래밍",
+      "인공지능",
+      "디지털 문화"
+    ],
+
+    "ai-basic": [
+      "전체",
+      "인공지능의 이해",
+      "인공지능과 학습",
+      "인공지능의 사회적 영향",
+      "인공지능 프로젝트"
+    ],
+
+    "data-science": [
+      "전체",
+      "데이터 과학의 이해",
+      "데이터 준비와 분석",
+      "데이터 모델링과 평가",
+      "데이터 과학 프로젝트"
+    ],
+
+    "software-life": [
+      "전체",
+      "세상을 변화시키는 소프트웨어",
+      "창작을 지원하는 소프트웨어",
+      "현상을 분석하는 소프트웨어",
+      "모의 실험하는 소프트웨어",
+      "가치를 창출하는 소프트웨어"
+    ],
+
+    "info-science": [
+      "전체",
+      "프로그래밍 설계와 구현",
+      "데이터 구조",
+      "알고리즘",
+      "정보과학 프로젝트"
+    ]
+
+  };
+
+
+  function updateUnits() {
+
+    const subject =
+      document.getElementById("subjectSelect").value;
+
+    const unitSelect =
+      document.getElementById("unitSelect");
+
+    unitSelect.innerHTML = "";
+
+    subjectAreas[subject].forEach(area => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = area;
+      option.textContent = area;
+
+      unitSelect.appendChild(option);
+
+    });
+
+  }
+
+
   function showTab(tab) {
 
     const generalPage =
@@ -347,6 +432,24 @@
     }
 
   }
+
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const subjectSelect =
+        document.getElementById("subjectSelect");
+
+      subjectSelect.addEventListener(
+        "change",
+        updateUnits
+      );
+
+      updateUnits();
+
+    }
+  );
 
 </script>
 
