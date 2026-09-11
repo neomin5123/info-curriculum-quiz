@@ -116,10 +116,11 @@
       cursor: pointer;
     }
 
-    .placeholder {
-      padding: 50px 20px;
-      text-align: center;
-      color: #777;
+    .secondary-button {
+      margin-top: 12px;
+      background: white;
+      color: #111;
+      border: 1px solid #d1d5db;
     }
 
     .hidden {
@@ -142,6 +143,7 @@
   </style>
 </head>
 
+
 <body>
 
 <header>
@@ -150,6 +152,7 @@
     <h1>CoreLoop</h1>
 
     <nav class="tabs">
+
       <button
         class="tab active"
         id="generalTab"
@@ -165,6 +168,7 @@
       >
         각론
       </button>
+
     </nav>
 
   </div>
@@ -173,7 +177,10 @@
 
 <main>
 
+  <!-- ========================= -->
   <!-- 총론 -->
+  <!-- ========================= -->
+
   <section id="generalPage">
 
     <div class="panel">
@@ -230,94 +237,181 @@
   </section>
 
 
+  <!-- ========================= -->
   <!-- 각론 -->
-<section id="subjectPage" class="hidden">
+  <!-- ========================= -->
 
-  <div class="panel">
+  <section
+    id="subjectPage"
+    class="hidden"
+  >
 
-    <h2>각론 학습</h2>
+    <div class="panel">
 
-    <p class="description">
-      과목, 영역, 학습 항목과 난이도를 선택하여 문제를 풉니다.
-    </p>
+      <h2>각론 학습</h2>
 
-    <div class="field">
-      <label for="subjectSelect">과목</label>
+      <p class="description">
+        과목, 영역, 출제 항목과 난이도를 선택하여 문제를 풉니다.
+      </p>
 
-      <select id="subjectSelect">
-        <option value="all">전체</option>
-        <option value="middle-info">중학교 정보</option>
-        <option value="high-info">고등학교 정보</option>
-        <option value="ai-basic">인공지능 기초</option>
-        <option value="data-science">데이터 과학</option>
-        <option value="software-life">소프트웨어와 생활</option>
-        <option value="info-science">정보과학</option>
-      </select>
+
+      <!-- 과목 -->
+
+      <div class="field">
+
+        <label for="subjectSelect">
+          과목
+        </label>
+
+        <select
+          id="subjectSelect"
+          onchange="updateUnits()"
+        >
+
+          <option value="all">
+            전체
+          </option>
+
+          <option value="middle-info">
+            중학교 정보
+          </option>
+
+          <option value="high-info">
+            고등학교 정보
+          </option>
+
+          <option value="ai-basic">
+            인공지능 기초
+          </option>
+
+          <option value="data-science">
+            데이터 과학
+          </option>
+
+          <option value="software-life">
+            소프트웨어와 생활
+          </option>
+
+          <option value="info-science">
+            정보과학
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- 영역 -->
+
+      <div class="field">
+
+        <label for="unitSelect">
+          영역
+        </label>
+
+        <select id="unitSelect">
+          <option value="all">
+            전체
+          </option>
+        </select>
+
+      </div>
+
+
+      <!-- 출제 항목 -->
+
+      <div class="field">
+
+        <label for="contentSelect">
+          출제 항목
+        </label>
+
+        <select id="contentSelect">
+
+          <option value="all">
+            전체
+          </option>
+
+          <option value="content-system">
+            내용 체계
+          </option>
+
+          <option value="achievement">
+            성취기준
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- 난이도 -->
+
+      <div class="field">
+
+        <label for="difficultySelect">
+          난이도
+        </label>
+
+        <select id="difficultySelect">
+
+          <option value="all">
+            전체
+          </option>
+
+          <option value="easy">
+            초급
+          </option>
+
+          <option value="normal">
+            중급
+          </option>
+
+          <option value="hard">
+            고급
+          </option>
+
+          <option value="recall">
+            암송
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button class="start-button">
+        선택 범위 시작
+      </button>
+
+      <button
+        class="start-button secondary-button"
+      >
+        완전 랜덤
+      </button>
+
     </div>
 
+  </section>
 
-    <div class="field">
-      <label for="unitSelect">영역</label>
-
-      <select id="unitSelect">
-        <option value="all">전체</option>
-      </select>
-    </div>
-
-
-    <div class="field">
-      <label for="contentSelect">출제 항목</label>
-
-      <select id="contentSelect">
-  <option value="all">전체</option>
-  <option value="content-system">내용 체계</option>
-  <option value="achievement">성취기준</option>
-</select>
-    </div>
-
-
-    <div class="field">
-      <label for="difficultySelect">난이도</label>
-
-      <select id="difficultySelect">
-        <option value="all">전체</option>
-        <option value="easy">초급</option>
-        <option value="normal">중급</option>
-        <option value="hard">고급</option>
-        <option value="recall">암송</option>
-      </select>
-    </div>
-
-
-    <button class="start-button">
-      선택 범위 시작
-    </button>
-
-    <button
-      class="start-button"
-      style="
-        margin-top: 12px;
-        background: white;
-        color: #111;
-        border: 1px solid #d1d5db;
-      "
-    >
-      완전 랜덤
-    </button>
-
-  </div>
-
-</section>
 </main>
 
 
 <script>
+
+  /*
+    과목별 영역
+
+    정보과학은 별책20 원문 확인 후
+    정확한 영역을 추가할 예정.
+  */
 
   const subjectAreas = {
 
     "all": [
       "전체"
     ],
+
 
     "middle-info": [
       "전체",
@@ -328,6 +422,7 @@
       "디지털 문화"
     ],
 
+
     "high-info": [
       "전체",
       "컴퓨팅 시스템",
@@ -337,6 +432,7 @@
       "디지털 문화"
     ],
 
+
     "ai-basic": [
       "전체",
       "인공지능의 이해",
@@ -345,6 +441,7 @@
       "인공지능 프로젝트"
     ],
 
+
     "data-science": [
       "전체",
       "데이터 과학의 이해",
@@ -352,6 +449,7 @@
       "데이터 모델링과 평가",
       "데이터 과학 프로젝트"
     ],
+
 
     "software-life": [
       "전체",
@@ -362,28 +460,39 @@
       "가치를 창출하는 소프트웨어"
     ],
 
+
     "info-science": [
-      "전체",
-      "프로그래밍 설계와 구현",
-      "데이터 구조",
-      "알고리즘",
-      "정보과학 프로젝트"
+      "전체"
     ]
 
   };
 
 
+  /*
+    과목을 변경하면
+    영역 드롭다운을 다시 생성
+  */
+
   function updateUnits() {
 
-    const subject =
-      document.getElementById("subjectSelect").value;
+    const subjectSelect =
+      document.getElementById("subjectSelect");
 
     const unitSelect =
       document.getElementById("unitSelect");
 
+    const selectedSubject =
+      subjectSelect.value;
+
+
     unitSelect.innerHTML = "";
 
-    subjectAreas[subject].forEach(area => {
+
+    const areas =
+      subjectAreas[selectedSubject] || ["전체"];
+
+
+    areas.forEach(function(area) {
 
       const option =
         document.createElement("option");
@@ -397,6 +506,10 @@
 
   }
 
+
+  /*
+    총론 / 각론 탭 전환
+  */
 
   function showTab(tab) {
 
@@ -421,7 +534,9 @@
       generalTab.classList.add("active");
       subjectTab.classList.remove("active");
 
-    } else {
+    }
+
+    else {
 
       generalPage.classList.add("hidden");
       subjectPage.classList.remove("hidden");
@@ -434,22 +549,12 @@
   }
 
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+  /*
+    사이트 최초 실행 시
+    영역 목록 초기화
+  */
 
-      const subjectSelect =
-        document.getElementById("subjectSelect");
-
-      subjectSelect.addEventListener(
-        "change",
-        updateUnits
-      );
-
-      updateUnits();
-
-    }
-  );
+  updateUnits();
 
 </script>
 
