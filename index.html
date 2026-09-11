@@ -4,33 +4,288 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>정보·컴퓨터 교육과정 암기</title>
+  <title>CoreLoop</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        sans-serif;
+      background: #f6f7f9;
+      color: #202124;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 20px 0;
+    }
+
+    h1 {
+      margin: 0 0 22px;
+      font-size: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 28px;
+    }
+
+    .tab {
+      padding: 12px 4px;
+      border: none;
+      background: none;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #777;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      color: #111;
+      border-bottom-color: #111;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 20px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .panel h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px 14px;
+      font-size: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      background: white;
+    }
+
+    .start-button {
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px;
+      border: none;
+      border-radius: 9px;
+      background: #111;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .placeholder {
+      padding: 50px 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        padding-top: 18px;
+      }
+
+      main {
+        margin-top: 20px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>정보·컴퓨터 교육과정 암기</h1>
+<header>
+  <div class="header-inner">
 
-    <nav>
-      <button>총론</button>
-      <button>각론</button>
-      <button>홈</button>
+    <h1>CoreLoop</h1>
+
+    <nav class="tabs">
+      <button
+        class="tab active"
+        id="generalTab"
+        onclick="showTab('general')"
+      >
+        총론
+      </button>
+
+      <button
+        class="tab"
+        id="subjectTab"
+        onclick="showTab('subject')"
+      >
+        각론
+      </button>
     </nav>
-  </header>
 
-  <main>
+  </div>
+</header>
 
-    <section>
-      <h2>총론</h2>
 
-      <p>
-        핵심역량, 추구하는 인간상, 정보과 교육과정 변천,
-        시수 및 교과 편제를 학습합니다.
+<main>
+
+  <!-- 총론 -->
+  <section id="generalPage">
+
+    <div class="panel">
+
+      <h2>총론 학습</h2>
+
+      <p class="description">
+        국가 교육과정 총론과 정보과 교육과정의 주요 변천 내용을 학습합니다.
+        선택한 범위의 문제를 순서대로 모두 풉니다.
       </p>
-    </section>
 
-  </main>
+      <div class="field">
+
+        <label for="generalCategory">
+          학습 범위
+        </label>
+
+        <select id="generalCategory">
+
+          <option value="all">
+            전체
+          </option>
+
+          <option value="competency">
+            추구하는 인간상 · 핵심역량
+          </option>
+
+          <option value="history">
+            정보과 교육과정 변천
+          </option>
+
+          <option value="hours">
+            시수 · 편제
+          </option>
+
+          <option value="subjects">
+            교과 · 선택과목 변화
+          </option>
+
+          <option value="comparison">
+            2015 · 2022 개정 비교
+          </option>
+
+        </select>
+
+      </div>
+
+      <button class="start-button">
+        총론 문제 시작
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- 각론 -->
+  <section id="subjectPage" class="hidden">
+
+    <div class="panel">
+
+      <h2>각론 학습</h2>
+
+      <div class="placeholder">
+        각론 설정 화면은 다음 단계에서 만듭니다.
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+  function showTab(tab) {
+
+    const generalPage =
+      document.getElementById("generalPage");
+
+    const subjectPage =
+      document.getElementById("subjectPage");
+
+    const generalTab =
+      document.getElementById("generalTab");
+
+    const subjectTab =
+      document.getElementById("subjectTab");
+
+
+    if (tab === "general") {
+
+      generalPage.classList.remove("hidden");
+      subjectPage.classList.add("hidden");
+
+      generalTab.classList.add("active");
+      subjectTab.classList.remove("active");
+
+    } else {
+
+      generalPage.classList.add("hidden");
+      subjectPage.classList.remove("hidden");
+
+      generalTab.classList.remove("active");
+      subjectTab.classList.add("active");
+
+    }
+
+  }
+
+</script>
 
 </body>
 </html>
