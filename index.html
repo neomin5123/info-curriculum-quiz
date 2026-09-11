@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -127,7 +128,65 @@
       display: none;
     }
 
+    /* 문제 화면 */
+
+    .quiz-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      padding: 7px 11px;
+      border-radius: 20px;
+      background: #f1f3f5;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .question-box {
+      background: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      line-height: 1.7;
+      font-size: 18px;
+    }
+
+    .answer-input {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      padding: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .result-box {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 9px;
+      background: #f6f7f9;
+      line-height: 1.6;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .button-row button {
+      flex: 1;
+    }
+
     @media (max-width: 600px) {
+
       .header-inner {
         padding-top: 18px;
       }
@@ -139,6 +198,10 @@
       .panel {
         padding: 20px;
       }
+
+      .button-row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -147,6 +210,7 @@
 <body>
 
 <header>
+
   <div class="header-inner">
 
     <h1>CoreLoop</h1>
@@ -172,13 +236,14 @@
     </nav>
 
   </div>
+
 </header>
 
 
 <main>
 
   <!-- ========================= -->
-  <!-- 총론 -->
+  <!-- 총론 설정 -->
   <!-- ========================= -->
 
   <section id="generalPage">
@@ -228,7 +293,10 @@
 
       </div>
 
-      <button class="start-button">
+      <button
+        class="start-button"
+        onclick="startGeneralQuiz()"
+      >
         총론 문제 시작
       </button>
 
@@ -238,7 +306,7 @@
 
 
   <!-- ========================= -->
-  <!-- 각론 -->
+  <!-- 각론 설정 -->
   <!-- ========================= -->
 
   <section
@@ -310,9 +378,11 @@
         </label>
 
         <select id="unitSelect">
+
           <option value="all">
             전체
           </option>
+
         </select>
 
       </div>
@@ -380,15 +450,102 @@
       </div>
 
 
-      <button class="start-button">
+      <button
+        class="start-button"
+        onclick="startSubjectQuiz(false)"
+      >
         선택 범위 시작
       </button>
 
       <button
         class="start-button secondary-button"
+        onclick="startSubjectQuiz(true)"
       >
         완전 랜덤
       </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ========================= -->
+  <!-- 문제 화면 -->
+  <!-- ========================= -->
+
+  <section
+    id="quizPage"
+    class="hidden"
+  >
+
+    <div class="panel">
+
+      <h2 id="quizTitle">
+        문제
+      </h2>
+
+      <div
+        class="quiz-meta"
+        id="quizMeta"
+      >
+      </div>
+
+
+      <div
+        class="question-box"
+        id="questionText"
+      >
+        문제
+      </div>
+
+
+      <div class="field">
+
+        <label for="answerInput">
+          답안
+        </label>
+
+        <textarea
+          id="answerInput"
+          class="answer-input"
+          placeholder="정답을 입력하세요."
+        ></textarea>
+
+      </div>
+
+
+      <button
+        class="start-button"
+        onclick="checkAnswerPlaceholder()"
+      >
+        정답 확인
+      </button>
+
+
+      <div
+        id="resultBox"
+        class="result-box hidden"
+      >
+      </div>
+
+
+      <div class="button-row">
+
+        <button
+          class="start-button secondary-button"
+          onclick="backToSettings()"
+        >
+          설정으로 돌아가기
+        </button>
+
+        <button
+          class="start-button secondary-button"
+          onclick="nextPlaceholderQuestion()"
+        >
+          다음 문제
+        </button>
+
+      </div>
 
     </div>
 
@@ -399,12 +556,9 @@
 
 <script>
 
-  /*
-    과목별 영역
-
-    정보과학은 별책20 원문 확인 후
-    정확한 영역을 추가할 예정.
-  */
+  /* ========================================
+     과목별 영역
+  ======================================== */
 
   const subjectAreas = {
 
@@ -461,17 +615,35 @@
     ],
 
 
+    /*
+      2022 개정 정보과학
+      [12정과01] 프로그래밍
+      [12정과02] 데이터 구조
+      [12정과03] 알고리즘
+      [12정과04] 정보과학 프로젝트
+    */
+
     "info-science": [
-      "전체"
+      "전체",
+      "프로그래밍",
+      "데이터 구조",
+      "알고리즘",
+      "정보과학 프로젝트"
     ]
 
   };
 
 
-  /*
-    과목을 변경하면
-    영역 드롭다운을 다시 생성
-  */
+  /* ========================================
+     현재 문제의 출처
+  ======================================== */
+
+  let currentQuizType = "subject";
+
+
+  /* ========================================
+     영역 자동 변경
+  ======================================== */
 
   function updateUnits() {
 
@@ -507,9 +679,9 @@
   }
 
 
-  /*
-    총론 / 각론 탭 전환
-  */
+  /* ========================================
+     총론 / 각론 탭
+  ======================================== */
 
   function showTab(tab) {
 
@@ -519,11 +691,17 @@
     const subjectPage =
       document.getElementById("subjectPage");
 
+    const quizPage =
+      document.getElementById("quizPage");
+
     const generalTab =
       document.getElementById("generalTab");
 
     const subjectTab =
       document.getElementById("subjectTab");
+
+
+    quizPage.classList.add("hidden");
 
 
     if (tab === "general") {
@@ -549,14 +727,317 @@
   }
 
 
-  /*
-    사이트 최초 실행 시
-    영역 목록 초기화
-  */
+  /* ========================================
+     선택된 글자 얻기
+  ======================================== */
+
+  function getSelectedText(id) {
+
+    const select =
+      document.getElementById(id);
+
+    return select.options[
+      select.selectedIndex
+    ].text;
+
+  }
+
+
+  /* ========================================
+     랜덤 선택
+  ======================================== */
+
+  function randomItem(array) {
+
+    return array[
+      Math.floor(
+        Math.random() * array.length
+      )
+    ];
+
+  }
+
+
+  /* ========================================
+     총론 문제 시작
+  ======================================== */
+
+  function startGeneralQuiz() {
+
+    currentQuizType = "general";
+
+    const category =
+      getSelectedText("generalCategory");
+
+
+    showQuizPage(
+      "총론 문제",
+      [
+        category
+      ]
+    );
+
+  }
+
+
+  /* ========================================
+     각론 문제 시작
+  ======================================== */
+
+  function startSubjectQuiz(randomMode) {
+
+    currentQuizType = "subject";
+
+
+    const subjectSelect =
+      document.getElementById("subjectSelect");
+
+    const unitSelect =
+      document.getElementById("unitSelect");
+
+    const contentSelect =
+      document.getElementById("contentSelect");
+
+    const difficultySelect =
+      document.getElementById("difficultySelect");
+
+
+    /*
+      완전 랜덤
+    */
+
+    if (randomMode) {
+
+      const subjects = [
+        "middle-info",
+        "high-info",
+        "ai-basic",
+        "data-science",
+        "software-life",
+        "info-science"
+      ];
+
+
+      subjectSelect.value =
+        randomItem(subjects);
+
+
+      updateUnits();
+
+
+      const areaOptions =
+        Array.from(unitSelect.options)
+          .filter(
+            option =>
+              option.value !== "전체"
+          );
+
+
+      if (areaOptions.length > 0) {
+
+        unitSelect.value =
+          randomItem(areaOptions).value;
+
+      }
+
+
+      contentSelect.value =
+        randomItem([
+          "content-system",
+          "achievement"
+        ]);
+
+
+      difficultySelect.value =
+        randomItem([
+          "easy",
+          "normal",
+          "hard",
+          "recall"
+        ]);
+
+    }
+
+
+    const subject =
+      getSelectedText("subjectSelect");
+
+    const unit =
+      getSelectedText("unitSelect");
+
+    const content =
+      getSelectedText("contentSelect");
+
+    const difficulty =
+      getSelectedText("difficultySelect");
+
+
+    showQuizPage(
+      "각론 문제",
+      [
+        subject,
+        unit,
+        content,
+        difficulty
+      ]
+    );
+
+  }
+
+
+  /* ========================================
+     문제 화면 표시
+  ======================================== */
+
+  function showQuizPage(
+    title,
+    metaItems
+  ) {
+
+    const generalPage =
+      document.getElementById("generalPage");
+
+    const subjectPage =
+      document.getElementById("subjectPage");
+
+    const quizPage =
+      document.getElementById("quizPage");
+
+
+    generalPage.classList.add("hidden");
+    subjectPage.classList.add("hidden");
+
+    quizPage.classList.remove("hidden");
+
+
+    document.getElementById(
+      "quizTitle"
+    ).textContent = title;
+
+
+    const quizMeta =
+      document.getElementById("quizMeta");
+
+
+    quizMeta.innerHTML = "";
+
+
+    metaItems.forEach(function(item) {
+
+      const chip =
+        document.createElement("span");
+
+      chip.className = "chip";
+
+      chip.textContent = item;
+
+      quizMeta.appendChild(chip);
+
+    });
+
+
+    /*
+      다음 단계에서 실제 문제 데이터와 연결
+    */
+
+    document.getElementById(
+      "questionText"
+    ).textContent =
+      "문제 데이터가 여기에 표시됩니다. 다음 단계에서 공식 교육과정과 기출 기반 변형문제를 연결합니다.";
+
+
+    document.getElementById(
+      "answerInput"
+    ).value = "";
+
+
+    document.getElementById(
+      "resultBox"
+    ).classList.add("hidden");
+
+  }
+
+
+  /* ========================================
+     정답 확인 - 현재는 테스트용
+  ======================================== */
+
+  function checkAnswerPlaceholder() {
+
+    const resultBox =
+      document.getElementById("resultBox");
+
+
+    resultBox.classList.remove("hidden");
+
+
+    resultBox.innerHTML =
+      "<strong>채점 기능 준비 완료</strong><br>" +
+      "다음 단계에서 실제 정답 데이터와 연결합니다.";
+
+  }
+
+
+  /* ========================================
+     다음 문제 - 현재는 테스트용
+  ======================================== */
+
+  function nextPlaceholderQuestion() {
+
+    document.getElementById(
+      "answerInput"
+    ).value = "";
+
+
+    document.getElementById(
+      "resultBox"
+    ).classList.add("hidden");
+
+  }
+
+
+  /* ========================================
+     설정 화면 복귀
+  ======================================== */
+
+  function backToSettings() {
+
+    const quizPage =
+      document.getElementById("quizPage");
+
+    const generalPage =
+      document.getElementById("generalPage");
+
+    const subjectPage =
+      document.getElementById("subjectPage");
+
+
+    quizPage.classList.add("hidden");
+
+
+    if (currentQuizType === "general") {
+
+      generalPage.classList.remove("hidden");
+
+    }
+
+    else {
+
+      subjectPage.classList.remove("hidden");
+
+    }
+
+  }
+
+
+  /* ========================================
+     최초 실행
+  ======================================== */
 
   updateUnits();
 
 </script>
 
 </body>
+
 </html>
