@@ -231,20 +231,88 @@
 
 
   <!-- 각론 -->
-  <section id="subjectPage" class="hidden">
+<section id="subjectPage" class="hidden">
 
-    <div class="panel">
+  <div class="panel">
 
-      <h2>각론 학습</h2>
+    <h2>각론 학습</h2>
 
-      <div class="placeholder">
-        각론 설정 화면은 다음 단계에서 만듭니다.
-      </div>
+    <p class="description">
+      과목, 영역, 학습 항목과 난이도를 선택하여 문제를 풉니다.
+    </p>
 
+    <div class="field">
+      <label for="subjectSelect">과목</label>
+
+      <select id="subjectSelect">
+        <option value="all">전체</option>
+        <option value="middle-info">중학교 정보</option>
+        <option value="high-info">고등학교 정보</option>
+        <option value="ai-basic">인공지능 기초</option>
+        <option value="data-science">데이터 과학</option>
+        <option value="software-life">소프트웨어와 생활</option>
+        <option value="info-science">정보과학</option>
+      </select>
     </div>
 
-  </section>
 
+    <div class="field">
+      <label for="unitSelect">영역</label>
+
+      <select id="unitSelect">
+        <option value="all">전체</option>
+      </select>
+    </div>
+
+
+    <div class="field">
+      <label for="contentSelect">출제 항목</label>
+
+      <select id="contentSelect">
+        <option value="all">전체</option>
+        <option value="core-idea">핵심 아이디어</option>
+        <option value="content-element">내용 요소</option>
+        <option value="achievement">성취기준</option>
+        <option value="explanation">성취기준 해설</option>
+        <option value="consideration">
+          성취기준 적용 시 고려 사항
+        </option>
+      </select>
+    </div>
+
+
+    <div class="field">
+      <label for="difficultySelect">난이도</label>
+
+      <select id="difficultySelect">
+        <option value="all">전체</option>
+        <option value="easy">초급</option>
+        <option value="normal">중급</option>
+        <option value="hard">고급</option>
+        <option value="recall">암송</option>
+      </select>
+    </div>
+
+
+    <button class="start-button">
+      선택 범위 시작
+    </button>
+
+    <button
+      class="start-button"
+      style="
+        margin-top: 12px;
+        background: white;
+        color: #111;
+        border: 1px solid #d1d5db;
+      "
+    >
+      완전 랜덤
+    </button>
+
+  </div>
+
+</section>
 </main>
 
 
