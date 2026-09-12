@@ -465,6 +465,152 @@
       color: var(--faint);
     }
 
+
+    .history-panel h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .history-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .history-description {
+      color: var(--muted);
+      margin: 7px 0 0;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .history-toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history-toolbar label {
+      font-weight: 750;
+    }
+
+    .history-toolbar select {
+      width: auto;
+      min-width: 130px;
+    }
+
+    .history-count {
+      margin-left: auto;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .history-item {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .history-item-top {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .history-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .history-time {
+      margin-left: auto;
+      color: var(--faint);
+      font-size: 12px;
+    }
+
+    .history-context {
+      line-height: 1.65;
+      margin-bottom: 10px;
+      font-weight: 650;
+    }
+
+    .history-answer-row {
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 8px;
+      margin-top: 5px;
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .history-answer-label {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .history-wrong-answer {
+      color: var(--bad);
+      font-weight: 700;
+    }
+
+    .history-correct-answer {
+      color: var(--good);
+      font-weight: 800;
+    }
+
+    .history-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .history-empty {
+      padding: 50px 16px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer-inner a {
+      color: var(--accent);
+      text-underline-offset: 2px;
+    }
+
+    @media (max-width: 600px) {
+      .history-head {
+        flex-direction: column;
+      }
+
+      .history-time {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .history-answer-row {
+        grid-template-columns: 70px 1fr;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; transition: none !important; }
     }
@@ -510,6 +656,7 @@
     <nav class="tabs">
       <button class="tab active" id="generalTab" onclick="showTab('general')">총론</button>
       <button class="tab" id="subjectTab" onclick="showTab('subject')">각론</button>
+      <button class="tab" id="historyTab" onclick="showTab('history')">오답노트</button>
     </nav>
   </div>
 </header>
@@ -537,7 +684,9 @@
       <textarea id="generalAnswer" placeholder="답을 입력하세요. Enter: 채점 · 한 번 더 Enter: 다음 문제 · Shift+Enter: 줄바꿈"></textarea>
       <div class="toolbar">
         <button class="btn primary" onclick="gradeGeneral()">정답 확인</button>
-        <button class="btn" onclick="nextGeneral()">다음 문제</button>
+        <button class="btn" id="prevGeneralButton" onclick="previousGeneral()">← 이전 문제</button>
+        <button class="btn" id="nextGeneralButton" onclick="nextGeneral()">다음 문제 →</button>
+        <button class="btn soft" onclick="restartGeneral()">처음부터</button>
       </div>
       <div id="generalResult" class="general-result hidden"></div>
     </div>
@@ -603,23 +752,69 @@
       <div id="studyArea"></div>
     </div>
   </section>
+
+  <section id="historyPage" class="hidden">
+    <div class="panel history-panel">
+      <div class="history-head">
+        <div>
+          <h2>오답노트</h2>
+          <p class="history-description">
+            이 브라우저에서 틀린 문제를 자동으로 저장합니다. 기록은 서버가 아니라 현재 기기의 브라우저에만 저장됩니다.
+          </p>
+        </div>
+        <button class="btn soft" onclick="clearHistory()">오답노트 초기화</button>
+      </div>
+
+      <div class="history-toolbar">
+        <label for="historyFilter">보기</label>
+        <select id="historyFilter" onchange="renderHistory()">
+          <option value="all">전체</option>
+          <option value="general">총론</option>
+          <option value="subject">각론</option>
+        </select>
+        <span id="historyCount" class="history-count">0개</span>
+      </div>
+
+      <div id="historyList" class="history-list"></div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <strong>CoreLoop 안내</strong>
+    <strong>자료 이용 및 저작권 안내</strong>
+
     <p>
-      CoreLoop은 교육과정 및 임용시험 학습을 돕기 위한 비공식 학습 도구이며,
-      교육부·한국교육과정평가원·시도교육청과 제휴하거나 공식 승인을 받은 서비스가 아닙니다.
+      CoreLoop은 개인 학습을 위한 비공식 학습 도구이며,
+      국가교육위원회·교육부·한국교육과정평가원·시도교육청과 제휴하거나 공식 승인을 받은 서비스가 아닙니다.
     </p>
+
     <p>
-      교육과정 문구와 시험 자료의 권리는 각 원저작권자에게 있습니다.
-      이 사이트의 문제는 학습을 위해 공식 교육과정 내용을 일부 인용·요약하고,
-      기출의 출제 경향과 핵심 개념을 바탕으로 재구성·변형할 수 있습니다.
-      정확한 원문·최신 고시·시험 자료는 해당 공식 기관 자료를 우선 확인하세요.
+      교육과정 자료: 국가교육위원회가 공개한
+      <strong>「2022 개정 교육과정(초·중등학교 교육과정 총론 및 각론)」</strong>을 활용합니다.
+      해당 공공저작물은 <strong>공공누리 제2유형(출처표시 + 상업적 이용금지)</strong> 조건에 따라
+      비상업적 학습 목적으로 이용·재구성하고 있습니다.
     </p>
+
+    <p>
+      출처:
+      <a href="https://www.kogl.or.kr/recommend/recommendDivView.do?division=doc&oc=&recommendIdx=60522"
+         target="_blank" rel="noopener noreferrer">공공누리 2022 개정 교육과정 자료</a>
+      ·
+      <a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="
+         target="_blank" rel="noopener noreferrer">교육부 고시 제2022-33호</a>
+    </p>
+
+    <p>
+      임용시험 관련 문항은 원문 전체를 그대로 게시하기보다,
+      공개된 기출의 출제 범위·핵심 개념·문항 형식을 참고한 변형 문항을 중심으로 구성합니다.
+      제3자의 지문·도표·이미지 등 별도 권리가 포함될 수 있는 자료는 원문 복제를 지양합니다.
+    </p>
+
     <p class="footer-small">
-      외부 배포·복제·상업적 이용을 할 경우에는 각 원자료의 이용 조건과 저작권 표시 요건을 별도로 확인해야 합니다.
+      © 2026 CoreLoop. 사이트 자체의 구성·코드·자체 제작 문항에 관한 표시는 원자료의 이용조건과 별개입니다.
+      광고·유료화 등 상업적 이용을 시작하기 전에는 공공누리 제2유형 자료의 이용 범위를 다시 확인해야 합니다.
     </p>
   </div>
 </footer>
@@ -1167,6 +1362,7 @@
   // -------------------------
   let currentTab = "general";
   let currentAreaIndex = 0;
+  let currentRandomUnit = null;
   let quizMode = false;
   const fieldState = {}; // key -> {value,status}
   let generalIndex = 0;
@@ -1185,14 +1381,34 @@
 
   function showTab(tab) {
     currentTab = tab;
-    const isGeneral = tab === "general";
-    document.getElementById("generalPage").classList.toggle("hidden", !isGeneral);
-    document.getElementById("subjectPage").classList.toggle("hidden", isGeneral);
-    document.getElementById("generalTab").classList.toggle("active", isGeneral);
-    document.getElementById("subjectTab").classList.toggle("active", !isGeneral);
-    if (!isGeneral) {
+
+    const pages = {
+      general: document.getElementById("generalPage"),
+      subject: document.getElementById("subjectPage"),
+      history: document.getElementById("historyPage")
+    };
+
+    const tabs = {
+      general: document.getElementById("generalTab"),
+      subject: document.getElementById("subjectTab"),
+      history: document.getElementById("historyTab")
+    };
+
+    Object.entries(pages).forEach(([key, page]) => {
+      page.classList.toggle("hidden", key !== tab);
+    });
+
+    Object.entries(tabs).forEach(([key, button]) => {
+      button.classList.toggle("active", key === tab);
+    });
+
+    if (tab === "subject") {
       quizMode = false;
       renderStudy();
+    }
+
+    if (tab === "history") {
+      renderHistory();
     }
   }
 
@@ -1206,14 +1422,47 @@
     );
   }
 
+  function encodeUnit(subject, area) {
+    return `unit::${subject}::${area}`;
+  }
+
+  function decodeUnit(value) {
+    if (!value || !value.startsWith("unit::")) return null;
+    const [, subject, ...areaParts] = value.split("::");
+    return { subject, area: areaParts.join("::") };
+  }
+
+  function pickRandom(array) {
+    if (!array.length) return null;
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  function chooseRandomUnit() {
+    const subject = getCurrentSubject();
+    const pool = subject === "all"
+      ? getAllUnits()
+      : (subjectAreas[subject] || []).map(area => ({ subject, area }));
+
+    currentRandomUnit = pickRandom(pool);
+    currentAreaIndex = 0;
+  }
+
   function getUnitSequence() {
     const subject = getCurrentSubject();
+    const selectedArea = document.getElementById("areaSelect").value;
+
+    if (selectedArea === "random") {
+      if (!currentRandomUnit) chooseRandomUnit();
+      return currentRandomUnit ? [currentRandomUnit] : [];
+    }
+
+    const decoded = decodeUnit(selectedArea);
+    if (decoded) return [decoded];
 
     if (subject === "all") {
       return getAllUnits();
     }
 
-    const selectedArea = document.getElementById("areaSelect").value;
     const areas = subjectAreas[subject] || [];
 
     if (selectedArea === "all") {
@@ -1236,6 +1485,7 @@
 
   function onSubjectChange() {
     currentAreaIndex = 0;
+    currentRandomUnit = null;
     quizMode = false;
     fillAreaSelect();
     renderStudy();
@@ -1249,11 +1499,30 @@
 
     const all = document.createElement("option");
     all.value = "all";
-    all.textContent = "전체";
+    all.textContent = "전체 단원";
     select.appendChild(all);
 
-    // 과목 '전체'에서는 모든 과목·영역을 단원 이동 버튼으로 순회한다.
-    if (subject === "all") return;
+    const random = document.createElement("option");
+    random.value = "random";
+    random.textContent = "랜덤 단원";
+    select.appendChild(random);
+
+    if (subject === "all") {
+      Object.entries(subjectAreas).forEach(([subjectKey, areas]) => {
+        const group = document.createElement("optgroup");
+        group.label = subjectLabels[subjectKey];
+
+        areas.forEach(area => {
+          const op = document.createElement("option");
+          op.value = encodeUnit(subjectKey, area);
+          op.textContent = `${subjectLabels[subjectKey]} · ${area}`;
+          group.appendChild(op);
+        });
+
+        select.appendChild(group);
+      });
+      return;
+    }
 
     (subjectAreas[subject] || []).forEach(area => {
       const op = document.createElement("option");
@@ -1266,6 +1535,13 @@
   function onAreaChange() {
     currentAreaIndex = 0;
     quizMode = false;
+
+    if (document.getElementById("areaSelect").value === "random") {
+      chooseRandomUnit();
+    } else {
+      currentRandomUnit = null;
+    }
+
     renderStudy();
   }
 
@@ -1291,6 +1567,10 @@
   }
 
   function startQuiz() {
+    if (document.getElementById("areaSelect").value === "random") {
+      chooseRandomUnit();
+    }
+
     quizMode = true;
     renderStudy();
     requestAnimationFrame(() => focusFirstEmpty());
@@ -1584,6 +1864,156 @@
     })[value] || value;
   }
 
+
+  // -------------------------
+  // 오답 히스토리
+  // -------------------------
+  const HISTORY_KEY = "coreloop-wrong-history-v1";
+
+  function loadHistory() {
+    try {
+      const data = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      return Array.isArray(data) ? data : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory(list) {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 400)));
+  }
+
+  function addWrongHistory(entry) {
+    const list = loadHistory();
+    const key = entry.key;
+
+    const existingIndex = list.findIndex(item => item.key === key);
+
+    const payload = {
+      ...entry,
+      lastWrongAt: new Date().toISOString()
+    };
+
+    if (existingIndex >= 0) {
+      const existing = list.splice(existingIndex, 1)[0];
+      list.unshift({
+        ...existing,
+        ...payload,
+        attempts: (existing.attempts || 1) + 1
+      });
+    } else {
+      list.unshift({
+        ...payload,
+        attempts: 1
+      });
+    }
+
+    saveHistory(list);
+  }
+
+  function removeHistoryItem(key) {
+    const list = loadHistory().filter(item => item.key !== key);
+    saveHistory(list);
+    renderHistory();
+  }
+
+  function clearHistory() {
+    if (!confirm("오답노트 기록을 모두 지울까요?")) return;
+    localStorage.removeItem(HISTORY_KEY);
+    renderHistory();
+  }
+
+  function formatHistoryTime(iso) {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function renderHistory() {
+    const container = document.getElementById("historyList");
+    const count = document.getElementById("historyCount");
+    const filter = document.getElementById("historyFilter")?.value || "all";
+
+    if (!container || !count) return;
+
+    let list = loadHistory();
+    if (filter !== "all") {
+      list = list.filter(item => item.type === filter);
+    }
+
+    count.textContent = `${list.length}개`;
+    container.innerHTML = "";
+
+    if (!list.length) {
+      container.innerHTML = `
+        <div class="history-empty">
+          아직 저장된 오답이 없습니다.<br>
+          총론이나 각론에서 틀린 문항이 생기면 자동으로 이곳에 쌓입니다.
+        </div>
+      `;
+      return;
+    }
+
+    list.forEach(item => {
+      const card = document.createElement("article");
+      card.className = "history-item";
+
+      const badge = item.type === "general" ? "총론" : "각론";
+      const meta = item.type === "general"
+        ? (item.categoryLabel || "총론")
+        : [item.subjectLabel, item.area, item.groupLabel, item.difficultyLabel]
+            .filter(Boolean).join(" · ");
+
+      card.innerHTML = `
+        <div class="history-item-top">
+          <span class="history-badge">${escapeHtml(badge)}</span>
+          ${meta ? `<span class="history-badge">${escapeHtml(meta)}</span>` : ""}
+          ${item.attempts > 1 ? `<span class="history-badge">${item.attempts}회 오답</span>` : ""}
+          <span class="history-time">${escapeHtml(formatHistoryTime(item.lastWrongAt))}</span>
+        </div>
+
+        <div class="history-context">${escapeHtml(item.context || item.question || "")}</div>
+
+        <div class="history-answer-row">
+          <div class="history-answer-label">내 답</div>
+          <div class="history-wrong-answer">${escapeHtml(item.userAnswer || "(미입력)")}</div>
+        </div>
+
+        <div class="history-answer-row">
+          <div class="history-answer-label">정답</div>
+          <div class="history-correct-answer">${escapeHtml(item.correctAnswer || "")}</div>
+        </div>
+
+        <div class="history-actions">
+          <button class="btn" type="button" data-history-key="${escapeHtml(item.key)}">삭제</button>
+        </div>
+      `;
+
+      card.querySelector("button[data-history-key]").addEventListener("click", () => {
+        removeHistoryItem(item.key);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+
   // -------------------------
   // 8) 채점
   // -------------------------
@@ -1608,11 +2038,35 @@
     const correct = isCorrect(input);
     input.classList.remove("correct","wrong");
     input.classList.add(correct ? "correct" : "wrong");
+
     const state = fieldState[input.dataset.stateKey] || {};
     state.value = input.value;
     state.status = correct ? "correct" : "wrong";
     fieldState[input.dataset.stateKey] = state;
+
     appendResult(input.parentElement, state.status, input.dataset.answer);
+
+    if (!correct) {
+      const unit = getCurrentUnit();
+      const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
+      const sectionIndex = Number(input.dataset.sectionIndex);
+      const lineIndex = Number(input.dataset.lineIndex);
+      const context = sections?.[sectionIndex]?.lines?.[lineIndex]?.text || "";
+
+      addWrongHistory({
+        type: "subject",
+        key: `subject|${unit.subject}|${unit.area}|${getCurrentGroup()}|${getCurrentDifficulty()}|${sectionIndex}|${lineIndex}|${input.dataset.answer}`,
+        subjectLabel: subjectLabels[unit.subject] || unit.subject,
+        area: unit.area,
+        groupLabel: getCurrentGroup() === "content-system" ? "내용 체계"
+          : getCurrentGroup() === "achievement" ? "성취기준" : "전체",
+        difficultyLabel: difficultyLabel(getCurrentDifficulty()),
+        context,
+        userAnswer: input.value,
+        correctAnswer: input.dataset.answer
+      });
+    }
+
     updateScore();
   }
 
@@ -1671,6 +2125,14 @@
   // -------------------------
   // 9) 총론
   // -------------------------
+  const generalCategoryLabels = {
+    all: "전체",
+    competency: "추구하는 인간상 · 핵심역량",
+    history: "개정 교육과정 변천",
+    hours: "시수 · 편제",
+    subjects: "과목 신설 · 통합 · 선택 유형"
+  };
+
   function filteredGeneral() {
     const category = document.getElementById("generalCategory").value;
     return category === "all" ? generalBank : generalBank.filter(q => q.category === category);
@@ -1692,6 +2154,11 @@
     document.getElementById("generalQuestion").textContent = list[generalIndex].q;
     document.getElementById("generalProgress").textContent = `${generalIndex + 1} / ${list.length}`;
 
+    const prevButton = document.getElementById("prevGeneralButton");
+    const nextButton = document.getElementById("nextGeneralButton");
+    if (prevButton) prevButton.disabled = generalIndex === 0;
+    if (nextButton) nextButton.disabled = generalIndex === list.length - 1;
+
     const answer = document.getElementById("generalAnswer");
     answer.value = "";
 
@@ -1705,7 +2172,8 @@
   function gradeGeneral() {
     const list = filteredGeneral();
     const q = list[generalIndex];
-    const user = normalize(document.getElementById("generalAnswer").value);
+    const rawUser = document.getElementById("generalAnswer").value;
+    const user = normalize(rawUser);
 
     const ok = q.answers.every(group =>
       group.some(a => user.includes(normalize(a)))
@@ -1714,18 +2182,41 @@
     const box = document.getElementById("generalResult");
     box.className = "general-result " + (ok ? "good" : "bad");
 
-    // 맞았더라도 공식 정답을 항상 표시한다.
     box.innerHTML = ok
-      ? `<strong>✓ 정답</strong><br><span style="color:var(--muted)">정답</span><br>${q.display}`
-      : `<strong style="color:var(--bad)">✕ 오답</strong><br><span style="color:var(--muted)">정답</span><br><strong style="color:var(--bad)">${q.display}</strong>`;
+      ? `<strong>✓ 정답</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong>${q.display}</strong>`
+      : `<strong style="color:var(--bad)">✕ 오답</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong style="color:var(--bad)">${q.display}</strong>`;
 
     box.classList.remove("hidden");
     generalGraded = true;
+
+    if (!ok) {
+      const category = document.getElementById("generalCategory").value;
+      addWrongHistory({
+        type: "general",
+        key: `general|${q.q}`,
+        categoryLabel: generalCategoryLabels[category] || category,
+        question: q.q,
+        context: q.q,
+        userAnswer: rawUser,
+        correctAnswer: q.display
+      });
+    }
   }
 
   function nextGeneral() {
     const list = filteredGeneral();
-    generalIndex = (generalIndex + 1) % list.length;
+    generalIndex = Math.min(list.length - 1, generalIndex + 1);
+    renderGeneral();
+  }
+
+  function previousGeneral() {
+    generalIndex = Math.max(0, generalIndex - 1);
+    renderGeneral();
+  }
+
+  function restartGeneral() {
+    generalIndex = 0;
+    generalGraded = false;
     renderGeneral();
   }
 
@@ -1775,6 +2266,7 @@
   quizMode = false;
   renderStudy();
   renderGeneral();
+  renderHistory();
 </script>
 </body>
 </html>
