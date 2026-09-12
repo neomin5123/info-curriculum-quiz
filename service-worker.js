@@ -1,4 +1,4 @@
-const CACHE_NAME = "curriloop-v5-3-1-labels-20260912";
+const CACHE_NAME = "curriloop-v6-public-rc1-20260912";
 const CACHE_PREFIX = "curriloop-";
 const PRECACHE = [
   "/",
@@ -6,11 +6,22 @@ const PRECACHE = [
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/icons/apple-touch-icon.png"
+  "/icons/apple-touch-icon.png",
+  "/icons/og-card.png",
+  "/robots.txt",
+  "/sitemap.xml"
 ];
 
 self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE)));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await Promise.all(PRECACHE.map(async url => {
+      try {
+        const response = await fetch(url, {cache:"reload"});
+        if (response.ok) await cache.put(url, response.clone());
+      } catch {}
+    }));
+  })());
 });
 
 self.addEventListener("message", event => {
