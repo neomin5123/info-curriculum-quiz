@@ -1,4 +1,4 @@
-const CACHE_NAME = "curriloop-v5-stable-20260912";
+const CACHE_NAME = "curriloop-v5-3-manual-550-20260912";
 const CACHE_PREFIX = "curriloop-";
 const PRECACHE = [
   "/",
