@@ -86,29 +86,37 @@
       background: #f8f9fa;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 26px;
-      margin-bottom: 22px;
-      line-height: 1.75;
+      padding: 20px;
+      margin-bottom: 14px;
+      line-height: 1.65;
       font-size: 18px;
       white-space: pre-wrap;
     }
     .answer-input {
       width: 100%;
-      min-height: 120px;
+      min-height: 72px;
+      max-height: 120px;
       resize: vertical;
-      padding: 14px;
+      padding: 12px 14px;
       border: 1px solid #d1d5db;
       border-radius: 9px;
       font-family: inherit;
       font-size: 16px;
-      line-height: 1.6;
+      line-height: 1.5;
+    }
+    .answer-hint {
+      margin-top: 7px;
+      color: #777;
+      font-size: 13px;
     }
     .result-box {
-      margin-top: 18px;
-      padding: 18px;
+      margin-top: 12px;
+      padding: 14px 16px;
       border-radius: 10px;
-      line-height: 1.7;
+      line-height: 1.55;
       border: 1px solid #e5e7eb;
+      max-height: 180px;
+      overflow-y: auto;
     }
     .result-box.correct { background: #f0fdf4; border-color: #bbf7d0; }
     .result-box.wrong { background: #fff7ed; border-color: #fed7aa; }
@@ -221,10 +229,11 @@
         <div class="field">
           <label for="answerInput">답안</label>
           <textarea id="answerInput" class="answer-input" placeholder="정답을 입력하세요."></textarea>
+          <div class="answer-hint">Enter: 채점 · Shift+Enter: 줄바꿈</div>
         </div>
 
-        <button id="checkButton" class="start-button" onclick="checkAnswer()">정답 확인</button>
         <div id="resultBox" class="result-box hidden"></div>
+        <button id="checkButton" class="start-button" onclick="checkAnswer()">정답 확인</button>
 
         <div class="button-row">
           <button class="start-button secondary-button" onclick="backToSettings()">설정으로 돌아가기</button>
@@ -673,6 +682,10 @@
     document.getElementById("resultBox").innerHTML = "";
     document.getElementById("checkButton").disabled = false;
 
+    setTimeout(() => {
+      document.getElementById("answerInput").focus();
+    }, 0);
+
     document.getElementById("quizTitle").textContent = q.section === "general" ? "총론 문제" : "각론 문제";
     document.getElementById("questionText").textContent = prompt;
     document.getElementById("progressText").textContent = `${currentIndex + 1} / ${activeSession.length}`;
@@ -805,6 +818,16 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   }
+
+  document.getElementById("answerInput").addEventListener("keydown", function(event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+
+      if (!checkedCurrent) {
+        checkAnswer();
+      }
+    }
+  });
 
   updateUnits();
 </script>
