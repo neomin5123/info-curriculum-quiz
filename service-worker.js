@@ -1,30 +1,45 @@
-const CACHE_NAME = "curriloop-v6-public-rc1-20260912";
+const CACHE_NAME = "curriloop-v6-public-final-20260912";
 const CACHE_PREFIX = "curriloop-";
-const PRECACHE = [
-  "/",
+
+// 설치가 성공했다면 최소한 앱 본체와 설치 아이콘은 반드시 캐시에 존재하게 한다.
+const CORE_PRECACHE = [
   "/index.html",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
-  "/icons/apple-touch-icon.png",
+  "/icons/apple-touch-icon.png"
+];
+
+// 공유 카드·검색엔진 파일과 루트 별칭은 오프라인 핵심 동작을 막지 않는다.
+const OPTIONAL_PRECACHE = [
+  "/",
   "/icons/og-card.png",
   "/robots.txt",
   "/sitemap.xml"
 ];
 
+async function fetchAndCache(cache, url, {required = false} = {}) {
+  try {
+    const response = await fetch(url, {cache: "reload"});
+    if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+    await cache.put(url, response.clone());
+  } catch (error) {
+    if (required) throw error;
+  }
+}
+
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    await Promise.all(PRECACHE.map(async url => {
-      try {
-        const response = await fetch(url, {cache:"reload"});
-        if (response.ok) await cache.put(url, response.clone());
-      } catch {}
-    }));
+    // 핵심 파일 하나라도 실패하면 새 SW 설치를 완료하지 않아 불완전한 오프라인판을 활성화하지 않는다.
+    await Promise.all(CORE_PRECACHE.map(url => fetchAndCache(cache, url, {required: true})));
+    // 부가 파일은 배포 환경에 따라 없어도 앱 설치·업데이트를 막지 않는다.
+    await Promise.all(OPTIONAL_PRECACHE.map(url => fetchAndCache(cache, url)));
   })());
 });
 
 self.addEventListener("message", event => {
+  // 사용자가 화면의 업데이트 알림에서 새로고침을 선택했을 때만 대기 중 SW를 즉시 활성화한다.
   if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
 });
 
@@ -45,6 +60,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
+  // HTML 탐색은 network-first: 새 배포를 가능한 한 빨리 받고, 오프라인일 때만 검증된 캐시로 후퇴한다.
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       try {
@@ -61,14 +77,19 @@ self.addEventListener("fetch", event => {
     return;
   }
 
+  // 아이콘·manifest 등의 정적 자산은 cache-first, 미캐시 자산은 성공 응답만 런타임 캐시한다.
   event.respondWith((async () => {
     const cached = await caches.match(request);
     if (cached) return cached;
-    const response = await fetch(request);
-    if (response.ok && response.type === "basic") {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
+    try {
+      const response = await fetch(request);
+      if (response.ok && response.type === "basic") {
+        const cache = await caches.open(CACHE_NAME);
+        await cache.put(request, response.clone());
+      }
+      return response;
+    } catch {
+      return Response.error();
     }
-    return response;
   })());
 });
