@@ -6,6 +6,14 @@
   <title>CurriLoop</title>
   <meta name="description" content="2022 개정 정보과 교육과정 원문 기반 빈칸 학습 도구 CurriLoop">
   <link rel="canonical" href="https://curriloop.vercel.app/">
+  <meta name="theme-color" content="#f2f3ee">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CurriLoop">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 
   <style>
     @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
@@ -677,6 +685,410 @@
       .unit-nav .btn { font-size: 13px; }
       .gap-input { max-width: 210px; }
     }
+  
+    /* =========================================================
+       CurriLoop Mobile / PWA
+       데스크톱 구조를 그대로 두고 720px 이하에서 터치 중심으로 재배치
+       ========================================================= */
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      scroll-padding-top: 118px;
+    }
+
+    button, select, textarea, input {
+      touch-action: manipulation;
+    }
+
+    body {
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    .gap-input,
+    .general-card textarea {
+      scroll-margin-top: 125px;
+      scroll-margin-bottom: 42vh;
+    }
+
+    @media (display-mode: standalone) {
+      body {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    @media (max-width: 720px) {
+      :root {
+        --mobile-page-pad: 10px;
+        --mobile-radius: 10px;
+      }
+
+      body {
+        min-width: 0;
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      .header-inner {
+        max-width: none;
+        padding:
+          max(8px, env(safe-area-inset-top))
+          12px
+          0;
+      }
+
+      .header-top {
+        min-height: 34px;
+        align-items: center;
+      }
+
+      h1 {
+        font-size: 20px;
+        line-height: 1.15;
+        margin-bottom: 4px;
+      }
+
+      .theme-toggle {
+        min-height: 34px;
+        padding: 6px 9px;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .tabs {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        width: 100%;
+      }
+
+      .tab {
+        width: 100%;
+        min-height: 43px;
+        padding: 8px 2px 9px;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      main {
+        width: 100%;
+        max-width: none;
+        margin: 9px auto 28px;
+        padding: 0 var(--mobile-page-pad);
+      }
+
+      .panel {
+        border-radius: var(--mobile-radius);
+        padding: 11px;
+      }
+
+      .control-panel {
+        margin-bottom: 8px;
+      }
+
+      /* 4개 설정을 2×2로 배치해 세로 길이를 크게 줄임 */
+      .controls,
+      .general-card .controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 7px;
+      }
+
+      .field {
+        min-width: 0;
+      }
+
+      .field label {
+        margin-bottom: 3px;
+        font-size: 11px;
+      }
+
+      /* iOS Safari 자동 확대 방지 */
+      select,
+      textarea,
+      input,
+      .gap-input,
+      .general-card textarea {
+        font-size: 16px !important;
+      }
+
+      select {
+        width: 100%;
+        min-width: 0;
+        min-height: 43px;
+        padding: 7px 28px 7px 9px;
+        border-radius: 8px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 8px;
+      }
+
+      .toolbar .btn {
+        width: 100%;
+      }
+
+      .btn {
+        min-height: 44px;
+        padding: 8px 9px;
+        border-radius: 8px;
+        font-size: 13px;
+        white-space: normal;
+        line-height: 1.25;
+      }
+
+      .score {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 34px;
+        margin: 0;
+        padding: 7px 2px 1px;
+        text-align: left;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .general-card .question {
+        margin: 9px 0 8px;
+        padding: 13px 14px;
+        border-radius: 9px;
+        font-size: 15px;
+        line-height: 1.65;
+      }
+
+      .general-card textarea {
+        min-height: 92px;
+        padding: 11px;
+        border-radius: 9px;
+        line-height: 1.55;
+      }
+
+      #generalProgress {
+        min-height: 43px;
+        display: flex;
+        align-items: center;
+        padding: 0 2px !important;
+        font-size: 13px;
+      }
+
+      .general-result {
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .unit-nav {
+        position: sticky;
+        top: 89px;
+        z-index: 70;
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr) 72px;
+        gap: 6px;
+        min-height: 50px;
+        margin-bottom: 7px;
+        padding: 6px;
+        border-radius: 9px;
+        box-shadow: 0 4px 14px var(--shadow);
+      }
+
+      .unit-nav .btn {
+        min-height: 38px;
+        padding: 6px 5px;
+        font-size: 11px;
+      }
+
+      .unit-title {
+        min-width: 0;
+        font-size: 12px;
+        line-height: 1.35;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+
+      .study-shell {
+        border-radius: var(--mobile-radius);
+        overflow: visible;
+      }
+
+      .study-head {
+        padding: 9px 11px;
+        border-radius: var(--mobile-radius) var(--mobile-radius) 0 0;
+        gap: 6px;
+      }
+
+      .study-head h2 {
+        min-width: 0;
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .status-note {
+        flex: 0 0 auto;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .section-table,
+      .section-table tbody,
+      .section-table tr,
+      .section-table th,
+      .section-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .section-table {
+        border-collapse: separate;
+      }
+
+      .section-table tr {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-table th {
+        width: 100%;
+        padding: 8px 11px 6px;
+        border: 0;
+        text-align: left;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .section-table td {
+        padding: 9px 11px 11px;
+        border: 0;
+      }
+
+      .line-item {
+        max-width: 100%;
+        margin-bottom: 8px;
+        line-height: 2.15;
+        font-size: 15px;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
+
+      .gap-input {
+        display: inline-block;
+        box-sizing: border-box;
+        width: auto;
+        min-width: 74px;
+        max-width: min(240px, calc(100vw - 56px));
+        height: 36px;
+        margin: 1px 2px;
+        padding: 5px 7px;
+        vertical-align: middle;
+        border-radius: 7px;
+      }
+
+      .gap-result {
+        display: inline;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .history-panel {
+        padding: 11px;
+      }
+
+      .history-head {
+        display: block;
+      }
+
+      .history-head h2 {
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+
+      .history-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+        margin-top: 0;
+      }
+
+      .history-toolbar {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 7px;
+        align-items: center;
+      }
+
+      .history-toolbar select {
+        min-width: 0;
+      }
+
+      .history-item {
+        padding: 11px;
+        border-radius: 9px;
+      }
+
+      .history-head,
+      .history-answer-row {
+        min-width: 0;
+      }
+
+      .history-answer-row {
+        grid-template-columns: 62px minmax(0, 1fr);
+        font-size: 13px;
+      }
+
+      .history-time {
+        width: 100%;
+        margin-left: 0;
+        font-size: 11px;
+      }
+
+      .site-footer {
+        margin-top: 22px;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      }
+
+      .footer-inner {
+        padding: 15px 12px;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+
+      .footer-inner p {
+        margin: 6px 0;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .controls,
+      .general-card .controls {
+        gap: 6px;
+      }
+
+      select {
+        padding-left: 7px;
+        font-size: 15px !important;
+      }
+
+      .btn {
+        font-size: 12px;
+      }
+
+      .unit-nav {
+        grid-template-columns: 64px minmax(0, 1fr) 64px;
+      }
+
+      .line-item {
+        font-size: 14px;
+      }
+    }
+
   </style>
 
 </head>
@@ -2686,5 +3098,17 @@
   renderGeneral();
   renderHistory();
 </script>
+
+<script>
+  // CurriLoop PWA: 모바일 홈 화면 설치 및 오프라인 재접속 지원
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("/service-worker.js")
+        .then(registration => registration.update())
+        .catch(() => {});
+    });
+  }
+</script>
+
 </body>
 </html>
