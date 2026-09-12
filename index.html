@@ -436,6 +436,35 @@
       background: var(--bad-bg);
     }
 
+
+    .site-footer {
+      max-width: 1180px;
+      margin: 34px auto 28px;
+      padding: 0 20px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      border-top: 1px solid var(--line);
+      padding: 18px 4px 0;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .footer-inner strong {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .footer-inner p {
+      margin: 7px 0 0;
+    }
+
+    .footer-small {
+      font-size: 12px;
+      color: var(--faint);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       * { scroll-behavior: auto !important; transition: none !important; }
     }
@@ -494,9 +523,9 @@
           <select id="generalCategory" onchange="resetGeneral()">
             <option value="all">전체</option>
             <option value="competency">추구하는 인간상 · 핵심역량</option>
-            <option value="history">정보과 교육과정 변천</option>
+            <option value="history">개정 교육과정 변천</option>
             <option value="hours">시수 · 편제</option>
-            <option value="subjects">교과 · 선택과목 변화</option>
+            <option value="subjects">과목 신설 · 통합 · 선택 유형</option>
           </select>
         </div>
         <div class="field">
@@ -505,7 +534,7 @@
         </div>
       </div>
       <div class="question" id="generalQuestion"></div>
-      <textarea id="generalAnswer" placeholder="답을 입력하세요. Enter: 채점 · Shift+Enter: 줄바꿈"></textarea>
+      <textarea id="generalAnswer" placeholder="답을 입력하세요. Enter: 채점 · 한 번 더 Enter: 다음 문제 · Shift+Enter: 줄바꿈"></textarea>
       <div class="toolbar">
         <button class="btn primary" onclick="gradeGeneral()">정답 확인</button>
         <button class="btn" onclick="nextGeneral()">다음 문제</button>
@@ -520,6 +549,7 @@
         <div class="field">
           <label for="subjectSelect">과목</label>
           <select id="subjectSelect" onchange="onSubjectChange()">
+            <option value="all">전체</option>
             <option value="middle-info">중학교 정보</option>
             <option value="high-info">고등학교 정보</option>
             <option value="ai-basic">인공지능 기초</option>
@@ -534,7 +564,7 @@
         </div>
         <div class="field">
           <label for="groupSelect">출제 항목</label>
-          <select id="groupSelect" onchange="renderStudy()">
+          <select id="groupSelect" onchange="onGroupChange()">
             <option value="content-system">내용 체계</option>
             <option value="achievement">성취기준</option>
             <option value="all">전체</option>
@@ -552,10 +582,9 @@
       </div>
       <div class="toolbar">
         <button class="btn primary" onclick="startQuiz()">퀴즈 시작</button>
-        <button class="btn" id="hintButton" onclick="toggleHints()">힌트 숨기기</button>
-        <button class="btn" id="originalButton" onclick="toggleOriginal()">원문 보기</button>
-        <button class="btn" onclick="gradeAllVisible()">전체 채점</button>
-        <button class="btn soft" onclick="resetVisible()">현재 단원 초기화</button>
+        <button class="btn" id="originalButton" onclick="showOriginalAndReset()">원문 보기</button>
+        <button class="btn" id="gradeAllButton" onclick="gradeAllVisible()">전체 채점</button>
+        <button class="btn soft" id="resetUnitButton" onclick="resetVisible()">현재 단원 초기화</button>
         <div class="score" id="scoreText">정답: 0 | 오답: 0</div>
       </div>
     </div>
@@ -573,13 +602,28 @@
       </div>
       <div id="studyArea"></div>
     </div>
-
-    <div id="originalPanel" class="original-panel hidden">
-      <div class="original-head">원문</div>
-      <div class="original-body" id="originalBody"></div>
-    </div>
   </section>
 </main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <strong>CoreLoop 안내</strong>
+    <p>
+      CoreLoop은 교육과정 및 임용시험 학습을 돕기 위한 비공식 학습 도구이며,
+      교육부·한국교육과정평가원·시도교육청과 제휴하거나 공식 승인을 받은 서비스가 아닙니다.
+    </p>
+    <p>
+      교육과정 문구와 시험 자료의 권리는 각 원저작권자에게 있습니다.
+      이 사이트의 문제는 학습을 위해 공식 교육과정 내용을 일부 인용·요약하고,
+      기출의 출제 경향과 핵심 개념을 바탕으로 재구성·변형할 수 있습니다.
+      정확한 원문·최신 고시·시험 자료는 해당 공식 기관 자료를 우선 확인하세요.
+    </p>
+    <p class="footer-small">
+      외부 배포·복제·상업적 이용을 할 경우에는 각 원자료의 이용 조건과 저작권 표시 요건을 별도로 확인해야 합니다.
+    </p>
+  </div>
+</footer>
+
 
 <script>
   // -------------------------
@@ -595,6 +639,7 @@
   };
 
   const subjectLabels = {
+    "all":"전체",
     "middle-info":"중학교 정보", "high-info":"고등학교 정보", "ai-basic":"인공지능 기초",
     "data-science":"데이터 과학", "software-life":"소프트웨어와 생활", "info-science":"정보과학"
   };
@@ -925,13 +970,196 @@
   // 3) 총론 간단 문제은행
   // -------------------------
   const generalBank = [
-    {category:"competency", q:"2022 개정 교육과정의 핵심역량 6가지를 모두 쓰시오.", answers:[["자기관리 역량","자기관리"],["지식정보처리 역량","지식정보처리"],["창의적 사고 역량","창의적 사고"],["심미적 감성 역량","심미적 감성"],["협력적 소통 역량","협력적 소통"],["공동체 역량","공동체"]], display:"자기관리 역량, 지식정보처리 역량, 창의적 사고 역량, 심미적 감성 역량, 협력적 소통 역량, 공동체 역량"},
-    {category:"competency", q:"2022 개정 교육과정이 추구하는 인간상 4가지를 모두 쓰시오.", answers:[["자기주도적인 사람"],["창의적인 사람"],["교양 있는 사람"],["더불어 사는 사람"]], display:"자기주도적인 사람, 창의적인 사람, 교양 있는 사람, 더불어 사는 사람"},
-    {category:"history", q:"중학교 정보Ⅰ·정보Ⅱ·정보Ⅲ이 하나의 '정보'로 통합된 개정 교육과정은?", answers:[["2009 개정 교육과정","2009 개정"]], display:"2009 개정 교육과정"},
-    {category:"history", q:"정보과학Ⅰ·Ⅱ가 '정보과학'으로 통합된 고시 연도는?", answers:[["2011","2011년"]], display:"2011년"},
-    {category:"hours", q:"2015 개정 교육과정에서 중학교 정보의 최소 이수 시간은?", answers:[["34","34시간"]], display:"34시간"},
-    {category:"hours", q:"2022 개정 교육과정에서 중학교 정보의 최소 이수 시간은?", answers:[["68","68시간"]], display:"68시간"},
-    {category:"subjects", q:"2022 개정 고등학교 정보 교과의 일반 선택 과목 명칭은?", answers:[["정보"]], display:"정보"}
+    // 2022 개정 총론/정보과 공통
+    {
+      category:"competency",
+      q:"2022 개정 교육과정의 핵심역량 6가지를 모두 쓰시오.",
+      answers:[
+        ["자기관리 역량","자기관리"],
+        ["지식정보처리 역량","지식정보처리"],
+        ["창의적 사고 역량","창의적 사고"],
+        ["심미적 감성 역량","심미적 감성"],
+        ["협력적 소통 역량","협력적 소통"],
+        ["공동체 역량","공동체"]
+      ],
+      display:"자기관리 역량, 지식정보처리 역량, 창의적 사고 역량, 심미적 감성 역량, 협력적 소통 역량, 공동체 역량"
+    },
+    {
+      category:"competency",
+      q:"2022 개정 교육과정이 추구하는 인간상 4가지를 모두 쓰시오.",
+      answers:[
+        ["자기주도적인 사람"],
+        ["창의적인 사람"],
+        ["교양 있는 사람"],
+        ["더불어 사는 사람"]
+      ],
+      display:"자기주도적인 사람, 창의적인 사람, 교양 있는 사람, 더불어 사는 사람"
+    },
+    {
+      category:"competency",
+      q:"2022 개정 정보과 교육과정의 교과 역량 3가지를 모두 쓰시오.",
+      answers:[
+        ["컴퓨팅 사고력"],
+        ["디지털 문화 소양","디지털문화소양"],
+        ["인공지능 소양","인공지능소양"]
+      ],
+      display:"컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양"
+    },
+
+    // 개정 교육과정 변천 — 기출에서 반복적으로 다뤄진 명칭·편제 변화 중심
+    {
+      category:"history",
+      q:"중·고등학교 보통 교과의 컴퓨터 관련 과목 명칭이 '정보'로 통일되기 시작한 개정 교육과정은?",
+      answers:[["2007 개정 교육과정","2007 개정","2007"]],
+      display:"2007 개정 교육과정"
+    },
+    {
+      category:"history",
+      q:"2007 개정 교육과정에서 중학교의 종전 '컴퓨터' 과목은 어떤 과목 체계로 바뀌었는가?",
+      answers:[
+        ["정보Ⅰ","정보1","정보I"],
+        ["정보Ⅱ","정보2","정보II"],
+        ["정보Ⅲ","정보3","정보III"]
+      ],
+      display:"정보Ⅰ, 정보Ⅱ, 정보Ⅲ"
+    },
+    {
+      category:"history",
+      q:"2007 개정 교육과정에서 고등학교 보통 교과의 '정보사회와 컴퓨터'는 어떤 과목명으로 바뀌었는가?",
+      answers:[["정보"]],
+      display:"정보"
+    },
+    {
+      category:"history",
+      q:"중학교 정보Ⅰ·정보Ⅱ·정보Ⅲ이 하나의 '정보'로 통합된 개정 교육과정은?",
+      answers:[["2009 개정 교육과정","2009 개정","2009"]],
+      display:"2009 개정 교육과정"
+    },
+    {
+      category:"history",
+      q:"정보과학Ⅰ·정보과학Ⅱ가 하나의 '정보과학'으로 통합된 고시 연도는?",
+      answers:[["2011","2011년"]],
+      display:"2011년"
+    },
+    {
+      category:"history",
+      q:"중학교 '정보'가 필수 과목이 되고 과학/기술·가정/정보 교과(군)에 편성된 개정 교육과정은?",
+      answers:[["2015 개정 교육과정","2015 개정","2015"]],
+      display:"2015 개정 교육과정"
+    },
+    {
+      category:"history",
+      q:"'인공지능 기초'가 2015 개정 교육과정에 진로 선택 과목으로 추가된 고시 연도는?",
+      answers:[["2020","2020년"]],
+      display:"2020년"
+    },
+    {
+      category:"history",
+      q:"2022 개정 교육과정에서 새롭게 편성된 정보 교과의 데이터 중심 진로 선택 과목은?",
+      answers:[["데이터 과학","데이터과학"]],
+      display:"데이터 과학"
+    },
+    {
+      category:"history",
+      q:"2022 개정 교육과정에서 정보 교과의 융합 선택 과목으로 편성된 과목은?",
+      answers:[["소프트웨어와 생활","소프트웨어와생활"]],
+      display:"소프트웨어와 생활"
+    },
+    {
+      category:"history",
+      q:"2015 개정에서 전문 교과Ⅰ 과학계열에 있던 '정보과학'은 2022 개정에서 어떤 선택 유형으로 편성되는가?",
+      answers:[["진로 선택","진로선택"]],
+      display:"진로 선택"
+    },
+
+    // 시수·편제
+    {
+      category:"hours",
+      q:"2015 개정 교육과정에서 중학교 '정보'의 최소 이수 시간은?",
+      answers:[["34","34시간"]],
+      display:"34시간"
+    },
+    {
+      category:"hours",
+      q:"2022 개정 교육과정에서 중학교 '정보'의 최소 이수 시간은?",
+      answers:[["68","68시간"]],
+      display:"68시간"
+    },
+    {
+      category:"hours",
+      q:"2015 개정 교육과정에서 중학교 '정보'가 속한 교과(군)는?",
+      answers:[["과학/기술·가정/정보","과학 기술·가정 정보","과학기술가정정보"]],
+      display:"과학/기술·가정/정보 교과(군)"
+    },
+    {
+      category:"hours",
+      q:"2022 개정 고등학교에서 '정보'가 속한 교과(군)는?",
+      answers:[["기술·가정/정보","기술가정정보","기술·가정 정보"]],
+      display:"기술·가정/정보 교과(군)"
+    },
+
+    // 6개 과목의 현재 분류 + 신설·통합
+    {
+      category:"subjects",
+      q:"2022 개정 기준 중학교 '정보'는 일반·진로·융합 선택 중 어디에 해당하는가?",
+      answers:[["해당 없음","선택과목 아님","필수 과목","필수","공통 교육과정","공통교육과정"]],
+      display:"선택과목이 아니라 공통 교육과정의 필수 과목"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 고등학교 '정보'의 선택 유형은?",
+      answers:[["일반 선택","일반선택"]],
+      display:"일반 선택"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 '인공지능 기초'의 선택 유형은?",
+      answers:[["진로 선택","진로선택"]],
+      display:"진로 선택"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 '데이터 과학'의 선택 유형은?",
+      answers:[["진로 선택","진로선택"]],
+      display:"진로 선택"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 '소프트웨어와 생활'의 선택 유형은?",
+      answers:[["융합 선택","융합선택"]],
+      display:"융합 선택"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 '정보과학'의 선택 유형은?",
+      answers:[["진로 선택","진로선택"]],
+      display:"진로 선택"
+    },
+    {
+      category:"subjects",
+      q:"2022 개정 기준 정보 관련 진로 선택 과목 3가지를 모두 쓰시오.",
+      answers:[
+        ["인공지능 기초","인공지능기초"],
+        ["데이터 과학","데이터과학"],
+        ["정보과학"]
+      ],
+      display:"인공지능 기초, 데이터 과학, 정보과학"
+    },
+    {
+      category:"subjects",
+      q:"2015 개정 고등학교 '정보'의 선택 유형은?",
+      answers:[["일반 선택","일반선택"]],
+      display:"일반 선택"
+    },
+    {
+      category:"subjects",
+      q:"2015 개정에서 '정보과학'이 편성된 체계는?",
+      answers:[
+        ["전문 교과Ⅰ","전문교과1","전문교과Ⅰ"],
+        ["과학계열","과학 계열"]
+      ],
+      display:"전문 교과Ⅰ → 과학계열"
+    }
   ];
 
   // -------------------------
@@ -939,10 +1167,10 @@
   // -------------------------
   let currentTab = "general";
   let currentAreaIndex = 0;
-  let hintsVisible = true;
-  let originalVisible = false;
+  let quizMode = false;
   const fieldState = {}; // key -> {value,status}
   let generalIndex = 0;
+  let generalGraded = false;
 
   // -------------------------
   // 5) 공통 유틸
@@ -962,45 +1190,72 @@
     document.getElementById("subjectPage").classList.toggle("hidden", isGeneral);
     document.getElementById("generalTab").classList.toggle("active", isGeneral);
     document.getElementById("subjectTab").classList.toggle("active", !isGeneral);
-    if (!isGeneral) renderStudy();
+    if (!isGeneral) {
+      quizMode = false;
+      renderStudy();
+    }
   }
 
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
   function getCurrentGroup() { return document.getElementById("groupSelect").value; }
   function getCurrentDifficulty() { return document.getElementById("difficultySelect").value; }
 
-  function getAreasForCurrentSubject() {
-    return subjectAreas[getCurrentSubject()] || [];
+  function getAllUnits() {
+    return Object.entries(subjectAreas).flatMap(([subject, areas]) =>
+      areas.map(area => ({ subject, area }))
+    );
+  }
+
+  function getUnitSequence() {
+    const subject = getCurrentSubject();
+
+    if (subject === "all") {
+      return getAllUnits();
+    }
+
+    const selectedArea = document.getElementById("areaSelect").value;
+    const areas = subjectAreas[subject] || [];
+
+    if (selectedArea === "all") {
+      return areas.map(area => ({ subject, area }));
+    }
+
+    return selectedArea ? [{ subject, area: selectedArea }] : [];
+  }
+
+  function getCurrentUnit() {
+    const sequence = getUnitSequence();
+    if (!sequence.length) return { subject: "", area: "" };
+    currentAreaIndex = Math.max(0, Math.min(currentAreaIndex, sequence.length - 1));
+    return sequence[currentAreaIndex];
   }
 
   function getSelectedAreaName() {
-    const select = document.getElementById("areaSelect");
-    if (select.value === "all") {
-      const areas = getAreasForCurrentSubject();
-      return areas[currentAreaIndex] || areas[0] || "";
-    }
-    return select.value;
+    return getCurrentUnit().area;
   }
 
   function onSubjectChange() {
     currentAreaIndex = 0;
-    hintsVisible = true;
-    originalVisible = false;
-    document.getElementById("originalPanel").classList.add("hidden");
-    document.getElementById("originalButton").textContent = "원문 보기";
+    quizMode = false;
     fillAreaSelect();
     renderStudy();
   }
 
   function fillAreaSelect() {
     const select = document.getElementById("areaSelect");
-    const areas = getAreasForCurrentSubject();
+    const subject = getCurrentSubject();
+
     select.innerHTML = "";
+
     const all = document.createElement("option");
     all.value = "all";
     all.textContent = "전체";
     select.appendChild(all);
-    areas.forEach(area => {
+
+    // 과목 '전체'에서는 모든 과목·영역을 단원 이동 버튼으로 순회한다.
+    if (subject === "all") return;
+
+    (subjectAreas[subject] || []).forEach(area => {
       const op = document.createElement("option");
       op.value = area;
       op.textContent = area;
@@ -1010,45 +1265,69 @@
 
   function onAreaChange() {
     currentAreaIndex = 0;
-    hintsVisible = true;
-    updateHintButton();
+    quizMode = false;
+    renderStudy();
+  }
+
+  function onGroupChange() {
+    currentAreaIndex = 0;
+    quizMode = false;
     renderStudy();
   }
 
   function onDifficultyChange() {
-    hintsVisible = true;
-    updateHintButton();
+    quizMode = false;
     renderStudy();
   }
 
   function moveUnit(delta) {
-    const areas = getAreasForCurrentSubject();
-    currentAreaIndex = Math.max(0, Math.min(areas.length - 1, currentAreaIndex + delta));
+    const sequence = getUnitSequence();
+    currentAreaIndex = Math.max(0, Math.min(sequence.length - 1, currentAreaIndex + delta));
     renderStudy();
+
+    if (quizMode) {
+      requestAnimationFrame(() => focusFirstEmpty());
+    }
   }
 
   function startQuiz() {
-    hintsVisible = false;
-    updateHintButton();
+    quizMode = true;
     renderStudy();
     requestAnimationFrame(() => focusFirstEmpty());
   }
 
-  function toggleHints() {
-    hintsVisible = !hintsVisible;
-    updateHintButton();
+  function clearCurrentUnitState() {
+    const unit = getCurrentUnit();
+    if (!unit.subject || !unit.area) return;
+
+    const prefix = [
+      unit.subject,
+      unit.area,
+      getCurrentGroup(),
+      getCurrentDifficulty()
+    ].join("|") + "|";
+
+    Object.keys(fieldState).forEach(key => {
+      if (key.startsWith(prefix)) delete fieldState[key];
+    });
+  }
+
+  // 퀴즈 중 원문 보기를 누르면 현재 단원의 풀이 기록을 초기화하고
+  // 원문 학습 화면으로 돌아간다.
+  function showOriginalAndReset() {
+    clearCurrentUnitState();
+    quizMode = false;
     renderStudy();
   }
 
-  function updateHintButton() {
-    document.getElementById("hintButton").textContent = hintsVisible ? "힌트 숨기기" : "힌트 보기";
-  }
+  function updateStudyControls() {
+    const gradeButton = document.getElementById("gradeAllButton");
+    const resetButton = document.getElementById("resetUnitButton");
+    const originalButton = document.getElementById("originalButton");
 
-  function toggleOriginal() {
-    originalVisible = !originalVisible;
-    document.getElementById("originalPanel").classList.toggle("hidden", !originalVisible);
-    document.getElementById("originalButton").textContent = originalVisible ? "원문 숨기기" : "원문 보기";
-    if (originalVisible) renderOriginal();
+    if (gradeButton) gradeButton.disabled = !quizMode;
+    if (resetButton) resetButton.disabled = !quizMode;
+    if (originalButton) originalButton.disabled = !quizMode;
   }
 
   function getUnitData(subject, area, group) {
@@ -1059,7 +1338,8 @@
   }
 
   function makeStateKey(sectionIndex, lineIndex, gapIndex) {
-    return [getCurrentSubject(), getSelectedAreaName(), getCurrentGroup(), getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
+    const unit = getCurrentUnit();
+    return [unit.subject, unit.area, getCurrentGroup(), getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
   }
 
   // -------------------------
@@ -1142,7 +1422,6 @@
     if (!spec.sentence) {
       input.style.width = Math.max(82, Math.min(260, spec.answer.length * 17 + 28)) + "px";
     }
-    if (hintsVisible) input.placeholder = spec.answer;
 
     const saved = fieldState[input.dataset.stateKey];
     if (saved) {
@@ -1165,8 +1444,19 @@
     input.addEventListener("keydown", event => {
       if (event.key === "Enter") {
         event.preventDefault();
-        gradeOne(input);
-        focusRelative(input, 1);
+
+        const savedState = fieldState[input.dataset.stateKey];
+
+        // 첫 Enter: 현재 빈칸 채점
+        if (!savedState?.status) {
+          gradeOne(input);
+          input.focus();
+        }
+        // 채점된 상태에서 한 번 더 Enter: 다음 빈칸,
+        // 마지막 빈칸이면 '전체' 학습 중 다음 단원으로 이동
+        else {
+          advanceAfterGrade(input);
+        }
       } else if (event.key === "Tab") {
         event.preventDefault();
         focusRelative(input, event.shiftKey ? -1 : 1);
@@ -1211,29 +1501,41 @@
   // 7) 학습 화면 렌더링
   // -------------------------
   function renderStudy() {
-    const subject = getCurrentSubject();
-    const area = getSelectedAreaName();
+    const unit = getCurrentUnit();
+    const subject = unit.subject;
+    const area = unit.area;
     const group = getCurrentGroup();
     const sections = getUnitData(subject, area, group);
     const studyArea = document.getElementById("studyArea");
-    const areaModeAll = document.getElementById("areaSelect").value === "all";
-    const areas = getAreasForCurrentSubject();
+    const sequence = getUnitSequence();
 
-    document.getElementById("studyTitle").textContent = `${subjectLabels[subject]} · ${area || "영역"}`;
-    document.getElementById("studyStatus").textContent = hintsVisible ? "회색 글씨는 힌트입니다. 입력 전까지 정답으로 처리되지 않습니다." : "힌트 없이 회상 중";
+    const subjectLabel = subjectLabels[subject] || "과목";
+    document.getElementById("studyTitle").textContent =
+      subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
+
+    document.getElementById("studyStatus").textContent = quizMode
+      ? `${difficultyLabel(getCurrentDifficulty())} 난이도 · 빈칸 회상 중`
+      : "원문 학습 중 · 난이도를 선택한 뒤 '퀴즈 시작'을 누르세요.";
 
     const nav = document.getElementById("unitNav");
-    nav.classList.toggle("hidden", !areaModeAll || !areas.length);
-    if (areaModeAll && areas.length) {
-      document.getElementById("unitNavTitle").innerHTML = `${currentAreaIndex + 1} / ${areas.length} · ${area}<span class="unit-progress">단원 간 이동 시 입력·채점 상태가 유지됩니다.</span>`;
+    nav.classList.toggle("hidden", sequence.length <= 1);
+
+    if (sequence.length > 1 && subject && area) {
+      document.getElementById("unitNavTitle").innerHTML =
+        `${currentAreaIndex + 1} / ${sequence.length} · ${subjectLabel} · ${area}` +
+        `<span class="unit-progress">단원 간 이동 시 입력·채점 상태가 유지됩니다.</span>`;
+
       document.getElementById("prevUnit").disabled = currentAreaIndex === 0;
-      document.getElementById("nextUnit").disabled = currentAreaIndex === areas.length - 1;
+      document.getElementById("nextUnit").disabled = currentAreaIndex === sequence.length - 1;
     }
 
     studyArea.innerHTML = "";
+
     if (!sections.length) {
-      studyArea.innerHTML = `<div class="empty"><strong>${area}</strong> 원문 데이터는 아직 이 파일에 넣지 않았습니다.<br>화면·채점 엔진은 정상이며, 다음 단계에서 공식 원문을 추가하면 바로 같은 방식으로 작동합니다.</div>`;
-      if (originalVisible) renderOriginal();
+      studyArea.innerHTML =
+        `<div class="empty"><strong>${subjectLabel}${area ? " · " + area : ""}</strong> 원문 데이터는 아직 이 파일에 넣지 않았습니다.<br>` +
+        `공식 원문을 추가하면 같은 화면에서 바로 학습·퀴즈가 작동합니다.</div>`;
+      updateStudyControls();
       updateScore();
       return;
     }
@@ -1241,49 +1543,45 @@
     const table = document.createElement("table");
     table.className = "section-table";
     const tbody = document.createElement("tbody");
+
     sections.forEach((section, sectionIndex) => {
       const tr = document.createElement("tr");
+
       const th = document.createElement("th");
       th.textContent = section.title;
+
       const td = document.createElement("td");
-      section.lines.forEach((line, lineIndex) => td.appendChild(renderLine(line, sectionIndex, lineIndex)));
+
+      section.lines.forEach((line, lineIndex) => {
+        if (quizMode) {
+          td.appendChild(renderLine(line, sectionIndex, lineIndex));
+        } else {
+          const p = document.createElement("div");
+          p.className = "line-item";
+          p.textContent = line.text;
+          td.appendChild(p);
+        }
+      });
+
       tr.appendChild(th);
       tr.appendChild(td);
       tbody.appendChild(tr);
     });
+
     table.appendChild(tbody);
     studyArea.appendChild(table);
 
-    if (originalVisible) renderOriginal();
+    updateStudyControls();
     updateScore();
   }
 
-  function renderOriginal() {
-    const subject = getCurrentSubject();
-    const area = getSelectedAreaName();
-    const group = getCurrentGroup();
-    const sections = getUnitData(subject, area, group);
-    const body = document.getElementById("originalBody");
-    body.innerHTML = "";
-    if (!sections.length) {
-      body.innerHTML = "<div class='empty'>원문 데이터가 아직 없습니다.</div>";
-      return;
-    }
-    sections.forEach(section => {
-      const div = document.createElement("div");
-      div.className = "original-section";
-      const h = document.createElement("h3");
-      h.textContent = section.title;
-      const ul = document.createElement("ul");
-      section.lines.forEach(line => {
-        const li = document.createElement("li");
-        li.textContent = line.text;
-        ul.appendChild(li);
-      });
-      div.appendChild(h);
-      div.appendChild(ul);
-      body.appendChild(div);
-    });
+  function difficultyLabel(value) {
+    return ({
+      easy: "쉬움",
+      normal: "보통",
+      hard: "어려움",
+      yaho: "야~호!"
+    })[value] || value;
   }
 
   // -------------------------
@@ -1319,12 +1617,13 @@
   }
 
   function gradeAllVisible() {
+    if (!quizMode) return;
     document.querySelectorAll("#studyArea .gap-input").forEach(gradeOne);
   }
 
   function resetVisible() {
-    const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
-    inputs.forEach(input => delete fieldState[input.dataset.stateKey]);
+    if (!quizMode) return;
+    clearCurrentUnitState();
     renderStudy();
     focusFirstEmpty();
   }
@@ -1335,6 +1634,23 @@
     if (i < 0) return;
     const target = inputs[i + delta];
     if (target) target.focus();
+  }
+
+  function advanceAfterGrade(current) {
+    const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
+    const i = inputs.indexOf(current);
+
+    if (i >= 0 && inputs[i + 1]) {
+      inputs[i + 1].focus();
+      return;
+    }
+
+    const sequence = getUnitSequence();
+    if (currentAreaIndex < sequence.length - 1) {
+      currentAreaIndex++;
+      renderStudy();
+      requestAnimationFrame(() => focusFirstEmpty());
+    }
   }
 
   function focusFirstEmpty() {
@@ -1360,27 +1676,51 @@
     return category === "all" ? generalBank : generalBank.filter(q => q.category === category);
   }
 
-  function resetGeneral() { generalIndex = 0; renderGeneral(); }
+  function resetGeneral() {
+    generalIndex = 0;
+    generalGraded = false;
+    renderGeneral();
+  }
 
   function renderGeneral() {
     const list = filteredGeneral();
     if (!list.length) return;
+
     generalIndex = Math.min(generalIndex, list.length - 1);
+    generalGraded = false;
+
     document.getElementById("generalQuestion").textContent = list[generalIndex].q;
     document.getElementById("generalProgress").textContent = `${generalIndex + 1} / ${list.length}`;
-    document.getElementById("generalAnswer").value = "";
-    document.getElementById("generalResult").classList.add("hidden");
+
+    const answer = document.getElementById("generalAnswer");
+    answer.value = "";
+
+    const result = document.getElementById("generalResult");
+    result.className = "general-result hidden";
+    result.innerHTML = "";
+
+    setTimeout(() => answer.focus(), 0);
   }
 
   function gradeGeneral() {
     const list = filteredGeneral();
     const q = list[generalIndex];
     const user = normalize(document.getElementById("generalAnswer").value);
-    const ok = q.answers.every(group => group.some(a => user.includes(normalize(a))));
+
+    const ok = q.answers.every(group =>
+      group.some(a => user.includes(normalize(a)))
+    );
+
     const box = document.getElementById("generalResult");
     box.className = "general-result " + (ok ? "good" : "bad");
-    box.innerHTML = ok ? `<strong>✓ 정답</strong>` : `<strong style="color:var(--bad)">✕ 오답</strong><br>${q.display}`;
+
+    // 맞았더라도 공식 정답을 항상 표시한다.
+    box.innerHTML = ok
+      ? `<strong>✓ 정답</strong><br><span style="color:var(--muted)">정답</span><br>${q.display}`
+      : `<strong style="color:var(--bad)">✕ 오답</strong><br><span style="color:var(--muted)">정답</span><br><strong style="color:var(--bad)">${q.display}</strong>`;
+
     box.classList.remove("hidden");
+    generalGraded = true;
   }
 
   function nextGeneral() {
@@ -1390,7 +1730,16 @@
   }
 
   document.getElementById("generalAnswer").addEventListener("keydown", e => {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); gradeGeneral(); }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+
+      // 첫 Enter: 채점 / 채점 후 두 번째 Enter: 다음 문제
+      if (generalGraded) {
+        nextGeneral();
+      } else {
+        gradeGeneral();
+      }
+    }
   });
 
   // -------------------------
@@ -1423,7 +1772,7 @@
   // 11) 초기화
   // -------------------------
   fillAreaSelect();
-  updateHintButton();
+  quizMode = false;
   renderStudy();
   renderGeneral();
 </script>
