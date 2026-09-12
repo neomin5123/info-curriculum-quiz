@@ -1254,3 +1254,18 @@
       .help-button { padding:5px 8px; font-size:12px; }
       .source-note { width:100%; margin-left:0; }
     }
+
+/* v6.3 — 난이도별 빈칸 크기 통일. 핵심/정밀은 각각 동일한 폭을 사용하고 야~호!는 문장형 폭을 유지한다. */
+.gap-input[data-difficulty="easy"]:not(.sentence-gap) {
+  width: min(164px, calc(100vw - 64px));
+  min-width: min(164px, calc(100vw - 64px));
+  max-width: min(164px, calc(100vw - 64px));
+  flex: 0 0 auto;
+}
+
+.gap-input[data-difficulty="normal"]:not(.sentence-gap) {
+  width: min(204px, calc(100vw - 64px));
+  min-width: min(204px, calc(100vw - 64px));
+  max-width: min(204px, calc(100vw - 64px));
+  flex: 0 0 auto;
+}

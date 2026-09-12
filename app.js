@@ -75,8 +75,8 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.1.0";
-  const MANUAL_GAP_REVIEW = "2026-09-12 / 6과목 27영역 550문장 핵심·정밀 개별 검수; 반복 핵심어 전수 가림·stable gap ID 도입; 중학교 정보 111문장 공식 별책10 재대조; 컴퓨팅 시스템·데이터 내용 체계 핵심을 소단위 회상형으로 재조정";
+  const APP_VERSION = "6.3.0";
+  const MANUAL_GAP_REVIEW = "2026-09-12 / 6과목 27영역 550문장 핵심·정밀 개별 검수; 핵심 소단위 회상형 재분할; 정밀 13자 이상 장문 빈칸 재분할; 난이도별 입력칸 크기 통일; 오답 Enter 시 현재 빈칸 유지·전체 선택";
 
   // -------------------------
   // 5) 공통 유틸
@@ -510,6 +510,8 @@
     const input = document.createElement("input");
     input.type = "text";
     input.className = "gap-input" + (spec.sentence ? " sentence-gap" : "");
+    const inputDifficulty = getCurrentDifficulty();
+    input.dataset.difficulty = inputDifficulty;
     input.dataset.answer = spec.answer;
     input.dataset.gapId = spec.gapId || `legacy-${gapIndex}`;
     input.dataset.aliases = JSON.stringify(spec.aliases || []);
@@ -526,9 +528,6 @@
     input.enterKeyHint = "next";
     input.setAttribute("enterkeyhint", "next");
     input.setAttribute("aria-label", `${sectionTitle || "학습"} · ${lineIndex + 1}번째 문장 · ${gapIndex + 1}번째 빈칸`);
-    if (!spec.sentence) {
-      input.style.width = Math.max(82, Math.min(260, spec.answer.length * 17 + 28)) + "px";
-    }
 
     const saved = fieldState[input.dataset.stateKey];
     if (saved) {
@@ -574,7 +573,13 @@
     });
 
     const gradeAndAdvance = () => {
-      gradeOne(input); // 빈 입력도 오답으로 처리한다.
+      const correct = gradeOne(input); // 빈 입력도 오답으로 처리한다.
+      if (!correct) {
+        // 오답은 현재 빈칸에 머문다. 입력값이 있으면 즉시 덮어쓸 수 있게 전체 선택한다.
+        input.focus();
+        selectFilledGapText();
+        return;
+      }
       if (reviewActive) return;
       requestAnimationFrame(() => advanceAfterGrade(input));
     };
@@ -766,10 +771,12 @@
   // IndexedDB를 쓸 수 없는 환경의 원자적 fallback. history/mastery를 한 JSON 객체로 저장한다.
   const FALLBACK_STATE_KEY = "curriloop-learning-fallback-state-v1";
   const QUARANTINE_FALLBACK_KEY = "curriloop-migration-quarantine-v1";
+  // v6.2: 기존 핵심의 큰 빈칸을 작은 stable gap으로 분할한 1회성 마이그레이션 버전.
+  const CORE_SPLIT_MIGRATION_VERSION = 1;
 
   let learningDb = null;
   let learningStorageMode = "memory";
-  let learningStateMemory = {history: [], mastery: {}, updatedAt: null};
+  let learningStateMemory = {history: [], mastery: {}, coreSplitMigrationVersion: 0, updatedAt: null};
   let learningPersistChain = Promise.resolve();
   let migrationQuarantineCount = 0;
 
@@ -846,6 +853,7 @@
       schemaVersion: 1,
       history: cloneJson(learningStateMemory.history, []),
       mastery: cloneJson(learningStateMemory.mastery, {}),
+      coreSplitMigrationVersion: Number(learningStateMemory.coreSplitMigrationVersion || 0),
       updatedAt: new Date().toISOString()
     };
   }
@@ -902,6 +910,7 @@
       if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
       const migrated = {};
       let changed = false;
+      const seedCoreSplits = Number(learningStateMemory.coreSplitMigrationVersion || 0) < CORE_SPLIT_MIGRATION_VERSION;
 
       const merge = (key, item) => {
         const prev = migrated[key];
@@ -929,8 +938,32 @@
           nextKey = migrateSubjectConceptKey(key);
         }
         if (nextKey !== key) changed = true;
-        merge(nextKey, item || {});
+        const retiredNormalTargets = nextKey.startsWith("subject|")
+          ? normalSplitTargetConceptKeys(nextKey)
+          : [];
+        // v6.3에서 폐기된 정밀 composite ID는 저장소에 남겨 두지 않고 자식 gap으로 이관한다.
+        if (retiredNormalTargets.length) {
+          retiredNormalTargets.forEach(targetKey => merge(targetKey, item || {}));
+          changed = true;
+        } else {
+          merge(nextKey, item || {});
+        }
+
+        // v6.2에서 과거 '핵심'의 큰 의미 단위를 여러 작은 빈칸으로 나눈 경우,
+        // 기존 composite ID 자체는 당시 정밀 기록을 위해 보존하고 새 핵심 자식들에게
+        // 기존 숙련도를 한 번만 seed한다. 이후 정밀 학습 결과가 계속 전파되지는 않는다.
+        if (seedCoreSplits && nextKey.startsWith("subject|")) {
+          for (const targetKey of coreSplitTargetConceptKeys(nextKey)) {
+            merge(targetKey, item || {});
+            changed = true;
+          }
+        }
       });
+
+      if (seedCoreSplits) {
+        learningStateMemory.coreSplitMigrationVersion = CORE_SPLIT_MIGRATION_VERSION;
+        changed = true;
+      }
 
       if (changed || Object.keys(migrated).length !== Object.keys(raw).length) {
         learningStateMemory.mastery = migrated;
@@ -1018,6 +1051,44 @@
       gapId,
       Number(occurrence || 0)
     );
+  }
+
+  function coreSplitTargetConceptKeys(key) {
+    const parts = String(key || "").split("|");
+    if (parts[0] !== "subject" || parts.length < 7) return [];
+    const [, subjectKey, areaName, sourceGroup, lineId, gapToken, occurrence] = parts;
+    if (!String(gapToken || "").startsWith("gap:")) return [];
+    const meta = findLineIdentity(subjectKey, areaName, lineId, "");
+    if (!meta) return [];
+    const oldGapId = String(gapToken).slice(4);
+    const targets = meta.line.coreSplitMigrations?.[oldGapId];
+    if (!Array.isArray(targets) || !targets.length) return [];
+    return targets.map(gapId => conceptKeyForSubject(
+      {subject:subjectKey, area:areaName},
+      meta.sourceGroup || sourceGroup,
+      meta.line.id,
+      gapId,
+      Number(occurrence || 0)
+    ));
+  }
+
+  function normalSplitTargetConceptKeys(key) {
+    const parts = String(key || "").split("|");
+    if (parts[0] !== "subject" || parts.length < 7) return [];
+    const [, subjectKey, areaName, sourceGroup, lineId, gapToken, occurrence] = parts;
+    if (!String(gapToken || "").startsWith("gap:")) return [];
+    const meta = findLineIdentity(subjectKey, areaName, lineId, "");
+    if (!meta) return [];
+    const oldGapId = String(gapToken).slice(4);
+    const targets = meta.line.normalSplitMigrations?.[oldGapId];
+    if (!Array.isArray(targets) || !targets.length) return [];
+    return targets.map(gapId => conceptKeyForSubject(
+      {subject:subjectKey, area:areaName},
+      meta.sourceGroup || sourceGroup,
+      meta.line.id,
+      gapId,
+      Number(occurrence || 0)
+    ));
   }
 
   function conceptKeyForGeneral(questionOrId) {
@@ -1129,7 +1200,7 @@
         storeMigrationQuarantine(invalidRecords);
       }
 
-      const migrated = data
+      const migratedBase = data
         .filter(item => item && typeof item === "object" && ["general","subject"].includes(item.type))
         .map(item => {
           const copy = {...item};
@@ -1190,6 +1261,35 @@
 
           return copy;
         });
+
+      // 과거 composite 오답은 현재의 분할된 stable gap들에 이어 준다.
+      // v6.2 핵심 분할과 v6.3 정밀 장문 분할을 모두 지원한다.
+      const migrated = migratedBase.flatMap(copy => {
+        if (copy.type !== "subject" || !["easy","normal"].includes(copy.difficultyKey)) return [copy];
+        const meta = findLineIdentity(copy.subjectKey, copy.area, copy.lineId || "", copy.context || "");
+        const splitMap = copy.difficultyKey === "easy"
+          ? meta?.line?.coreSplitMigrations
+          : meta?.line?.normalSplitMigrations;
+        const targets = splitMap?.[copy.gapId];
+        if (!Array.isArray(targets) || !targets.length) return [copy];
+        changed = true;
+        const entries = configuredGapEntries(meta.line, copy.difficultyKey);
+        return targets.map(gapId => {
+          const entry = entries.find(candidate => candidate.gapId === gapId);
+          const next = {...copy, gapId};
+          next.answerText = entry?.answer || next.answerText;
+          next.correctAnswer = entry?.answer || next.correctAnswer;
+          next.conceptKey = conceptKeyForSubject(
+            {subject:next.subjectKey, area:next.area},
+            meta.sourceGroup,
+            meta.line.id,
+            gapId,
+            Number(next.answerOccurrence || 0)
+          );
+          next.key = next.conceptKey;
+          return next;
+        });
+      });
 
       if (migrated.length !== data.length) changed = true;
 
@@ -1267,12 +1367,14 @@
         learningStateMemory = {
           history: cloneJson(fallbackState.history, []),
           mastery: cloneJson(fallbackState.mastery, {}),
+          coreSplitMigrationVersion: Number(fallbackState.coreSplitMigrationVersion || 0),
           updatedAt: fallbackState.updatedAt || null
         };
       } else if (validLearningStateRecord(stored)) {
         learningStateMemory = {
           history: cloneJson(stored.history, []),
           mastery: cloneJson(stored.mastery, {}),
+          coreSplitMigrationVersion: Number(stored.coreSplitMigrationVersion || 0),
           updatedAt: stored.updatedAt || null
         };
       } else {
@@ -1305,7 +1407,7 @@
             savedAt:new Date().toISOString(), historyRaw:legacyHistoryRaw, masteryRaw:legacyMasteryRaw
           });
         }
-        learningStateMemory = {history: legacyHistory, mastery: legacyMastery, updatedAt:null};
+        learningStateMemory = {history: legacyHistory, mastery: legacyMastery, coreSplitMigrationVersion:0, updatedAt:null};
       }
 
       // line/gap stable ID, hard→정밀 등 모든 호환 마이그레이션을 메모리에서 수행한다.
@@ -1337,6 +1439,7 @@
         learningStateMemory = {
           history:cloneJson(fallbackState.history, []),
           mastery:cloneJson(fallbackState.mastery, {}),
+          coreSplitMigrationVersion:Number(fallbackState.coreSplitMigrationVersion || 0),
           updatedAt:fallbackState.updatedAt || null
         };
       } else {
@@ -1599,6 +1702,7 @@
       learningStateMemory = {
         history:cloneJson(snapshot.learning.history, []),
         mastery:cloneJson(snapshot.learning.mastery, {}),
+        coreSplitMigrationVersion:Number(snapshot.learning.coreSplitMigrationVersion || 0),
         updatedAt:snapshot.learning.updatedAt || null
       };
       learningStateMemory.history = loadHistory();
@@ -1622,6 +1726,7 @@
       learningStateMemory = {
         history:cloneJson(before.history, []),
         mastery:cloneJson(before.mastery, {}),
+        coreSplitMigrationVersion:Number(before.coreSplitMigrationVersion || 0),
         updatedAt:before.updatedAt || null
       };
       await persistLearningStateNow();
@@ -1681,6 +1786,7 @@
       schemaVersion: 5,
       app: "CurriLoop",
       appVersion: APP_VERSION,
+      coreSplitMigrationVersion: Number(learningStateMemory.coreSplitMigrationVersion || CORE_SPLIT_MIGRATION_VERSION),
       exportedAt: new Date().toISOString(),
       counts: {history: history.length, mastery: Object.keys(mastery).length},
       history,
@@ -1759,6 +1865,7 @@
         learningStateMemory = {
           history: cloneJson(data.history, []),
           mastery: cloneJson(data.mastery, {}),
+          coreSplitMigrationVersion: Number(data.coreSplitMigrationVersion || 0),
           updatedAt: null
         };
 
@@ -1798,6 +1905,7 @@
         learningStateMemory = {
           history: cloneJson(before.history, []),
           mastery: cloneJson(before.mastery, {}),
+          coreSplitMigrationVersion: Number(before.coreSplitMigrationVersion || 0),
           updatedAt: before.updatedAt || null
         };
         await persistLearningStateNow();
