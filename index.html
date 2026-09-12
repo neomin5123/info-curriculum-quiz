@@ -1524,7 +1524,7 @@
     return String(value || "")
       .normalize("NFKC")
       .toLowerCase()
-      .replace(/[\s,.;:!?·ㆍ\-_/()\[\]{}'"“”‘’]+/g, "")
+      .replace(/[\s,.;:!?·ㆍ・∙‧⋅\-_/()\[\]{}'"“”‘’]+/g, "")
       .trim();
   }
 
@@ -2970,7 +2970,11 @@
 
     // 단답형은 정답/허용답안과 완전히 일치해야 한다.
     if (q.answers.length === 1) {
-      return q.answers[0].some(alias => normalize(alias) === normalizedWhole);
+      const accepted = [
+        ...q.answers[0],
+        q.display
+      ];
+      return accepted.some(alias => normalize(alias) === normalizedWhole);
     }
 
     const parts = splitGeneralAnswers(rawUser).map(normalize);
