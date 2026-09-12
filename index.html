@@ -1319,7 +1319,7 @@
         <div class="field">
           <label for="difficultySelect">난이도</label>
           <select id="difficultySelect" onchange="onDifficultyChange()">
-            <option value="easy">쉬움</option>
+            <option value="easy">핵심</option>
             <option value="normal" selected>보통</option>
             <option value="yaho">야~호!</option>
           </select>
@@ -1711,8 +1711,8 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "5.3.0";
-  const MANUAL_GAP_REVIEW = "2026-09-12 / 6과목 27영역 550문장 쉬움·보통 개별 검수";
+  const APP_VERSION = "5.3.1";
+  const MANUAL_GAP_REVIEW = "2026-09-12 / 6과목 27영역 550문장 핵심·정밀 개별 검수";
 
   // -------------------------
   // 5) 공통 유틸
@@ -2198,7 +2198,7 @@
   };
 
   const MAX_GAPS_BY_DIFFICULTY = {
-    // v5.3: 쉬움·보통은 550개 문장을 개별 수동 검수한 빈칸을 그대로 사용한다.
+    // v5.3: 핵심·정밀은 550개 문장을 개별 수동 검수한 빈칸을 그대로 사용한다.
     // 수동으로 선정한 핵심어가 많다면 빈칸 수도 그대로 많아질 수 있다.
     easy: Infinity,
     normal: Infinity,
@@ -2384,7 +2384,7 @@
 
     } else if (difficulty === "normal") {
       // v5.3: 문장별 수동 검수 결과만 사용한다.
-      // 쉬움 목록을 자동 합치거나, 형태소/복합어 규칙으로 추가 빈칸을 만들지 않는다.
+      // 핵심 목록을 자동 합치거나, 형태소/복합어 규칙으로 추가 빈칸을 만들지 않는다.
       phrases = exactConfiguredTerms(line.text, line.normal || []);
 
     } else {
@@ -2443,7 +2443,7 @@
 
       const normalizedAnswer = normalize(item.spec.answer);
 
-      // 쉬움·보통: 같은 개념의 반복 입력은 첫 등장만.
+      // 핵심·정밀: 같은 개념의 반복 입력은 첫 등장만.
       // 어려움: 반복되는 실질어도 전부 회상하도록 유지.
       if (difficulty !== "hard" && usedAnswers.has(normalizedAnswer)) {
         return;
