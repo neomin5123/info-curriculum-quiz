@@ -713,7 +713,7 @@
         </div>
       </div>
       <div class="question" id="generalQuestion"></div>
-      <textarea id="generalAnswer" placeholder="답을 입력하세요. Enter: 채점 · 채점 후 같은 답에서 Enter: 다음 문제 · 답을 고치면 다시 채점 · Shift+Enter: 줄바꿈"></textarea>
+      <textarea id="generalAnswer" placeholder="답을 입력하세요."></textarea>
       <div class="toolbar">
         <button class="btn primary" onclick="gradeGeneral()">정답 확인</button>
         <button class="btn" id="prevGeneralButton" onclick="previousGeneral()">← 이전 문제</button>
@@ -748,7 +748,7 @@
           <select id="groupSelect" onchange="onGroupChange()">
             <option value="content-system">내용 체계</option>
             <option value="achievement">성취기준</option>
-            <option value="exam-variant">기출 변형</option>
+            <option value="exam-variant">기출 변형 문제</option>
             <option value="all">전체</option>
           </select>
         </div>
@@ -756,8 +756,8 @@
           <label for="difficultySelect">난이도</label>
           <select id="difficultySelect" onchange="onDifficultyChange()">
             <option value="easy">쉬움</option>
-            <option value="normal" selected>보통 · 핵심 개념+행위</option>
-            <option value="hard">어려움 · 실질어 거의 전부</option>
+            <option value="normal" selected>보통</option>
+            <option value="hard">어려움</option>
             <option value="yaho">야~호!</option>
           </select>
         </div>
@@ -791,11 +791,11 @@
       <div class="history-head">
         <div>
           <h2>오답노트</h2>
-          <p class="history-description">
-            이 브라우저에서 틀린 문제를 자동으로 저장합니다. 기록은 서버가 아니라 현재 기기의 브라우저에만 저장됩니다.
-          </p>
         </div>
-        <button class="btn soft" onclick="clearHistory()">오답노트 초기화</button>
+        <div class="history-actions">
+          <button class="btn" onclick="startWrongReview()">오답 복습 시작</button>
+          <button class="btn soft" onclick="clearHistory()">기록 초기화</button>
+        </div>
       </div>
 
       <div class="history-toolbar">
@@ -1218,7 +1218,130 @@
     ])
   );
 
-  const variantData = {"middle-info": {"데이터": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 아날로그 데이터를 컴퓨터에서 처리할 수 있도록 바꾸어 표현하는 형태는 디지털 형태이다.", "easy": ["디지털 형태"]}, {"text": "[기출 변형] 데이터 간의 관계를 파악하고 새로운 지식을 찾기 위해 데이터를 조직하는 과정은 구조화이다.", "easy": ["구조화"]}]}], "알고리즘과 프로그래밍": [{"title": "기출 변형", "lines": [{"text": "[2017형] 문제를 이해하고 분석하여 불필요한 요소를 제거하거나 작은 문제로 나누는 문제 해결 과정은 추상화이다.", "easy": ["추상화"]}, {"text": "[2017형] 추상화 과정에서 문제 해결에 필요한 핵심만 골라내는 방법은 핵심요소 추출이다.", "easy": ["핵심요소 추출"]}]}]}, "high-info": {"데이터": [{"title": "기출 변형", "lines": [{"text": "[2024형] 고등학교 정보의 데이터 영역에서 데이터를 효율적으로 관리하고 보호하기 위한 핵심 내용 요소는 디지털 데이터 압축과 암호화이다.", "easy": ["디지털 데이터 압축", "암호화"]}, {"text": "[기출 변형] 암호화된 정보를 원래 정보로 되돌리는 과정은 복호화이다.", "easy": ["복호화"]}]}], "인공지능": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 정답이 있는 학습 데이터로 모델을 학습시키는 유형은 지도학습이고, 정답 없이 데이터의 구조를 찾는 유형은 비지도학습이다.", "easy": ["지도학습", "비지도학습"]}]}]}, "ai-basic": {"인공지능의 사회적 영향": [{"title": "기출 변형", "lines": [{"text": "[2024형] 인공지능의 활용 사례와 윤리적 딜레마 상황을 인공지능 윤리 관점에서 분석한다.", "easy": ["윤리적 딜레마", "인공지능 윤리"]}]}], "인공지능과 학습": [{"title": "기출 변형", "lines": [{"text": "[2026형] 기계학습에서 모델 학습에 사용하는 데이터는 훈련 데이터이고, 학습된 모델의 성능을 평가하는 데이터는 테스트 데이터이다.", "easy": ["훈련 데이터", "테스트 데이터"]}]}]}, "data-science": {"데이터 과학의 이해": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 일정한 구조와 스키마를 가진 데이터는 정형 데이터이고, 고정된 구조가 없는 텍스트·이미지·영상 등은 비정형 데이터이다.", "easy": ["정형 데이터", "비정형 데이터"]}]}], "데이터 모델링과 평가": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 연관 분석에서 항목 간 연관 규칙을 평가하는 대표 지표는 지지도, 신뢰도, 향상도이다.", "easy": ["지지도", "신뢰도", "향상도"]}]}]}, "software-life": {"모의 실험하는 소프트웨어": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 복잡한 문제나 현상의 원리를 소프트웨어로 모의적으로 표현한 것은 시뮬레이션 모델이다.", "easy": ["시뮬레이션 모델"]}]}], "가치를 창출하는 소프트웨어": [{"title": "기출 변형", "lines": [{"text": "[기출 변형] 소프트웨어 스타트업 프로젝트에서 주제와 해결 아이디어를 구체화하기 위해 우선 파악해야 할 것은 사용자 요구이다.", "easy": ["사용자 요구"]}]}]}, "info-science": {"알고리즘": [{"title": "기출 변형", "lines": [{"text": "[2025형] 부분 문제를 해결한 결과를 이용하여 전체 문제를 해결하는 대표적인 관계기반 알고리즘 설계 방법은 분할정복법이다.", "easy": ["분할정복법"]}, {"text": "[2025형] 중복되는 부분 문제의 답을 저장하여 반복 계산을 줄이는 대표적인 관계기반 알고리즘 설계 방법은 동적계획법이다.", "easy": ["동적계획법"]}, {"text": "[2025형] 상태 공간의 일부를 배제하면서 해를 탐색하는 알고리즘 설계 방법의 예로 분기한정법과 탐욕법이 있다.", "easy": ["분기한정법", "탐욕법"]}]}]}};
+
+  // 중학교 정보: 공식 2022 개정 교육과정 해설·적용 시 고려 사항 보강
+  curriculumData["middle-info"]["컴퓨팅 시스템"].achievement.push(
+    S("성취기준 해설", [
+      L("[9정01-01] 컴퓨팅 시스템은 컴퓨터라는 특정한 기기에서 더 큰 범위의 시스템으로 확장되었음을 인식하고, 현실 세계의 다양한 컴퓨팅 시스템이 문제를 해결하는 방식을 설명할 수 있어야 한다. 또한 운영 체제가 컴퓨팅 시스템을 효율적으로 활용하기 위해 수행하는 작업을 설명할 수 있어야 한다.",
+        ["컴퓨팅 시스템", "운영 체제"]),
+      L("[9정01-02] 다양한 구성요소가 컴퓨팅 시스템에서 고유한 역할을 담당하고 있음을 이해하고, 목적에 맞는 물리적 장치와 소프트웨어를 결합하여 피지컬 컴퓨팅 시스템을 구현함으로써 그 유용성을 판단할 수 있어야 한다.",
+        ["피지컬 컴퓨팅 시스템"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("실생활에서 관찰할 수 있는 구체적인 컴퓨팅 시스템 사례를 활용하여 삶과 컴퓨팅 시스템이 괴리되어 있지 않음을 인식하고, 컴퓨팅 시스템이 사회에서 담당하는 역할과 영향력을 탐색하도록 교수·학습을 구성한다.",
+        ["컴퓨팅 시스템"]),
+      L("피지컬 컴퓨팅 시스템 구현 활동은 초등학교 실과 수준의 프로그래밍으로 수행할 수 있도록 난이도를 조절하고, 하드웨어와 소프트웨어가 통합적으로 동작함을 인식하는 데 초점을 둔다.",
+        ["피지컬 컴퓨팅", "하드웨어", "소프트웨어"]),
+      L("탐구 중심 활동과 프로젝트 형태의 수업을 통해 피지컬 컴퓨팅 시스템을 구성하는 종합적인 경험을 제공한다.",
+        ["프로젝트", "피지컬 컴퓨팅 시스템"])
+    ])
+  );
+
+  curriculumData["middle-info"]["인공지능"].achievement.push(
+    S("성취기준 해설", [
+      L("[9정04-01] 인공지능의 기초적인 개념을 이해하고 모델, 학습, 데이터 등 인공지능 시스템이 구성되는 원리와 문제를 해결하는 과정을 설명할 수 있어야 한다.",
+        ["모델", "학습", "데이터"]),
+      L("[9정04-03] 이미지, 소리, 글자 등의 데이터를 활용하여 인공지능 시스템을 학습시키고 학습한 시스템을 활용하여 문제를 해결하는 과정을 수행할 수 있어야 한다.",
+        ["이미지", "소리", "글자"]),
+      L("[9정04-05] 인공지능 학습에 필요한 데이터의 수집과 활용에서 나타나는 현실적 문제에 대해 법적·사회적·윤리적으로 타당한 해결 방안을 제시하고, 여러 해결 방안의 장단점을 비교하여 인공지능의 사회적 역할과 가치를 판단할 수 있어야 한다.",
+        ["법적", "사회적", "윤리적"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("인공지능 시스템 적용 시 학생이 익숙하게 활용할 수 있는 프로그래밍 언어를 사용하여 인지적 부하가 적도록 교수·학습 활동을 구성한다.",
+        ["인지적 부하"]),
+      L("인공지능 윤리에 대해서는 서로 다른 관점을 존중하고 근거를 바탕으로 논리적으로 자신의 의견을 주장할 수 있도록 활동을 구성한다.",
+        ["인공지능 윤리"]),
+      L("인공지능과 관련된 여러 사례를 경험하게 하여 인공지능에 대한 깊이 있는 이해가 내면화되도록 교수·학습을 구성한다.",
+        ["인공지능"])
+    ])
+  );
+
+  curriculumData["middle-info"]["디지털 문화"].achievement.push(
+    S("성취기준 해설", [
+      L("[9정05-02] 정보 윤리, 사이버 폭력 및 범죄 예방에 대한 기본 소양을 갖추고 스마트폰 중독, 인터넷 중독, 게임 과몰입 등의 사례를 분석하여 개인과 사회가 수행해야 하는 실천 방안을 도출하고 자신의 삶에 적용하려는 태도를 갖출 수 있어야 한다.",
+        ["정보 윤리", "사이버 폭력", "게임 과몰입"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("정보 과목의 다른 내용 영역에서 실제로 학습한 내용을 바탕으로 디지털 사회를 이해하고 자신의 진로 계획을 수립할 수 있도록 진로 연계 교육을 고려하여 교수·학습을 구성한다.",
+        ["진로 연계 교육"]),
+      L("민주시민 교육의 일환으로 디지털 사회에서 발생하는 여러 문제에 다양한 견해가 있을 수 있음을 인정하고 다른 사람의 의견을 존중하는 논의 환경을 조성한다.",
+        ["민주시민 교육"])
+    ])
+  );
+
+  // 기존 알고리즘과 프로그래밍 해설의 누락 항목 보강
+  curriculumData["middle-info"]["알고리즘과 프로그래밍"].achievement.push(
+    S("성취기준 해설 보강", [
+      L("[9정03-03] 하나의 문제를 해결하는 여러 알고리즘의 장단점을 비교·분석하여 효과적이고 효율적인 알고리즘의 중요성을 논리적으로 설명할 수 있어야 한다.",
+        ["효과적", "효율적"]),
+      L("[9정03-05] 배열이나 리스트 등 데이터를 순차적으로 저장할 수 있는 구조를 활용하여 많은 양의 데이터를 효과적으로 처리할 수 있어야 한다.",
+        ["배열", "리스트"])
+    ])
+  );
+
+
+  // 정보과학: 별책20 공식 성취기준 해설·적용 시 고려 사항
+  curriculumData["info-science"]["프로그래밍"].achievement.push(
+    S("성취기준 해설", [
+      L("[12정과01-02] 재귀관계를 파악할 때 수학적 귀납법을 활용할 수 있음을 이해하고, 문제 해결책을 재귀구조를 활용하여 설계하고 프로그래밍할 수 있어야 한다.",
+        ["수학적 귀납법", "재귀구조"]),
+      L("[12정과01-03] 특정 문제를 해결할 때 재귀구조와 반복구조를 사용하여 프로그래밍하는 방식의 차이를 구체적으로 비교하여 설명할 수 있어야 한다.",
+        ["재귀구조", "반복구조"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("수학적 귀납법 자체의 증명보다 귀납 가정과 재귀함수 호출의 관계를 다양한 예로 이해하여 실제 문제 해결에서 재귀구조를 활용할 수 있도록 한다.",
+        ["귀납 가정", "재귀함수 호출"]),
+      L("최소 성취수준을 보장하기 위해 재귀관계를 바로 파악하지 못하더라도 반복구조로 작성된 프로그램을 재귀함수로 변환하는 활동을 제공한다.",
+        ["반복구조", "재귀함수"])
+    ])
+  );
+
+  curriculumData["info-science"]["데이터 구조"].achievement.push(
+    S("성취기준 해설", [
+      L("[12정과02-01] 선입선출과 후입선출 구조를 활용하여 복잡한 문제를 단순화할 수 있음을 이해하고, 배열이나 리스트를 활용하여 스택과 큐를 구현하고 문제 해결에 활용할 수 있어야 한다.",
+        ["선입선출", "후입선출", "스택", "큐"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("스택과 큐를 배열이나 리스트로 직접 구현하여 원리를 이해한 뒤, 문제 해결에서는 프로그래밍 언어가 제공하는 스택과 큐 라이브러리를 활용할 수 있도록 한다.",
+        ["배열", "리스트", "라이브러리"]),
+      L("인접리스트는 트리와 그래프를 만드는 도구로 활용하는 것이 목적이므로 구조체와 포인터로 직접 구현하기보다 벡터와 같은 라이브러리를 활용하는 방법도 사용할 수 있다.",
+        ["인접리스트", "벡터"]),
+      L("데이터 구조를 이해하고 구현하는 과정이 궁극적으로 문제를 효율적으로 해결하는 방법임을 인식하도록 실생활 문제 해결 활동과 예제를 제공한다.",
+        ["데이터 구조"])
+    ])
+  );
+
+  curriculumData["info-science"]["알고리즘"].achievement.push(
+    S("성취기준 적용 시 고려 사항", [
+      L("탐색으로 알고리즘을 설계하는 방법이 인공지능 분야의 탐색과 추론 영역과 연계됨을 인식하고 관련 용어를 명확히 사용하도록 한다.",
+        ["탐색", "추론"]),
+      L("구체적인 알고리즘이 정보학의 문제 해결 과정에서 실제로 활용되는 예시를 제공하고, 프로그램이나 시각 자료를 통해 효율성을 직관적으로 인식하도록 구성할 수 있다.",
+        ["알고리즘", "효율성"]),
+      L("알고리즘을 적용한 프로그램을 평가할 때 효과성과 효율성을 종합적으로 평가하고 다양한 환경이나 데이터에서도 효율적으로 작동하는지 확인한다.",
+        ["효과성", "효율성"]),
+      L("최소 성취수준을 보장하기 위해 알고리즘 시뮬레이션 자료와 프로그래밍 언어의 라이브러리 활용 방법을 제공한다.",
+        ["시뮬레이션", "라이브러리"])
+    ])
+  );
+
+  curriculumData["info-science"]["정보과학 프로젝트"].achievement.push(
+    S("성취기준 해설", [
+      L("[12정과04-02] 프로젝트 수행 과정은 문제 분석 및 구조화, 효율적인 알고리즘 설계, 프로그래밍을 통한 자동화, 검증 단계를 포함하며 절차에 맞게 문제 해결 과정을 설계할 수 있어야 한다.",
+        ["문제 분석", "알고리즘 설계", "자동화", "검증"])
+    ]),
+    S("성취기준 적용 시 고려 사항", [
+      L("실생활 문제 발견 활동에는 환경, 생태, 자연의 위기 등 생태 관련 주제를 포함할 수 있으며 효율적인 문제 해결이 에너지 절약과 환경 보호와 관련됨을 인식하도록 한다.",
+        ["생태", "에너지 절약"]),
+      L("프로젝트 활동에는 알고리즘 설계와 프로그래밍 과정을 포함하고, 주제와 프로그래밍 언어의 선정은 학습자 간 협의를 통한 민주적 절차로 이루어지도록 한다.",
+        ["알고리즘 설계", "민주적 절차"]),
+      L("프로젝트는 가능한 모둠별로 진행하고 공개 코드나 프로그래밍 언어의 라이브러리를 적극 활용하여 목표 기능 구현과 문제 해결에 집중하도록 한다.",
+        ["공개 코드", "라이브러리"]),
+      L("프로젝트 주제와 학습자의 역량 및 환경에 따라 소프트웨어 제작이나 알고리즘 설계 등 다양한 수준의 활동을 운영할 수 있도록 사례를 제공한다.",
+        ["소프트웨어 제작", "알고리즘 설계"])
+    ])
+  );
+
+  const variantData = {"middle-info": {"데이터": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 아날로그 데이터를 컴퓨터에서 처리할 수 있도록 바꾸어 표현하는 형태는 디지털 형태이다.", "easy": ["디지털 형태"]}, {"text": "[자체 변형] 데이터 간의 관계를 파악하고 새로운 지식을 찾기 위해 데이터를 조직하는 과정은 구조화이다.", "easy": ["구조화"]}]}], "알고리즘과 프로그래밍": [{"title": "기출 변형", "lines": [{"text": "[2017 기출 포인트 변형] 문제를 이해하고 분석하여 불필요한 요소를 제거하거나 작은 문제로 나누는 문제 해결 과정은 추상화이다.", "easy": ["추상화"]}, {"text": "[2017 기출 포인트 변형] 추상화 과정에서 문제 해결에 필요한 핵심만 골라내는 방법은 핵심요소 추출이다.", "easy": ["핵심요소 추출"]}]}]}, "high-info": {"데이터": [{"title": "기출 변형", "lines": [{"text": "[2024 기출 포인트 변형] 고등학교 정보의 데이터 영역에서 데이터를 효율적으로 관리하고 보호하기 위한 핵심 내용 요소는 디지털 데이터 압축과 암호화이다.", "easy": ["디지털 데이터 압축", "암호화"]}, {"text": "[자체 변형] 암호화된 정보를 원래 정보로 되돌리는 과정은 복호화이다.", "easy": ["복호화"]}]}], "인공지능": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 정답이 있는 학습 데이터로 모델을 학습시키는 유형은 지도학습이고, 정답 없이 데이터의 구조를 찾는 유형은 비지도학습이다.", "easy": ["지도학습", "비지도학습"]}]}]}, "ai-basic": {"인공지능의 사회적 영향": [{"title": "기출 변형", "lines": [{"text": "[2024 기출 포인트 변형] 인공지능의 활용 사례와 윤리적 딜레마 상황을 인공지능 윤리 관점에서 분석한다.", "easy": ["윤리적 딜레마", "인공지능 윤리"]}]}], "인공지능과 학습": [{"title": "기출 변형", "lines": [{"text": "[2026 기출 포인트 변형] 기계학습에서 모델 학습에 사용하는 데이터는 훈련 데이터이고, 학습된 모델의 성능을 평가하는 데이터는 테스트 데이터이다.", "easy": ["훈련 데이터", "테스트 데이터"]}]}]}, "data-science": {"데이터 과학의 이해": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 일정한 구조와 스키마를 가진 데이터는 정형 데이터이고, 고정된 구조가 없는 텍스트·이미지·영상 등은 비정형 데이터이다.", "easy": ["정형 데이터", "비정형 데이터"]}]}], "데이터 모델링과 평가": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 연관 분석에서 항목 간 연관 규칙을 평가하는 대표 지표는 지지도, 신뢰도, 향상도이다.", "easy": ["지지도", "신뢰도", "향상도"]}]}]}, "software-life": {"모의 실험하는 소프트웨어": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 복잡한 문제나 현상의 원리를 소프트웨어로 모의적으로 표현한 것은 시뮬레이션 모델이다.", "easy": ["시뮬레이션 모델"]}]}], "가치를 창출하는 소프트웨어": [{"title": "기출 변형", "lines": [{"text": "[자체 변형] 소프트웨어 스타트업 프로젝트에서 주제와 해결 아이디어를 구체화하기 위해 우선 파악해야 할 것은 사용자 요구이다.", "easy": ["사용자 요구"]}]}]}, "info-science": {"알고리즘": [{"title": "기출 변형", "lines": [{"text": "[2025 기출 포인트 변형] 부분 문제를 해결한 결과를 이용하여 전체 문제를 해결하는 대표적인 관계기반 알고리즘 설계 방법은 분할정복법이다.", "easy": ["분할정복법"]}, {"text": "[2025 기출 포인트 변형] 중복되는 부분 문제의 답을 저장하여 반복 계산을 줄이는 대표적인 관계기반 알고리즘 설계 방법은 동적계획법이다.", "easy": ["동적계획법"]}, {"text": "[2025 기출 포인트 변형] 상태 공간의 일부를 배제하면서 해를 탐색하는 알고리즘 설계 방법의 예로 분기한정법과 탐욕법이 있다.", "easy": ["분기한정법", "탐욕법"]}]}]}};
 
   // -------------------------
   // 3) 총론 간단 문제은행
@@ -1441,7 +1564,11 @@
   let currentAreaIndex = 0;
   let currentRandomUnit = null;
   let quizMode = false;
+  let lastStudyFocus = null; // {sectionIndex, lineIndex}
   const fieldState = {}; // key -> {value,status}
+  const shuffleBags = {};
+  let currentAttemptId = 1;
+  let generalAttemptId = 1;
   let generalIndex = 0;
   let generalGraded = false;
   let generalLastGradedValue = "";
@@ -1481,7 +1608,6 @@
     });
 
     if (tab === "subject") {
-      quizMode = false;
       renderStudy();
     }
 
@@ -1515,6 +1641,19 @@
     return array[Math.floor(Math.random() * array.length)];
   }
 
+  function unitKey(unit) {
+    return `${unit.subject}::${unit.area}`;
+  }
+
+  function shuffleArray(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
   function chooseRandomUnit() {
     const subject = getCurrentSubject();
     let pool = subject === "all"
@@ -1525,7 +1664,24 @@
       pool = pool.filter(unit => (variantData[unit.subject]?.[unit.area] || []).length);
     }
 
-    currentRandomUnit = pickRandom(pool);
+    const bagKey = `${subject}|${getCurrentGroup()}`;
+    const validKeys = new Set(pool.map(unitKey));
+
+    let bag = (shuffleBags[bagKey] || []).filter(key => validKeys.has(key));
+    if (!bag.length) {
+      bag = shuffleArray(pool.map(unitKey));
+
+      // 새 회차 첫 단원이 직전 단원과 같으면 가능한 경우 뒤로 보낸다.
+      const previousKey = currentRandomUnit ? unitKey(currentRandomUnit) : null;
+      if (bag.length > 1 && previousKey && bag[bag.length - 1] === previousKey) {
+        [bag[bag.length - 1], bag[0]] = [bag[0], bag[bag.length - 1]];
+      }
+    }
+
+    const pickedKey = bag.pop();
+    shuffleBags[bagKey] = bag;
+
+    currentRandomUnit = pool.find(unit => unitKey(unit) === pickedKey) || pool[0] || null;
     currentAreaIndex = 0;
   }
 
@@ -1579,9 +1735,15 @@
     renderStudy();
   }
 
+  function areaHasCurrentGroup(subject, area) {
+    if (getCurrentGroup() !== "exam-variant") return true;
+    return (variantData[subject]?.[area] || []).length > 0;
+  }
+
   function fillAreaSelect() {
     const select = document.getElementById("areaSelect");
     const subject = getCurrentSubject();
+    const previous = select.value;
 
     select.innerHTML = "";
 
@@ -1597,10 +1759,13 @@
 
     if (subject === "all") {
       Object.entries(subjectAreas).forEach(([subjectKey, areas]) => {
+        const visibleAreas = areas.filter(area => areaHasCurrentGroup(subjectKey, area));
+        if (!visibleAreas.length) return;
+
         const group = document.createElement("optgroup");
         group.label = subjectLabels[subjectKey];
 
-        areas.forEach(area => {
+        visibleAreas.forEach(area => {
           const op = document.createElement("option");
           op.value = encodeUnit(subjectKey, area);
           op.textContent = `${subjectLabels[subjectKey]} · ${area}`;
@@ -1609,15 +1774,19 @@
 
         select.appendChild(group);
       });
-      return;
+    } else {
+      (subjectAreas[subject] || [])
+        .filter(area => areaHasCurrentGroup(subject, area))
+        .forEach(area => {
+          const op = document.createElement("option");
+          op.value = area;
+          op.textContent = area;
+          select.appendChild(op);
+        });
     }
 
-    (subjectAreas[subject] || []).forEach(area => {
-      const op = document.createElement("option");
-      op.value = area;
-      op.textContent = area;
-      select.appendChild(op);
-    });
+    const optionValues = [...select.options].map(o => o.value);
+    select.value = optionValues.includes(previous) ? previous : "all";
   }
 
   function onAreaChange() {
@@ -1635,13 +1804,21 @@
 
   function onGroupChange() {
     currentAreaIndex = 0;
+    currentRandomUnit = null;
     quizMode = false;
+    fillAreaSelect();
     renderStudy();
   }
 
   function onDifficultyChange() {
-    quizMode = false;
+    const wasQuizMode = quizMode;
+    const focusSnapshot = lastStudyFocus ? {...lastStudyFocus} : null;
+
     renderStudy();
+
+    if (wasQuizMode && focusSnapshot) {
+      requestAnimationFrame(() => focusMatchingLine(focusSnapshot));
+    }
   }
 
   function moveUnit(delta) {
@@ -1659,6 +1836,7 @@
       chooseRandomUnit();
     }
 
+    currentAttemptId++;
     quizMode = true;
     renderStudy();
     requestAnimationFrame(() => focusFirstEmpty());
@@ -1711,8 +1889,35 @@
     return unit[group] || [];
   }
 
-  function makeStateKey(sectionIndex, lineIndex, gapIndex) {
+  function stableHash(value) {
+    let hash = 2166136261;
+    const str = String(value || "");
+    for (let i = 0; i < str.length; i++) {
+      hash ^= str.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(36);
+  }
+
+  function makeLineStableId(sectionTitle, lineText) {
+    return `${stableHash(sectionTitle)}-${stableHash(lineText)}`;
+  }
+
+  function makeStateKey(sectionIndex, lineIndex, gapIndex, lineId = "", answer = "", answerOccurrence = 0) {
     const unit = getCurrentUnit();
+
+    if (lineId && answer) {
+      return [
+        unit.subject,
+        unit.area,
+        getCurrentGroup(),
+        getCurrentDifficulty(),
+        lineId,
+        normalize(answer),
+        answerOccurrence
+      ].join("|");
+    }
+
     return [unit.subject, unit.area, getCurrentGroup(), getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
   }
 
@@ -1788,6 +1993,91 @@
 
   const EASY_PRIORITY_TERMS = new Set(["하드웨어", "소프트웨어", "컴퓨팅 시스템", "운영 체제", "피지컬 컴퓨팅", "네트워크", "사물인터넷", "사물인터넷 시스템", "디지털 데이터", "아날로그 데이터", "디지털 형태", "압축", "디지털 데이터 압축", "암호화", "빅데이터", "데이터 구조화", "핵심요소", "핵심요소 추출", "추상화", "상태 정의", "알고리즘", "정렬", "정렬 알고리즘", "탐색", "탐색 알고리즘", "논리 연산", "중첩 제어 구조", "함수", "디버거", "자료형", "표준입출력", "파일입출력", "다차원 데이터", "다차원 데이터 구조", "클래스", "인스턴스", "객체", "지능 에이전트", "기계학습", "기계학습 모델", "지도학습", "비지도학습", "강화학습", "회귀", "분류", "군집", "정보 보호", "정보보안", "디지털 윤리", "개인 정보", "튜링 테스트", "맹목적 탐색", "정보 이용 탐색", "정보 이용 탐색 알고리즘", "A*", "규칙", "사실", "추론", "훈련 데이터", "테스트 데이터", "인공신경망", "딥러닝", "은닉층", "컴퓨터 비전", "음성 인식", "자연어처리", "윤리적 딜레마", "인공지능 윤리", "알고리즘 편향", "데이터 편향", "지속가능발전목표", "데이터 과학", "데이터 기반 의사 결정", "정형 데이터", "비정형 데이터", "데이터셋", "데이터베이스", "데이터 전처리", "이상치", "결측치", "정규화", "회귀 분석", "군집 분석", "연관 분석", "지지도", "신뢰도", "향상도", "탐색적 데이터 분석", "미디어 아트", "웨어러블 장치", "시뮬레이션", "시뮬레이션 모델", "소프트웨어 스타트업", "소프트웨어 스타트업 프로젝트", "오픈소스", "재귀관계", "재귀함수", "연결 리스트", "스택", "큐", "트리", "그래프", "깊이 우선 탐색", "너비 우선 탐색", "탐색기반 알고리즘", "관계기반 알고리즘", "알고리즘 복잡도", "분기한정법", "탐욕법", "분할정복법", "동적계획법", "빅오 표기법", "구조화", "복호화", "사용자 요구", "디지털 문화", "인공지능 소양", "컴퓨팅 사고력", "디지털 문화 소양"].map(normalize));
 
+  // 교육과정 고유 복합어는 어려움에서도 단어별로 쪼개지 않고 한 칸으로 유지한다.
+  const COMPOUND_TERMS = [
+    "데이터 기반 의사 결정",
+    "디지털 데이터 압축",
+    "정보 이용 탐색 알고리즘",
+    "정보 이용 탐색",
+    "맹목적 탐색",
+    "지능 에이전트",
+    "기계학습 모델",
+    "기계학습 알고리즘",
+    "데이터 분석 방법",
+    "데이터 과학 프로젝트",
+    "인공지능 문제 해결 과정",
+    "인공지능 프로젝트",
+    "인공지능 소프트웨어",
+    "인공지능 윤리",
+    "윤리적 딜레마",
+    "사회적 책임",
+    "지속가능발전목표",
+    "컴퓨팅 시스템",
+    "피지컬 컴퓨팅",
+    "사물인터넷 시스템",
+    "다차원 데이터 구조",
+    "표준입출력",
+    "파일입출력",
+    "핵심요소 추출",
+    "문제 분해",
+    "알고리즘 복잡도",
+    "탐색기반 알고리즘",
+    "관계기반 알고리즘",
+    "분할정복법",
+    "동적계획법",
+    "빅오 표기법",
+    "정형 데이터",
+    "비정형 데이터",
+    "탐색적 데이터 분석",
+    "회귀 분석",
+    "군집 분석",
+    "연관 분석",
+    "데이터 전처리",
+    "소프트웨어 스타트업 프로젝트",
+    "소프트웨어 스타트업",
+    "시뮬레이션 모델",
+    "디지털 문화 소양",
+    "컴퓨팅 사고력",
+    "인공지능 소양",
+    "정보 보호",
+    "정보보안",
+    "디지털 윤리",
+    "훈련 데이터",
+    "테스트 데이터",
+    "인공신경망",
+    "자연어처리",
+    "음성 인식",
+    "컴퓨터 비전",
+    "깊이 우선 탐색",
+    "너비 우선 탐색"
+  ].sort((a,b) => b.length - a.length);
+
+  // 전역 alias는 '동일한 용어의 표기 변형'만 허용한다.
+  // 개념적으로 비슷한 말은 자동 정답 처리하지 않는다.
+  const SAFE_GLOBAL_ALIASES = {
+    "A*": ["A-star", "A star", "A스타", "에이스타"],
+    "빅오 표기법": ["Big O 표기법", "Big-O 표기법", "Big O notation"]
+  };
+
+  const MAX_GAPS_BY_DIFFICULTY = {
+    easy: 5,
+    normal: 8,
+    hard: 10,
+    yaho: 1
+  };
+
+  function getSafeAliases(answer, lineAliases = {}) {
+    return [
+      ...(lineAliases?.[answer] || []),
+      ...(SAFE_GLOBAL_ALIASES[answer] || [])
+    ];
+  }
+
+  function findCompoundTerms(text) {
+    return COMPOUND_TERMS.filter(term => text.includes(term));
+  }
+
+
   // 보통에서 빈칸으로 낼 가치가 높은 '행위' 어간.
   // 어려움과 달리 일반적인 수식어·보조 명사·저정보 단어는 남긴다.
   const NORMAL_ACTION_STEMS = new Set([
@@ -1826,48 +2116,124 @@
   }
 
   function buildGapSpecs(line, difficulty) {
-    if (difficulty === "yaho") return [{ answer: line.text, sentence: true, aliases: [] }];
-
-    let phrases;
-    if (difficulty === "easy") {
-      phrases = (line.easy || []).filter(term => EASY_PRIORITY_TERMS.has(normalize(term)));
-    } else if (difficulty === "normal") {
-      // 사람이 지정한 normal 키워드가 있으면 반드시 포함하고,
-      // 나머지는 교육과정 개념어 + 핵심 행위어만 자동으로 보충한다.
-      phrases = [...(line.easy || []), ...(line.normal || []), ...deriveNormalWords(line.text)];
-    } else {
-      // 어려움은 조사·접속사 등을 제외한 거의 모든 실질어를 어간 단위로 뚫는다.
-      phrases = deriveHardWords(line.text);
+    if (difficulty === "yaho") {
+      return [{
+        answer: line.text,
+        sentence: true,
+        aliases: getSafeAliases(line.text, line.aliases)
+      }];
     }
 
-    phrases = [...new Set((phrases || []).filter(Boolean))].sort((a,b) => b.length - a.length);
-    return phrases.map(p => ({ answer:p, sentence:false, aliases: line.aliases?.[p] || [] }));
+    const compounds = findCompoundTerms(line.text);
+    let phrases;
+
+    if (difficulty === "easy") {
+      phrases = (line.easy || [])
+        .filter(term => EASY_PRIORITY_TERMS.has(normalize(term)));
+
+    } else if (difficulty === "normal") {
+      // 보통: 고유 개념 + 핵심 행위어.
+      // 같은 용어가 반복돼도 실제 빈칸은 첫 등장만 사용한다.
+      phrases = [
+        ...compounds,
+        ...(line.easy || []),
+        ...(line.normal || []),
+        ...deriveNormalWords(line.text)
+      ];
+
+    } else {
+      // 어려움: 고유 복합어는 한 덩어리로 보존하고,
+      // 그 외 실질어는 거의 전부 빈칸 후보로 만든다.
+      phrases = [
+        ...compounds,
+        ...deriveHardWords(line.text)
+      ];
+    }
+
+    phrases = [...new Set((phrases || []).filter(Boolean))]
+      .sort((a,b) => b.length - a.length);
+
+    return phrases.map(answer => ({
+      answer,
+      sentence: false,
+      aliases: getSafeAliases(answer, line.aliases),
+      compound: answer.includes(" ") || COMPOUND_TERMS.includes(answer)
+    }));
   }
 
-  function findOccurrences(text, specs) {
+  function findOccurrences(text, specs, difficulty) {
     const found = [];
+
     specs.forEach((spec, specIndex) => {
       let from = 0;
+
       while (from < text.length) {
         const idx = text.indexOf(spec.answer, from);
         if (idx < 0) break;
-        found.push({start:idx, end:idx + spec.answer.length, specIndex, spec});
+
+        found.push({
+          start: idx,
+          end: idx + spec.answer.length,
+          specIndex,
+          spec
+        });
+
         from = idx + spec.answer.length;
       }
     });
-    found.sort((a,b) => a.start - b.start || (b.end-b.start)-(a.end-a.start));
+
+    // 같은 위치에서 겹치면 긴 복합어를 먼저 선택한다.
+    found.sort((a,b) =>
+      a.start - b.start ||
+      (b.end - b.start) - (a.end - a.start)
+    );
+
     const accepted = [];
     let lastEnd = -1;
+    const usedAnswers = new Set();
+
     found.forEach(item => {
-      if (item.start >= lastEnd) {
-        accepted.push(item);
-        lastEnd = item.end;
+      if (item.start < lastEnd) return;
+
+      const normalizedAnswer = normalize(item.spec.answer);
+
+      // 쉬움·보통: 같은 개념의 반복 입력은 첫 등장만.
+      // 어려움: 반복되는 실질어도 전부 회상하도록 유지.
+      if (difficulty !== "hard" && usedAnswers.has(normalizedAnswer)) {
+        return;
       }
+
+      accepted.push(item);
+      usedAnswers.add(normalizedAnswer);
+      lastEnd = item.end;
     });
-    return accepted;
+
+    const maxGaps = MAX_GAPS_BY_DIFFICULTY[difficulty] || 10;
+    if (accepted.length <= maxGaps) return accepted;
+
+    // 빈칸이 과도하면 고유 복합어·기출 핵심어·긴 용어를 우선한다.
+    const ranked = [...accepted].sort((a,b) => {
+      const aNorm = normalize(a.spec.answer);
+      const bNorm = normalize(b.spec.answer);
+
+      const score = item => {
+        const norm = normalize(item.spec.answer);
+        let value = 0;
+        if (item.spec.compound) value += 100;
+        if (EASY_PRIORITY_TERMS.has(norm)) value += 60;
+        value += Math.min(item.spec.answer.length, 20);
+        return value;
+      };
+
+      return score(b) - score(a) || a.start - b.start;
+    });
+
+    return ranked
+      .slice(0, maxGaps)
+      .sort((a,b) => a.start - b.start);
   }
 
-  function createGapInput(spec, sectionIndex, lineIndex, gapIndex) {
+  function createGapInput(spec, sectionIndex, lineIndex, gapIndex, lineId = "", answerOccurrence = 0) {
     const wrap = document.createElement("span");
     wrap.className = "gap-wrap";
 
@@ -1876,11 +2242,13 @@
     input.className = "gap-input" + (spec.sentence ? " sentence-gap" : "");
     input.dataset.answer = spec.answer;
     input.dataset.aliases = JSON.stringify(spec.aliases || []);
-    input.dataset.stateKey = makeStateKey(sectionIndex, lineIndex, gapIndex);
+    input.dataset.stateKey = makeStateKey(sectionIndex, lineIndex, gapIndex, lineId, spec.answer, answerOccurrence);
     input.dataset.sectionIndex = String(sectionIndex);
     input.dataset.lineIndex = String(lineIndex);
     input.dataset.gapIndex = String(gapIndex);
-    input.dataset.lineKey = `${sectionIndex}|${lineIndex}`;
+    input.dataset.lineId = lineId;
+    input.dataset.answerOccurrence = String(answerOccurrence);
+    input.dataset.lineKey = lineId || `${sectionIndex}|${lineIndex}`;
     input.autocomplete = "off";
     input.spellcheck = false;
     if (!spec.sentence) {
@@ -1893,6 +2261,10 @@
       if (saved.status === "correct") input.classList.add("correct");
       if (saved.status === "wrong") input.classList.add("wrong");
     }
+
+    input.addEventListener("focus", () => {
+      lastStudyFocus = { sectionIndex, lineIndex };
+    });
 
     input.addEventListener("input", () => {
       const state = fieldState[input.dataset.stateKey] || {};
@@ -1909,7 +2281,11 @@
       if (event.key === "Enter") {
         event.preventDefault();
 
-        // Enter 한 번: 현재 빈칸을 채점하고 즉시 다음 빈칸으로 이동한다.
+        if (!normalize(input.value)) {
+          input.focus();
+          return;
+        }
+
         gradeOne(input);
         requestAnimationFrame(() => advanceAfterGrade(input));
       } else if (event.key === "Tab") {
@@ -1923,19 +2299,20 @@
     return wrap;
   }
 
-  function renderLine(line, sectionIndex, lineIndex) {
+  function renderLine(line, sectionIndex, lineIndex, sectionTitle = "") {
     const p = document.createElement("div");
     p.className = "line-item";
     const difficulty = getCurrentDifficulty();
     const specs = buildGapSpecs(line, difficulty);
+    const lineId = makeLineStableId(sectionTitle, line.text);
 
     if (difficulty === "yaho") {
       p.innerHTML = "";
-      p.appendChild(createGapInput(specs[0], sectionIndex, lineIndex, 0));
+      p.appendChild(createGapInput(specs[0], sectionIndex, lineIndex, 0, lineId, 0));
       return p;
     }
 
-    const occurrences = findOccurrences(line.text, specs);
+    const occurrences = findOccurrences(line.text, specs, difficulty);
     if (!occurrences.length) {
       p.textContent = line.text;
       return p;
@@ -1943,9 +2320,24 @@
 
     let cursor = 0;
     let gapIndex = 0;
+    const answerOccurrences = {};
+
     occurrences.forEach(o => {
       if (o.start > cursor) p.appendChild(document.createTextNode(line.text.slice(cursor, o.start)));
-      p.appendChild(createGapInput(o.spec, sectionIndex, lineIndex, gapIndex++));
+
+      const answerKey = normalize(o.spec.answer);
+      const answerOccurrence = answerOccurrences[answerKey] || 0;
+      answerOccurrences[answerKey] = answerOccurrence + 1;
+
+      p.appendChild(createGapInput(
+        o.spec,
+        sectionIndex,
+        lineIndex,
+        gapIndex++,
+        lineId,
+        answerOccurrence
+      ));
+
       cursor = o.end;
     });
     if (cursor < line.text.length) p.appendChild(document.createTextNode(line.text.slice(cursor)));
@@ -1969,16 +2361,15 @@
       subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
 
     document.getElementById("studyStatus").textContent = quizMode
-      ? `${difficultyLabel(getCurrentDifficulty())} · ${difficultyDescription(getCurrentDifficulty())}`
-      : "원문 학습 중 · 난이도를 선택한 뒤 '퀴즈 시작'을 누르세요.";
+      ? "Enter: 개별 채점"
+      : "";
 
     const nav = document.getElementById("unitNav");
     nav.classList.toggle("hidden", sequence.length <= 1);
 
     if (sequence.length > 1 && subject && area) {
       document.getElementById("unitNavTitle").innerHTML =
-        `${currentAreaIndex + 1} / ${sequence.length} · ${subjectLabel} · ${area}` +
-        `<span class="unit-progress">단원 간 이동 시 입력·채점 상태가 유지됩니다.</span>`;
+        `${currentAreaIndex + 1} / ${sequence.length} · ${subjectLabel} · ${area}`;
 
       document.getElementById("prevUnit").disabled = currentAreaIndex === 0;
       document.getElementById("nextUnit").disabled = currentAreaIndex === sequence.length - 1;
@@ -2009,7 +2400,7 @@
 
       section.lines.forEach((line, lineIndex) => {
         if (quizMode) {
-          td.appendChild(renderLine(line, sectionIndex, lineIndex));
+          td.appendChild(renderLine(line, sectionIndex, lineIndex, section.title));
         } else {
           const p = document.createElement("div");
           p.className = "line-item";
@@ -2039,20 +2430,111 @@
     })[value] || value;
   }
 
-  function difficultyDescription(value) {
-    return ({
-      easy: "기출·극핵심 키워드",
-      normal: "핵심 개념·행위어",
-      hard: "실질어 거의 전부",
-      yaho: "문장 전체 암송"
-    })[value] || "빈칸 회상 중";
-  }
 
 
   // -------------------------
   // 오답 히스토리
   // -------------------------
   const HISTORY_KEY = "coreloop-wrong-history-v1";
+  const MASTERY_KEY = "coreloop-mastery-v1";
+
+  function loadMastery() {
+    try {
+      const data = JSON.parse(localStorage.getItem(MASTERY_KEY) || "{}");
+      return data && typeof data === "object" ? data : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function saveMastery(data) {
+    localStorage.setItem(MASTERY_KEY, JSON.stringify(data));
+  }
+
+  function conceptKeyForSubject(unit, group, lineId, answer, answerOccurrence = 0) {
+    return [
+      "subject",
+      unit.subject,
+      unit.area,
+      group,
+      lineId,
+      normalize(answer),
+      answerOccurrence
+    ].join("|");
+  }
+
+  function conceptKeyForGeneral(question) {
+    return `general|${normalize(question)}`;
+  }
+
+  function updateMastery(conceptKey, correct, attemptId) {
+    const all = loadMastery();
+    const now = Date.now();
+    const item = all[conceptKey] || {
+      correctCount: 0,
+      wrongCount: 0,
+      correctStreak: 0,
+      mastered: false,
+      nextReviewAt: 0
+    };
+
+    // 같은 풀이 시도에서 정답 확인/전체 채점을 반복해도 한 번만 기록한다.
+    if (item.lastAttemptId === attemptId) {
+      return item;
+    }
+
+    item.lastAttemptId = attemptId;
+    item.lastSeenAt = now;
+
+    if (correct) {
+      item.correctCount += 1;
+
+      // 직전 복습 예정 시점이 지난 뒤의 정답만 새로운 연속 정답으로 인정한다.
+      const due = !item.nextReviewAt || now >= item.nextReviewAt;
+
+      if (due) {
+        item.correctStreak += 1;
+      }
+
+      item.mastered = item.correctStreak >= 2;
+
+      if (due) {
+        const days =
+          item.correctStreak >= 3 ? 7 :
+          item.correctStreak >= 2 ? 3 : 1;
+        item.nextReviewAt = now + days * 24 * 60 * 60 * 1000;
+      }
+
+      item.lastResult = "correct";
+    } else {
+      item.wrongCount += 1;
+      item.correctStreak = 0;
+      item.mastered = false;
+      item.nextReviewAt = now;
+      item.lastResult = "wrong";
+    }
+
+    all[conceptKey] = item;
+    saveMastery(all);
+
+    if (item.mastered) {
+      removeMasteredHistory(conceptKey);
+    }
+
+    return item;
+  }
+
+  function removeMasteredHistory(conceptKey) {
+    if (!conceptKey) return;
+    const list = loadHistory();
+    const filtered = list.filter(item => item.conceptKey !== conceptKey);
+
+    if (filtered.length !== list.length) {
+      saveHistory(filtered);
+    }
+  }
+
+
 
   function loadHistory() {
     try {
@@ -2129,31 +2611,85 @@
       currentRandomUnit = null;
       quizMode = true;
 
-      const targetKey = [
-        item.subjectKey,
-        item.area,
-        item.groupKey || "content-system",
-        item.difficultyKey || "normal",
-        Number(item.sectionIndex || 0),
-        Number(item.lineIndex || 0),
-        Number(item.gapIndex || 0)
-      ].join("|");
+      currentAttemptId++;
 
-      delete fieldState[targetKey];
       renderStudy();
 
       requestAnimationFrame(() => {
-        const target = [...document.querySelectorAll("#studyArea .gap-input")]
-          .find(input => input.dataset.stateKey === targetKey);
-        if (target) target.focus();
-        else focusFirstEmpty();
+        const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
+
+        let target = null;
+
+        if (item.lineId && item.answerText) {
+          target = inputs.find(input =>
+            input.dataset.lineId === item.lineId &&
+            normalize(input.dataset.answer) === normalize(item.answerText) &&
+            Number(input.dataset.answerOccurrence || 0) === Number(item.answerOccurrence || 0)
+          );
+        }
+
+        // v4 이전 오답 기록 호환
+        if (!target) {
+          target = inputs.find(input =>
+            Number(input.dataset.sectionIndex) === Number(item.sectionIndex || 0) &&
+            Number(input.dataset.lineIndex) === Number(item.lineIndex || 0) &&
+            normalize(input.dataset.answer) === normalize(item.correctAnswer || item.answerText || "")
+          );
+        }
+
+        if (target) {
+          delete fieldState[target.dataset.stateKey];
+          target.value = "";
+          target.classList.remove("correct", "wrong");
+          target.focus();
+        } else {
+          focusFirstEmpty();
+        }
       });
     }
   }
 
+  function startWrongReview() {
+    const list = loadHistory();
+
+    if (!list.length) {
+      alert("복습할 오답이 없습니다.");
+      return;
+    }
+
+    const mastery = loadMastery();
+    const now = Date.now();
+
+    const candidates = list
+      .map(item => ({
+        item,
+        mastery: mastery[item.conceptKey] || null
+      }))
+      .filter(({mastery}) => !mastery?.mastered)
+      .sort((a,b) => {
+        const aDue = !a.mastery?.nextReviewAt || a.mastery.nextReviewAt <= now ? 1 : 0;
+        const bDue = !b.mastery?.nextReviewAt || b.mastery.nextReviewAt <= now ? 1 : 0;
+
+        if (aDue !== bDue) return bDue - aDue;
+
+        const aWrong = a.mastery?.wrongCount || a.item.attempts || 1;
+        const bWrong = b.mastery?.wrongCount || b.item.attempts || 1;
+
+        return bWrong - aWrong;
+      });
+
+    if (!candidates.length) {
+      alert("현재 미숙달 오답이 없습니다.");
+      return;
+    }
+
+    retryHistoryItem(candidates[0].item);
+  }
+
   function clearHistory() {
-    if (!confirm("오답노트 기록을 모두 지울까요?")) return;
+    if (!confirm("오답과 복습 기록을 모두 지울까요?")) return;
     localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(MASTERY_KEY);
     renderHistory();
   }
 
@@ -2286,22 +2822,41 @@
 
     appendResult(input.parentElement, state.status, input.dataset.answer);
 
-    if (!correct) {
-      const unit = getCurrentUnit();
-      const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
-      const sectionIndex = Number(input.dataset.sectionIndex);
-      const lineIndex = Number(input.dataset.lineIndex);
-      const context = sections?.[sectionIndex]?.lines?.[lineIndex]?.text || "";
+    const unit = getCurrentUnit();
+    const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
+    const sectionIndex = Number(input.dataset.sectionIndex);
+    const lineIndex = Number(input.dataset.lineIndex);
+    const context = sections?.[sectionIndex]?.lines?.[lineIndex]?.text || "";
+    const lineId = input.dataset.lineId || makeLineStableId(
+      sections?.[sectionIndex]?.title || "",
+      context
+    );
+    const answerOccurrence = Number(input.dataset.answerOccurrence || 0);
 
+    const conceptKey = conceptKeyForSubject(
+      unit,
+      getCurrentGroup(),
+      lineId,
+      input.dataset.answer,
+      answerOccurrence
+    );
+
+    updateMastery(conceptKey, correct, currentAttemptId);
+
+    if (!correct) {
       addWrongHistory({
         type: "subject",
         key: `subject|${unit.subject}|${unit.area}|${getCurrentGroup()}|${getCurrentDifficulty()}|${sectionIndex}|${lineIndex}|${input.dataset.answer}`,
+        conceptKey,
         subjectKey: unit.subject,
         groupKey: getCurrentGroup(),
         difficultyKey: getCurrentDifficulty(),
         sectionIndex,
         lineIndex,
         gapIndex: Number(input.dataset.gapIndex || 0),
+        lineId,
+        answerOccurrence,
+        answerText: input.dataset.answer,
         subjectLabel: subjectLabels[unit.subject] || unit.subject,
         area: unit.area,
         groupLabel: getCurrentGroup() === "content-system" ? "내용 체계"
@@ -2327,6 +2882,27 @@
     clearCurrentUnitState();
     renderStudy();
     focusFirstEmpty();
+  }
+
+  function focusMatchingLine(snapshot) {
+    if (!snapshot) return;
+
+    const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
+    const target =
+      inputs.find(input =>
+        Number(input.dataset.sectionIndex) === Number(snapshot.sectionIndex) &&
+        Number(input.dataset.lineIndex) === Number(snapshot.lineIndex) &&
+        !input.value
+      ) ||
+      inputs.find(input =>
+        Number(input.dataset.sectionIndex) === Number(snapshot.sectionIndex) &&
+        Number(input.dataset.lineIndex) === Number(snapshot.lineIndex)
+      );
+
+    if (target) {
+      target.focus();
+      target.scrollIntoView({block:"center", behavior:"smooth"});
+    }
   }
 
   function focusRelative(current, delta) {
@@ -2361,10 +2937,24 @@
   }
 
   function updateScore() {
-    let correct = 0, wrong = 0;
-    Object.values(fieldState).forEach(state => {
-      if (state.status === "correct") correct++;
-      if (state.status === "wrong") wrong++;
+    const unit = getCurrentUnit();
+    const currentPrefix = unit.subject && unit.area
+      ? [unit.subject, unit.area, getCurrentGroup(), getCurrentDifficulty()].join("|") + "|"
+      : "";
+
+    let currentCorrect = 0;
+    let currentWrong = 0;
+    let sessionCorrect = 0;
+    let sessionWrong = 0;
+
+    Object.entries(fieldState).forEach(([key, state]) => {
+      if (state.status === "correct") sessionCorrect++;
+      if (state.status === "wrong") sessionWrong++;
+
+      if (currentPrefix && key.startsWith(currentPrefix)) {
+        if (state.status === "correct") currentCorrect++;
+        if (state.status === "wrong") currentWrong++;
+      }
     });
 
     const visibleInputs = [...document.querySelectorAll("#studyArea .gap-input")];
@@ -2383,8 +2973,9 @@
       }
     });
 
-    const lineText = lineGroups.size ? ` · 문장완성 ${completedLines}/${lineGroups.size}` : "";
-    document.getElementById("scoreText").textContent = `정답 ${correct} | 오답 ${wrong}${lineText}`;
+    const lineText = lineGroups.size ? ` · 문장 ${completedLines}/${lineGroups.size}` : "";
+    document.getElementById("scoreText").textContent =
+      `현재 ${currentCorrect}✓ ${currentWrong}✕${lineText} · 누적 ${sessionCorrect}✓ ${sessionWrong}✕`;
   }
 
   // -------------------------
@@ -2410,6 +3001,7 @@
   }
 
   function renderGeneral() {
+    generalAttemptId++;
     const list = filteredGeneral();
     if (!list.length) return;
 
@@ -2435,15 +3027,48 @@
     setTimeout(() => answer.focus(), 0);
   }
 
+  function splitGeneralAnswers(raw) {
+    return String(raw || "")
+      .split(/[\n,;|/]+/)
+      .map(v => v.trim())
+      .filter(Boolean);
+  }
+
+  function isGeneralAnswerCorrect(q, rawUser) {
+    const normalizedWhole = normalize(rawUser);
+    if (!normalizedWhole) return false;
+
+    // 단답형은 정답/허용답안과 완전히 일치해야 한다.
+    if (q.answers.length === 1) {
+      return q.answers[0].some(alias => normalize(alias) === normalizedWhole);
+    }
+
+    const parts = splitGeneralAnswers(rawUser).map(normalize);
+
+    // 쉼표·줄바꿈 등으로 분리해서 적은 경우 항목 단위로 정확히 검사한다.
+    if (parts.length > 1) {
+      return q.answers.every(group =>
+        group.some(alias => parts.includes(normalize(alias)))
+      );
+    }
+
+    // 여러 답을 띄어쓰기만으로 연속 입력한 경우는 허용하되,
+    // 부정 표현이 섞인 답은 정답 처리하지 않는다.
+    if (/(아니다|아님|없다|없음|제외)/.test(String(rawUser))) {
+      return false;
+    }
+
+    return q.answers.every(group =>
+      group.some(alias => normalizedWhole.includes(normalize(alias)))
+    );
+  }
+
   function gradeGeneral() {
     const list = filteredGeneral();
     const q = list[generalIndex];
     const rawUser = document.getElementById("generalAnswer").value;
     const user = normalize(rawUser);
-
-    const ok = q.answers.every(group =>
-      group.some(a => user.includes(normalize(a)))
-    );
+    const ok = isGeneralAnswerCorrect(q, rawUser);
 
     const box = document.getElementById("generalResult");
     box.className = "general-result " + (ok ? "good" : "bad");
@@ -2456,11 +3081,15 @@
     generalGraded = true;
     generalLastGradedValue = normalize(rawUser);
 
+    const conceptKey = conceptKeyForGeneral(q.q);
+    updateMastery(conceptKey, ok, generalAttemptId);
+
     if (!ok) {
       const category = document.getElementById("generalCategory").value;
       addWrongHistory({
         type: "general",
         key: `general|${q.q}`,
+        conceptKey,
         categoryLabel: generalCategoryLabels[category] || category,
         question: q.q,
         context: q.q,
