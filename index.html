@@ -2173,6 +2173,8 @@
     input.dataset.lineKey = lineId || `${sectionIndex}|${lineIndex}`;
     input.autocomplete = "off";
     input.spellcheck = false;
+    input.enterKeyHint = "next";
+    input.setAttribute("enterkeyhint", "next");
     if (!spec.sentence) {
       input.style.width = Math.max(82, Math.min(260, spec.answer.length * 17 + 28)) + "px";
     }
@@ -2199,17 +2201,22 @@
       updateScore();
     });
 
+    const gradeAndAdvance = () => {
+      if (!normalize(input.value)) {
+        input.focus();
+        return;
+      }
+
+      gradeOne(input);
+      requestAnimationFrame(() => advanceAfterGrade(input));
+    };
+
     input.addEventListener("keydown", event => {
-      if (event.key === "Enter") {
+      // 모바일 키보드에서 enterKeyHint="next"는 '다음'으로 표시되지만
+      // 실제 이벤트는 Enter(13)로 전달된다.
+      if (event.key === "Enter" || event.keyCode === 13) {
         event.preventDefault();
-
-        if (!normalize(input.value)) {
-          input.focus();
-          return;
-        }
-
-        gradeOne(input);
-        requestAnimationFrame(() => advanceAfterGrade(input));
+        gradeAndAdvance();
       } else if (event.key === "Tab") {
         event.preventDefault();
         focusRelative(input, event.shiftKey ? -1 : 1);
@@ -2283,7 +2290,9 @@
       subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
 
     document.getElementById("studyStatus").textContent = quizMode
-      ? "Enter: 개별 채점"
+      ? (window.matchMedia("(max-width: 720px)").matches
+          ? "다음: 채점 후 이동"
+          : "Enter: 개별 채점")
       : "";
 
     const nav = document.getElementById("unitNav");
