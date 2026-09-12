@@ -756,8 +756,8 @@
           <label for="difficultySelect">난이도</label>
           <select id="difficultySelect" onchange="onDifficultyChange()">
             <option value="easy">쉬움</option>
-            <option value="normal" selected>보통</option>
-            <option value="hard">어려움</option>
+            <option value="normal" selected>보통 · 핵심 개념+행위</option>
+            <option value="hard">어려움 · 실질어 거의 전부</option>
             <option value="yaho">야~호!</option>
           </select>
         </div>
@@ -1720,45 +1720,109 @@
   // 6) 빈칸 생성
   // -------------------------
   const standaloneKeep = new Set([
-    "그리고","그러나","하지만","또한","따라서","또는","및","등","때","통해","위해","위해서는","것은","것이","수","데","에","의","를","을","은","는","이","가","와","과","로","으로"
+    "그리고","그러나","하지만","또한","따라서","또는","및","등","때","통해","위해","위해서는","것은","것이","수","데",
+    "에","의","를","을","은","는","이","가","와","과","로","으로","도","만","에서","에게","까지","부터","보다","처럼","만큼",
+    "위한","통한","따른","따라"
   ]);
+
+  // 어려움: 조사·접속사·어미 같은 기능어만 남기고 실질어를 거의 전부 빈칸으로 만든다.
+  // 예) "데이터를 효율적으로 관리하고" -> [데이터]를 [효율적]으로 [관리]하고
+  const HARD_SUFFIXES = [
+    "하도록","하면서","하므로","하였고","하였으며","하여야","하여","해서","하고","하는","하며","하면","한다","한",
+    "되도록","되면서","되므로","되었고","되어야","되어","되고","되는","되며","되면","된다","된",
+    "시키도록","시키면서","시키며","시키고","시키는","시킨",
+    "해야","하며","한다","이다","이며","이고","인",
+    "적으로","으로","에서","에게","까지","부터","보다","처럼","만큼","의","을","를","이","가","은","는","에","와","과","로","도","만"
+  ].sort((a,b) => b.length - a.length);
+
+  function lexicalStem(original) {
+    if (!original || standaloneKeep.has(original) || /\d/.test(original)) return "";
+
+    let word = original;
+
+    // 복합 조사/어미를 긴 것부터 제거한다. 한 번만 제거해서 과도한 어간 훼손을 막는다.
+    for (const suffix of HARD_SUFFIXES) {
+      if (word.endsWith(suffix) && word.length >= suffix.length + 2) {
+        const stem = word.slice(0, -suffix.length);
+        if (stem.length >= 2) {
+          word = stem;
+          break;
+        }
+      }
+    }
+
+    // 자주 나오는 서술형 어미 보정
+    const verbalPatterns = [
+      [/하(고|는|여|여서|며|면|도록|기|자|여야|였다|였으며|였습니다)$/u, ""],
+      [/되(고|는|어|어서|며|면|도록|기|었다|었으며|었습니다)$/u, ""],
+      [/(한다|된다|있다|없다)$/u, ""]
+    ];
+    for (const [pattern, replacement] of verbalPatterns) {
+      const candidate = word.replace(pattern, replacement);
+      if (candidate !== word && candidate.length >= 2) {
+        word = candidate;
+        break;
+      }
+    }
+
+    return standaloneKeep.has(word) || word.length <= 1 ? "" : word;
+  }
 
   function deriveHardWords(text) {
     const raw = text.match(/[가-힣A-Za-z0-9*]+(?:·[가-힣A-Za-z0-9*]+)*/g) || [];
     const seen = new Set();
     const words = [];
-    const particles = ["에서","에게","까지","부터","보다","처럼","만큼","으로","의","을","를","이","가","에","와","과","로","도","만","은","는"];
 
     raw.forEach(original => {
-      if (standaloneKeep.has(original)) return;
-      if (/\d/.test(original)) return; // 성취기준 코드·수치는 남긴다.
-
-      let word = original;
-      for (const particle of particles) {
-        if (!word.endsWith(particle) || word.length <= particle.length + 1) continue;
-        const stem = word.slice(0, -particle.length);
-
-        // '해결하는/활용되는'처럼 관형형 어미인 은·는을 조사로 오인하지 않도록 보수적으로 처리한다.
-        if ((particle === "은" || particle === "는") && /[하되있없않같되]$/.test(stem)) continue;
-
-        word = stem;
-        break;
+      const word = lexicalStem(original);
+      if (!word) return;
+      const key = normalize(word);
+      if (!seen.has(key)) {
+        seen.add(key);
+        words.push(word);
       }
-
-      if (standaloneKeep.has(word) || word.length <= 1) return;
-      if (!seen.has(word)) { seen.add(word); words.push(word); }
     });
+
     return words;
   }
 
   const EASY_PRIORITY_TERMS = new Set(["하드웨어", "소프트웨어", "컴퓨팅 시스템", "운영 체제", "피지컬 컴퓨팅", "네트워크", "사물인터넷", "사물인터넷 시스템", "디지털 데이터", "아날로그 데이터", "디지털 형태", "압축", "디지털 데이터 압축", "암호화", "빅데이터", "데이터 구조화", "핵심요소", "핵심요소 추출", "추상화", "상태 정의", "알고리즘", "정렬", "정렬 알고리즘", "탐색", "탐색 알고리즘", "논리 연산", "중첩 제어 구조", "함수", "디버거", "자료형", "표준입출력", "파일입출력", "다차원 데이터", "다차원 데이터 구조", "클래스", "인스턴스", "객체", "지능 에이전트", "기계학습", "기계학습 모델", "지도학습", "비지도학습", "강화학습", "회귀", "분류", "군집", "정보 보호", "정보보안", "디지털 윤리", "개인 정보", "튜링 테스트", "맹목적 탐색", "정보 이용 탐색", "정보 이용 탐색 알고리즘", "A*", "규칙", "사실", "추론", "훈련 데이터", "테스트 데이터", "인공신경망", "딥러닝", "은닉층", "컴퓨터 비전", "음성 인식", "자연어처리", "윤리적 딜레마", "인공지능 윤리", "알고리즘 편향", "데이터 편향", "지속가능발전목표", "데이터 과학", "데이터 기반 의사 결정", "정형 데이터", "비정형 데이터", "데이터셋", "데이터베이스", "데이터 전처리", "이상치", "결측치", "정규화", "회귀 분석", "군집 분석", "연관 분석", "지지도", "신뢰도", "향상도", "탐색적 데이터 분석", "미디어 아트", "웨어러블 장치", "시뮬레이션", "시뮬레이션 모델", "소프트웨어 스타트업", "소프트웨어 스타트업 프로젝트", "오픈소스", "재귀관계", "재귀함수", "연결 리스트", "스택", "큐", "트리", "그래프", "깊이 우선 탐색", "너비 우선 탐색", "탐색기반 알고리즘", "관계기반 알고리즘", "알고리즘 복잡도", "분기한정법", "탐욕법", "분할정복법", "동적계획법", "빅오 표기법", "구조화", "복호화", "사용자 요구", "디지털 문화", "인공지능 소양", "컴퓨팅 사고력", "디지털 문화 소양"].map(normalize));
 
+  // 보통에서 빈칸으로 낼 가치가 높은 '행위' 어간.
+  // 어려움과 달리 일반적인 수식어·보조 명사·저정보 단어는 남긴다.
+  const NORMAL_ACTION_STEMS = new Set([
+    "분석","설계","구현","비교","평가","탐색","수집","분류","처리","관리","보호","해석","예측","적용","활용","생성","표현","구성","선택",
+    "개발","개선","공유","추론","학습","해결","검증","설명","파악","인식","판단","도출","통합","시각화","저장","전처리","모델링","정규화","압축","암호화","복호화","분해","정의"
+  ].map(normalize));
+
+  // 보통에서는 일부러 남겨서 어려움과 체감 차이를 만든다.
+  const NORMAL_LOW_INFORMATION = new Set([
+    "문제","과정","결과","방법","가치","역할","필요","필요성","중요","중요성","도움","관계","특성","사례","분야","사회","사회적","기술적","다양한","적합한","새로운","효율적","실생활","기반","방안","환경","수준","활동","내용","목적","방식","의미"
+  ].map(normalize));
+
   function deriveNormalWords(text) {
-    // 보통은 어려움보다 덜 촘촘하게: 조사 제거 후 3글자 이상 실질어와 핵심 용어 중심.
     const hardWords = deriveHardWords(text);
-    return hardWords.filter(word =>
-      word.length >= 3 || EASY_PRIORITY_TERMS.has(normalize(word))
-    );
+    const selected = [];
+    const seen = new Set();
+
+    hardWords.forEach(word => {
+      const n = normalize(word);
+      if (!n || NORMAL_LOW_INFORMATION.has(n)) return;
+
+      const isPriorityConcept = EASY_PRIORITY_TERMS.has(n);
+      const isCoreAction = NORMAL_ACTION_STEMS.has(n);
+      const looksDomainSpecific =
+        word.length >= 4 && /(?:데이터|알고리즘|프로그램|프로그래밍|컴퓨팅|인공지능|소프트웨어|네트워크|시스템|모델|학습|윤리|보안|정보|디지털|분석|과학|신경망|시뮬레이션|스타트업|프로젝트)/u.test(word);
+
+      if (isPriorityConcept || isCoreAction || looksDomainSpecific) {
+        if (!seen.has(n)) {
+          seen.add(n);
+          selected.push(word);
+        }
+      }
+    });
+
+    return selected;
   }
 
   function buildGapSpecs(line, difficulty) {
@@ -1768,8 +1832,11 @@
     if (difficulty === "easy") {
       phrases = (line.easy || []).filter(term => EASY_PRIORITY_TERMS.has(normalize(term)));
     } else if (difficulty === "normal") {
-      phrases = [...(line.normal || []), ...deriveNormalWords(line.text)];
+      // 사람이 지정한 normal 키워드가 있으면 반드시 포함하고,
+      // 나머지는 교육과정 개념어 + 핵심 행위어만 자동으로 보충한다.
+      phrases = [...(line.easy || []), ...(line.normal || []), ...deriveNormalWords(line.text)];
     } else {
+      // 어려움은 조사·접속사 등을 제외한 거의 모든 실질어를 어간 단위로 뚫는다.
       phrases = deriveHardWords(line.text);
     }
 
@@ -1902,7 +1969,7 @@
       subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
 
     document.getElementById("studyStatus").textContent = quizMode
-      ? `${difficultyLabel(getCurrentDifficulty())} 난이도 · 빈칸 회상 중`
+      ? `${difficultyLabel(getCurrentDifficulty())} · ${difficultyDescription(getCurrentDifficulty())}`
       : "원문 학습 중 · 난이도를 선택한 뒤 '퀴즈 시작'을 누르세요.";
 
     const nav = document.getElementById("unitNav");
@@ -1970,6 +2037,15 @@
       hard: "어려움",
       yaho: "야~호!"
     })[value] || value;
+  }
+
+  function difficultyDescription(value) {
+    return ({
+      easy: "기출·극핵심 키워드",
+      normal: "핵심 개념·행위어",
+      hard: "실질어 거의 전부",
+      yaho: "문장 전체 암송"
+    })[value] || "빈칸 회상 중";
   }
 
 
