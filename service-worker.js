@@ -1,4 +1,4 @@
-const CACHE_NAME = "curriloop-mobile-v2-next-20260912";
+const CACHE_NAME = "curriloop-mobile-v3-curriculum-labels-20260912";
 const PRECACHE = [
   "/",
   "/index.html",
