@@ -1,7 +1,7 @@
 {
   "name": "CurriLoop",
   "short_name": "CurriLoop",
-  "description": "2022 개정 정보과 교육과정 원문 기반 빈칸 학습 도구",
+  "description": "2022 개정 정보과 교육과정 원문 기반 빈칸 학습 도구 CurriLoop v5",
   "id": "/",
   "start_url": "/",
   "scope": "/",
