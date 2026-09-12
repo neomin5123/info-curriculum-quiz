@@ -1,50 +1,21 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>CoreLoop</title>
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans KR",
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
       background: #f6f7f9;
       color: #202124;
     }
-
-    header {
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    .header-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 24px 20px 0;
-    }
-
-    h1 {
-      margin: 0 0 22px;
-      font-size: 24px;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 28px;
-    }
-
+    header { background: white; border-bottom: 1px solid #e5e7eb; }
+    .header-inner { max-width: 900px; margin: 0 auto; padding: 24px 20px 0; }
+    h1 { margin: 0 0 22px; font-size: 24px; }
+    .tabs { display: flex; gap: 28px; }
     .tab {
       padding: 12px 4px;
       border: none;
@@ -55,46 +26,18 @@
       color: #777;
       border-bottom: 3px solid transparent;
     }
-
-    .tab.active {
-      color: #111;
-      border-bottom-color: #111;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 32px auto;
-      padding: 0 20px;
-    }
-
+    .tab.active { color: #111; border-bottom-color: #111; }
+    main { max-width: 900px; margin: 32px auto; padding: 0 20px; }
     .panel {
       background: white;
       border: 1px solid #e5e7eb;
       border-radius: 14px;
       padding: 28px;
     }
-
-    .panel h2 {
-      margin-top: 0;
-      font-size: 22px;
-    }
-
-    .description {
-      color: #666;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    .field {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
+    .panel h2 { margin-top: 0; font-size: 22px; }
+    .description { color: #666; margin-bottom: 28px; line-height: 1.6; }
+    .field { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; }
     select {
       width: 100%;
       padding: 13px 14px;
@@ -103,7 +46,6 @@
       border-radius: 9px;
       background: white;
     }
-
     .start-button {
       width: 100%;
       margin-top: 8px;
@@ -116,27 +58,23 @@
       font-weight: 600;
       cursor: pointer;
     }
-
     .secondary-button {
       margin-top: 12px;
       background: white;
       color: #111;
       border: 1px solid #d1d5db;
     }
-
-    .hidden {
-      display: none;
-    }
-
-    /* 문제 화면 */
-
-    .quiz-meta {
+    .hidden { display: none !important; }
+    .quiz-top {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 18px;
+      color: #666;
+      font-size: 14px;
     }
-
+    .quiz-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
     .chip {
       padding: 7px 11px;
       border-radius: 20px;
@@ -144,20 +82,19 @@
       font-size: 14px;
       color: #555;
     }
-
     .question-box {
       background: #f8f9fa;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 28px;
-      margin-bottom: 24px;
-      line-height: 1.7;
+      padding: 26px;
+      margin-bottom: 22px;
+      line-height: 1.75;
       font-size: 18px;
+      white-space: pre-wrap;
     }
-
     .answer-input {
       width: 100%;
-      min-height: 130px;
+      min-height: 120px;
       resize: vertical;
       padding: 14px;
       border: 1px solid #d1d5db;
@@ -166,878 +103,710 @@
       font-size: 16px;
       line-height: 1.6;
     }
-
     .result-box {
       margin-top: 18px;
-      padding: 16px;
-      border-radius: 9px;
-      background: #f6f7f9;
-      line-height: 1.6;
+      padding: 18px;
+      border-radius: 10px;
+      line-height: 1.7;
+      border: 1px solid #e5e7eb;
     }
-
-    .button-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .button-row button {
-      flex: 1;
-    }
+    .result-box.correct { background: #f0fdf4; border-color: #bbf7d0; }
+    .result-box.wrong { background: #fff7ed; border-color: #fed7aa; }
+    .answer-label { margin-top: 8px; font-weight: 700; }
+    .button-row { display: flex; gap: 12px; margin-top: 18px; }
+    .button-row button { flex: 1; }
+    .empty-message { text-align: center; padding: 35px 10px; color: #666; line-height: 1.7; }
+    .summary-number { font-size: 34px; font-weight: 800; margin: 14px 0; }
 
     @media (max-width: 600px) {
-
-      .header-inner {
-        padding-top: 18px;
-      }
-
-      main {
-        margin-top: 20px;
-      }
-
-      .panel {
-        padding: 20px;
-      }
-
-      .button-row {
-        flex-direction: column;
-      }
+      .header-inner { padding-top: 18px; }
+      main { margin-top: 20px; }
+      .panel { padding: 20px; }
+      .button-row { flex-direction: column; }
+      .quiz-top { align-items: flex-start; flex-direction: column; gap: 4px; }
     }
   </style>
 </head>
-
-
 <body>
-
 <header>
-
   <div class="header-inner">
-
     <h1>CoreLoop</h1>
-
     <nav class="tabs">
-
-      <button
-        class="tab active"
-        id="generalTab"
-        onclick="showTab('general')"
-      >
-        총론
-      </button>
-
-      <button
-        class="tab"
-        id="subjectTab"
-        onclick="showTab('subject')"
-      >
-        각론
-      </button>
-
+      <button class="tab active" id="generalTab" onclick="showTab('general')">총론</button>
+      <button class="tab" id="subjectTab" onclick="showTab('subject')">각론</button>
     </nav>
-
   </div>
-
 </header>
 
-
 <main>
-
-  <!-- ========================= -->
-  <!-- 총론 설정 -->
-  <!-- ========================= -->
-
   <section id="generalPage">
-
     <div class="panel">
-
       <h2>총론 학습</h2>
-
-      <p class="description">
-        국가 교육과정 총론과 정보과 교육과정의 주요 변천 내용을 학습합니다.
-        선택한 범위의 문제를 순서대로 모두 풉니다.
-      </p>
-
+      <p class="description">선택한 범위에 등록된 총론 문제를 한 세트로 모두 풉니다.</p>
       <div class="field">
-
-        <label for="generalCategory">
-          학습 범위
-        </label>
-
+        <label for="generalCategory">학습 범위</label>
         <select id="generalCategory">
-
-          <option value="all">
-            전체
-          </option>
-
-          <option value="competency">
-            추구하는 인간상 · 핵심역량
-          </option>
-
-          <option value="history">
-            정보과 교육과정 변천
-          </option>
-
-          <option value="hours">
-            시수 · 편제
-          </option>
-
-          <option value="subjects">
-            교과 · 선택과목 변화
-          </option>
-
-          <option value="comparison">
-            2015 · 2022 개정 비교
-          </option>
-
+          <option value="all">전체</option>
+          <option value="competency">추구하는 인간상 · 핵심역량</option>
+          <option value="history">정보과 교육과정 변천</option>
+          <option value="hours">시수 · 편제</option>
+          <option value="subjects">교과 · 선택과목 변화</option>
+          <option value="comparison">2015 · 2022 개정 비교</option>
         </select>
-
       </div>
-
-      <button
-        class="start-button"
-        onclick="startGeneralQuiz()"
-      >
-        총론 문제 시작
-      </button>
-
+      <button class="start-button" onclick="startGeneralQuiz()">총론 문제 시작</button>
     </div>
-
   </section>
 
-
-  <!-- ========================= -->
-  <!-- 각론 설정 -->
-  <!-- ========================= -->
-
-  <section
-    id="subjectPage"
-    class="hidden"
-  >
-
+  <section id="subjectPage" class="hidden">
     <div class="panel">
-
       <h2>각론 학습</h2>
-
-      <p class="description">
-        과목, 영역, 출제 항목과 난이도를 선택하여 문제를 풉니다.
-      </p>
-
-
-      <!-- 과목 -->
+      <p class="description">과목, 영역, 출제 항목과 난이도를 선택하여 등록된 문제를 풉니다.</p>
 
       <div class="field">
-
-        <label for="subjectSelect">
-          과목
-        </label>
-
-        <select
-          id="subjectSelect"
-          onchange="updateUnits()"
-        >
-
-          <option value="all">
-            전체
-          </option>
-
-          <option value="middle-info">
-            중학교 정보
-          </option>
-
-          <option value="high-info">
-            고등학교 정보
-          </option>
-
-          <option value="ai-basic">
-            인공지능 기초
-          </option>
-
-          <option value="data-science">
-            데이터 과학
-          </option>
-
-          <option value="software-life">
-            소프트웨어와 생활
-          </option>
-
-          <option value="info-science">
-            정보과학
-          </option>
-
+        <label for="subjectSelect">과목</label>
+        <select id="subjectSelect" onchange="updateUnits()">
+          <option value="all">전체</option>
+          <option value="middle-info">중학교 정보</option>
+          <option value="high-info">고등학교 정보</option>
+          <option value="ai-basic">인공지능 기초</option>
+          <option value="data-science">데이터 과학</option>
+          <option value="software-life">소프트웨어와 생활</option>
+          <option value="info-science">정보과학</option>
         </select>
-
       </div>
 
-
-      <!-- 영역 -->
-
       <div class="field">
-
-        <label for="unitSelect">
-          영역
-        </label>
-
-        <select id="unitSelect">
-
-          <option value="all">
-            전체
-          </option>
-
-        </select>
-
+        <label for="unitSelect">영역</label>
+        <select id="unitSelect"><option value="all">전체</option></select>
       </div>
 
-
-      <!-- 출제 항목 -->
-
       <div class="field">
-
-        <label for="contentSelect">
-          출제 항목
-        </label>
-
+        <label for="contentSelect">출제 항목</label>
         <select id="contentSelect">
-
-          <option value="all">
-            전체
-          </option>
-
-          <option value="content-system">
-            내용 체계
-          </option>
-
-          <option value="achievement">
-            성취기준
-          </option>
-
+          <option value="all">전체</option>
+          <option value="content-system">내용 체계</option>
+          <option value="achievement">성취기준</option>
         </select>
-
       </div>
 
-
-      <!-- 난이도 -->
-
       <div class="field">
-
-        <label for="difficultySelect">
-          난이도
-        </label>
-
+        <label for="difficultySelect">난이도</label>
         <select id="difficultySelect">
-
-          <option value="all">
-            전체
-          </option>
-
-          <option value="easy">
-            초급
-          </option>
-
-          <option value="normal">
-            중급
-          </option>
-
-          <option value="hard">
-            고급
-          </option>
-
-          <option value="recall">
-            암송
-          </option>
-
+          <option value="all">전체</option>
+          <option value="easy">초급</option>
+          <option value="normal">중급</option>
+          <option value="hard">고급</option>
+          <option value="recall">암송</option>
         </select>
-
       </div>
 
-
-      <button
-        class="start-button"
-        onclick="startSubjectQuiz(false)"
-      >
-        선택 범위 시작
-      </button>
-
-      <button
-        class="start-button secondary-button"
-        onclick="startSubjectQuiz(true)"
-      >
-        완전 랜덤
-      </button>
-
+      <button class="start-button" onclick="startSubjectQuiz(false)">선택 범위 시작</button>
+      <button class="start-button secondary-button" onclick="startSubjectQuiz(true)">완전 랜덤</button>
     </div>
-
   </section>
 
-
-  <!-- ========================= -->
-  <!-- 문제 화면 -->
-  <!-- ========================= -->
-
-  <section
-    id="quizPage"
-    class="hidden"
-  >
-
+  <section id="quizPage" class="hidden">
     <div class="panel">
-
-      <h2 id="quizTitle">
-        문제
-      </h2>
-
-      <div
-        class="quiz-meta"
-        id="quizMeta"
-      >
+      <div class="quiz-top">
+        <span id="progressText">1 / 1</span>
+        <span id="scoreText">정답 0 · 오답 0</span>
       </div>
 
+      <h2 id="quizTitle">문제</h2>
+      <div class="quiz-meta" id="quizMeta"></div>
+      <div class="question-box" id="questionText"></div>
 
-      <div
-        class="question-box"
-        id="questionText"
-      >
-        문제
+      <div id="answerArea">
+        <div class="field">
+          <label for="answerInput">답안</label>
+          <textarea id="answerInput" class="answer-input" placeholder="정답을 입력하세요."></textarea>
+        </div>
+
+        <button id="checkButton" class="start-button" onclick="checkAnswer()">정답 확인</button>
+        <div id="resultBox" class="result-box hidden"></div>
+
+        <div class="button-row">
+          <button class="start-button secondary-button" onclick="backToSettings()">설정으로 돌아가기</button>
+          <button id="nextButton" class="start-button secondary-button" onclick="nextQuestion()">다음 문제</button>
+        </div>
       </div>
 
-
-      <div class="field">
-
-        <label for="answerInput">
-          답안
-        </label>
-
-        <textarea
-          id="answerInput"
-          class="answer-input"
-          placeholder="정답을 입력하세요."
-        ></textarea>
-
+      <div id="summaryArea" class="hidden empty-message">
+        <div>학습 완료</div>
+        <div id="summaryScore" class="summary-number"></div>
+        <div id="summaryDetail"></div>
+        <button class="start-button" style="margin-top:24px" onclick="backToSettings()">설정으로 돌아가기</button>
       </div>
-
-
-      <button
-        class="start-button"
-        onclick="checkAnswerPlaceholder()"
-      >
-        정답 확인
-      </button>
-
-
-      <div
-        id="resultBox"
-        class="result-box hidden"
-      >
-      </div>
-
-
-      <div class="button-row">
-
-        <button
-          class="start-button secondary-button"
-          onclick="backToSettings()"
-        >
-          설정으로 돌아가기
-        </button>
-
-        <button
-          class="start-button secondary-button"
-          onclick="nextPlaceholderQuestion()"
-        >
-          다음 문제
-        </button>
-
-      </div>
-
     </div>
-
   </section>
-
 </main>
 
-
 <script>
-
-  /* ========================================
-     과목별 영역
-  ======================================== */
-
   const subjectAreas = {
-
-    "all": [
-      "전체"
-    ],
-
-
-    "middle-info": [
-      "전체",
-      "컴퓨팅 시스템",
-      "데이터",
-      "알고리즘과 프로그래밍",
-      "인공지능",
-      "디지털 문화"
-    ],
-
-
-    "high-info": [
-      "전체",
-      "컴퓨팅 시스템",
-      "데이터",
-      "알고리즘과 프로그래밍",
-      "인공지능",
-      "디지털 문화"
-    ],
-
-
-    "ai-basic": [
-      "전체",
-      "인공지능의 이해",
-      "인공지능과 학습",
-      "인공지능의 사회적 영향",
-      "인공지능 프로젝트"
-    ],
-
-
-    "data-science": [
-      "전체",
-      "데이터 과학의 이해",
-      "데이터 준비와 분석",
-      "데이터 모델링과 평가",
-      "데이터 과학 프로젝트"
-    ],
-
-
-    "software-life": [
-      "전체",
-      "세상을 변화시키는 소프트웨어",
-      "창작을 지원하는 소프트웨어",
-      "현상을 분석하는 소프트웨어",
-      "모의 실험하는 소프트웨어",
-      "가치를 창출하는 소프트웨어"
-    ],
-
-
-    /*
-      2022 개정 정보과학
-      [12정과01] 프로그래밍
-      [12정과02] 데이터 구조
-      [12정과03] 알고리즘
-      [12정과04] 정보과학 프로젝트
-    */
-
-    "info-science": [
-      "전체",
-      "프로그래밍",
-      "데이터 구조",
-      "알고리즘",
-      "정보과학 프로젝트"
-    ]
-
+    "all": ["전체"],
+    "middle-info": ["전체", "컴퓨팅 시스템", "데이터", "알고리즘과 프로그래밍", "인공지능", "디지털 문화"],
+    "high-info": ["전체", "컴퓨팅 시스템", "데이터", "알고리즘과 프로그래밍", "인공지능", "디지털 문화"],
+    "ai-basic": ["전체", "인공지능의 이해", "인공지능과 학습", "인공지능의 사회적 영향", "인공지능 프로젝트"],
+    "data-science": ["전체", "데이터 과학의 이해", "데이터 준비와 분석", "데이터 모델링과 평가", "데이터 과학 프로젝트"],
+    "software-life": ["전체", "세상을 변화시키는 소프트웨어", "창작을 지원하는 소프트웨어", "현상을 분석하는 소프트웨어", "모의 실험하는 소프트웨어", "가치를 창출하는 소프트웨어"],
+    "info-science": ["전체", "프로그래밍", "데이터 구조", "알고리즘", "정보과학 프로젝트"]
   };
 
+  const questionBank = [
+    {
+      id: "g-core-competencies",
+      section: "general",
+      category: "competency",
+      subtype: "핵심역량",
+      source: "2022 개정 총론",
+      prompts: {
+        normal: "2022 개정 교육과정의 핵심역량 6가지를 모두 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["자기관리 역량", "지식정보처리 역량", "창의적 사고 역량", "심미적 감성 역량", "협력적 소통 역량", "공동체 역량"],
+      displayAnswer: "자기관리 역량, 지식정보처리 역량, 창의적 사고 역량, 심미적 감성 역량, 협력적 소통 역량, 공동체 역량",
+      explanation: "순서는 채점하지 않고 6개 용어가 모두 포함되었는지만 확인합니다."
+    },
+    {
+      id: "g-human-image",
+      section: "general",
+      category: "competency",
+      subtype: "추구하는 인간상",
+      source: "2022 개정 총론",
+      prompts: { normal: "2022 개정 교육과정이 추구하는 인간상 4가지를 모두 쓰시오." },
+      answerMode: "containsAll",
+      required: ["자기주도적인 사람", "창의적인 사람", "교양 있는 사람", "더불어 사는 사람"],
+      displayAnswer: "자기주도적인 사람, 창의적인 사람, 교양 있는 사람, 더불어 사는 사람",
+      explanation: "순서는 채점하지 않습니다."
+    },
+    {
+      id: "g-2009-middle-info",
+      section: "general",
+      category: "history",
+      subtype: "교육과정 변천",
+      source: "교육과정 변천",
+      prompts: { normal: "중학교의 정보Ⅰ·정보Ⅱ·정보Ⅲ이 하나의 과목인 '정보'로 통합된 개정 교육과정은?" },
+      answerMode: "exactAny",
+      accepted: ["2009 개정 교육과정", "2009 개정"],
+      displayAnswer: "2009 개정 교육과정",
+      explanation: "중학교 정보Ⅰ·Ⅱ·Ⅲ → 정보 통합 시점을 묻는 문항입니다."
+    },
+    {
+      id: "g-2011-infoscience",
+      section: "general",
+      category: "history",
+      subtype: "교육과정 변천",
+      source: "교육과정 변천",
+      prompts: { normal: "정보과학Ⅰ·정보과학Ⅱ가 '정보과학'으로 통합된 고시 시기를 쓰시오." },
+      answerMode: "containsAll",
+      required: ["2011"],
+      displayAnswer: "2011년(교육과학기술부 고시 제2011-361호)",
+      explanation: "큰 틀에서는 2009 개정 교육과정 시기이지만 통합 고시는 2011년입니다."
+    },
+    {
+      id: "g-hours-2015",
+      section: "general",
+      category: "hours",
+      subtype: "중학교 정보 시수",
+      source: "2015 개정",
+      prompts: { normal: "2015 개정 교육과정에서 중학교 정보의 최소 이수 시간은 몇 시간인가?" },
+      answerMode: "exactAny",
+      accepted: ["34시간", "34"],
+      displayAnswer: "34시간",
+      explanation: "2015 개정에서 중학교 정보가 필수화되면서 최소 34시간이 제시되었습니다."
+    },
+    {
+      id: "g-hours-2022",
+      section: "general",
+      category: "hours",
+      subtype: "중학교 정보 시수",
+      source: "2022 개정",
+      prompts: { normal: "2022 개정 교육과정에서 중학교 정보의 최소 이수 시간은 몇 시간인가?" },
+      answerMode: "exactAny",
+      accepted: ["68시간", "68"],
+      displayAnswer: "68시간",
+      explanation: "2015 개정의 34시간에서 2022 개정은 68시간으로 확대되었습니다."
+    },
+    {
+      id: "g-compare-hours",
+      section: "general",
+      category: "comparison",
+      subtype: "2015 · 2022 비교",
+      source: "중학교 정보 시수",
+      prompts: { normal: "중학교 정보 최소 이수 시간을 2015 개정과 2022 개정 순서로 각각 쓰시오." },
+      answerMode: "containsAll",
+      required: ["34", "68"],
+      displayAnswer: "2015 개정: 34시간 / 2022 개정: 68시간",
+      explanation: "채점은 두 수치가 모두 포함되었는지 확인합니다."
+    },
+    {
+      id: "g-electives-2022",
+      section: "general",
+      category: "subjects",
+      subtype: "고등학교 선택과목",
+      source: "2022 개정",
+      prompts: { normal: "2022 개정 고등학교 정보 교과에서 일반 선택 과목의 명칭을 쓰시오." },
+      answerMode: "exactAny",
+      accepted: ["정보"],
+      displayAnswer: "정보",
+      explanation: "인공지능 기초·데이터 과학·정보과학은 진로 선택, 소프트웨어와 생활은 융합 선택입니다."
+    },
 
-  /* ========================================
-     현재 문제의 출처
-  ======================================== */
+    {
+      id: "m-algo-automation",
+      section: "subject",
+      subject: "middle-info",
+      area: "알고리즘과 프로그래밍",
+      group: "content-system",
+      subtype: "핵심 아이디어",
+      source: "2022 개정",
+      prompts: {
+        easy: "핵심 아이디어: '___을 고려해 설계된 알고리즘은 컴퓨터가 이해할 수 있는 언어로 구현되어 생활을 더욱 편리하게 하는 데 활용된다.' 빈칸을 쓰시오. (힌트: 자동○)",
+        normal: "핵심 아이디어의 빈칸을 쓰시오.\n'___을 고려해 설계된 알고리즘은 컴퓨터가 이해할 수 있는 언어로 구현되어 생활을 더욱 편리하게 하는 데 활용된다.'",
+        hard: "중학교 정보 「알고리즘과 프로그래밍」 영역에서 알고리즘을 컴퓨터가 이해할 수 있는 언어로 구현할 때 고려해야 하는 핵심 개념은?",
+        recall: "중학교 정보 「알고리즘과 프로그래밍」 핵심 아이디어 중 알고리즘 구현과 관련된 핵심 용어를 쓰시오."
+      },
+      answerMode: "exactAny",
+      accepted: ["자동화"],
+      displayAnswer: "자동화",
+      explanation: "알고리즘 설계와 프로그래밍 구현을 연결하는 핵심 용어입니다."
+    },
+    {
+      id: "m-algo-abstraction",
+      section: "subject",
+      subject: "middle-info",
+      area: "알고리즘과 프로그래밍",
+      group: "content-system",
+      subtype: "내용 요소 · 가치·태도",
+      source: "2022 개정",
+      prompts: {
+        easy: "'문제 분석을 통한 ___의 중요성을 이해하고, 실생활 문제 해결을 실천하는 자세'의 빈칸을 쓰시오. (힌트: 문제 ○○화)",
+        normal: "중학교 정보 알고리즘과 프로그래밍 영역의 가치·태도 내용 요소에서 '문제 분석을 통한 ___의 중요성'이라고 제시된 용어를 쓰시오.",
+        hard: "문제를 분석하여 해결 가능한 형태로 구조화하는 과정의 중요성을 강조하는 내용 요소의 공식 용어를 쓰시오.",
+        recall: "중학교 정보 알고리즘과 프로그래밍 영역의 가치·태도 내용 요소 중 '문제 분석'과 직접 연결되는 항목을 쓰시오."
+      },
+      answerMode: "exactAny",
+      accepted: ["문제 추상화"],
+      displayAnswer: "문제 추상화",
+      explanation: "공식 내용 요소 표현을 기준으로 채점합니다."
+    },
+    {
+      id: "m-algo-standard-90304",
+      section: "subject",
+      subject: "middle-info",
+      area: "알고리즘과 프로그래밍",
+      group: "achievement",
+      subtype: "성취기준",
+      source: "[9정03-04]",
+      prompts: {
+        easy: "[9정03-04] '사례를 중심으로 문제 해결에 적합한 ___을 선택하여 알고리즘을 설계한다.' 빈칸을 쓰시오.",
+        normal: "[9정03-04]에서 사례를 중심으로 문제 해결에 적합한 무엇을 선택하여 알고리즘을 설계하는가?",
+        hard: "[9정03-04]의 핵심 대상어를 쓰시오: 문제 해결에 적합한 ○○을 선택하여 알고리즘을 설계한다.",
+        recall: "[9정03-04] 성취기준의 핵심 문장을 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["전략"],
+      displayAnswer: "사례를 중심으로 문제 해결에 적합한 전략을 선택하여 알고리즘을 설계한다.",
+      explanation: "암송 난이도에서도 채점은 핵심어 '전략' 포함을 우선 확인합니다. 이후 완전문장 채점으로 강화할 수 있습니다."
+    },
+    {
+      id: "h-data-compress-encrypt",
+      section: "subject",
+      subject: "high-info",
+      area: "데이터",
+      group: "content-system",
+      subtype: "내용 요소 · 지식·이해",
+      source: "2022 개정",
+      prompts: {
+        easy: "고등학교 정보 데이터 영역의 지식·이해 내용 요소 '디지털 데이터 ___과 ___'의 두 용어를 쓰시오.",
+        normal: "고등학교 정보 「데이터」 영역에서 디지털 데이터를 효율적으로 관리하고 보호하기 위해 다루는 두 핵심 개념을 쓰시오.",
+        hard: "고등학교 정보 데이터 영역의 지식·이해 내용 요소 중 효율성과 보호에 각각 대응하는 두 용어를 쓰시오.",
+        recall: "고등학교 정보 데이터 영역의 '디지털 데이터' 관련 지식·이해 내용 요소를 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["압축", "암호화"],
+      displayAnswer: "디지털 데이터 압축과 암호화",
+      explanation: "'보안'처럼 의미가 비슷해도 공식 용어인 '암호화'가 아니면 정답으로 처리하지 않습니다."
+    },
+    {
+      id: "ai-understanding-search-reasoning",
+      section: "subject",
+      subject: "ai-basic",
+      area: "인공지능의 이해",
+      group: "content-system",
+      subtype: "핵심 아이디어",
+      source: "2022 개정",
+      prompts: {
+        easy: "인공지능의 이해 핵심 아이디어: '___과 ___으로 문제를 해결하는 인공지능을 구현하는 것은 다양한 학문 분야에 활용된다.' 두 용어를 쓰시오.",
+        normal: "인공지능 기초 「인공지능의 이해」에서 문제 해결 인공지능 구현의 두 핵심 방법을 쓰시오.",
+        hard: "인공지능의 지능적 문제 해결에서 지식 기반 접근과 상태 공간 접근을 대표하는 두 핵심 용어를 쓰시오.",
+        recall: "인공지능 기초 「인공지능의 이해」 핵심 아이디어에 제시된 두 문제 해결 방법을 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["탐색", "추론"],
+      displayAnswer: "탐색, 추론",
+      explanation: "두 용어의 순서는 채점하지 않습니다."
+    },
+    {
+      id: "data-science-elements",
+      section: "subject",
+      subject: "data-science",
+      area: "데이터 과학의 이해",
+      group: "content-system",
+      subtype: "내용 요소 · 지식·이해",
+      source: "2022 개정",
+      prompts: {
+        easy: "「데이터 과학의 이해」 지식·이해 내용 요소 3가지를 쓰시오. 힌트: 개념 / 형태와 속성 / 데이터셋과 ○○○○○",
+        normal: "데이터 과학 「데이터 과학의 이해」 영역의 지식·이해 내용 요소 3가지를 모두 쓰시오.",
+        hard: "데이터 과학의 개념적 기초를 이루는 지식·이해 내용 요소 3가지를 공식 용어로 쓰시오.",
+        recall: "데이터 과학 「데이터 과학의 이해」 지식·이해 내용 요소를 전부 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["데이터 과학의 개념", "데이터의 형태와 속성", "데이터셋과 데이터베이스"],
+      displayAnswer: "데이터 과학의 개념, 데이터의 형태와 속성, 데이터셋과 데이터베이스",
+      explanation: "공식 내용 요소 3개를 모두 포함해야 정답입니다."
+    },
+    {
+      id: "sw-life-physical-elements",
+      section: "subject",
+      subject: "software-life",
+      area: "창작을 지원하는 소프트웨어",
+      group: "content-system",
+      subtype: "내용 요소 · 지식·이해",
+      source: "2022 개정",
+      prompts: {
+        easy: "「창작을 지원하는 소프트웨어」의 지식·이해 내용 요소 3가지를 쓰시오. 힌트: 피지컬 컴퓨팅 / 미디어 / 웨어러블",
+        normal: "소프트웨어와 생활 「창작을 지원하는 소프트웨어」의 지식·이해 내용 요소 3가지를 모두 쓰시오.",
+        hard: "피지컬 컴퓨팅 기반 창작 영역에서 다루는 세 가지 지식·이해 내용 요소를 공식 용어로 쓰시오.",
+        recall: "소프트웨어와 생활 「창작을 지원하는 소프트웨어」 지식·이해 내용 요소를 전부 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["피지컬 컴퓨팅 도구", "미디어 아트", "웨어러블 장치"],
+      displayAnswer: "피지컬 컴퓨팅 도구, 미디어 아트, 웨어러블 장치",
+      explanation: "세 항목의 순서는 채점하지 않습니다."
+    },
+    {
+      id: "is-ds-stack-queue",
+      section: "subject",
+      subject: "info-science",
+      area: "데이터 구조",
+      group: "achievement",
+      subtype: "성취기준",
+      source: "[12정과02-01]",
+      prompts: {
+        easy: "[12정과02-01]에서 원리를 이해하고 순차적인 데이터 구조를 이용하여 구현하는 두 자료구조를 쓰시오.",
+        normal: "정보과학 데이터 구조 영역에서 [12정과02-01]이 다루는 두 자료구조는?",
+        hard: "선입선출과 후입선출 원리를 대표하며 [12정과02-01]에서 구현하도록 하는 두 구조를 쓰시오.",
+        recall: "[12정과02-01] 성취기준의 핵심 자료구조 두 가지를 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["스택", "큐"],
+      displayAnswer: "스택, 큐",
+      explanation: "순서는 무관합니다."
+    },
+    {
+      id: "is-algo-divide-conquer",
+      section: "subject",
+      subject: "info-science",
+      area: "알고리즘",
+      group: "achievement",
+      subtype: "성취기준 해설",
+      source: "[12정과03-04]",
+      prompts: {
+        easy: "[12정과03-04] 해설에서 퀵 정렬·합병 정렬을 예로 들어 설명하는 알고리즘 설계 방법은?",
+        normal: "'부분 문제를 해결한 결과를 이용하여 전체 문제를 해결'하는 [12정과03-04]와 연결되는 설계 기법을 쓰시오.",
+        hard: "전체 문제를 부분 문제로 나누어 각각 해결한 결과를 결합하는 정보과학의 관계기반 설계 기법을 쓰시오.",
+        recall: "[12정과03-04] 성취기준 해설의 핵심 알고리즘 설계 기법을 쓰시오."
+      },
+      answerMode: "exactAny",
+      accepted: ["분할정복법", "분할 정복법", "분할정복"],
+      displayAnswer: "분할정복법",
+      explanation: "퀵 정렬과 합병 정렬이 대표 예시입니다."
+    },
+    {
+      id: "is-algo-dp",
+      section: "subject",
+      subject: "info-science",
+      area: "알고리즘",
+      group: "achievement",
+      subtype: "성취기준 해설",
+      source: "[12정과03-05]",
+      prompts: {
+        easy: "[12정과03-05] 해설에서 중복 계산되는 부분 문제의 답을 저장하여 효율을 높이는 기법은?",
+        normal: "부분 문제가 중복으로 적용되지 않도록 이미 계산한 답을 저장하여 활용하는 알고리즘 설계 기법을 쓰시오.",
+        hard: "중복 부분 문제의 결과를 저장해 재사용하는 관계기반 알고리즘 설계 기법의 공식 명칭을 쓰시오.",
+        recall: "[12정과03-05] 성취기준 해설의 핵심 알고리즘 설계 기법을 쓰시오."
+      },
+      answerMode: "exactAny",
+      accepted: ["동적계획법", "동적 계획법", "동적 프로그래밍"],
+      displayAnswer: "동적 계획법",
+      explanation: "분할정복법과의 차이를 비교할 수 있어야 합니다."
+    },
+    {
+      id: "is-project-test-debug",
+      section: "subject",
+      subject: "info-science",
+      area: "정보과학 프로젝트",
+      group: "achievement",
+      subtype: "성취기준",
+      source: "[12정과04-04]",
+      prompts: {
+        easy: "[12정과04-04]에서 완성도 높은 프로그램을 구현하기 위해 수행하는 두 과정을 쓰시오.",
+        normal: "정보과학 프로젝트에서 프로그램을 검증하기 위해 [12정과04-04]가 요구하는 두 과정은?",
+        hard: "프로그램의 완성도를 높이기 위한 검증 단계의 두 핵심 활동을 공식 용어로 쓰시오.",
+        recall: "[12정과04-04] 성취기준의 핵심 검증 활동 두 가지를 쓰시오."
+      },
+      answerMode: "containsAll",
+      required: ["테스트", "디버깅"],
+      displayAnswer: "테스트, 디버깅",
+      explanation: "두 활동을 통해 프로그램을 검증합니다."
+    }
+  ];
 
-  let currentQuizType = "subject";
-
-
-  /* ========================================
-     영역 자동 변경
-  ======================================== */
+  let currentQuizType = "general";
+  let activeSession = [];
+  let currentIndex = 0;
+  let correctCount = 0;
+  let wrongCount = 0;
+  let checkedCurrent = false;
 
   function updateUnits() {
-
-    const subjectSelect =
-      document.getElementById("subjectSelect");
-
-    const unitSelect =
-      document.getElementById("unitSelect");
-
-    const selectedSubject =
-      subjectSelect.value;
-
-
+    const subject = document.getElementById("subjectSelect").value;
+    const unitSelect = document.getElementById("unitSelect");
     unitSelect.innerHTML = "";
-
-
-    const areas =
-      subjectAreas[selectedSubject] || ["전체"];
-
-
-    areas.forEach(function(area) {
-
-      const option =
-        document.createElement("option");
-
-      option.value = area;
+    (subjectAreas[subject] || ["전체"]).forEach(area => {
+      const option = document.createElement("option");
+      option.value = area === "전체" ? "all" : area;
       option.textContent = area;
-
       unitSelect.appendChild(option);
-
     });
-
   }
-
-
-  /* ========================================
-     총론 / 각론 탭
-  ======================================== */
 
   function showTab(tab) {
+    document.getElementById("quizPage").classList.add("hidden");
+    const isGeneral = tab === "general";
+    document.getElementById("generalPage").classList.toggle("hidden", !isGeneral);
+    document.getElementById("subjectPage").classList.toggle("hidden", isGeneral);
+    document.getElementById("generalTab").classList.toggle("active", isGeneral);
+    document.getElementById("subjectTab").classList.toggle("active", !isGeneral);
+  }
 
-    const generalPage =
-      document.getElementById("generalPage");
-
-    const subjectPage =
-      document.getElementById("subjectPage");
-
-    const quizPage =
-      document.getElementById("quizPage");
-
-    const generalTab =
-      document.getElementById("generalTab");
-
-    const subjectTab =
-      document.getElementById("subjectTab");
-
-
-    quizPage.classList.add("hidden");
-
-
-    if (tab === "general") {
-
-      generalPage.classList.remove("hidden");
-      subjectPage.classList.add("hidden");
-
-      generalTab.classList.add("active");
-      subjectTab.classList.remove("active");
-
+  function shuffle(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
     }
-
-    else {
-
-      generalPage.classList.add("hidden");
-      subjectPage.classList.remove("hidden");
-
-      generalTab.classList.remove("active");
-      subjectTab.classList.add("active");
-
-    }
-
+    return copy;
   }
 
-
-  /* ========================================
-     선택된 글자 얻기
-  ======================================== */
-
-  function getSelectedText(id) {
-
-    const select =
-      document.getElementById(id);
-
-    return select.options[
-      select.selectedIndex
-    ].text;
-
+  function randomLevel() {
+    const levels = ["easy", "normal", "hard", "recall"];
+    return levels[Math.floor(Math.random() * levels.length)];
   }
-
-
-  /* ========================================
-     랜덤 선택
-  ======================================== */
-
-  function randomItem(array) {
-
-    return array[
-      Math.floor(
-        Math.random() * array.length
-      )
-    ];
-
-  }
-
-
-  /* ========================================
-     총론 문제 시작
-  ======================================== */
 
   function startGeneralQuiz() {
-
+    const category = document.getElementById("generalCategory").value;
+    let questions = questionBank.filter(q => q.section === "general");
+    if (category !== "all") questions = questions.filter(q => q.category === category);
+    activeSession = shuffle(questions).map(q => ({ q, level: "normal" }));
     currentQuizType = "general";
-
-    const category =
-      getSelectedText("generalCategory");
-
-
-    showQuizPage(
-      "총론 문제",
-      [
-        category
-      ]
-    );
-
+    beginSession();
   }
-
-
-  /* ========================================
-     각론 문제 시작
-  ======================================== */
 
   function startSubjectQuiz(randomMode) {
+    let questions = questionBank.filter(q => q.section === "subject");
+    let chosenDifficulty = document.getElementById("difficultySelect").value;
+
+    if (!randomMode) {
+      const subject = document.getElementById("subjectSelect").value;
+      const area = document.getElementById("unitSelect").value;
+      const group = document.getElementById("contentSelect").value;
+
+      if (subject !== "all") questions = questions.filter(q => q.subject === subject);
+      if (area !== "all") questions = questions.filter(q => q.area === area);
+      if (group !== "all") questions = questions.filter(q => q.group === group);
+    } else {
+      chosenDifficulty = "all";
+    }
+
+    activeSession = shuffle(questions).map(q => ({
+      q,
+      level: chosenDifficulty === "all" ? randomLevel() : chosenDifficulty
+    }));
 
     currentQuizType = "subject";
+    beginSession();
+  }
 
+  function beginSession() {
+    currentIndex = 0;
+    correctCount = 0;
+    wrongCount = 0;
+    checkedCurrent = false;
 
-    const subjectSelect =
-      document.getElementById("subjectSelect");
-
-    const unitSelect =
-      document.getElementById("unitSelect");
-
-    const contentSelect =
-      document.getElementById("contentSelect");
-
-    const difficultySelect =
-      document.getElementById("difficultySelect");
-
-
-    /*
-      완전 랜덤
-    */
-
-    if (randomMode) {
-
-      const subjects = [
-        "middle-info",
-        "high-info",
-        "ai-basic",
-        "data-science",
-        "software-life",
-        "info-science"
-      ];
-
-
-      subjectSelect.value =
-        randomItem(subjects);
-
-
-      updateUnits();
-
-
-      const areaOptions =
-        Array.from(unitSelect.options)
-          .filter(
-            option =>
-              option.value !== "전체"
-          );
-
-
-      if (areaOptions.length > 0) {
-
-        unitSelect.value =
-          randomItem(areaOptions).value;
-
-      }
-
-
-      contentSelect.value =
-        randomItem([
-          "content-system",
-          "achievement"
-        ]);
-
-
-      difficultySelect.value =
-        randomItem([
-          "easy",
-          "normal",
-          "hard",
-          "recall"
-        ]);
-
+    if (activeSession.length === 0) {
+      alert("현재 선택 범위에 등록된 문제가 없습니다. 문제은행을 계속 추가할 예정입니다.");
+      return;
     }
 
-
-    const subject =
-      getSelectedText("subjectSelect");
-
-    const unit =
-      getSelectedText("unitSelect");
-
-    const content =
-      getSelectedText("contentSelect");
-
-    const difficulty =
-      getSelectedText("difficultySelect");
-
-
-    showQuizPage(
-      "각론 문제",
-      [
-        subject,
-        unit,
-        content,
-        difficulty
-      ]
-    );
-
+    document.getElementById("generalPage").classList.add("hidden");
+    document.getElementById("subjectPage").classList.add("hidden");
+    document.getElementById("quizPage").classList.remove("hidden");
+    document.getElementById("summaryArea").classList.add("hidden");
+    document.getElementById("answerArea").classList.remove("hidden");
+    document.getElementById("questionText").classList.remove("hidden");
+    document.getElementById("quizMeta").classList.remove("hidden");
+    renderQuestion();
   }
 
+  function renderQuestion() {
+    const item = activeSession[currentIndex];
+    const q = item.q;
+    const level = item.level;
+    const prompt = q.prompts[level] || q.prompts.normal || Object.values(q.prompts)[0];
 
-  /* ========================================
-     문제 화면 표시
-  ======================================== */
+    checkedCurrent = false;
+    document.getElementById("answerInput").value = "";
+    document.getElementById("resultBox").className = "result-box hidden";
+    document.getElementById("resultBox").innerHTML = "";
+    document.getElementById("checkButton").disabled = false;
 
-  function showQuizPage(
-    title,
-    metaItems
-  ) {
+    document.getElementById("quizTitle").textContent = q.section === "general" ? "총론 문제" : "각론 문제";
+    document.getElementById("questionText").textContent = prompt;
+    document.getElementById("progressText").textContent = `${currentIndex + 1} / ${activeSession.length}`;
+    document.getElementById("scoreText").textContent = `정답 ${correctCount} · 오답 ${wrongCount}`;
+    document.getElementById("nextButton").textContent = currentIndex === activeSession.length - 1 ? "결과 보기" : "다음 문제";
 
-    const generalPage =
-      document.getElementById("generalPage");
+    const meta = document.getElementById("quizMeta");
+    meta.innerHTML = "";
+    const items = q.section === "general"
+      ? [q.subtype, q.source]
+      : [subjectName(q.subject), q.area, q.group === "content-system" ? "내용 체계" : "성취기준", q.subtype, difficultyName(level), q.source];
 
-    const subjectPage =
-      document.getElementById("subjectPage");
-
-    const quizPage =
-      document.getElementById("quizPage");
-
-
-    generalPage.classList.add("hidden");
-    subjectPage.classList.add("hidden");
-
-    quizPage.classList.remove("hidden");
-
-
-    document.getElementById(
-      "quizTitle"
-    ).textContent = title;
-
-
-    const quizMeta =
-      document.getElementById("quizMeta");
-
-
-    quizMeta.innerHTML = "";
-
-
-    metaItems.forEach(function(item) {
-
-      const chip =
-        document.createElement("span");
-
+    items.forEach(text => {
+      const chip = document.createElement("span");
       chip.className = "chip";
-
-      chip.textContent = item;
-
-      quizMeta.appendChild(chip);
-
+      chip.textContent = text;
+      meta.appendChild(chip);
     });
-
-
-    /*
-      다음 단계에서 실제 문제 데이터와 연결
-    */
-
-    document.getElementById(
-      "questionText"
-    ).textContent =
-      "문제 데이터가 여기에 표시됩니다. 다음 단계에서 공식 교육과정과 기출 기반 변형문제를 연결합니다.";
-
-
-    document.getElementById(
-      "answerInput"
-    ).value = "";
-
-
-    document.getElementById(
-      "resultBox"
-    ).classList.add("hidden");
-
   }
 
+  function normalizeText(text) {
+    return String(text || "")
+      .normalize("NFKC")
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]/gu, "");
+  }
 
-  /* ========================================
-     정답 확인 - 현재는 테스트용
-  ======================================== */
+  function isCorrectAnswer(q, userAnswer) {
+    const normalizedUser = normalizeText(userAnswer);
+    if (!normalizedUser) return false;
 
-  function checkAnswerPlaceholder() {
+    if (q.answerMode === "exactAny") {
+      return (q.accepted || []).some(answer => normalizeText(answer) === normalizedUser);
+    }
 
-    const resultBox =
-      document.getElementById("resultBox");
+    if (q.answerMode === "containsAll") {
+      return (q.required || []).every(term => normalizedUser.includes(normalizeText(term)));
+    }
 
+    return false;
+  }
+
+  function checkAnswer() {
+    if (checkedCurrent) return;
+
+    const item = activeSession[currentIndex];
+    const q = item.q;
+    const userAnswer = document.getElementById("answerInput").value;
+    const correct = isCorrectAnswer(q, userAnswer);
+    const resultBox = document.getElementById("resultBox");
+
+    checkedCurrent = true;
+    if (correct) correctCount += 1;
+    else wrongCount += 1;
 
     resultBox.classList.remove("hidden");
+    resultBox.classList.add(correct ? "correct" : "wrong");
+    resultBox.innerHTML = `
+      <strong>${correct ? "✅ 정답" : "❌ 오답"}</strong>
+      <div class="answer-label">정답</div>
+      <div>${escapeHtml(q.displayAnswer)}</div>
+      <div class="answer-label">설명</div>
+      <div>${escapeHtml(q.explanation)}</div>
+    `;
 
-
-    resultBox.innerHTML =
-      "<strong>채점 기능 준비 완료</strong><br>" +
-      "다음 단계에서 실제 정답 데이터와 연결합니다.";
-
+    document.getElementById("scoreText").textContent = `정답 ${correctCount} · 오답 ${wrongCount}`;
+    document.getElementById("checkButton").disabled = true;
   }
 
+  function nextQuestion() {
+    if (!checkedCurrent) {
+      alert("먼저 정답 확인을 눌러 주세요.");
+      return;
+    }
 
-  /* ========================================
-     다음 문제 - 현재는 테스트용
-  ======================================== */
+    if (currentIndex >= activeSession.length - 1) {
+      finishSession();
+      return;
+    }
 
-  function nextPlaceholderQuestion() {
-
-    document.getElementById(
-      "answerInput"
-    ).value = "";
-
-
-    document.getElementById(
-      "resultBox"
-    ).classList.add("hidden");
-
+    currentIndex += 1;
+    renderQuestion();
   }
 
+  function finishSession() {
+    document.getElementById("answerArea").classList.add("hidden");
+    document.getElementById("summaryArea").classList.remove("hidden");
+    document.getElementById("questionText").classList.add("hidden");
+    document.getElementById("quizMeta").classList.add("hidden");
 
-  /* ========================================
-     설정 화면 복귀
-  ======================================== */
+    const total = correctCount + wrongCount;
+    const rate = total ? Math.round((correctCount / total) * 1000) / 10 : 0;
+    document.getElementById("summaryScore").textContent = `${rate}%`;
+    document.getElementById("summaryDetail").textContent = `${total}문제 중 ${correctCount}문제 정답 · ${wrongCount}문제 오답`;
+  }
 
   function backToSettings() {
+    document.getElementById("quizPage").classList.add("hidden");
+    document.getElementById("answerArea").classList.remove("hidden");
+    document.getElementById("summaryArea").classList.add("hidden");
+    document.getElementById("questionText").classList.remove("hidden");
+    document.getElementById("quizMeta").classList.remove("hidden");
 
-    const quizPage =
-      document.getElementById("quizPage");
-
-    const generalPage =
-      document.getElementById("generalPage");
-
-    const subjectPage =
-      document.getElementById("subjectPage");
-
-
-    quizPage.classList.add("hidden");
-
-
-    if (currentQuizType === "general") {
-
-      generalPage.classList.remove("hidden");
-
-    }
-
-    else {
-
-      subjectPage.classList.remove("hidden");
-
-    }
-
+    if (currentQuizType === "general") showTab("general");
+    else showTab("subject");
   }
 
+  function subjectName(value) {
+    const names = {
+      "middle-info": "중학교 정보",
+      "high-info": "고등학교 정보",
+      "ai-basic": "인공지능 기초",
+      "data-science": "데이터 과학",
+      "software-life": "소프트웨어와 생활",
+      "info-science": "정보과학"
+    };
+    return names[value] || value;
+  }
 
-  /* ========================================
-     최초 실행
-  ======================================== */
+  function difficultyName(value) {
+    const names = { easy: "초급", normal: "중급", hard: "고급", recall: "암송" };
+    return names[value] || value;
+  }
+
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
   updateUnits();
-
 </script>
-
 </body>
-
 </html>
