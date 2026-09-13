@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 
-    <link rel="stylesheet" href="/styles.css?v=6.3.0">
+    <link rel="stylesheet" href="/styles.css?v=6.4.2">
 
 
 </head>
@@ -181,12 +181,12 @@
   <section class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" onclick="event.stopPropagation()">
     <h2 id="helpModalTitle">CurriLoop 사용법</h2>
     <p><strong>핵심</strong>은 중요한 개념·용어를 빠짐없이 가리되 짧은 회상 단위로 나누고, <strong>정밀</strong>은 더 큰 의미 단위와 정확한 교육과정 문구를 회상합니다. <strong>야~호!</strong>는 문장 전체를 직접 재생하는 단계입니다.</p>
-    <p>각론 빈칸에서 <strong>Enter</strong>(모바일 키보드의 ‘다음’)를 누르면 즉시 채점하고 다음 빈칸으로 이동합니다. <strong>빈칸인 채 Enter를 눌러도 오답</strong>으로 기록됩니다. 이미 답이 입력된 빈칸은 다시 클릭하거나 <strong>Tab</strong>으로 진입하면 기존 텍스트가 전체 선택되어 바로 새 답을 입력할 수 있습니다.</p>
+    <p><strong>Enter</strong>(모바일 ‘다음’)로 채점합니다. 정답이면 다음으로 이동하고, 오답이면 현재 입력칸에 머물며 답이 전체 선택됩니다. 빈칸도 오답으로 처리됩니다.</p>
     <p>‘원문 보기’는 입력 기록을 지우지 않습니다. 답안을 지우려면 ‘현재 단원 초기화’를 사용하세요.</p>
     <h3>오답·복습</h3>
-    <p>틀린 항목은 오답노트에 개념별로 누적됩니다. 충분히 다시 맞힌 항목은 ‘해결됨’으로 남아 과거 이력을 보존하며, 미해결 목록에서는 제외됩니다. 화면의 ‘세션 시도’는 앱을 연 뒤 채점한 횟수이며 장기 성취도 점수가 아닙니다.</p>
+    <p>틀린 항목은 오답노트에 개념별로 누적됩니다. 충분히 다시 맞힌 항목은 ‘해결됨’으로 남아 과거 이력을 보존하며, 미해결 목록에서는 제외됩니다.</p>
     <h3>저장과 개인정보</h3>
-    <p class="privacy-note">계정·광고·분석 SDK가 없습니다. 학습 기록은 현재 브라우저에 저장되며 CurriLoop 서버로 전송되지 않습니다. 브라우저 데이터를 삭제하거나 기기를 바꾸면 기록을 잃을 수 있으므로 정기적으로 ‘백업 내보내기’를 권장합니다.</p>
+    <p class="privacy-note">계정·광고·분석 SDK가 없습니다. 오답·복습 기록과 마지막 학습 위치는 현재 브라우저에 저장되며 CurriLoop 서버로 전송되지 않습니다. 같은 탭의 새로고침·앱 업데이트에서는 작성 중 답도 복원합니다. 브라우저 데이터를 삭제하거나 기기를 바꾸면 기록을 잃을 수 있으므로 정기적으로 ‘백업 내보내기’를 권장합니다.</p>
     <h3>자료 기준</h3>
     <p>교육과정 원문은 2022 개정 교육과정 공식 자료를 기준으로 합니다. 정보·인공지능 기초·데이터 과학·소프트웨어와 생활은 <strong>별책10</strong>, 정보과학은 <strong>별책20</strong>을 기준으로 관리합니다. 빈칸 위치와 난이도는 CurriLoop의 학습용 편집입니다.</p>
     <div class="modal-actions"><button class="btn primary" type="button" onclick="closeHelpModal()">닫기</button></div>
@@ -206,13 +206,13 @@
     <p>학습 기록은 이 브라우저에만 저장되고 서버로 전송되지 않습니다. 브라우저 데이터 삭제·기기 변경에 대비해 오답노트의 백업 기능을 이용하세요.</p>
     <p>2022 개정 교육과정 공공저작물은 <strong>공공누리 제2유형(출처표시 + 상업적 이용금지)</strong> 조건에 따라 비상업적 학습 목적으로 활용합니다.</p>
     <p>출처: <a href="https://www.kogl.or.kr/recommend/recommendDivView.do?division=doc&oc=&recommendIdx=60522" target="_blank" rel="noopener noreferrer">공공누리 2022 개정 교육과정 자료</a> · <a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp=" target="_blank" rel="noopener noreferrer">교육부 고시 제2022-33호</a></p>
-    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v6.3</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
+    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v6.4.2</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
   </div>
 </footer>
 
 
-  <script src="/data/curriculum-data.js?v=6.3.0"></script>
-  <script src="/app.js?v=6.3.0"></script>
+  <script src="/data/curriculum-data.js?v=6.4.2"></script>
+  <script src="/app.js?v=6.4.2"></script>
 
 
 

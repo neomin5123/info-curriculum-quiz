@@ -24,20 +24,12 @@
   // -------------------------
 
   const subjectSourceMeta = {
-    "middle-info": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 공통 교육과정 정보 · 인쇄 p.14–21", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
+    "middle-info": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 공통 교육과정 정보", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
     "high-info": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 일반 선택 과목 정보", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
     "ai-basic": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 진로 선택 과목 인공지능 기초", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
     "data-science": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 진로 선택 과목 데이터 과학", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
     "software-life": {book:"별책10", label:"교육부 고시 제2022-33호 [별책10] 융합 선택 과목 소프트웨어와 생활", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="},
     "info-science": {book:"별책20", label:"2022 개정 [별책20] 과학 계열 선택 과목 교육과정 · 정보과학", url:"https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp="}
-  };
-
-  const middleInfoSourceRanges = {
-    "컴퓨팅 시스템": "인쇄 p.14, 16–17",
-    "데이터": "인쇄 p.14, 17–18",
-    "알고리즘과 프로그래밍": "인쇄 p.15, 18–19",
-    "인공지능": "인쇄 p.15, 19–20",
-    "디지털 문화": "인쇄 p.16, 20–21"
   };
 
   const SHUFFLE_SESSION_KEY = "curriloop-shuffle-bags-v1";
@@ -62,21 +54,20 @@
   let lastStudyFocus = null; // {sectionIndex, lineIndex}
   const fieldState = {}; // key -> {value,status}
   const shuffleBags = loadShuffleBags();
-  let currentAttemptId = 1;
-  let generalAttemptId = 1;
   let generalIndex = 0;
   let generalGraded = false;
   let generalLastGradedValue = "";
   let generalShuffleState = null;
-  const sessionStats = { subject: {correct:0, wrong:0}, general: {correct:0, wrong:0} };
   let reviewQueue = [];
   let reviewPosition = -1;
   let reviewActive = false;
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.3.0";
-  const MANUAL_GAP_REVIEW = "2026-09-12 / 6과목 27영역 550문장 핵심·정밀 개별 검수; 핵심 소단위 회상형 재분할; 정밀 13자 이상 장문 빈칸 재분할; 난이도별 입력칸 크기 통일; 오답 Enter 시 현재 빈칸 유지·전체 선택";
+  const APP_VERSION = "6.4.2";
+  const MANUAL_GAP_REVIEW = "2026-09-13 / 6과목 27영역 550문장 수동 빈칸 최종 검수; 기능어·중복 빈칸 정리; 총론 정답 확인 2단계 Enter; 오답 Enter 유지; 학습 위치·작성 중 답 복원; 출처 페이지 표기 제거";
+  let gradingEventSerial = 0;
+  let statePersistenceReady = false;
 
   // -------------------------
   // 5) 공통 유틸
@@ -87,6 +78,11 @@
       .toLowerCase()
       .replace(/[\s,.;:!?·ㆍ・∙‧⋅\-_/()\[\]{}'"“”‘’]+/g, "")
       .trim();
+  }
+
+  function makeGradingEventToken(scope, conceptKey, signature) {
+    gradingEventSerial += 1;
+    return `${scope}|${Date.now()}|${gradingEventSerial}|${stableHash(`${conceptKey}|${signature}`)}`;
   }
 
   function showTab(tab) {
@@ -122,6 +118,7 @@
     if (tab === "history") {
       renderHistory();
     }
+    scheduleStateSave();
   }
 
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
@@ -144,10 +141,6 @@
     return { subject, area: areaParts.join("::") };
   }
 
-  function pickRandom(array) {
-    if (!array.length) return null;
-    return array[Math.floor(Math.random() * array.length)];
-  }
 
   function unitKey(unit) {
     return `${unit.subject}::${unit.area}`;
@@ -222,9 +215,6 @@
     return sequence[currentAreaIndex];
   }
 
-  function getSelectedAreaName() {
-    return getCurrentUnit().area;
-  }
 
   function onSubjectChange() {
     currentAreaIndex = 0;
@@ -232,6 +222,7 @@
     quizMode = false;
     fillAreaSelect();
     renderStudy();
+    scheduleStateSave();
   }
 
 
@@ -291,6 +282,7 @@
     }
 
     renderStudy();
+    scheduleStateSave();
   }
 
   function onGroupChange() {
@@ -299,6 +291,7 @@
     quizMode = false;
     fillAreaSelect();
     renderStudy();
+    scheduleStateSave();
   }
 
   function onDifficultyChange() {
@@ -310,13 +303,13 @@
     if (wasQuizMode && focusSnapshot) {
       requestAnimationFrame(() => focusMatchingLine(focusSnapshot));
     }
+    scheduleStateSave();
   }
 
   function moveUnit(delta) {
     if (document.getElementById("areaSelect").value === "random") {
       if (delta > 0) {
         chooseRandomUnit();
-        currentAttemptId++;
         renderStudy();
         if (quizMode) requestAnimationFrame(() => focusFirstEmpty());
       }
@@ -326,6 +319,7 @@
     currentAreaIndex = Math.max(0, Math.min(sequence.length - 1, currentAreaIndex + delta));
     renderStudy();
     if (quizMode) requestAnimationFrame(() => focusFirstEmpty());
+    scheduleStateSave();
   }
 
   function startQuiz() {
@@ -335,11 +329,11 @@
       chooseRandomUnit();
     }
 
-    currentAttemptId++;
     quizMode = true;
     renderStudy();
     if (window.matchMedia("(max-width: 720px)").matches) toggleMobileSettings(true);
     requestAnimationFrame(() => focusFirstEmpty());
+    scheduleStateSave();
   }
 
   function clearCurrentUnitState() {
@@ -359,6 +353,7 @@
     // 원문 보기는 현재 입력/채점 상태를 보존한다. 삭제는 '현재 단원 초기화'에서만 수행한다.
     quizMode = false;
     renderStudy();
+    scheduleStateSave();
   }
 
   function updateStudyControls() {
@@ -563,7 +558,10 @@
       const state = fieldState[input.dataset.stateKey] || {};
       state.value = input.value;
       if (state.status) delete state.status;
+      // 사용자가 실제로 답을 수정했다면 같은 문자열로 되돌아오더라도 다음 채점은 새 학습 이벤트다.
+      delete state.lastCountedSignature;
       fieldState[input.dataset.stateKey] = state;
+      scheduleStateSave();
       input.classList.remove("correct","wrong");
       const result = wrap.querySelector(".gap-result");
       if (result) result.remove();
@@ -665,9 +663,7 @@
       subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
 
     document.getElementById("studyStatus").textContent = quizMode
-      ? (window.matchMedia("(max-width: 720px)").matches
-          ? "다음: 채점 후 이동(빈칸도 오답)"
-          : "Enter: 채점 후 이동(빈칸도 오답)")
+      ? (window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점")
       : "";
 
     const nav = document.getElementById("unitNav");
@@ -692,13 +688,11 @@
     if (sourceButton) {
       sourceButton.classList.toggle("hidden", !subject);
       if (subject) {
-        const range = subject === "middle-info" ? middleInfoSourceRanges[area] : "";
         const meta = subjectSourceMeta[subject];
-        const sourceParts = ["공식 출처", meta?.book, range].filter(Boolean);
-        sourceButton.textContent = sourceParts.join(" · ");
+        sourceButton.textContent = "공식 출처";
         sourceButton.href = meta?.url || "#";
         sourceButton.title = meta?.label || "공식 교육과정 출처";
-        sourceButton.setAttribute("aria-label", `${subjectLabel}${area ? " · " + area : ""} 공식 교육과정 출처 새 탭에서 열기. ${meta?.label || ""}`.trim());
+        sourceButton.setAttribute("aria-label", `${subjectLabel}${area ? " · " + area : ""} 공식 교육과정 출처 새 탭에서 열기`);
       }
     }
 
@@ -747,12 +741,107 @@
 
     updateStudyControls();
     updateScore();
+    scheduleStateSave();
   }
 
   function difficultyLabel(value) {
     return ({ easy: "핵심", normal: "정밀", yaho: "야~호!" })[value] || (value === "hard" ? "정밀" : value);
   }
 
+
+
+  // -------------------------
+  // 학습 화면 상태 복원
+  // -------------------------
+  const UI_STATE_KEY = "curriloop-ui-state-v1";
+  const DRAFT_STATE_KEY = "curriloop-draft-state-v1";
+  let stateSaveTimer = null;
+
+  function parseStoredJson(storage, key, fallback = null) {
+    try {
+      const raw = storage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function collectUiState() {
+    return {
+      version: 1,
+      currentTab,
+      subject: document.getElementById("subjectSelect")?.value || "all",
+      area: document.getElementById("areaSelect")?.value || "all",
+      group: document.getElementById("groupSelect")?.value || "all",
+      difficulty: getCurrentDifficulty(),
+      currentAreaIndex,
+      currentRandomUnit,
+      quizMode,
+      lastStudyFocus,
+      generalCategory: document.getElementById("generalCategory")?.value || "all",
+      generalIndex,
+      generalShuffleState,
+      savedAt: new Date().toISOString()
+    };
+  }
+
+  function collectDraftState() {
+    return {
+      version: 1,
+      fieldState,
+      generalAnswer: document.getElementById("generalAnswer")?.value || "",
+      savedAt: new Date().toISOString()
+    };
+  }
+
+  function saveCurrentState() {
+    if (!statePersistenceReady) return;
+    try { localStorage.setItem(UI_STATE_KEY, JSON.stringify(collectUiState())); } catch {}
+    try { sessionStorage.setItem(DRAFT_STATE_KEY, JSON.stringify(collectDraftState())); } catch {}
+  }
+
+  function scheduleStateSave() {
+    if (!statePersistenceReady) return;
+    clearTimeout(stateSaveTimer);
+    stateSaveTimer = setTimeout(saveCurrentState, 80);
+  }
+
+  function restoreUiState() {
+    let saved = {};
+    try { saved = parseStoredJson(localStorage, UI_STATE_KEY, {}); } catch { return null; }
+    if (!saved || typeof saved !== "object") return null;
+
+    const subject = (saved.subject === "all" || Object.prototype.hasOwnProperty.call(subjectAreas, saved.subject)) ? saved.subject : "all";
+    document.getElementById("subjectSelect").value = subject || "all";
+    if (["all","content-system","achievement"].includes(saved.group)) document.getElementById("groupSelect").value = saved.group;
+    if (["easy","normal","yaho"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
+    if (["all","competency","history","hours","subjects"].includes(saved.generalCategory)) document.getElementById("generalCategory").value = saved.generalCategory;
+
+    fillAreaSelect();
+    const areaSelect = document.getElementById("areaSelect");
+    if ([...areaSelect.options].some(option => option.value === saved.area)) areaSelect.value = saved.area;
+
+    currentAreaIndex = Number.isFinite(Number(saved.currentAreaIndex)) ? Math.max(0, Number(saved.currentAreaIndex)) : 0;
+    currentRandomUnit = saved.currentRandomUnit && typeof saved.currentRandomUnit === "object" ? saved.currentRandomUnit : null;
+    quizMode = Boolean(saved.quizMode);
+    lastStudyFocus = saved.lastStudyFocus && typeof saved.lastStudyFocus === "object" ? saved.lastStudyFocus : null;
+    generalIndex = Number.isFinite(Number(saved.generalIndex)) ? Math.max(0, Number(saved.generalIndex)) : 0;
+    generalShuffleState = saved.generalShuffleState && typeof saved.generalShuffleState === "object" ? saved.generalShuffleState : null;
+    currentTab = ["general","subject","history"].includes(saved.currentTab) ? saved.currentTab : "general";
+    return saved;
+  }
+
+  function restoreDraftState() {
+    let draft = {};
+    try { draft = parseStoredJson(sessionStorage, DRAFT_STATE_KEY, {}); } catch { return ""; }
+    if (!draft || typeof draft !== "object") return "";
+    if (draft.fieldState && typeof draft.fieldState === "object" && !Array.isArray(draft.fieldState)) {
+      Object.entries(draft.fieldState).forEach(([key, value]) => {
+        if (value && typeof value === "object") fieldState[key] = value;
+      });
+    }
+    return typeof draft.generalAnswer === "string" ? draft.generalAnswer : "";
+  }
 
 
   // -------------------------
@@ -945,8 +1034,11 @@
         if (retiredNormalTargets.length) {
           retiredNormalTargets.forEach(targetKey => merge(targetKey, item || {}));
           changed = true;
-        } else {
+        } else if (!nextKey.startsWith("subject|") || isCurrentSubjectConceptKey(nextKey)) {
           merge(nextKey, item || {});
+        } else {
+          // 더 이상 존재하지 않는 빈칸(예: 검수에서 제거된 기능어)은 학습 상태에서 정리한다.
+          changed = true;
         }
 
         // v6.2에서 과거 '핵심'의 큰 의미 단위를 여러 작은 빈칸으로 나눈 경우,
@@ -1089,6 +1181,17 @@
       gapId,
       Number(occurrence || 0)
     ));
+  }
+
+  function isCurrentSubjectConceptKey(key) {
+    const parts = String(key || "").split("|");
+    if (parts[0] !== "subject" || parts.length < 7) return true;
+    const [, subjectKey, areaName, , lineId, gapToken] = parts;
+    if (!String(gapToken || "").startsWith("gap:")) return false;
+    const meta = findLineIdentity(subjectKey, areaName, lineId, "");
+    if (!meta) return false;
+    const gapId = String(gapToken).slice(4);
+    return ["easy","normal","yaho"].some(level => (meta.line.gapIds?.[level] || []).includes(gapId));
   }
 
   function conceptKeyForGeneral(questionOrId) {
@@ -1264,7 +1367,7 @@
 
       // 과거 composite 오답은 현재의 분할된 stable gap들에 이어 준다.
       // v6.2 핵심 분할과 v6.3 정밀 장문 분할을 모두 지원한다.
-      const migrated = migratedBase.flatMap(copy => {
+      let migrated = migratedBase.flatMap(copy => {
         if (copy.type !== "subject" || !["easy","normal"].includes(copy.difficultyKey)) return [copy];
         const meta = findLineIdentity(copy.subjectKey, copy.area, copy.lineId || "", copy.context || "");
         const splitMap = copy.difficultyKey === "easy"
@@ -1290,6 +1393,13 @@
           return next;
         });
       });
+
+      const retiredGapRecords = migrated.filter(copy => copy.type === "subject" && !isCurrentSubjectConceptKey(copy.conceptKey || copy.key));
+      if (retiredGapRecords.length) {
+        migrated = migrated.filter(copy => copy.type !== "subject" || isCurrentSubjectConceptKey(copy.conceptKey || copy.key));
+        storeMigrationQuarantine(retiredGapRecords.map(item => ({reason:"retired-gap", item})));
+        changed = true;
+      }
 
       if (migrated.length !== data.length) changed = true;
 
@@ -1556,8 +1666,7 @@
       currentRandomUnit = null;
       quizMode = true;
 
-      currentAttemptId++;
-      activeReviewConceptKey = item.conceptKey || null;
+        activeReviewConceptKey = item.conceptKey || null;
 
       renderStudy();
 
@@ -2085,11 +2194,9 @@
 
     const gradingSignature = `${normalizedValue || "__blank__"}|${correct ? "correct" : "wrong"}`;
     const isNewGradingEvent = state.lastCountedSignature !== gradingSignature;
-    if (isNewGradingEvent) {
-      state.lastCountedSignature = gradingSignature;
-      sessionStats.subject[correct ? "correct" : "wrong"] += 1;
-    }
+    if (isNewGradingEvent) state.lastCountedSignature = gradingSignature;
     fieldState[input.dataset.stateKey] = state;
+    scheduleStateSave();
 
     appendResult(input.parentElement, state.status, input.dataset.answer);
 
@@ -2103,11 +2210,11 @@
     const sourceGroup = input.dataset.sourceGroup || sections?.[sectionIndex]?._sourceGroup || getCurrentGroup();
     const gapId = input.dataset.gapId || resolveGapIdForLine(sections?.[sectionIndex]?.lines?.[lineIndex], getCurrentDifficulty(), input.dataset.answer, Number(input.dataset.gapIndex || -1));
     const conceptKey = conceptKeyForSubject(unit, sourceGroup, lineId, gapId, answerOccurrence);
-    const eventToken = `subject|${currentAttemptId}|${input.dataset.stateKey}|${gradingSignature}`;
+    const eventToken = isNewGradingEvent ? makeGradingEventToken("subject", conceptKey, gradingSignature) : "";
 
     if (isNewGradingEvent) updateMastery(conceptKey, correct, eventToken);
 
-    if (!correct) {
+    if (!correct && isNewGradingEvent) {
       addWrongHistory({
         type: "subject",
         key: conceptKey,
@@ -2158,7 +2265,6 @@
 
   function resetVisible() {
     if (!quizMode) return;
-    currentAttemptId++;
     clearCurrentUnitState();
     renderStudy();
     focusFirstEmpty();
@@ -2185,13 +2291,6 @@
     }
   }
 
-  function focusRelative(current, delta) {
-    const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
-    const i = inputs.indexOf(current);
-    if (i < 0) return;
-    const target = inputs[i + delta];
-    if (target) target.focus();
-  }
 
   function advanceAfterGrade(current) {
     const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
@@ -2206,8 +2305,7 @@
 
     if (document.getElementById("areaSelect").value === "random") {
       chooseRandomUnit();
-      currentAttemptId++;
-      renderStudy();
+        renderStudy();
       requestAnimationFrame(() => focusFirstEmpty());
       return;
     }
@@ -2262,7 +2360,7 @@
 
     const lineText = lineGroups.size ? ` · 문장 ${completedLines}/${lineGroups.size}` : "";
     document.getElementById("scoreText").textContent =
-      `현재 ${currentCorrect}✓ ${currentWrong}✕${lineText} · 세션 시도 ${sessionStats.subject.correct}✓ ${sessionStats.subject.wrong}✕`;
+      `현재 ${currentCorrect}✓ ${currentWrong}✕${lineText}`;
   }
 
   // -------------------------
@@ -2289,7 +2387,7 @@
   function updateGeneralProgress() {
     const list = filteredGeneral();
     const el = document.getElementById("generalProgress");
-    if (el) el.textContent = `${Math.min(generalIndex + 1, list.length)} / ${list.length} · 세션 시도 ${sessionStats.general.correct}✓ ${sessionStats.general.wrong}✕`;
+    if (el) el.textContent = `${Math.min(generalIndex + 1, list.length)} / ${list.length}`;
   }
 
   function resetGeneral() {
@@ -2308,7 +2406,6 @@
   }
 
   function renderGeneral() {
-    generalAttemptId++;
     const list = filteredGeneral();
     if (!list.length) return;
 
@@ -2335,11 +2432,9 @@
     if (window.matchMedia("(min-width: 721px) and (pointer:fine)").matches) {
       setTimeout(() => answer.focus(), 0);
     }
+    scheduleStateSave();
   }
 
-  function splitGeneralAnswers(raw) {
-    return String(raw || "").split(/[\n,;|/]+/).map(v => v.trim()).filter(Boolean);
-  }
 
   function canCoverAnswerExactly(q, rawUser) {
     const target = normalize(rawUser);
@@ -2398,19 +2493,16 @@
     box.classList.remove("hidden");
 
     const signature = `${normalize(rawUser) || "__blank__"}|${ok ? "correct" : "wrong"}`;
-    const eventToken = `general|${generalAttemptId}|${q.id}|${signature}`;
     const duplicate = generalGraded && generalLastGradedValue === signature;
 
     generalGraded = true;
     generalLastGradedValue = signature;
 
     const conceptKey = conceptKeyForGeneral(q.id);
-    if (!duplicate) {
-      sessionStats.general[ok ? "correct" : "wrong"] += 1;
-      updateMastery(conceptKey, ok, eventToken);
-    }
+    const eventToken = duplicate ? "" : makeGradingEventToken("general", conceptKey, signature);
+    if (!duplicate) updateMastery(conceptKey, ok, eventToken);
 
-    if (!ok) {
+    if (!ok && !duplicate) {
       addWrongHistory({
         type: "general",
         key: conceptKey,
@@ -2425,7 +2517,6 @@
     }
 
     updateGeneralProgress();
-    if (ok && reviewActive && activeReviewConceptKey === conceptKey) advanceWrongReview();
     return ok;
   }
 
@@ -2458,22 +2549,34 @@
       generalGraded = false;
       document.getElementById("generalResult").classList.add("hidden");
     }
+    scheduleStateSave();
   });
 
   generalAnswerEl.addEventListener("keydown", e => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
 
-      const currentNormalized = normalize(generalAnswerEl.value) || "__blank__";
-      const unchangedAfterGrade = generalGraded && generalLastGradedValue.startsWith(currentNormalized + "|");
-
-      if (reviewActive) {
-        gradeGeneral();
-      } else if (unchangedAfterGrade) {
-        nextGeneral();
-      } else {
-        gradeGeneral();
+      // 총론은 정답을 맞혀도 곧바로 넘기지 않는다.
+      // 첫 Enter는 채점 결과를 보여주고, 같은 정답을 유지한 상태의 두 번째 Enter에서만 다음으로 이동한다.
+      const currentValue = normalize(generalAnswerEl.value) || "__blank__";
+      if (generalGraded && generalLastGradedValue === `${currentValue}|correct`) {
+        const list = filteredGeneral();
+        const q = list[generalIndex];
+        const conceptKey = q ? conceptKeyForGeneral(q.id) : null;
+        if (reviewActive && conceptKey && activeReviewConceptKey === conceptKey) advanceWrongReview();
+        else nextGeneral();
+        return;
       }
+
+      const correct = gradeGeneral();
+      if (correct) {
+        generalAnswerEl.focus();
+        return;
+      }
+
+      // 오답이면 현재 문제에 머물고 즉시 다시 입력할 수 있게 전체 선택한다.
+      generalAnswerEl.focus();
+      requestAnimationFrame(() => generalAnswerEl.select());
     }
   });
 
@@ -2541,8 +2644,17 @@
   }
 
   function runDataAudit() {
-    const result = {subjects:0, areas:0, lines:0, duplicateLineIds:[], configuredTermsMissing:[], missingExplicitIds:[]};
-    const seen = new Set();
+    const result = {
+      subjects: 0, areas: 0, lines: 0,
+      expectedSubjects: 6, expectedAreas: 27, expectedLines: 550,
+      duplicateLineIds: [], missingExplicitIds: [], configuredTermsMissing: [],
+      emptyCore: [], emptyPrecise: [], duplicateConfiguredTerms: [],
+      gapIdLengthMismatch: [], duplicateGapIds: [], gapMeaningConflicts: [],
+      coreNotHiddenInPrecise: [], functionWordGaps: [], overlongGaps: [], sourcePageFields: []
+    };
+    const seenLineIds = new Set();
+    const functionWords = new Set(["및","과","와","의","를","을","에","로","으로","또는","그리고"]);
+
     result.subjects = Object.keys(curriculumData).length;
     Object.entries(curriculumData).forEach(([subjectKey, subject]) => {
       Object.entries(subject).forEach(([areaName, area]) => {
@@ -2550,18 +2662,54 @@
         ["content-system", "achievement"].forEach(group => {
           (area[group] || []).forEach(section => (section.lines || []).forEach(line => {
             result.lines++;
-            const id = line.id || "";
-            if (!id) result.missingExplicitIds.push({subjectKey,areaName,group,text:line.text});
-            const fullId = `${subjectKey}|${areaName}|${group}|${id}`;
-            if (seen.has(fullId)) result.duplicateLineIds.push(fullId); else seen.add(fullId);
-            ["easy", "normal"].forEach(level => (line[level] || []).forEach(term => {
-              if (term && !line.text.includes(term)) result.configuredTermsMissing.push({subjectKey,areaName,group,level,term,text:line.text});
-            }));
+            const id = String(line.id || "");
+            const where = {subjectKey, areaName, group, lineId:id, text:line.text};
+            if (!id) result.missingExplicitIds.push(where);
+            else if (seenLineIds.has(id)) result.duplicateLineIds.push({...where, id});
+            else seenLineIds.add(id);
+            if (Object.prototype.hasOwnProperty.call(line, "sourcePage")) result.sourcePageFields.push(where);
+
+            const meaningByGapId = new Map();
+            ["easy", "normal"].forEach(level => {
+              const terms = Array.isArray(line[level]) ? line[level] : [];
+              const ids = Array.isArray(line.gapIds?.[level]) ? line.gapIds[level] : [];
+              if (!terms.length) (level === "easy" ? result.emptyCore : result.emptyPrecise).push(where);
+              if (ids.length !== terms.length) result.gapIdLengthMismatch.push({...where, level, termCount:terms.length, gapIdCount:ids.length});
+
+              const seenTerms = new Set();
+              const seenIds = new Set();
+              terms.forEach((term, index) => {
+                const normalizedTerm = normalize(term);
+                if (!term || !line.text.includes(term)) result.configuredTermsMissing.push({...where, level, term});
+                if (seenTerms.has(normalizedTerm)) result.duplicateConfiguredTerms.push({...where, level, term});
+                else seenTerms.add(normalizedTerm);
+                const gapId = ids[index] || "";
+                if (gapId && seenIds.has(gapId)) result.duplicateGapIds.push({...where, level, gapId});
+                if (gapId) seenIds.add(gapId);
+                if (gapId && meaningByGapId.has(gapId) && meaningByGapId.get(gapId) !== normalizedTerm) {
+                  result.gapMeaningConflicts.push({...where, gapId, first:meaningByGapId.get(gapId), second:normalizedTerm});
+                } else if (gapId) meaningByGapId.set(gapId, normalizedTerm);
+                if (functionWords.has(String(term).trim())) result.functionWordGaps.push({...where, level, term});
+                if ([...String(term)].length > 12) result.overlongGaps.push({...where, level, term});
+              });
+            });
+
+            const coreSpans = findOccurrences(line.text, buildGapSpecs(line, "easy"));
+            const preciseSpans = findOccurrences(line.text, buildGapSpecs(line, "normal"));
+            coreSpans.forEach(core => {
+              const covered = preciseSpans.some(precise => precise.start <= core.start && precise.end >= core.end);
+              if (!covered) result.coreNotHiddenInPrecise.push({...where, term:core.spec.answer, start:core.start, end:core.end});
+            });
           }));
         });
       });
     });
-    if (result.duplicateLineIds.length || result.configuredTermsMissing.length || result.missingExplicitIds.length) console.warn("CurriLoop 데이터 감사", result);
+
+    result.ok = result.subjects === result.expectedSubjects && result.areas === result.expectedAreas && result.lines === result.expectedLines &&
+      ["duplicateLineIds","missingExplicitIds","configuredTermsMissing","emptyCore","emptyPrecise","duplicateConfiguredTerms","gapIdLengthMismatch","duplicateGapIds","gapMeaningConflicts","coreNotHiddenInPrecise","functionWordGaps","overlongGaps","sourcePageFields"]
+        .every(key => result[key].length === 0);
+    if (!result.ok) console.error("CurriLoop 데이터 감사 실패", result);
+    else console.info("CurriLoop 데이터 감사 통과", {subjects:result.subjects, areas:result.areas, lines:result.lines});
     return result;
   }
 
@@ -2652,16 +2800,20 @@
   // -------------------------
   async function bootstrapCurriLoop() {
     await initializeLearningStorage();
-    fillAreaSelect();
+    restoreUiState();
+    const restoredGeneralAnswer = restoreDraftState();
     setupAccessibleTabs();
     window.CurriLoopAudit = runDataAudit();
-    quizMode = false;
     renderStudy();
     renderGeneral();
+    if (restoredGeneralAnswer) document.getElementById("generalAnswer").value = restoredGeneralAnswer;
     renderHistory();
     await refreshUndoImportButton();
     const requestedTab = new URLSearchParams(location.search).get("tab");
-    if (["general","subject","history"].includes(requestedTab)) showTab(requestedTab);
+    const initialTab = ["general","subject","history"].includes(requestedTab) ? requestedTab : currentTab;
+    showTab(initialTab);
+    statePersistenceReady = true;
+    saveCurrentState();
 
     if (migrationQuarantineCount > 0) {
       console.warn(`CurriLoop: ${migrationQuarantineCount}개의 구형/손상 기록을 격리 보존했습니다.`);
