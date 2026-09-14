@@ -1484,7 +1484,7 @@
   }
 }
 
-/* v6.7.2 실전 재인출: 설정은 숨기고, 필요한 순간에만 짧게 떠오르는 보조 패널 */
+/* v6.7.3 실전 재인출: 설정은 숨기고, 필요한 순간에만 짧게 떠오르는 보조 패널 */
 .practical-retry {
   position: fixed;
   right: 18px;
@@ -1504,6 +1504,17 @@
   font-size: 12px;
   font-weight: 850;
   letter-spacing: .02em;
+}
+
+.practical-retry-meta {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .practical-retry-prompt {

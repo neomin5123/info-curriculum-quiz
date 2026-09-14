@@ -76,8 +76,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.7.2";
-  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7.2 복습 탭 내 직접 복습·Enter 이동 수정·일반적 활용 단독 빈칸 제외; v6.7 실전 엔진 유지";
+  const APP_VERSION = "6.7.3";
+  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7.3 실전 재인출에 과목·영역·출제 항목 문맥 표시; v6.7.2 복습·Enter·저가치 빈칸 개선 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -664,7 +664,9 @@
 
   function hidePracticalRetryPanel() {
     const panel = document.getElementById("practicalRetryPanel");
+    const meta = document.getElementById("practicalRetryMeta");
     if (panel) panel.classList.add("hidden");
+    if (meta) meta.textContent = "";
     activePracticalRetry = null;
   }
 
@@ -705,9 +707,16 @@
       .sort((a,b) => Number(a.dueAt || 0) - Number(b.dueAt || 0))[0];
     if (!due) { panel.classList.add("hidden"); return; }
     activePracticalRetry = due;
+    const meta = document.getElementById("practicalRetryMeta");
     const prompt = document.getElementById("practicalRetryPrompt");
     const input = document.getElementById("practicalRetryInput");
     const feedback = document.getElementById("practicalRetryFeedback");
+    if (meta) {
+      const subject = due.subjectLabel || subjectLabels[due.subjectKey] || due.subjectKey || "각론";
+      const area = due.area || "영역 미상";
+      const group = due.groupLabel || groupLabels[due.sourceGroup || due.groupKey] || due.sourceGroup || due.groupKey || "";
+      meta.textContent = [`과목: ${subject}`, `영역: ${area}`, group ? `출제 항목: ${group}` : ""].filter(Boolean).join("  ·  ");
+    }
     if (prompt) prompt.textContent = blankNth(due.context || "", due.correctAnswer, Number(due.answerOccurrence || 0));
     if (input) { input.value = ""; input.classList.remove("correct","wrong"); }
     if (feedback) feedback.textContent = "아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.";
