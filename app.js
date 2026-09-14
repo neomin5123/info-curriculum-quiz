@@ -64,7 +64,7 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.6.0";
+  const APP_VERSION = "6.6.1";
   const MANUAL_GAP_REVIEW = "2026-09-14 / 핵심 빈칸 효율화; 마스킹·따라치기·빈칸 채우기 3학습 방식; 입력칸 2단계 클릭 선택; 기존 공식 원문 550문장 lock 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
@@ -671,10 +671,29 @@
     button.type = "button";
     button.className = "mask-token" + (sentence ? " sentence-mask" : "");
     button.textContent = spec.answer;
-    button.setAttribute("aria-label", "가린 답. 눌러서 확인");
-    button.setAttribute("aria-pressed", "false");
-    button.title = "눌러서 정답 확인";
+
+    const hoverReveal = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const setHiddenA11y = () => {
+      button.setAttribute("aria-pressed", "false");
+      if (hoverReveal()) {
+        button.setAttribute("aria-label", "가린 답. 마우스를 올리면 확인");
+        button.title = "마우스를 올려 정답 확인";
+      } else {
+        button.setAttribute("aria-label", "가린 답. 눌러서 확인");
+        button.title = "눌러서 정답 확인";
+      }
+    };
+    setHiddenA11y();
+
     button.addEventListener("click", () => {
+      // 마우스 환경에서는 hover 동안만 일시적으로 공개한다. 클릭으로 공개 상태를 고정하지 않는다.
+      if (hoverReveal()) {
+        button.classList.remove("revealed");
+        setHiddenA11y();
+        return;
+      }
+
+      // 터치/hover 불가 환경에서는 기존처럼 탭하여 확인하고 다시 탭하여 가린다.
       const revealed = button.classList.toggle("revealed");
       button.setAttribute("aria-pressed", revealed ? "true" : "false");
       button.setAttribute("aria-label", revealed ? `정답: ${spec.answer}. 다시 누르면 가리기` : "가린 답. 눌러서 확인");
@@ -785,7 +804,7 @@
 
     const statusByMode = {
       original: "",
-      mask: "가린 부분을 눌러 확인",
+      mask: window.matchMedia("(hover: hover) and (pointer: fine)").matches ? "마우스를 올려 확인" : "눌러 확인",
       trace: window.matchMedia("(max-width: 720px)").matches ? "다음: 확인" : "Enter: 확인",
       fill: window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점"
     };

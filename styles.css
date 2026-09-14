@@ -1325,17 +1325,24 @@
   transition: background-color .12s ease, color .12s ease, border-color .12s ease;
 }
 
-.mask-token:hover,
-.mask-token:focus-visible {
-  background: color-mix(in srgb, var(--text) 72%, var(--panel));
-}
-
+.mask-token:focus-visible,
 .mask-token.revealed {
   color: var(--text);
   background: var(--accent-soft);
   border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
   user-select: text;
   -webkit-user-select: text;
+}
+
+/* 마우스/트랙패드에서는 포인터가 올라가 있는 동안만 답을 공개한다. */
+@media (hover: hover) and (pointer: fine) {
+  .mask-token:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+    border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+    user-select: text;
+    -webkit-user-select: text;
+  }
 }
 
 .mask-token.sentence-mask {
