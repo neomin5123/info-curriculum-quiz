@@ -1,13 +1,13 @@
-const CACHE_NAME = "curriloop-v6-7-1-20260914";
+const CACHE_NAME = "curriloop-v6-7-2-20260914";
 const CACHE_PREFIX = "curriloop-";
 
 // 설치가 성공했다면 최소한 앱 본체와 설치 아이콘은 반드시 캐시에 존재하게 한다.
 const CORE_PRECACHE = [
   "/index.html",
-  "/styles.css?v=6.7.1",
-  "/data/curriculum-data.js?v=6.7.1",
-  "/data/supplemental-data.js?v=6.7.1",
-  "/app.js?v=6.7.1",
+  "/styles.css?v=6.7.2",
+  "/data/curriculum-data.js?v=6.7.2",
+  "/data/supplemental-data.js?v=6.7.2",
+  "/app.js?v=6.7.2",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",

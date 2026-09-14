@@ -1484,7 +1484,7 @@
   }
 }
 
-/* v6.7.1 실전 재인출: 설정은 숨기고, 필요한 순간에만 짧게 떠오르는 보조 패널 */
+/* v6.7.2 실전 재인출: 설정은 숨기고, 필요한 순간에만 짧게 떠오르는 보조 패널 */
 .practical-retry {
   position: fixed;
   right: 18px;
@@ -1573,4 +1573,81 @@
     grid-column: 1 / -1;
     justify-self: end;
   }
+}
+
+
+/* v6.7.2 — 복습 탭 안에서 바로 인출하는 단순 복습 흐름 */
+.review-overview {
+  display: grid;
+  grid-template-columns: minmax(150px, .8fr) minmax(150px, .8fr) minmax(240px, 1.4fr);
+  gap: 10px;
+  align-items: stretch;
+  margin: 2px 0 14px;
+}
+.review-stat {
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  border-radius: 12px;
+  padding: 13px 14px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 10px;
+  align-items: baseline;
+}
+.review-stat span { font-weight: 800; }
+.review-stat strong { font-size: 22px; line-height: 1; color: var(--accent); }
+.review-stat small { grid-column: 1 / -1; color: var(--muted); line-height: 1.45; }
+.review-start-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--panel-2);
+}
+.review-session {
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 35%, var(--panel));
+  border-radius: 14px;
+  padding: 16px;
+  margin: 0 0 16px;
+}
+.review-session.hidden { display: none; }
+.review-session-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.review-kicker { display:block; color:var(--accent); font-size:12px; font-weight:850; margin-bottom:3px; }
+.review-session h3 { margin:0; font-size:18px; }
+.review-progress { font-weight:850; color:var(--muted); white-space:nowrap; }
+.review-meta { margin-top:10px; font-size:12px; font-weight:800; color:var(--muted); }
+.review-prompt { margin-top:9px; font-size:17px; line-height:1.7; font-weight:700; }
+.review-answer-row { display:flex; gap:8px; align-items:center; margin-top:13px; }
+.review-answer-row input {
+  flex:1; min-width:0; min-height:42px; border:1px solid var(--line); border-radius:9px;
+  background:var(--panel); color:var(--text); padding:8px 11px; font:inherit;
+}
+.review-answer-row input.correct { border-color:var(--good); background:var(--good-bg); }
+.review-answer-row input.wrong { border-color:var(--bad); background:var(--bad-bg); }
+.review-feedback { min-height:24px; margin-top:9px; color:var(--muted); line-height:1.5; }
+.review-feedback.good { color:var(--good); font-weight:750; }
+.review-feedback.bad { color:var(--bad); font-weight:750; }
+.review-session-actions { display:flex; gap:7px; justify-content:flex-end; margin-top:8px; }
+.history-records { border-top:1px solid var(--line); padding-top:12px; margin-top:8px; }
+.history-records > summary { cursor:pointer; list-style:none; font-weight:850; padding:8px 2px; }
+.history-records > summary::-webkit-details-marker { display:none; }
+.history-records > summary::before { content:"▸"; display:inline-block; margin-right:7px; color:var(--muted); transition:transform .15s ease; }
+.history-records[open] > summary::before { transform:rotate(90deg); }
+.history-records-note { margin-left:7px; color:var(--muted); font-size:12px; font-weight:650; }
+.history-data-actions { margin-top:0; }
+.source-highlight { border-radius:8px; background:color-mix(in srgb, var(--accent-soft) 70%, transparent); transition:background .4s ease; }
+
+@media (max-width: 720px) {
+  .review-overview { grid-template-columns: 1fr 1fr; }
+  .review-start-actions { grid-column: 1 / -1; justify-content:stretch; }
+  .review-start-actions .btn { flex:1; }
+  .review-answer-row { flex-wrap:wrap; }
+  .review-answer-row input { flex-basis:100%; }
+  .review-answer-row .btn { flex:1; }
+  .review-session-actions { justify-content:stretch; }
+  .review-session-actions .btn { flex:1; }
 }

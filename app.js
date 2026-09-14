@@ -72,10 +72,12 @@
   let reviewPosition = -1;
   let reviewActive = false;
   let activeReviewConceptKey = null;
+  let reviewGraded = false;
+  let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.7.1";
-  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7.1 실전 다음 세트·재인출 자동 포커스·입력 커서 개선·저가치 빈칸 제외·단원 자동이동 제거; v6.7 학습 엔진 유지";
+  const APP_VERSION = "6.7.2";
+  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7.2 복습 탭 내 직접 복습·Enter 이동 수정·일반적 활용 단독 빈칸 제외; v6.7 실전 엔진 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -474,11 +476,20 @@
   }
 
   // 실전은 임용에서 변별력이 낮은 일반 서술어를 굳이 단독 빈칸으로 만들지 않는다.
-  // '필요성'·'중요성'처럼 교육과정의 명시적 개념은 남기고, 단독 술어만 제외한다.
-  const PRACTICAL_LOW_VALUE_TERMS = new Set(["필요", "도움", "중요", "가능"]);
+  // '필요성'·'활용 방안'·'윤리적으로 활용'처럼 구체적인 의미 단위는 남긴다.
+  const PRACTICAL_LOW_VALUE_TERMS = new Set(["필요", "도움", "중요", "가능", "사용", "제공"]);
 
-  function isPracticalLowValueEntry(entry) {
-    return PRACTICAL_LOW_VALUE_TERMS.has(normalize(entry?.answer));
+  function isPracticalLowValueEntry(entry, line = null) {
+    const answer = normalize(entry?.answer);
+    if (PRACTICAL_LOW_VALUE_TERMS.has(answer)) return true;
+    if (answer === "활용") {
+      // '다차원 데이터 활용'처럼 짧은 공식 내용 요소 자체가 '활용'으로 끝나는 경우는 살리고,
+      // '…하는 데 활용된다/활용하여…' 같은 긴 문장의 일반 술어만 제외한다.
+      const text = String(line?.text || "").trim();
+      const shortOfficialElement = normalize(text).length <= 14 && /활용(?:하기)?$/.test(text);
+      return !shortOfficialElement;
+    }
+    return false;
   }
 
   function practicalPresentationToken(line) {
@@ -522,8 +533,8 @@
   function selectPracticalEntries(line) {
     const cacheKey = practicalLineKey(line);
     const cached = practicalComboCache.get(cacheKey);
-    const normalEntries = rawConfiguredEntries(line, "normal").filter(entry => !isPracticalLowValueEntry(entry));
-    const easyEntries = rawConfiguredEntries(line, "easy").filter(entry => !isPracticalLowValueEntry(entry));
+    const normalEntries = rawConfiguredEntries(line, "normal").filter(entry => !isPracticalLowValueEntry(entry, line));
+    const easyEntries = rawConfiguredEntries(line, "easy").filter(entry => !isPracticalLowValueEntry(entry, line));
     const base = normalEntries.length ? normalEntries : easyEntries;
     if (!base.length) return [];
     if (cached?.length) {
@@ -1002,7 +1013,9 @@
         selectFilledGapText(true);
         return;
       }
-      if (reviewActive || activePracticalRetry) return;
+      // 복습 세션은 이제 복습 탭 안에서만 진행하므로, 과거 reviewActive 상태가 일반 학습의 Enter 이동을 막지 않는다.
+      // 실전 지연 재인출이 실제로 등장한 경우에만 그 입력칸을 우선한다.
+      if (activePracticalRetry) { focusPracticalRetryInput(); return; }
       requestAnimationFrame(() => advanceAfterGrade(input));
     };
 
@@ -1228,6 +1241,7 @@
         } else {
           const p = document.createElement("div");
           p.className = "line-item";
+          p.dataset.lineId = line.id || makeLineStableId(section.title, line.text, "");
           p.textContent = line.text;
           td.appendChild(p);
         }
@@ -2160,95 +2174,18 @@
   }
 
 
-  function retryHistoryItem(item, preserveReview = false) {
-    if (!preserveReview) { reviewActive = false; activeReviewConceptKey = null; }
-
-    if (item.type === "general") {
-      const index = generalBank.findIndex(q => q.id === item.generalId || q.q === item.question || q.q === item.context);
-      if (index < 0) return;
-
-      generalShuffleState = null;
-      document.getElementById("generalCategory").value = "all";
-      generalIndex = index;
-      showTab("general");
-      renderGeneral();
-      activeReviewConceptKey = item.conceptKey || (generalBank[index] ? conceptKeyForGeneral(generalBank[index].id) : null);
-      requestAnimationFrame(() => document.getElementById("generalAnswer").focus());
-      return;
-    }
-
-    if (item.type === "subject" && item.subjectKey && item.area) {
-      showTab("subject");
-
-      document.getElementById("subjectSelect").value = item.subjectKey;
-      if (SUBJECT_GROUPS.includes(item.groupKey)) document.getElementById("groupSelect").value = item.groupKey;
-      fillAreaSelect();
-      if ([...document.getElementById("areaSelect").options].some(option => option.value === item.area)) {
-        document.getElementById("areaSelect").value = item.area;
-      }
-      const retryDifficulty = item.difficultyKey === "hard" || item.difficultyKey === "practical" ? "normal" : item.difficultyKey;
-      if (["easy","normal","yaho"].includes(retryDifficulty)) document.getElementById("difficultySelect").value = retryDifficulty;
-
-      currentAreaIndex = 0;
-      currentRandomUnit = null;
-      studyMode = "fill";
-
-        activeReviewConceptKey = item.conceptKey || null;
-
-      renderStudy();
-
-      requestAnimationFrame(() => {
-        const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
-
-        let target = null;
-
-        if (item.lineId && item.gapId) {
-          target = inputs.find(input =>
-            input.dataset.lineId === item.lineId &&
-            input.dataset.gapId === item.gapId &&
-            Number(input.dataset.answerOccurrence || 0) === Number(item.answerOccurrence || 0)
-          );
-        }
-
-        // v6.0 이하 answer-text 기반 기록 호환
-        if (!target && item.lineId && item.answerText) {
-          target = inputs.find(input =>
-            input.dataset.lineId === item.lineId &&
-            normalize(input.dataset.answer) === normalize(item.answerText) &&
-            Number(input.dataset.answerOccurrence || 0) === Number(item.answerOccurrence || 0)
-          );
-        }
-
-        // 원문/수동 빈칸 문구가 크게 바뀐 경우에도 stable line ID가 같으면 같은 문장 안의 첫 빈칸으로 연결한다.
-        if (!target && item.lineId) {
-          target = inputs.find(input => input.dataset.lineId === item.lineId);
-        }
-
-        // v4 이전 위치 기반 오답 기록 호환
-        if (!target) {
-          target = inputs.find(input =>
-            Number(input.dataset.sectionIndex) === Number(item.sectionIndex || 0) &&
-            Number(input.dataset.lineIndex) === Number(item.lineIndex || 0)
-          );
-        }
-
-        if (target) {
-          delete fieldState[target.dataset.stateKey];
-          target.value = "";
-          target.classList.remove("correct", "wrong");
-          target.focus();
-        } else {
-          alert("교육과정 데이터가 변경되어 기존 오답 위치를 정확히 찾지 못했습니다. 현재 단원의 첫 빈칸으로 이동합니다.");
-          focusFirstEmpty();
-        }
-      });
-    }
-  }
-
   function isWeakHistoryItem(item, mastery = loadMastery()) {
     if (!item || item.resolved) return false;
     const masteryItem = mastery[item.conceptKey] || null;
     return Number(item.attempts || 0) >= 2 || Number(masteryItem?.wrongCount || 0) >= 2;
+  }
+
+  function isReviewWorthyHistoryItem(item) {
+    if (!item || item.type !== "subject") return true;
+    return !isPracticalLowValueEntry(
+      {answer:item.correctAnswer || item.answerText || ""},
+      {text:item.context || ""}
+    );
   }
 
   function reviewItemFromConceptKey(conceptKey) {
@@ -2271,19 +2208,89 @@
 
     let difficultyKey = "normal";
     let answer = "";
+    let aliases = [];
     for (const level of ["easy", "normal", "yaho"]) {
       const entry = configuredGapEntries(meta.line, level).find(candidate => candidate.gapId === gapId);
-      if (entry) { difficultyKey = level; answer = entry.answer; break; }
+      if (entry) {
+        difficultyKey = level;
+        answer = entry.answer;
+        aliases = getSafeAliases(answer, meta.line.aliases);
+        break;
+      }
     }
     if (!answer) return null;
+    // 실전에서 제외한 저변별 일반어는 자동 복습 큐에서도 다시 요구하지 않는다.
+    if (isPracticalLowValueEntry({answer}, meta.line)) return null;
     return {
       type:"subject", key:conceptKey, conceptKey, subjectKey, area,
       sourceGroup, groupKey:sourceGroup, groupLabel:groupLabels[sourceGroup] || sourceGroup,
       subjectLabel:subjectLabels[subjectKey] || subjectKey,
       lineId:meta.line.id, gapId, answerOccurrence:Number(occurrenceRaw || 0),
       difficultyKey, difficultyLabel:difficultyLabel(difficultyKey),
-      context:meta.line.text, answerText:answer, correctAnswer:answer, attempts:0, resolved:false
+      context:meta.line.text, answerText:answer, correctAnswer:answer, aliases, attempts:0, resolved:false
     };
+  }
+
+  function reviewMetaText(item) {
+    if (!item) return "";
+    if (item.type === "general") return ["총론", item.categoryLabel].filter(Boolean).join(" · ");
+    return [item.subjectLabel, item.area, item.groupLabel].filter(Boolean).join(" · ");
+  }
+
+  function renderReviewSession(completed = false) {
+    const panel = document.getElementById("reviewSession");
+    const prompt = document.getElementById("reviewPrompt");
+    const meta = document.getElementById("reviewMeta");
+    const progress = document.getElementById("reviewProgress");
+    const input = document.getElementById("reviewAnswer");
+    const feedback = document.getElementById("reviewFeedback");
+    const primary = document.getElementById("reviewPrimaryButton");
+    const skip = document.getElementById("reviewSkipButton");
+    if (!panel || !prompt || !input || !feedback || !primary) return;
+
+    if (completed) {
+      panel.classList.remove("hidden");
+      if (progress) progress.textContent = "완료";
+      if (meta) meta.textContent = "";
+      prompt.textContent = "오늘의 복습을 마쳤습니다.";
+      input.value = "";
+      input.className = "";
+      input.readOnly = true;
+      input.classList.add("hidden");
+      primary.textContent = "복습 닫기";
+      primary.onclick = stopReviewSession;
+      if (skip) skip.classList.add("hidden");
+      feedback.className = "review-feedback good";
+      feedback.textContent = "필요한 항목만 다시 꺼냈습니다. 새 범위를 학습해도 좋습니다.";
+      return;
+    }
+
+    const item = reviewQueue[reviewPosition];
+    if (!reviewActive || !item) { panel.classList.add("hidden"); return; }
+    panel.classList.remove("hidden");
+    reviewGraded = false;
+    reviewLastStatus = "";
+    activeReviewConceptKey = item.conceptKey || null;
+    if (progress) progress.textContent = `${Math.min(reviewPosition + 1, reviewQueue.length)} / ${reviewQueue.length}`;
+    if (meta) meta.textContent = reviewMetaText(item);
+    prompt.textContent = item.type === "general"
+      ? (item.question || item.context || "")
+      : blankNth(item.context || "", item.correctAnswer || item.answerText || "", Number(item.answerOccurrence || 0));
+    input.classList.remove("hidden", "correct", "wrong");
+    input.readOnly = false;
+    input.value = "";
+    input.placeholder = item.type === "general" ? "필요한 답을 모두 입력" : "정답을 떠올려 입력";
+    primary.textContent = "채점";
+    primary.onclick = reviewPrimaryAction;
+    if (skip) skip.classList.remove("hidden");
+    feedback.className = "review-feedback";
+    feedback.textContent = "Enter: 채점 · 채점 후 Enter: 다음";
+    requestAnimationFrame(() => {
+      if (currentTab === "history") {
+        input.focus({preventScroll:true});
+        input.scrollIntoView({block:"center", behavior:"smooth"});
+      }
+    });
   }
 
   function startWrongReview(dueOnly = true) {
@@ -2300,41 +2307,186 @@
           if (aWrong !== bWrong) return bWrong - aWrong;
           return Number(a.state?.nextReviewAt || 0) - Number(b.state?.nextReviewAt || 0);
         })
-        .map(({item}) => item);
+        .map(({item}) => ({...item, _sessionFailures:0}));
       if (!reviewQueue.length) { alert("오늘 복습할 항목이 없습니다."); return; }
     } else {
       reviewQueue = loadHistory()
-        .filter(item => isWeakHistoryItem(item, mastery))
+        .filter(item => isWeakHistoryItem(item, mastery) && isReviewWorthyHistoryItem(item))
         .sort((a,b) => {
           const aWrong = Number(mastery[a.conceptKey]?.wrongCount || a.attempts || 1);
           const bWrong = Number(mastery[b.conceptKey]?.wrongCount || b.attempts || 1);
           return bWrong - aWrong;
-        });
+        })
+        .map(item => ({...item, _sessionFailures:0}));
       if (!reviewQueue.length) { alert("반복해서 틀린 취약 항목이 없습니다."); return; }
     }
 
     reviewPosition = 0;
     reviewActive = true;
-    openCurrentReviewItem();
+    reviewGraded = false;
+    activeReviewConceptKey = reviewQueue[0]?.conceptKey || null;
+    if (currentTab !== "history") showTab("history");
+    renderReviewSession();
   }
 
-  function openCurrentReviewItem() {
-    const item = reviewQueue[reviewPosition];
-    if (!item) {
-      reviewActive = false;
-      activeReviewConceptKey = null;
-      alert("복습을 완료했습니다.");
-      showTab("history");
-      return;
-    }
+  function startHistoryItemReview(key) {
+    const item = loadHistory().find(entry => entry.key === key);
+    if (!item) return;
+    reviewQueue = [{...item, _sessionFailures:0}];
+    reviewPosition = 0;
+    reviewActive = true;
+    reviewGraded = false;
     activeReviewConceptKey = item.conceptKey || null;
-    retryHistoryItem(item, true);
+    showTab("history");
+    renderReviewSession();
+  }
+
+  function currentReviewItem() {
+    return reviewActive ? reviewQueue[reviewPosition] || null : null;
+  }
+
+  function gradeReviewAnswer() {
+    const item = currentReviewItem();
+    const input = document.getElementById("reviewAnswer");
+    const feedback = document.getElementById("reviewFeedback");
+    const primary = document.getElementById("reviewPrimaryButton");
+    if (!item || !input || reviewGraded) return;
+
+    let status = "wrong";
+    if (item.type === "general") {
+      const q = generalBank.find(q => q.id === item.generalId);
+      status = q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong";
+    } else {
+      status = classifyRawAnswer(input.value, item.correctAnswer || item.answerText || "", item.aliases || []);
+    }
+    const success = status !== "wrong";
+    const signature = `${normalize(input.value) || "__blank__"}|review|${status}`;
+    const eventToken = makeGradingEventToken("review", item.conceptKey, signature);
+    const masteryItem = updateMastery(item.conceptKey, success, eventToken);
+
+    reviewGraded = true;
+    reviewLastStatus = status;
+    input.readOnly = true;
+    input.classList.toggle("correct", success);
+    input.classList.toggle("wrong", !success);
+    if (primary) primary.textContent = "다음";
+
+    if (success) {
+      if (feedback) {
+        feedback.className = "review-feedback good";
+        feedback.textContent = status === "near"
+          ? `표기 확인: ${item.correctAnswer || item.answerText || ""} · 이번 복습은 성공으로 처리했습니다.`
+          : `✓ 정답 · ${item.correctAnswer || item.answerText || item.correctAnswer || ""}`;
+      }
+    } else {
+      const failures = Number(item._sessionFailures || 0) + 1;
+      item._sessionFailures = failures;
+      if (Number(masteryItem?.wrongCount || 0) >= 2) {
+        addWrongHistory({
+          ...item,
+          key:item.key || item.conceptKey,
+          conceptKey:item.conceptKey,
+          userAnswer:input.value,
+          correctAnswer:item.correctAnswer || item.answerText || "",
+          attempts:Number(masteryItem.wrongCount || 2)
+        }, eventToken);
+      }
+      // 한 세션에서 무한 반복시키지 않는다. 첫 실패만 3개 정도 뒤에 한 번 재인출한다.
+      if (failures < 2) {
+        const retry = {...item, _sessionFailures:failures};
+        const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
+        reviewQueue.splice(insertAt, 0, retry);
+      }
+      if (feedback) {
+        feedback.className = "review-feedback bad";
+        feedback.textContent = `✕ 정답: ${item.correctAnswer || item.answerText || ""}${failures < 2 ? " · 몇 문제 뒤 한 번 더 확인합니다." : " · 다음 복습에서도 다시 확인합니다."}`;
+      }
+    }
+  }
+
+  function reviewPrimaryAction() {
+    if (!reviewActive) { stopReviewSession(); return; }
+    if (!reviewGraded) gradeReviewAnswer();
+    else advanceWrongReview();
   }
 
   function advanceWrongReview() {
     if (!reviewActive) return;
     reviewPosition += 1;
-    setTimeout(openCurrentReviewItem, 250);
+    if (reviewPosition >= reviewQueue.length) {
+      reviewActive = false;
+      activeReviewConceptKey = null;
+      reviewGraded = false;
+      renderReviewSession(true);
+      renderHistory();
+      return;
+    }
+    renderReviewSession();
+  }
+
+  function skipReviewItem() {
+    if (!reviewActive) return;
+    // 건너뛴 항목은 학습 결과를 기록하지 않고 세션 맨 뒤로 한 번 보낸다.
+    const item = currentReviewItem();
+    if (item && !item._skippedOnce) reviewQueue.push({...item, _skippedOnce:true});
+    reviewPosition += 1;
+    if (reviewPosition >= reviewQueue.length) {
+      reviewActive = false;
+      activeReviewConceptKey = null;
+      renderReviewSession(true);
+      return;
+    }
+    renderReviewSession();
+  }
+
+  function stopReviewSession() {
+    reviewActive = false;
+    reviewQueue = [];
+    reviewPosition = -1;
+    activeReviewConceptKey = null;
+    reviewGraded = false;
+    const panel = document.getElementById("reviewSession");
+    if (panel) panel.classList.add("hidden");
+    renderHistory();
+  }
+
+  function openHistorySource(item) {
+    if (!item) return;
+    if (item.type === "general") {
+      const index = generalBank.findIndex(q => q.id === item.generalId);
+      if (index < 0) return;
+      generalShuffleState = null;
+      document.getElementById("generalCategory").value = "all";
+      generalIndex = index;
+      showTab("general");
+      renderGeneral();
+      return;
+    }
+    if (item.type !== "subject" || !item.subjectKey || !item.area) return;
+    document.getElementById("subjectSelect").value = item.subjectKey;
+    if (["all", ...SUBJECT_GROUPS].includes(item.sourceGroup || item.groupKey)) {
+      document.getElementById("groupSelect").value = item.sourceGroup || item.groupKey;
+    }
+    fillAreaSelect();
+    const areaSelect = document.getElementById("areaSelect");
+    if ([...areaSelect.options].some(option => option.value === item.area)) areaSelect.value = item.area;
+    currentAreaIndex = 0;
+    currentRandomUnit = null;
+    studyMode = "original";
+    showTab("subject");
+    requestAnimationFrame(() => {
+      const target = [...document.querySelectorAll("#studyArea .line-item[data-line-id]")]
+        .find(line => line.dataset.lineId === item.lineId);
+      if (target) {
+        target.classList.add("source-highlight");
+        target.scrollIntoView({block:"center", behavior:"smooth"});
+        setTimeout(() => target.classList.remove("source-highlight"), 1800);
+      }
+    });
+  }
+
+  function openCurrentReviewSource() {
+    openHistorySource(currentReviewItem());
   }
 
   const PREIMPORT_BACKUP_KEY = "curriloop-preimport-backup-v1"; // v6.0 이하 fallback 호환
@@ -2663,6 +2815,7 @@
     reviewQueue = [];
     reviewPosition = -1;
     activeReviewConceptKey = null;
+    reviewGraded = false;
     learningStateMemory.history = [];
     learningStateMemory.mastery = {};
     practicalRetryQueue = [];
@@ -2714,16 +2867,30 @@
     const dueCount = Object.entries(mastery).filter(([conceptKey, state]) =>
       Number(state?.nextReviewAt || 0) > 0 && Number(state.nextReviewAt) <= Date.now() && Boolean(reviewItemFromConceptKey(conceptKey))
     ).length;
+    const weakList = loadHistory().filter(item => isWeakHistoryItem(item, mastery) && isReviewWorthyHistoryItem(item));
+    const weakCount = weakList.length;
+
+    const dueEl = document.getElementById("reviewDueCount");
+    const weakEl = document.getElementById("reviewWeakCount");
+    if (dueEl) dueEl.textContent = String(dueCount);
+    if (weakEl) weakEl.textContent = String(weakCount);
     const todayButton = document.getElementById("todayReviewButton");
+    const weakButton = document.getElementById("weakReviewButton");
     if (todayButton) {
-      todayButton.textContent = `오늘 복습 ${dueCount}개`;
+      todayButton.textContent = dueCount ? `오늘 복습 시작 · ${dueCount}` : "오늘 복습 완료";
       todayButton.disabled = dueCount === 0;
     }
+    if (weakButton) {
+      weakButton.textContent = weakCount ? `취약 항목 복습 · ${weakCount}` : "취약 항목 없음";
+      weakButton.disabled = weakCount === 0;
+    }
+
+    if (reviewActive && currentTab === "history") renderReviewSession();
+
     let list = loadHistory();
     if (filter === "weak") list = list.filter(item => isWeakHistoryItem(item, mastery));
     else if (filter === "resolved") list = list.filter(item => item.resolved);
     else if (filter === "general" || filter === "subject") list = list.filter(item => item.type === filter);
-    // all은 기존 기록을 포함한 전체 이력을 그대로 보여 준다.
     if (search) {
       list = list.filter(item => normalize([item.context, item.question, item.correctAnswer, item.userAnswer, item.area, item.subjectLabel].filter(Boolean).join(" ")).includes(search));
     }
@@ -2732,7 +2899,7 @@
     container.innerHTML = "";
 
     if (!list.length) {
-      const emptyCopy = filter === "weak" || filter === "due"
+      const emptyCopy = filter === "weak"
         ? "반복해서 틀린 취약 항목이 없습니다.<br>한 번의 오타나 자잘한 실수는 취약 항목으로 쌓지 않습니다."
         : "조건에 맞는 복습 기록이 없습니다.";
       container.innerHTML = `<div class="history-empty">${emptyCopy}</div>`;
@@ -2773,15 +2940,15 @@
         </div>
 
         <div class="history-actions">
-          <button class="btn" type="button" data-history-retry="${escapeHtml(item.key)}">다시 풀기</button>
-          <button class="btn" type="button" data-history-key="${escapeHtml(item.key)}">삭제</button>
+          <button class="btn" type="button" data-history-review="${escapeHtml(item.key)}">이 페이지에서 복습</button>
+          <button class="btn soft" type="button" data-history-source="${escapeHtml(item.key)}">원문에서 보기</button>
+          <button class="btn soft" type="button" data-history-key="${escapeHtml(item.key)}">삭제</button>
         </div>
       `;
 
-      const retryButton = card.querySelector("button[data-history-retry]");
-      if (retryButton) retryButton.addEventListener("click", () => retryHistoryItem(item));
-      const deleteButton = card.querySelector("button[data-history-key]");
-      if (deleteButton) deleteButton.addEventListener("click", () => removeHistoryItem(item.key));
+      card.querySelector("button[data-history-review]")?.addEventListener("click", () => startHistoryItemReview(item.key));
+      card.querySelector("button[data-history-source]")?.addEventListener("click", () => openHistorySource(item));
+      card.querySelector("button[data-history-key]")?.addEventListener("click", () => removeHistoryItem(item.key));
       container.appendChild(card);
     });
   }
@@ -2916,7 +3083,6 @@
     updateScore();
     if (practical && isNewGradingEvent) maybeShowPracticalRetry();
 
-    if (correct && reviewActive && activeReviewConceptKey === conceptKey) advanceWrongReview();
     return correct;
   }
 
@@ -2995,11 +3161,18 @@
     const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
     const i = inputs.indexOf(current);
 
-    if (i >= 0 && inputs[i + 1]) {
-      const target = inputs[i + 1];
-      target.focus();
-      requestAnimationFrame(() => target.scrollIntoView({block:"center", behavior:"smooth"}));
-      return;
+    if (i >= 0) {
+      // 이미 맞힌 칸을 건너뛰고 다음 미완료 입력칸으로 이동한다.
+      // 사용자가 앞 칸을 다시 수정해도 Enter가 '다음 빈칸'이라는 기대대로 동작한다.
+      const target = inputs.slice(i + 1).find(input => {
+        const status = fieldState[input.dataset.stateKey]?.status;
+        return status !== "correct" && status !== "near" && status !== "trace-correct";
+      });
+      if (target) {
+        target.focus();
+        requestAnimationFrame(() => target.scrollIntoView({block:"center", behavior:"smooth"}));
+        return;
+      }
     }
 
     // 단원의 마지막 답을 맞혀도 다음 단원/랜덤 단원으로 자동 이동하지 않는다.
@@ -3236,10 +3409,6 @@
     }
 
     updateGeneralProgress();
-    if (ok && !duplicate && reviewActive && activeReviewConceptKey === conceptKey) {
-      activeReviewConceptKey = null;
-      setTimeout(() => { if (reviewActive) advanceWrongReview(); }, 450);
-    }
     return ok;
   }
 
@@ -3283,11 +3452,7 @@
       // 첫 Enter는 채점 결과를 보여주고, 같은 정답을 유지한 상태의 두 번째 Enter에서만 다음으로 이동한다.
       const currentValue = normalize(generalAnswerEl.value) || "__blank__";
       if (generalGraded && generalLastGradedValue === `${currentValue}|correct`) {
-        const list = filteredGeneral();
-        const q = list[generalIndex];
-        const conceptKey = q ? conceptKeyForGeneral(q.id) : null;
-        if (reviewActive && conceptKey && activeReviewConceptKey === conceptKey) advanceWrongReview();
-        else nextGeneral();
+        nextGeneral();
         return;
       }
 
@@ -3568,6 +3733,10 @@
     const retryInput = document.getElementById("practicalRetryInput");
     if (retryInput) retryInput.addEventListener("keydown", event => {
       if (event.key === "Enter") { event.preventDefault(); gradePracticalRetry(); }
+    });
+    const reviewAnswer = document.getElementById("reviewAnswer");
+    if (reviewAnswer) reviewAnswer.addEventListener("keydown", event => {
+      if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); reviewPrimaryAction(); }
     });
     window.CurriLoopAudit = runDataAudit();
     renderStudy();
