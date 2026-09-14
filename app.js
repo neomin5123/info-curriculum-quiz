@@ -20,7 +20,7 @@
   // -------------------------
   // 2) 교육과정 데이터
   // line(text, 핵심 키워드, 정밀 키워드)
-  // 공개판은 핵심·정밀 수동 큐레이션과 야~호! 문장 완전 회상의 3단계다.
+  // 기존 핵심·정밀·야~호!는 그대로 유지하고, 실전은 수동 빈칸 후보를 학습 이력에 따라 회전시킨다.
   // -------------------------
 
   const subjectSourceMeta = {
@@ -43,6 +43,14 @@
 
   const curriculumData = window.CURRILOOP_CURRICULUM_DATA;
   const generalBank = window.CURRILOOP_GENERAL_BANK;
+  const COMMON_AREA = window.CURRILOOP_COMMON_AREA || "과목 공통";
+  const SUBJECT_GROUPS = ["character-goal", "content-system", "achievement", "teaching-evaluation"];
+  const groupLabels = {
+    "character-goal":"성격·목표",
+    "content-system":"내용 체계",
+    "achievement":"성취기준",
+    "teaching-evaluation":"교수학습·평가"
+  };
 
   // -------------------------
   // 4) 상태
@@ -57,6 +65,8 @@
   let generalIndex = 0;
   let generalGraded = false;
   let generalLastGradedValue = "";
+  let generalCorrectCounted = false;
+  let generalWrongCounted = false;
   let generalShuffleState = null;
   let reviewQueue = [];
   let reviewPosition = -1;
@@ -64,10 +74,19 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.6.2";
-  const MANUAL_GAP_REVIEW = "2026-09-14 / 핵심 빈칸 효율화; 마스킹·따라치기·빈칸 채우기 3학습 방식; 입력칸 2단계 클릭 선택; 기존 공식 원문 550문장 lock 유지";
+  const APP_VERSION = "6.7.0";
+  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7 실전 회전 빈칸·지연 재인출·취약 복습; 성격·목표·교수학습·평가 기출연계 원문 보강; 기존 공식 원문 550문장 lock 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
+
+  const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
+  const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v1";
+  const practicalComboCache = new Map();
+  const practicalPresentationTokens = new Map();
+  let practicalPresentationSerial = 0;
+  let practicalGradeSerial = 0;
+  let practicalRetryQueue = [];
+  let activePracticalRetry = null;
 
   // -------------------------
   // 5) 공통 유틸
@@ -113,6 +132,9 @@
     if (tab === "subject") {
       renderStudy();
       requestAnimationFrame(updateStickyMetrics);
+      requestAnimationFrame(maybeShowPracticalRetry);
+    } else {
+      hidePracticalRetryPanel();
     }
 
     if (tab === "history") {
@@ -128,9 +150,16 @@
   function isInputStudyMode(mode = studyMode) { return mode === "fill" || mode === "trace"; }
   function isScoredStudyMode(mode = studyMode) { return mode === "fill"; }
 
-  function getAllUnits() {
-    return Object.entries(subjectAreas).flatMap(([subject, areas]) =>
-      areas.map(area => ({ subject, area }))
+  function areasForSubject(subject, group = getCurrentGroup()) {
+    const regular = subjectAreas[subject] || [];
+    if (group === "character-goal" || group === "teaching-evaluation") return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA] : [];
+    if (group === "content-system" || group === "achievement") return [...regular];
+    return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA, ...regular] : [...regular];
+  }
+
+  function getAllUnits(group = getCurrentGroup()) {
+    return Object.keys(subjectAreas).flatMap(subject =>
+      areasForSubject(subject, group).map(area => ({ subject, area }))
     );
   }
 
@@ -160,11 +189,12 @@
 
   function chooseRandomUnit() {
     const subject = getCurrentSubject();
+    const group = getCurrentGroup();
     let pool = subject === "all"
-      ? getAllUnits()
-      : (subjectAreas[subject] || []).map(area => ({ subject, area }));
+      ? getAllUnits(group)
+      : areasForSubject(subject, group).map(area => ({ subject, area }));
 
-    const bagKey = `${subject}|${getCurrentGroup()}`;
+    const bagKey = `${subject}|${group}`;
     const validKeys = new Set(pool.map(unitKey));
 
     let bag = (shuffleBags[bagKey] || []).filter(key => validKeys.has(key));
@@ -188,6 +218,7 @@
 
   function getUnitSequence() {
     const subject = getCurrentSubject();
+    const group = getCurrentGroup();
     const selectedArea = document.getElementById("areaSelect").value;
 
     if (selectedArea === "random") {
@@ -198,16 +229,10 @@
     const decoded = decodeUnit(selectedArea);
     if (decoded) return [decoded];
 
-    if (subject === "all") {
-      return getAllUnits();
-    }
+    if (subject === "all") return getAllUnits(group);
 
-    const areas = subjectAreas[subject] || [];
-
-    if (selectedArea === "all") {
-      return areas.map(area => ({ subject, area }));
-    }
-
+    const areas = areasForSubject(subject, group);
+    if (selectedArea === "all") return areas.map(area => ({ subject, area }));
     return selectedArea ? [{ subject, area: selectedArea }] : [];
   }
 
@@ -220,6 +245,7 @@
 
 
   function onSubjectChange() {
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
     currentAreaIndex = 0;
     currentRandomUnit = null;
     fillAreaSelect();
@@ -231,42 +257,42 @@
   function fillAreaSelect() {
     const select = document.getElementById("areaSelect");
     const subject = getCurrentSubject();
+    const groupKey = getCurrentGroup();
     const previous = select.value;
 
     select.innerHTML = "";
 
     const all = document.createElement("option");
     all.value = "all";
-    all.textContent = "전체 단원";
+    all.textContent = groupKey === "character-goal" || groupKey === "teaching-evaluation" ? "전체 과목" : "전체 단원";
     select.appendChild(all);
 
     const random = document.createElement("option");
     random.value = "random";
-    random.textContent = "랜덤 단원";
+    random.textContent = groupKey === "character-goal" || groupKey === "teaching-evaluation" ? "랜덤 과목" : "랜덤 단원";
     select.appendChild(random);
 
     if (subject === "all") {
-      Object.entries(subjectAreas).forEach(([subjectKey, areas]) => {
-        const group = document.createElement("optgroup");
-        group.label = subjectLabels[subjectKey];
-
+      Object.keys(subjectAreas).forEach(subjectKey => {
+        const areas = areasForSubject(subjectKey, groupKey);
+        if (!areas.length) return;
+        const optgroup = document.createElement("optgroup");
+        optgroup.label = subjectLabels[subjectKey];
         areas.forEach(area => {
           const op = document.createElement("option");
           op.value = encodeUnit(subjectKey, area);
-          op.textContent = `${subjectLabels[subjectKey]} · ${area}`;
-          group.appendChild(op);
+          op.textContent = area === COMMON_AREA ? `${subjectLabels[subjectKey]} · 과목 공통` : `${subjectLabels[subjectKey]} · ${area}`;
+          optgroup.appendChild(op);
         });
-
-        select.appendChild(group);
+        select.appendChild(optgroup);
       });
     } else {
-      (subjectAreas[subject] || [])
-        .forEach(area => {
-          const op = document.createElement("option");
-          op.value = area;
-          op.textContent = area;
-          select.appendChild(op);
-        });
+      areasForSubject(subject, groupKey).forEach(area => {
+        const op = document.createElement("option");
+        op.value = area;
+        op.textContent = area;
+        select.appendChild(op);
+      });
     }
 
     const optionValues = [...select.options].map(o => o.value);
@@ -274,6 +300,7 @@
   }
 
   function onAreaChange() {
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
     currentAreaIndex = 0;
 
     if (document.getElementById("areaSelect").value === "random") {
@@ -287,6 +314,7 @@
   }
 
   function onGroupChange() {
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
     currentAreaIndex = 0;
     currentRandomUnit = null;
     fillAreaSelect();
@@ -295,6 +323,8 @@
   }
 
   function onDifficultyChange() {
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
+    hidePracticalRetryPanel();
     const focusSnapshot = lastStudyFocus ? {...lastStudyFocus} : null;
     renderStudy();
 
@@ -305,6 +335,7 @@
   }
 
   function moveUnit(delta) {
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
     if (document.getElementById("areaSelect").value === "random") {
       if (delta > 0) {
         chooseRandomUnit();
@@ -342,7 +373,9 @@
     if (!unit.subject || !unit.area) return;
     const difficulty = getCurrentDifficulty();
     const selectedGroup = getCurrentGroup();
-    const groups = selectedGroup === "all" ? ["content-system", "achievement"] : [selectedGroup];
+    const groups = selectedGroup === "all"
+      ? (unit.area === COMMON_AREA ? ["character-goal", "teaching-evaluation"] : ["content-system", "achievement"])
+      : [selectedGroup];
     const basePrefixes = groups.map(group => [unit.subject, unit.area, group, difficulty].join("|") + "|");
     const tracePrefixes = basePrefixes.map(prefix => `trace|${prefix}`);
 
@@ -381,10 +414,16 @@
     const unit = curriculumData[subject]?.[area];
     if (!unit) return [];
     const tagged = (sections, sourceGroup) => (sections || []).map(section => ({...section, _sourceGroup: sourceGroup}));
-    if (group === "all") return [
-      ...tagged(unit["content-system"], "content-system"),
-      ...tagged(unit.achievement, "achievement")
-    ];
+    if (group === "all") {
+      if (area === COMMON_AREA) return [
+        ...tagged(unit["character-goal"], "character-goal"),
+        ...tagged(unit["teaching-evaluation"], "teaching-evaluation")
+      ];
+      return [
+        ...tagged(unit["content-system"], "content-system"),
+        ...tagged(unit.achievement, "achievement")
+      ];
+    }
     return tagged(unit[group], group);
   }
 
@@ -402,12 +441,314 @@
     return explicitId || `${stableHash(sectionTitle)}-${stableHash(lineText)}`;
   }
 
+  function loadPracticalStats() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PRACTICAL_STATS_KEY) || "{}");
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch { return {}; }
+  }
+
+  const practicalStats = loadPracticalStats();
+
+  function savePracticalStats() {
+    safeSetLocalStorage(PRACTICAL_STATS_KEY, JSON.stringify(practicalStats));
+  }
+
+  function replacePracticalStats(next = {}) {
+    Object.keys(practicalStats).forEach(key => delete practicalStats[key]);
+    if (next && typeof next === "object" && !Array.isArray(next)) {
+      Object.entries(next).forEach(([key, value]) => { practicalStats[key] = cloneJson(value, value); });
+    }
+    savePracticalStats();
+  }
+
+  function practicalLineKey(line) {
+    const unit = getCurrentUnit();
+    return `${unit.subject}|${unit.area}|${line?.id || stableHash(line?.text || "")}`;
+  }
+
+  function practicalTargetKey(line, gapId) {
+    return `${practicalLineKey(line)}|${gapId}`;
+  }
+
+  function practicalPresentationToken(line) {
+    return practicalPresentationTokens.get(practicalLineKey(line)) || "";
+  }
+
+  function rawConfiguredEntries(line, difficulty) {
+    const configured = difficulty === "easy" ? (line?.easy || []) : (line?.normal || []);
+    const ids = line?.gapIds?.[difficulty] || [];
+    const seen = new Set();
+    const entries = [];
+    configured.forEach((answer, index) => {
+      if (!answer || !line?.text?.includes(answer)) return;
+      const key = normalize(answer);
+      if (seen.has(key)) return;
+      seen.add(key);
+      entries.push({answer, gapId: ids[index] || `legacy-${stableHash(`${difficulty}|${line?.id || ""}|${index}`)}`});
+    });
+    return entries;
+  }
+
+  function practicalRenderedOccurrences(line, entries) {
+    if (!entries.length) return [];
+    const specs = entries.map(entry => ({...entry, aliases:[], sentence:false, compound:entry.answer.includes(" ")}));
+    return findOccurrences(line.text, specs);
+  }
+
+  function practicalSelectionRendersEveryTarget(line, entries) {
+    if (!entries.length) return false;
+    const renderedIds = new Set(practicalRenderedOccurrences(line, entries).map(item => item.spec.gapId));
+    return entries.every(entry => renderedIds.has(entry.gapId));
+  }
+
+  function practicalRenderedCharCount(line, entries) {
+    return practicalRenderedOccurrences(line, entries).reduce((sum, item) => {
+      const visible = line.text.slice(item.start, item.end);
+      return sum + (normalize(visible).length || visible.length);
+    }, 0);
+  }
+
+  function selectPracticalEntries(line) {
+    const cacheKey = practicalLineKey(line);
+    const cached = practicalComboCache.get(cacheKey);
+    const base = rawConfiguredEntries(line, "normal").length ? rawConfiguredEntries(line, "normal") : rawConfiguredEntries(line, "easy");
+    if (!base.length) return [];
+    if (cached?.length) {
+      const byId = new Map(base.map(entry => [entry.gapId, entry]));
+      const restored = cached.map(id => byId.get(id)).filter(Boolean);
+      if (restored.length) {
+        if (!practicalPresentationTokens.has(cacheKey)) {
+          practicalPresentationTokens.set(cacheKey, `p${++practicalPresentationSerial}`);
+        }
+        return restored;
+      }
+    }
+
+    practicalStats.targets = practicalStats.targets || {};
+    practicalStats.lines = practicalStats.lines || {};
+    const lineStats = practicalStats.lines[cacheKey] || {lastCombo:[], presentations:0};
+    const easyTerms = rawConfiguredEntries(line, "easy").map(entry => normalize(entry.answer));
+    const scored = base.map(entry => {
+      const key = practicalTargetKey(line, entry.gapId);
+      const stat = practicalStats.targets[key] || {shown:0, correct:0, wrong:0, lastResult:""};
+      const normalizedAnswer = normalize(entry.answer);
+      const coreLike = easyTerms.some(term => term && (normalizedAnswer === term || normalizedAnswer.includes(term) || term.includes(normalizedAnswer)));
+      let score = stat.shown === 0 ? 8 : Math.max(0, 4 - stat.shown) * 0.9;
+      score += stat.lastResult === "wrong" ? 6 : 0;
+      score += Math.min(4, Number(stat.wrong || 0)) * 0.8;
+      score += coreLike ? 2.2 : 0;
+      if ((lineStats.lastCombo || []).includes(entry.gapId)) score -= 3.5;
+      score += Math.random() * 0.7;
+      return {...entry, score, coreLike};
+    }).sort((a,b) => b.score - a.score);
+
+    const aggregate = base.reduce((acc, entry) => {
+      const stat = practicalStats.targets[practicalTargetKey(line, entry.gapId)] || {};
+      acc.correct += Number(stat.correct || 0);
+      acc.wrong += Number(stat.wrong || 0);
+      return acc;
+    }, {correct:0, wrong:0});
+    const visibleChars = normalize(line.text).length || line.text.length || 1;
+    let desired = visibleChars >= 30 ? 2 : 1;
+    if (aggregate.correct >= 4) desired += 1;
+    if (aggregate.correct >= 10 && aggregate.correct >= aggregate.wrong * 2) desired += 1;
+    desired = Math.max(1, Math.min(4, desired, scored.length));
+    const maxCoverage = aggregate.correct >= 6 ? 0.42 : 0.30;
+    const maxChars = Math.max(2, Math.floor(visibleChars * maxCoverage));
+
+    const selected = [];
+    let selectedChars = 0;
+    for (const entry of scored) {
+      const tentative = [...selected, entry];
+      // 겹치는 후보 때문에 선택된 기억 단위가 실제 화면에서 사라지는 조합은 만들지 않는다.
+      if (!practicalSelectionRendersEveryTarget(line, tentative)) continue;
+      // 같은 핵심어가 원문에 여러 번 등장하면 화면에서는 모두 가려지므로,
+      // 후보 문자열 길이가 아니라 실제 렌더링되는 총 마스킹 길이로 밀도를 제한한다.
+      const renderedChars = practicalRenderedCharCount(line, tentative);
+      if (renderedChars > maxChars) continue;
+      selected.push(entry);
+      selectedChars = renderedChars;
+      if (selected.length >= desired) break;
+    }
+    if (!selected.length) {
+      const fallback = scored.find(entry => practicalRenderedCharCount(line, [entry]) <= maxChars) ||
+        scored.slice().sort((a,b) => practicalRenderedCharCount(line, [a]) - practicalRenderedCharCount(line, [b]))[0];
+      selected.push(fallback);
+    }
+
+    const combo = selected.map(entry => entry.gapId);
+    practicalComboCache.set(cacheKey, combo);
+    practicalPresentationTokens.set(cacheKey, `p${++practicalPresentationSerial}`);
+    lineStats.lastCombo = combo;
+    lineStats.presentations = Number(lineStats.presentations || 0) + 1;
+    practicalStats.lines[cacheKey] = lineStats;
+    selected.forEach(entry => {
+      const key = practicalTargetKey(line, entry.gapId);
+      const stat = practicalStats.targets[key] || {shown:0, correct:0, wrong:0, lastResult:""};
+      stat.shown = Number(stat.shown || 0) + 1;
+      stat.lastShownAt = Date.now();
+      practicalStats.targets[key] = stat;
+    });
+    savePracticalStats();
+    return selected;
+  }
+
+  function recordPracticalTargetResult(line, gapId, result) {
+    if (!line || !gapId) return;
+    practicalStats.targets = practicalStats.targets || {};
+    const key = practicalTargetKey(line, gapId);
+    const stat = practicalStats.targets[key] || {shown:0, correct:0, wrong:0, lastResult:""};
+    if (result === "correct" || result === "near") stat.correct = Number(stat.correct || 0) + 1;
+    else if (result === "wrong") stat.wrong = Number(stat.wrong || 0) + 1;
+    stat.lastResult = result === "near" ? "correct" : result;
+    stat.lastResultAt = Date.now();
+    practicalStats.targets[key] = stat;
+    savePracticalStats();
+  }
+
+  function persistPracticalRetryState() {
+    try {
+      sessionStorage.setItem(PRACTICAL_RETRY_KEY, JSON.stringify({serial:practicalGradeSerial, queue:practicalRetryQueue}));
+    } catch {}
+  }
+
+  function restorePracticalRetryState() {
+    try {
+      const parsed = JSON.parse(sessionStorage.getItem(PRACTICAL_RETRY_KEY) || "null");
+      if (parsed && typeof parsed === "object") {
+        practicalGradeSerial = Number(parsed.serial || 0);
+        practicalRetryQueue = Array.isArray(parsed.queue) ? parsed.queue.filter(item => item && item.conceptKey && item.correctAnswer) : [];
+      }
+    } catch {
+      practicalGradeSerial = 0; practicalRetryQueue = [];
+    }
+  }
+
+  function schedulePracticalRetry(record) {
+    if (!record?.conceptKey || !record?.correctAnswer) return;
+    const existing = practicalRetryQueue.find(item => item.conceptKey === record.conceptKey);
+    const dueAt = practicalGradeSerial + 3 + Math.floor(Math.random() * 3);
+    if (existing) {
+      Object.assign(existing, record);
+      existing.dueAt = Math.min(Number(existing.dueAt || dueAt), dueAt);
+      existing.queuedFailures = Number(existing.queuedFailures || 0) + 1;
+    } else {
+      practicalRetryQueue.push({...record, dueAt, queuedFailures:1, retryFailures:0});
+    }
+    persistPracticalRetryState();
+  }
+
+  function hidePracticalRetryPanel() {
+    const panel = document.getElementById("practicalRetryPanel");
+    if (panel) panel.classList.add("hidden");
+    activePracticalRetry = null;
+  }
+
+  function blankNth(text, answer, occurrence = 0) {
+    const source = String(text || "");
+    const target = String(answer || "");
+    if (!target) return source;
+    let from = 0, index = -1;
+    for (let i = 0; i <= occurrence; i++) {
+      index = source.indexOf(target, from);
+      if (index < 0) break;
+      from = index + target.length;
+    }
+    if (index < 0) return source;
+    return source.slice(0, index) + "〔　　　　〕" + source.slice(index + target.length);
+  }
+
+  function maybeShowPracticalRetry() {
+    const panel = document.getElementById("practicalRetryPanel");
+    if (!panel) return;
+    if (currentTab !== "subject" || getCurrentDifficulty() !== "practical" || studyMode !== "fill") {
+      panel.classList.add("hidden");
+      return;
+    }
+    if (activePracticalRetry && practicalRetryQueue.includes(activePracticalRetry)) return;
+    const due = practicalRetryQueue
+      .filter(item => Number(item.dueAt || 0) <= practicalGradeSerial)
+      .sort((a,b) => Number(a.dueAt || 0) - Number(b.dueAt || 0))[0];
+    if (!due) { panel.classList.add("hidden"); return; }
+    activePracticalRetry = due;
+    const prompt = document.getElementById("practicalRetryPrompt");
+    const input = document.getElementById("practicalRetryInput");
+    const feedback = document.getElementById("practicalRetryFeedback");
+    if (prompt) prompt.textContent = blankNth(due.context || "", due.correctAnswer, Number(due.answerOccurrence || 0));
+    if (input) { input.value = ""; input.classList.remove("correct","wrong"); }
+    if (feedback) feedback.textContent = "아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.";
+    panel.classList.remove("hidden");
+  }
+
+  function recordPracticalRetryStat(record, result) {
+    practicalStats.targets = practicalStats.targets || {};
+    const key = `${record.subjectKey}|${record.area}|${record.lineId}|${record.gapId}`;
+    const stat = practicalStats.targets[key] || {shown:0, correct:0, wrong:0, lastResult:""};
+    if (result === "correct" || result === "near") stat.correct = Number(stat.correct || 0) + 1;
+    else stat.wrong = Number(stat.wrong || 0) + 1;
+    stat.lastResult = result === "near" ? "correct" : result;
+    stat.lastResultAt = Date.now();
+    practicalStats.targets[key] = stat;
+    savePracticalStats();
+  }
+
+  function gradePracticalRetry() {
+    const item = activePracticalRetry;
+    const input = document.getElementById("practicalRetryInput");
+    const feedback = document.getElementById("practicalRetryFeedback");
+    if (!item || !input) return;
+    const status = classifyRawAnswer(input.value, item.correctAnswer, item.aliases || []);
+    const success = status !== "wrong";
+    const signature = `${normalize(input.value) || "__blank__"}|retry|${status}`;
+    const eventToken = makeGradingEventToken("practical-retry", item.conceptKey, signature);
+    const masteryItem = updateMastery(item.conceptKey, success, eventToken);
+    recordPracticalRetryStat(item, status);
+
+    if (success) {
+      input.classList.add("correct");
+      if (feedback) feedback.textContent = status === "near" ? `회복 완료 · 표기는 “${item.correctAnswer}”` : "회복 완료 ✓";
+      practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
+      activePracticalRetry = null;
+      persistPracticalRetryState();
+      setTimeout(() => { hidePracticalRetryPanel(); maybeShowPracticalRetry(); }, 650);
+      return;
+    }
+
+    input.classList.add("wrong");
+    item.retryFailures = Number(item.retryFailures || 0) + 1;
+    item.userAnswer = input.value;
+    item.dueAt = practicalGradeSerial + 3;
+    if (Number(masteryItem?.wrongCount || 0) >= 2) {
+      addWrongHistory({...item, difficultyKey:"practical", difficultyLabel:"실전", attempts:Number(masteryItem.wrongCount || 2)}, eventToken);
+    }
+    if (feedback) feedback.textContent = `정답: ${item.correctAnswer} · 몇 문제 뒤 다시 확인합니다.`;
+    activePracticalRetry = null;
+    persistPracticalRetryState();
+    setTimeout(() => hidePracticalRetryPanel(), 1250);
+  }
+
+  function deferPracticalRetry() {
+    if (!activePracticalRetry) return;
+    activePracticalRetry.dueAt = practicalGradeSerial + 2;
+    activePracticalRetry = null;
+    persistPracticalRetryState();
+    hidePracticalRetryPanel();
+  }
+
   function makeStateKey(sectionIndex, lineIndex, gapIndex, lineId = "", gapId = "", answerOccurrence = 0, sourceGroup = "", mode = "fill") {
     const unit = getCurrentUnit();
     const intrinsicGroup = sourceGroup || getCurrentGroup();
-    const base = lineId && gapId
-      ? [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), lineId, gapId, answerOccurrence].join("|")
-      : [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
+    const difficulty = getCurrentDifficulty();
+    let base = lineId && gapId
+      ? [unit.subject, unit.area, intrinsicGroup, difficulty, lineId, gapId, answerOccurrence].join("|")
+      : [unit.subject, unit.area, intrinsicGroup, difficulty, sectionIndex, lineIndex, gapIndex].join("|");
+    if (difficulty === "practical" && lineId) {
+      const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
+      const line = sections?.[sectionIndex]?.lines?.[lineIndex];
+      const token = line ? practicalPresentationToken(line) : "";
+      if (token) base += `|${token}`;
+    }
     return mode === "trace" ? `trace|${base}` : base;
   }
 
@@ -443,6 +784,7 @@
   }
 
   function configuredGapEntries(line, difficulty) {
+    if (difficulty === "practical") return selectPracticalEntries(line);
     if (difficulty === "yaho") {
       const answers = hasCustomYaho(line) ? line.yaho : splitSentenceUnits(line.text).sentences;
       const ids = line.gapIds?.yaho || [];
@@ -454,23 +796,7 @@
         .filter(entry => entry.answer && line.text.includes(entry.answer));
     }
 
-    const configured = difficulty === "easy" ? (line.easy || []) : (line.normal || []);
-    const ids = line.gapIds?.[difficulty] || [];
-    const seen = new Set();
-    const entries = [];
-
-    configured.forEach((answer, index) => {
-      if (!answer || !line.text.includes(answer)) return;
-      const key = normalize(answer);
-      if (seen.has(key)) return;
-      seen.add(key);
-      entries.push({
-        answer,
-        gapId: ids[index] || `legacy-${stableHash(`${difficulty}|${index}`)}`
-      });
-    });
-
-    return entries;
+    return rawConfiguredEntries(line, difficulty);
   }
 
   function buildGapSpecs(line, difficulty) {
@@ -808,7 +1134,10 @@
       trace: window.matchMedia("(max-width: 720px)").matches ? "다음: 확인" : "Enter: 확인",
       fill: window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점"
     };
-    document.getElementById("studyStatus").textContent = statusByMode[studyMode] || "";
+    const baseStatus = statusByMode[studyMode] || "";
+    document.getElementById("studyStatus").textContent = getCurrentDifficulty() === "practical" && studyMode !== "original"
+      ? `${baseStatus}${baseStatus ? " · " : ""}빈칸 회전`
+      : baseStatus;
 
     const nav = document.getElementById("unitNav");
     const randomMode = document.getElementById("areaSelect").value === "random";
@@ -887,11 +1216,12 @@
 
     updateStudyControls();
     updateScore();
+    maybeShowPracticalRetry();
     scheduleStateSave();
   }
 
   function difficultyLabel(value) {
-    return ({ easy: "핵심", normal: "정밀", yaho: "야~호!" })[value] || (value === "hard" ? "정밀" : value);
+    return ({ easy: "핵심", normal: "정밀", yaho: "야~호!", practical: "실전" })[value] || (value === "hard" ? "정밀" : value);
   }
 
 
@@ -959,8 +1289,8 @@
 
     const subject = (saved.subject === "all" || Object.prototype.hasOwnProperty.call(subjectAreas, saved.subject)) ? saved.subject : "all";
     document.getElementById("subjectSelect").value = subject || "all";
-    if (["all","content-system","achievement"].includes(saved.group)) document.getElementById("groupSelect").value = saved.group;
-    if (["easy","normal","yaho"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
+    if (["all", ...SUBJECT_GROUPS].includes(saved.group)) document.getElementById("groupSelect").value = saved.group;
+    if (["easy","normal","yaho","practical"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
     if (["all","competency","history","hours","subjects"].includes(saved.generalCategory)) document.getElementById("generalCategory").value = saved.generalCategory;
 
     fillAreaSelect();
@@ -1247,7 +1577,7 @@
     const byText = new Map();
     Object.entries(curriculumData).forEach(([subjectKey, subject]) => {
       Object.entries(subject).forEach(([areaName, area]) => {
-        ["content-system", "achievement"].forEach(sourceGroup => {
+        SUBJECT_GROUPS.forEach(sourceGroup => {
           (area[sourceGroup] || []).forEach(section => (section.lines || []).forEach(line => {
             const meta = {subjectKey, areaName, sourceGroup, sectionTitle:section.title, line};
             byExplicit.set(`${subjectKey}|${areaName}|${line.id}`, meta);
@@ -1424,10 +1754,10 @@
   const HISTORY_EVENT_LIMIT = 100;
 
   function normalizeStoredDifficulty(copy) {
-    const legacyLabelMap = {"쉬움":"easy", "보통":"normal", "어려움":"normal", "핵심":"easy", "정밀":"normal", "야~호!":"yaho"};
+    const legacyLabelMap = {"쉬움":"easy", "보통":"normal", "어려움":"normal", "핵심":"easy", "정밀":"normal", "야~호!":"yaho", "실전":"practical"};
     let key = copy.difficultyKey || legacyLabelMap[copy.difficultyLabel] || "";
     if (key === "hard") key = "normal";
-    if (key && ["easy","normal","yaho"].includes(key)) {
+    if (key && ["easy","normal","yaho","practical"].includes(key)) {
       if (copy.difficultyKey !== key || copy.difficultyLabel !== difficultyLabel(key)) {
         copy.difficultyKey = key;
         copy.difficultyLabel = difficultyLabel(key);
@@ -1444,7 +1774,7 @@
       .map(event => ({
         at: event.at,
         userAnswer: typeof event.userAnswer === "string" ? event.userAnswer : "",
-        difficultyKey: ["easy","normal","yaho"].includes(event.difficultyKey) ? event.difficultyKey : ""
+        difficultyKey: ["easy","normal","yaho","practical"].includes(event.difficultyKey) ? event.difficultyKey : ""
       }))
       .sort((a,b) => new Date(b.at || 0) - new Date(a.at || 0));
 
@@ -1491,7 +1821,7 @@
               copy.lineId = meta.line.id;
               copy.sourceGroup = meta.sourceGroup;
               copy.groupKey = meta.sourceGroup;
-              copy.groupLabel = meta.sourceGroup === "content-system" ? "내용 체계" : "성취기준";
+              copy.groupLabel = groupLabels[meta.sourceGroup] || meta.sourceGroup;
               const oldKey = copy.conceptKey || copy.key || "";
               const oldParts = String(oldKey).split("|");
               const keyGapId = oldParts[0] === "subject" && String(oldParts[5] || "").startsWith("gap:")
@@ -1755,7 +2085,7 @@
     const wrongEvent = {
       at: now,
       userAnswer: typeof entry.userAnswer === "string" ? entry.userAnswer : "",
-      difficultyKey: ["easy","normal","yaho"].includes(entry.difficultyKey) ? entry.difficultyKey : ""
+      difficultyKey: ["easy","normal","yaho","practical"].includes(entry.difficultyKey) ? entry.difficultyKey : ""
     };
     const payload = {
       ...entry,
@@ -1788,7 +2118,7 @@
       list.unshift({
         ...payload,
         firstWrongAt: now,
-        attempts: 1,
+        attempts: Math.max(1, Number(entry.attempts || 1)),
         wrongEvents: [wrongEvent],
         archivedWrongEvents: 0
       });
@@ -1824,11 +2154,12 @@
       showTab("subject");
 
       document.getElementById("subjectSelect").value = item.subjectKey;
+      if (SUBJECT_GROUPS.includes(item.groupKey)) document.getElementById("groupSelect").value = item.groupKey;
       fillAreaSelect();
-      document.getElementById("areaSelect").value = item.area;
-
-      if (item.groupKey === "content-system" || item.groupKey === "achievement") document.getElementById("groupSelect").value = item.groupKey;
-      const retryDifficulty = item.difficultyKey === "hard" ? "normal" : item.difficultyKey;
+      if ([...document.getElementById("areaSelect").options].some(option => option.value === item.area)) {
+        document.getElementById("areaSelect").value = item.area;
+      }
+      const retryDifficulty = item.difficultyKey === "hard" || item.difficultyKey === "practical" ? "normal" : item.difficultyKey;
       if (["easy","normal","yaho"].includes(retryDifficulty)) document.getElementById("difficultySelect").value = retryDifficulty;
 
       currentAreaIndex = 0;
@@ -1887,27 +2218,74 @@
     }
   }
 
-  function startWrongReview(dueOnly = true) {
-    const list = loadHistory().filter(item => !item.resolved);
-    if (!list.length) { alert("복습할 미해결 오답이 없습니다."); return; }
+  function isWeakHistoryItem(item, mastery = loadMastery()) {
+    if (!item || item.resolved) return false;
+    const masteryItem = mastery[item.conceptKey] || null;
+    return Number(item.attempts || 0) >= 2 || Number(masteryItem?.wrongCount || 0) >= 2;
+  }
 
+  function reviewItemFromConceptKey(conceptKey) {
+    const parts = String(conceptKey || "").split("|");
+    if (parts[0] === "general" && parts[1]) {
+      const q = generalBank.find(item => item.id === parts.slice(1).join("|"));
+      if (!q) return null;
+      return {
+        type:"general", key:conceptKey, conceptKey, generalId:q.id,
+        categoryLabel:generalCategoryLabels[q.category] || q.category,
+        question:q.q, context:q.q, correctAnswer:q.display, attempts:0, resolved:false
+      };
+    }
+    if (parts[0] !== "subject" || parts.length < 7) return null;
+    const [, subjectKey, area, sourceGroup, lineId, gapToken, occurrenceRaw] = parts;
+    if (!String(gapToken || "").startsWith("gap:")) return null;
+    const gapId = String(gapToken).slice(4);
+    const meta = findLineIdentity(subjectKey, area, lineId, "");
+    if (!meta) return null;
+
+    let difficultyKey = "normal";
+    let answer = "";
+    for (const level of ["easy", "normal", "yaho"]) {
+      const entry = configuredGapEntries(meta.line, level).find(candidate => candidate.gapId === gapId);
+      if (entry) { difficultyKey = level; answer = entry.answer; break; }
+    }
+    if (!answer) return null;
+    return {
+      type:"subject", key:conceptKey, conceptKey, subjectKey, area,
+      sourceGroup, groupKey:sourceGroup, groupLabel:groupLabels[sourceGroup] || sourceGroup,
+      subjectLabel:subjectLabels[subjectKey] || subjectKey,
+      lineId:meta.line.id, gapId, answerOccurrence:Number(occurrenceRaw || 0),
+      difficultyKey, difficultyLabel:difficultyLabel(difficultyKey),
+      context:meta.line.text, answerText:answer, correctAnswer:answer, attempts:0, resolved:false
+    };
+  }
+
+  function startWrongReview(dueOnly = true) {
     const mastery = loadMastery();
     const now = Date.now();
-    reviewQueue = list
-      .map(item => ({item, mastery: mastery[item.conceptKey] || null}))
-      .filter(({mastery}) => !mastery?.mastered)
-      .filter(({mastery}) => !dueOnly || !mastery?.nextReviewAt || mastery.nextReviewAt <= now)
-      .sort((a,b) => {
-        const aDue = !a.mastery?.nextReviewAt || a.mastery.nextReviewAt <= now ? 1 : 0;
-        const bDue = !b.mastery?.nextReviewAt || b.mastery.nextReviewAt <= now ? 1 : 0;
-        if (aDue !== bDue) return bDue - aDue;
-        const aWrong = a.mastery?.wrongCount || a.item.attempts || 1;
-        const bWrong = b.mastery?.wrongCount || b.item.attempts || 1;
-        return bWrong - aWrong;
-      })
-      .map(x => x.item);
 
-    if (!reviewQueue.length) { alert(dueOnly ? "오늘 복습할 오답이 없습니다." : "복습할 미해결 오답이 없습니다."); return; }
+    if (dueOnly) {
+      reviewQueue = Object.entries(mastery)
+        .filter(([, state]) => Number(state?.nextReviewAt || 0) > 0 && Number(state.nextReviewAt) <= now)
+        .map(([conceptKey, state]) => ({item:reviewItemFromConceptKey(conceptKey), state}))
+        .filter(({item}) => Boolean(item))
+        .sort((a,b) => {
+          const aWrong = Number(a.state?.wrongCount || 0), bWrong = Number(b.state?.wrongCount || 0);
+          if (aWrong !== bWrong) return bWrong - aWrong;
+          return Number(a.state?.nextReviewAt || 0) - Number(b.state?.nextReviewAt || 0);
+        })
+        .map(({item}) => item);
+      if (!reviewQueue.length) { alert("오늘 복습할 항목이 없습니다."); return; }
+    } else {
+      reviewQueue = loadHistory()
+        .filter(item => isWeakHistoryItem(item, mastery))
+        .sort((a,b) => {
+          const aWrong = Number(mastery[a.conceptKey]?.wrongCount || a.attempts || 1);
+          const bWrong = Number(mastery[b.conceptKey]?.wrongCount || b.attempts || 1);
+          return bWrong - aWrong;
+        });
+      if (!reviewQueue.length) { alert("반복해서 틀린 취약 항목이 없습니다."); return; }
+    }
+
     reviewPosition = 0;
     reviewActive = true;
     openCurrentReviewItem();
@@ -1918,7 +2296,7 @@
     if (!item) {
       reviewActive = false;
       activeReviewConceptKey = null;
-      alert("오답 복습을 완료했습니다.");
+      alert("복습을 완료했습니다.");
       showTab("history");
       return;
     }
@@ -1973,6 +2351,7 @@
     if (!confirm("마지막 백업 가져오기 직전의 학습 기록으로 되돌릴까요?")) return;
 
     const before = learningStateSnapshot();
+    const beforePracticalStats = cloneJson(practicalStats, {});
     const beforeTheme = localStorage.getItem("coreloop-theme");
 
     try {
@@ -1986,6 +2365,7 @@
       learningStateMemory.history = loadHistory();
       learningStateMemory.mastery = loadMastery();
       await persistLearningStateNow();
+      replacePracticalStats(snapshot.practicalStats || {});
 
       if (snapshot.theme === "light" || snapshot.theme === "dark") {
         safeSetLocalStorage("coreloop-theme", snapshot.theme);
@@ -2008,6 +2388,7 @@
         updatedAt:before.updatedAt || null
       };
       await persistLearningStateNow();
+      replacePracticalStats(beforePracticalStats);
       if (beforeTheme) localStorage.setItem("coreloop-theme", beforeTheme);
       else localStorage.removeItem("coreloop-theme");
       alert("가져오기 이전 기록을 복구하지 못했습니다. 현재 기록은 변경하지 않았습니다.");
@@ -2057,11 +2438,44 @@
     return isSafeBackupString(value.lastResult, 20) && isSafeBackupString(value.lastEventToken, 500);
   }
 
+  function validateBackupPracticalStats(value) {
+    if (value === undefined || value === null) return true;
+    if (!isPlainRecord(value)) return false;
+    const targets = value.targets === undefined ? {} : value.targets;
+    const lines = value.lines === undefined ? {} : value.lines;
+    if (!isPlainRecord(targets) || !isPlainRecord(lines)) return false;
+    if (Object.keys(targets).length > 50000 || Object.keys(lines).length > 10000) return false;
+
+    for (const [key, stat] of Object.entries(targets)) {
+      if (typeof key !== "string" || key.length > 2000 || !isPlainRecord(stat)) return false;
+      for (const field of ["shown","correct","wrong","lastShownAt","lastResultAt"]) {
+        if (stat[field] !== undefined) {
+          const number = Number(stat[field]);
+          if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
+        }
+      }
+      if (!isSafeBackupString(stat.lastResult, 20)) return false;
+    }
+
+    for (const [key, stat] of Object.entries(lines)) {
+      if (typeof key !== "string" || key.length > 2000 || !isPlainRecord(stat)) return false;
+      if (stat.presentations !== undefined) {
+        const number = Number(stat.presentations);
+        if (!Number.isFinite(number) || number < 0 || number > 1e9) return false;
+      }
+      if (stat.lastCombo !== undefined) {
+        if (!Array.isArray(stat.lastCombo) || stat.lastCombo.length > 100 ||
+            !stat.lastCombo.every(id => typeof id === "string" && id.length <= 500)) return false;
+      }
+    }
+    return true;
+  }
+
   function exportStudyData() {
     const history = loadHistory();
     const mastery = loadMastery();
     const payload = {
-      schemaVersion: 5,
+      schemaVersion: 6,
       app: "CurriLoop",
       appVersion: APP_VERSION,
       coreSplitMigrationVersion: Number(learningStateMemory.coreSplitMigrationVersion || CORE_SPLIT_MIGRATION_VERSION),
@@ -2069,6 +2483,7 @@
       counts: {history: history.length, mastery: Object.keys(mastery).length},
       history,
       mastery,
+      practicalStats: cloneJson(practicalStats, {}),
       theme: localStorage.getItem("coreloop-theme") || null
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
@@ -2096,6 +2511,7 @@
     const reader = new FileReader();
     reader.onload = async () => {
       const before = learningStateSnapshot();
+      const beforePracticalStats = cloneJson(practicalStats, {});
       const oldTheme = localStorage.getItem("coreloop-theme");
       let snapshotSaved = false;
 
@@ -2105,7 +2521,7 @@
         if (data.app && data.app !== "CurriLoop") throw new Error("CurriLoop 백업 파일이 아닙니다.");
 
         const schemaVersion = Number(data.schemaVersion || 1);
-        if (!Number.isInteger(schemaVersion) || schemaVersion < 1 || schemaVersion > 5) {
+        if (!Number.isInteger(schemaVersion) || schemaVersion < 1 || schemaVersion > 6) {
           throw new Error("지원하지 않는 백업 버전입니다.");
         }
         if (!Array.isArray(data.history) || !isPlainRecord(data.mastery)) {
@@ -2122,6 +2538,9 @@
         )) {
           throw new Error("손상되었거나 형식이 다른 복습 기록이 포함되어 있습니다.");
         }
+        if (!validateBackupPracticalStats(data.practicalStats)) {
+          throw new Error("손상되었거나 형식이 다른 실전 학습 기록이 포함되어 있습니다.");
+        }
 
         if (data.counts !== undefined) {
           if (!isPlainRecord(data.counts) ||
@@ -2135,6 +2554,7 @@
 
         await savePreimportSnapshot({
           learning: before,
+          practicalStats: beforePracticalStats,
           theme: oldTheme,
           savedAt: new Date().toISOString()
         });
@@ -2150,6 +2570,7 @@
         // 구형 answer 기반 concept, hard/옛 난이도, legacy line ID를 현행 stable gap ID 체계로 마이그레이션한다.
         learningStateMemory.history = loadHistory();
         learningStateMemory.mastery = loadMastery();
+        replacePracticalStats(data.practicalStats || {});
 
         if (data.theme === "light" || data.theme === "dark") {
           if (!safeSetLocalStorage("coreloop-theme", data.theme)) throw new Error("테마 설정을 저장하지 못했습니다.");
@@ -2187,6 +2608,7 @@
           updatedAt: before.updatedAt || null
         };
         await persistLearningStateNow();
+        replacePracticalStats(beforePracticalStats);
         if (oldTheme === "light" || oldTheme === "dark") {
           safeSetLocalStorage("coreloop-theme", oldTheme);
           applyTheme(oldTheme);
@@ -2216,6 +2638,14 @@
     activeReviewConceptKey = null;
     learningStateMemory.history = [];
     learningStateMemory.mastery = {};
+    practicalRetryQueue = [];
+    activePracticalRetry = null;
+    practicalGradeSerial = 0;
+    practicalComboCache.clear(); practicalPresentationTokens.clear();
+    Object.keys(practicalStats).forEach(key => delete practicalStats[key]);
+    localStorage.removeItem(PRACTICAL_STATS_KEY);
+    sessionStorage.removeItem(PRACTICAL_RETRY_KEY);
+    hidePracticalRetryPanel();
     localStorage.removeItem(HISTORY_KEY);
     localStorage.removeItem(MASTERY_KEY);
     localStorage.removeItem(FALLBACK_STATE_KEY);
@@ -2248,15 +2678,25 @@
   function renderHistory() {
     const container = document.getElementById("historyList");
     const count = document.getElementById("historyCount");
-    const filter = document.getElementById("historyFilter")?.value || "active";
+    const filter = document.getElementById("historyFilter")?.value || "weak";
     const search = normalize(document.getElementById("historySearch")?.value || "");
 
     if (!container || !count) return;
 
+    const mastery = loadMastery();
+    const dueCount = Object.entries(mastery).filter(([conceptKey, state]) =>
+      Number(state?.nextReviewAt || 0) > 0 && Number(state.nextReviewAt) <= Date.now() && Boolean(reviewItemFromConceptKey(conceptKey))
+    ).length;
+    const todayButton = document.getElementById("todayReviewButton");
+    if (todayButton) {
+      todayButton.textContent = `오늘 복습 ${dueCount}개`;
+      todayButton.disabled = dueCount === 0;
+    }
     let list = loadHistory();
-    if (filter === "active") list = list.filter(item => !item.resolved);
+    if (filter === "weak") list = list.filter(item => isWeakHistoryItem(item, mastery));
     else if (filter === "resolved") list = list.filter(item => item.resolved);
     else if (filter === "general" || filter === "subject") list = list.filter(item => item.type === filter);
+    // all은 기존 기록을 포함한 전체 이력을 그대로 보여 준다.
     if (search) {
       list = list.filter(item => normalize([item.context, item.question, item.correctAnswer, item.userAnswer, item.area, item.subjectLabel].filter(Boolean).join(" ")).includes(search));
     }
@@ -2265,17 +2705,16 @@
     container.innerHTML = "";
 
     if (!list.length) {
-      container.innerHTML = `
-        <div class="history-empty">
-          아직 저장된 오답이 없습니다.<br>
-          총론이나 각론에서 틀린 문항이 생기면 자동으로 이곳에 쌓입니다.
-        </div>
-      `;
+      const emptyCopy = filter === "weak" || filter === "due"
+        ? "반복해서 틀린 취약 항목이 없습니다.<br>한 번의 오타나 자잘한 실수는 취약 항목으로 쌓지 않습니다."
+        : "조건에 맞는 복습 기록이 없습니다.";
+      container.innerHTML = `<div class="history-empty">${emptyCopy}</div>`;
       return;
     }
 
     list.forEach(item => {
       const card = document.createElement("article");
+      const weak = isWeakHistoryItem(item, mastery);
       card.className = "history-item" + (item.resolved ? " history-resolved" : "");
 
       const badge = item.type === "general" ? "총론" : "각론";
@@ -2288,6 +2727,7 @@
         <div class="history-item-top">
           <span class="history-badge">${escapeHtml(badge)}</span>
           ${meta ? `<span class="history-badge">${escapeHtml(meta)}</span>` : ""}
+          ${weak && !item.resolved ? `<span class="history-badge">취약</span>` : ""}
           ${item.attempts > 1 ? `<span class="history-badge">${item.attempts}회 오답</span>` : ""}
           ${item.resolved ? `<span class="history-badge resolved-badge">해결됨</span>` : ""}
           <span class="history-time">${item.firstWrongAt && item.firstWrongAt !== item.lastWrongAt ? `최초 ${escapeHtml(formatHistoryTime(item.firstWrongAt))} · ` : ""}최근 ${escapeHtml(formatHistoryTime(item.lastWrongAt))}</span>
@@ -2312,14 +2752,9 @@
       `;
 
       const retryButton = card.querySelector("button[data-history-retry]");
-      if (retryButton) {
-        retryButton.addEventListener("click", () => retryHistoryItem(item));
-      }
-
-      card.querySelector("button[data-history-key]").addEventListener("click", () => {
-        removeHistoryItem(item.key);
-      });
-
+      if (retryButton) retryButton.addEventListener("click", () => retryHistoryItem(item));
+      const deleteButton = card.querySelector("button[data-history-key]");
+      if (deleteButton) deleteButton.addEventListener("click", () => removeHistoryItem(item.key));
       container.appendChild(card);
     });
   }
@@ -2328,12 +2763,44 @@
   // -------------------------
   // 8) 채점
   // -------------------------
-  function isCorrect(input) {
+  function oneEditApart(a, b) {
+    const x = [...String(a || "")], y = [...String(b || "")];
+    if (Math.abs(x.length - y.length) > 1) return false;
+    if (x.join("") === y.join("")) return false;
+    if (x.length === y.length) {
+      let diff = 0;
+      for (let i = 0; i < x.length; i++) if (x[i] !== y[i] && ++diff > 1) return false;
+      return diff === 1;
+    }
+    const short = x.length < y.length ? x : y;
+    const long = x.length < y.length ? y : x;
+    let i = 0, j = 0, skipped = 0;
+    while (i < short.length && j < long.length) {
+      if (short[i] === long[j]) { i++; j++; continue; }
+      if (++skipped > 1) return false;
+      j++;
+    }
+    return true;
+  }
+
+  function classifyRawAnswer(rawUser, expected, aliases = []) {
+    const user = normalize(rawUser);
+    if (!user) return "wrong";
+    const candidates = [expected, ...(aliases || [])].map(normalize).filter(Boolean);
+    if (candidates.some(candidate => candidate === user)) return "correct";
+    // 긴 공식 표현에서 한 글자 삽입·삭제·치환만 표기 실수로 완화한다. 짧은 용어는 엄격하게 유지한다.
+    if (user.length >= 6 && candidates.some(candidate => candidate.length >= 6 && oneEditApart(user, candidate))) return "near";
+    return "wrong";
+  }
+
+  function classifyInput(input) {
     const expected = input.dataset.answer;
     const aliases = JSON.parse(input.dataset.aliases || "[]");
-    const user = normalize(input.value);
-    if (!user) return false;
-    return [expected, ...aliases].some(a => normalize(a) === user);
+    return classifyRawAnswer(input.value, expected, aliases);
+  }
+
+  function isCorrect(input) {
+    return classifyInput(input) !== "wrong";
   }
 
   function appendResult(wrap, status, answer) {
@@ -2341,29 +2808,41 @@
     if (old) old.remove();
     const input = wrap.querySelector(".gap-input");
     const span = document.createElement("span");
-    span.className = "gap-result " + (status === "correct" ? "good" : "bad");
+    const good = status === "correct" || status === "near";
+    span.className = "gap-result " + (good ? "good" : "bad") + (status === "near" ? " near" : "");
     span.id = `gap-result-${stableHash(input?.dataset.stateKey || `${answer}|${status}`)}`;
-    span.textContent = status === "correct" ? "✓" : `✕ 정답: ${answer}`;
+    span.textContent = status === "correct" ? "✓" : status === "near" ? `≈ 표기 확인: ${answer}` : `✕ 정답: ${answer}`;
     wrap.appendChild(span);
     if (input) {
       input.setAttribute("aria-describedby", span.id);
-      input.setAttribute("aria-invalid", status === "correct" ? "false" : "true");
+      input.setAttribute("aria-invalid", good ? "false" : "true");
     }
   }
 
   function gradeOne(input) {
     const normalizedValue = normalize(input.value);
-    const correct = normalizedValue ? isCorrect(input) : false;
+    const answerStatus = normalizedValue ? classifyInput(input) : "wrong";
+    const correct = answerStatus !== "wrong";
+    const practical = getCurrentDifficulty() === "practical";
     input.classList.remove("correct","wrong");
     input.classList.add(correct ? "correct" : "wrong");
 
     const state = fieldState[input.dataset.stateKey] || {};
     state.value = input.value;
-    state.status = correct ? "correct" : "wrong";
+    state.status = answerStatus;
 
-    const gradingSignature = `${normalizedValue || "__blank__"}|${correct ? "correct" : "wrong"}`;
-    const isNewGradingEvent = state.lastCountedSignature !== gradingSignature;
-    if (isNewGradingEvent) state.lastCountedSignature = gradingSignature;
+    const gradingSignature = `${normalizedValue || "__blank__"}|${answerStatus}`;
+    // 한 번 제시된 빈칸에서 답을 여러 번 고쳐도 같은 결과(정답/오답)는 1회만 누적한다.
+    // 실전은 첫 결과 자체를 1회만 세고, 실패 뒤의 진짜 회복은 지연 재인출에서 판정한다.
+    const outcomeAlreadyCounted = correct ? Boolean(state.correctOutcomeCounted) : Boolean(state.wrongOutcomeCounted);
+    const practicalAlreadyCounted = practical && Boolean(state.practicalOutcomeCounted);
+    const isNewGradingEvent = !practicalAlreadyCounted && !outcomeAlreadyCounted && state.lastCountedSignature !== gradingSignature;
+    if (isNewGradingEvent) {
+      state.lastCountedSignature = gradingSignature;
+      if (correct) state.correctOutcomeCounted = true;
+      else state.wrongOutcomeCounted = true;
+      if (practical) state.practicalOutcomeCounted = true;
+    }
     fieldState[input.dataset.stateKey] = state;
     scheduleStateSave();
 
@@ -2373,54 +2852,58 @@
     const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
     const sectionIndex = Number(input.dataset.sectionIndex);
     const lineIndex = Number(input.dataset.lineIndex);
-    const context = sections?.[sectionIndex]?.lines?.[lineIndex]?.text || "";
-    const lineId = input.dataset.lineId || makeLineStableId(sections?.[sectionIndex]?.title || "", context, sections?.[sectionIndex]?.lines?.[lineIndex]?.id || "");
+    const line = sections?.[sectionIndex]?.lines?.[lineIndex];
+    const context = line?.text || "";
+    const lineId = input.dataset.lineId || makeLineStableId(sections?.[sectionIndex]?.title || "", context, line?.id || "");
     const answerOccurrence = Number(input.dataset.answerOccurrence || 0);
     const sourceGroup = input.dataset.sourceGroup || sections?.[sectionIndex]?._sourceGroup || getCurrentGroup();
-    const gapId = input.dataset.gapId || resolveGapIdForLine(sections?.[sectionIndex]?.lines?.[lineIndex], getCurrentDifficulty(), input.dataset.answer, Number(input.dataset.gapIndex || -1));
+    const gapId = input.dataset.gapId || resolveGapIdForLine(line, getCurrentDifficulty(), input.dataset.answer, Number(input.dataset.gapIndex || -1));
     const conceptKey = conceptKeyForSubject(unit, sourceGroup, lineId, gapId, answerOccurrence);
     const eventToken = isNewGradingEvent ? makeGradingEventToken("subject", conceptKey, gradingSignature) : "";
 
-    if (isNewGradingEvent) updateMastery(conceptKey, correct, eventToken);
+    let masteryItem = null;
+    if (isNewGradingEvent) {
+      masteryItem = updateMastery(conceptKey, correct, eventToken);
+      if (practical) {
+        practicalGradeSerial += 1;
+        persistPracticalRetryState();
+        recordPracticalTargetResult(line, gapId, answerStatus);
+      }
+    }
+
+    const historyPayload = {
+      type: "subject", key: conceptKey, conceptKey, subjectKey: unit.subject,
+      groupKey: sourceGroup, sourceGroup, difficultyKey: getCurrentDifficulty(),
+      sectionIndex, lineIndex, gapIndex: Number(input.dataset.gapIndex || 0), lineId, gapId, answerOccurrence,
+      answerText: input.dataset.answer, subjectLabel: subjectLabels[unit.subject] || unit.subject, area: unit.area,
+      groupLabel: groupLabels[sourceGroup] || sourceGroup, difficultyLabel: difficultyLabel(getCurrentDifficulty()),
+      context, userAnswer: input.value, correctAnswer: input.dataset.answer
+    };
 
     if (!correct && isNewGradingEvent) {
-      addWrongHistory({
-        type: "subject",
-        key: conceptKey,
-        conceptKey,
-        subjectKey: unit.subject,
-        groupKey: sourceGroup,
-        sourceGroup,
-        difficultyKey: getCurrentDifficulty(),
-        sectionIndex,
-        lineIndex,
-        gapIndex: Number(input.dataset.gapIndex || 0),
-        lineId,
-        gapId,
-        answerOccurrence,
-        answerText: input.dataset.answer,
-        subjectLabel: subjectLabels[unit.subject] || unit.subject,
-        area: unit.area,
-        groupLabel: sourceGroup === "content-system" ? "내용 체계" : "성취기준",
-        difficultyLabel: difficultyLabel(getCurrentDifficulty()),
-        context,
-        userAnswer: input.value,
-        correctAnswer: input.dataset.answer
-      }, eventToken);
+      // 첫 실수는 영구 오답으로 쌓지 않는다. 같은 개념의 반복 실패부터 취약 기록으로 승격한다.
+      if (Number(masteryItem?.wrongCount || 0) >= 2) addWrongHistory({...historyPayload, attempts:Number(masteryItem.wrongCount || 2)}, eventToken);
+      if (practical) schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]")});
     }
 
     updateScore();
+    if (practical && isNewGradingEvent) maybeShowPracticalRetry();
 
-    if (correct && reviewActive && activeReviewConceptKey === conceptKey) {
-      advanceWrongReview();
-    }
+    if (correct && reviewActive && activeReviewConceptKey === conceptKey) advanceWrongReview();
     return correct;
   }
 
   function gradeAllVisible() {
     if (studyMode !== "fill") return;
-    const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
-    inputs.forEach(gradeOne); // 미입력도 오답으로 채점한다.
+    const allInputs = [...document.querySelectorAll("#studyArea .gap-input")];
+    const inputs = getCurrentDifficulty() === "practical" ? allInputs.filter(input => normalize(input.value)) : allInputs;
+    if (!inputs.length && getCurrentDifficulty() === "practical") {
+      const announcer = document.getElementById("gradingAnnouncer");
+      if (announcer) announcer.textContent = "실전에서는 입력한 빈칸만 전체 채점합니다.";
+      focusFirstEmpty();
+      return;
+    }
+    inputs.forEach(gradeOne);
     const wrongCount = inputs.filter(input => fieldState[input.dataset.stateKey]?.status === "wrong").length;
     const correctCount = inputs.length - wrongCount;
     const announcer = document.getElementById("gradingAnnouncer");
@@ -2435,6 +2918,10 @@
   function resetVisible() {
     if (!isInputStudyMode()) return;
     clearCurrentUnitState(studyMode);
+    if (getCurrentDifficulty() === "practical") {
+      practicalComboCache.clear();
+      practicalPresentationTokens.clear();
+    }
     renderStudy();
     focusFirstEmpty();
   }
@@ -2496,7 +2983,9 @@
   function updateScore() {
     const unit = getCurrentUnit();
     const selectedGroup = getCurrentGroup();
-    const scoreGroups = selectedGroup === "all" ? ["content-system", "achievement"] : [selectedGroup];
+    const scoreGroups = selectedGroup === "all"
+      ? (unit.area === COMMON_AREA ? ["character-goal", "teaching-evaluation"] : ["content-system", "achievement"])
+      : [selectedGroup];
     const currentPrefixes = unit.subject && unit.area
       ? scoreGroups.map(group => [unit.subject, unit.area, group, getCurrentDifficulty()].join("|") + "|")
       : [];
@@ -2504,14 +2993,22 @@
     let currentCorrect = 0;
     let currentWrong = 0;
 
-    Object.entries(fieldState).forEach(([key, state]) => {
-      if (currentPrefixes.some(prefix => key.startsWith(prefix))) {
-        if (state.status === "correct") currentCorrect++;
-        if (state.status === "wrong") currentWrong++;
-      }
-    });
-
     const visibleInputs = [...document.querySelectorAll("#studyArea .gap-input")];
+    if (getCurrentDifficulty() === "practical") {
+      // 실전은 같은 문장이 다른 빈칸 조합으로 반복되므로 현재 화면에 보이는 제시만 점수에 반영한다.
+      visibleInputs.forEach(input => {
+        const state = fieldState[input.dataset.stateKey];
+        if (state?.status === "correct" || state?.status === "near") currentCorrect++;
+        if (state?.status === "wrong") currentWrong++;
+      });
+    } else {
+      Object.entries(fieldState).forEach(([key, state]) => {
+        if (currentPrefixes.some(prefix => key.startsWith(prefix))) {
+          if (state.status === "correct" || state.status === "near") currentCorrect++;
+          if (state.status === "wrong") currentWrong++;
+        }
+      });
+    }
     const lineGroups = new Map();
 
     visibleInputs.forEach(input => {
@@ -2522,7 +3019,7 @@
 
     let completedLines = 0;
     lineGroups.forEach(inputs => {
-      if (inputs.length && inputs.every(input => fieldState[input.dataset.stateKey]?.status === "correct")) {
+      if (inputs.length && inputs.every(input => ["correct","near"].includes(fieldState[input.dataset.stateKey]?.status))) {
         completedLines++;
       }
     });
@@ -2581,6 +3078,8 @@
     generalIndex = Math.min(generalIndex, list.length - 1);
     generalGraded = false;
     generalLastGradedValue = "";
+    generalCorrectCounted = false;
+    generalWrongCounted = false;
 
     document.getElementById("generalQuestion").textContent = list[generalIndex].q;
     updateGeneralProgress();
@@ -2662,16 +3161,20 @@
     box.classList.remove("hidden");
 
     const signature = `${normalize(rawUser) || "__blank__"}|${ok ? "correct" : "wrong"}`;
-    const duplicate = generalGraded && generalLastGradedValue === signature;
+    const duplicate = ok ? generalCorrectCounted : generalWrongCounted;
 
     generalGraded = true;
     generalLastGradedValue = signature;
+    if (!duplicate) {
+      if (ok) generalCorrectCounted = true;
+      else generalWrongCounted = true;
+    }
 
     const conceptKey = conceptKeyForGeneral(q.id);
     const eventToken = duplicate ? "" : makeGradingEventToken("general", conceptKey, signature);
-    if (!duplicate) updateMastery(conceptKey, ok, eventToken);
+    const masteryItem = !duplicate ? updateMastery(conceptKey, ok, eventToken) : null;
 
-    if (!ok && !duplicate) {
+    if (!ok && !duplicate && Number(masteryItem?.wrongCount || 0) >= 2) {
       addWrongHistory({
         type: "general",
         key: conceptKey,
@@ -2681,11 +3184,16 @@
         question: q.q,
         context: q.q,
         userAnswer: rawUser,
-        correctAnswer: q.display
+        correctAnswer: q.display,
+        attempts: Number(masteryItem.wrongCount || 2)
       }, eventToken);
     }
 
     updateGeneralProgress();
+    if (ok && !duplicate && reviewActive && activeReviewConceptKey === conceptKey) {
+      activeReviewConceptKey = null;
+      setTimeout(() => { if (reviewActive) advanceWrongReview(); }, 450);
+    }
     return ok;
   }
 
@@ -2815,27 +3323,62 @@
   function runDataAudit() {
     const result = {
       subjects: 0, areas: 0, lines: 0,
-      expectedSubjects: 6, expectedAreas: 27, expectedLines: 550,
+      supplementalAreas: 0, supplementalLines: 0,
+      expectedSubjects: 6, expectedAreas: 27, expectedLines: 550, expectedSupplementalAreas: 6,
       duplicateLineIds: [], missingExplicitIds: [], configuredTermsMissing: [],
       emptyCore: [], emptyPrecise: [], duplicateConfiguredTerms: [],
       gapIdLengthMismatch: [], duplicateGapIds: [], gapMeaningConflicts: [],
-      coreNotHiddenInPrecise: [], functionWordGaps: [], overlongGaps: [], sourcePageFields: []
+      coreNotHiddenInPrecise: [], functionWordGaps: [], overlongGaps: [], sourcePageFields: [],
+      supplementalConfiguredTermsMissing: [], supplementalGapIdLengthMismatch: [], supplementalEmpty: [], supplementalDuplicateGapIds: []
     };
     const seenLineIds = new Set();
     const functionWords = new Set(["및","과","와","의","를","을","에","로","으로","또는","그리고"]);
 
+    const registerLineId = (where, line) => {
+      const id = String(line.id || "");
+      if (!id) result.missingExplicitIds.push(where);
+      else if (seenLineIds.has(id)) result.duplicateLineIds.push({...where, id});
+      else seenLineIds.add(id);
+      return id;
+    };
+
+    const validateSupplementalLine = (where, line) => {
+      registerLineId(where, line);
+      ["easy", "normal"].forEach(level => {
+        const terms = Array.isArray(line[level]) ? line[level] : [];
+        const ids = Array.isArray(line.gapIds?.[level]) ? line.gapIds[level] : [];
+        if (!terms.length) result.supplementalEmpty.push({...where, level});
+        if (terms.length !== ids.length) result.supplementalGapIdLengthMismatch.push({...where, level, termCount:terms.length, gapIdCount:ids.length});
+        const seenIds = new Set();
+        terms.forEach((term, index) => {
+          if (!term || !line.text.includes(term)) result.supplementalConfiguredTermsMissing.push({...where, level, term});
+          const gapId = ids[index] || "";
+          if (gapId && seenIds.has(gapId)) result.supplementalDuplicateGapIds.push({...where, level, gapId});
+          if (gapId) seenIds.add(gapId);
+        });
+      });
+    };
+
     result.subjects = Object.keys(curriculumData).length;
     Object.entries(curriculumData).forEach(([subjectKey, subject]) => {
       Object.entries(subject).forEach(([areaName, area]) => {
+        if (areaName === COMMON_AREA) {
+          result.supplementalAreas++;
+          ["character-goal", "teaching-evaluation"].forEach(group => {
+            (area[group] || []).forEach(section => (section.lines || []).forEach(line => {
+              result.supplementalLines++;
+              validateSupplementalLine({subjectKey, areaName, group, lineId:String(line.id || ""), text:line.text}, line);
+            }));
+          });
+          return;
+        }
+
         result.areas++;
         ["content-system", "achievement"].forEach(group => {
           (area[group] || []).forEach(section => (section.lines || []).forEach(line => {
             result.lines++;
-            const id = String(line.id || "");
-            const where = {subjectKey, areaName, group, lineId:id, text:line.text};
-            if (!id) result.missingExplicitIds.push(where);
-            else if (seenLineIds.has(id)) result.duplicateLineIds.push({...where, id});
-            else seenLineIds.add(id);
+            const where = {subjectKey, areaName, group, lineId:String(line.id || ""), text:line.text};
+            registerLineId(where, line);
             if (Object.prototype.hasOwnProperty.call(line, "sourcePage")) result.sourcePageFields.push(where);
 
             const meaningByGapId = new Map();
@@ -2874,13 +3417,16 @@
       });
     });
 
+    const originalChecks = ["duplicateLineIds","missingExplicitIds","configuredTermsMissing","emptyCore","emptyPrecise","duplicateConfiguredTerms","gapIdLengthMismatch","duplicateGapIds","gapMeaningConflicts","coreNotHiddenInPrecise","functionWordGaps","overlongGaps","sourcePageFields"];
+    const supplementChecks = ["supplementalConfiguredTermsMissing","supplementalGapIdLengthMismatch","supplementalEmpty","supplementalDuplicateGapIds"];
     result.ok = result.subjects === result.expectedSubjects && result.areas === result.expectedAreas && result.lines === result.expectedLines &&
-      ["duplicateLineIds","missingExplicitIds","configuredTermsMissing","emptyCore","emptyPrecise","duplicateConfiguredTerms","gapIdLengthMismatch","duplicateGapIds","gapMeaningConflicts","coreNotHiddenInPrecise","functionWordGaps","overlongGaps","sourcePageFields"]
-        .every(key => result[key].length === 0);
+      result.supplementalAreas === result.expectedSupplementalAreas && result.supplementalLines > 0 &&
+      [...originalChecks, ...supplementChecks].every(key => result[key].length === 0);
     if (!result.ok) console.error("CurriLoop 데이터 감사 실패", result);
-    else console.info("CurriLoop 데이터 감사 통과", {subjects:result.subjects, areas:result.areas, lines:result.lines});
+    else console.info("CurriLoop 데이터 감사 통과", {subjects:result.subjects, areas:result.areas, lines:result.lines, supplementalLines:result.supplementalLines});
     return result;
   }
+
 
 
   let helpModalReturnFocus = null;
@@ -2969,9 +3515,14 @@
   // -------------------------
   async function bootstrapCurriLoop() {
     await initializeLearningStorage();
+    restorePracticalRetryState();
     restoreUiState();
     const restoredGeneralAnswer = restoreDraftState();
     setupAccessibleTabs();
+    const retryInput = document.getElementById("practicalRetryInput");
+    if (retryInput) retryInput.addEventListener("keydown", event => {
+      if (event.key === "Enter") { event.preventDefault(); gradePracticalRetry(); }
+    });
     window.CurriLoopAudit = runDataAudit();
     renderStudy();
     renderGeneral();

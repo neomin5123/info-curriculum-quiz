@@ -1,7 +1,7 @@
 {
   "name": "CurriLoop",
   "short_name": "CurriLoop",
-  "description": "2022 개정 정보과 교육과정 원문 기반 회상 학습 도구",
+  "description": "2022 개정 정보과 교육과정 원문 기반 실전 회상·간격 복습 학습 도구",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -41,8 +41,8 @@
       ]
     },
     {
-      "name": "오답노트",
-      "short_name": "오답",
+      "name": "복습",
+      "short_name": "복습",
       "url": "/?tab=history",
       "icons": [
         {
