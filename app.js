@@ -64,7 +64,7 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.6.1";
+  const APP_VERSION = "6.6.2";
   const MANUAL_GAP_REVIEW = "2026-09-14 / 핵심 빈칸 효율화; 마스킹·따라치기·빈칸 채우기 3학습 방식; 입력칸 2단계 클릭 선택; 기존 공식 원문 550문장 lock 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
