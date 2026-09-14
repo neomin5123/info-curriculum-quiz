@@ -50,7 +50,7 @@
   let currentTab = "general";
   let currentAreaIndex = 0;
   let currentRandomUnit = null;
-  let quizMode = false;
+  let studyMode = "original"; // original | mask | trace | fill
   let lastStudyFocus = null; // {sectionIndex, lineIndex}
   const fieldState = {}; // key -> {value,status}
   const shuffleBags = loadShuffleBags();
@@ -64,8 +64,8 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.4.2";
-  const MANUAL_GAP_REVIEW = "2026-09-13 / 6과목 27영역 550문장 수동 빈칸 최종 검수; 기능어·중복 빈칸 정리; 총론 정답 확인 2단계 Enter; 오답 Enter 유지; 학습 위치·작성 중 답 복원; 출처 페이지 표기 제거";
+  const APP_VERSION = "6.6.0";
+  const MANUAL_GAP_REVIEW = "2026-09-14 / 핵심 빈칸 효율화; 마스킹·따라치기·빈칸 채우기 3학습 방식; 입력칸 2단계 클릭 선택; 기존 공식 원문 550문장 lock 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -124,6 +124,9 @@
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
   function getCurrentGroup() { return document.getElementById("groupSelect").value; }
   function getCurrentDifficulty() { return document.getElementById("difficultySelect").value; }
+  function getStudyMode() { return studyMode; }
+  function isInputStudyMode(mode = studyMode) { return mode === "fill" || mode === "trace"; }
+  function isScoredStudyMode(mode = studyMode) { return mode === "fill"; }
 
   function getAllUnits() {
     return Object.entries(subjectAreas).flatMap(([subject, areas]) =>
@@ -219,7 +222,6 @@
   function onSubjectChange() {
     currentAreaIndex = 0;
     currentRandomUnit = null;
-    quizMode = false;
     fillAreaSelect();
     renderStudy();
     scheduleStateSave();
@@ -273,7 +275,6 @@
 
   function onAreaChange() {
     currentAreaIndex = 0;
-    quizMode = false;
 
     if (document.getElementById("areaSelect").value === "random") {
       chooseRandomUnit();
@@ -288,19 +289,16 @@
   function onGroupChange() {
     currentAreaIndex = 0;
     currentRandomUnit = null;
-    quizMode = false;
     fillAreaSelect();
     renderStudy();
     scheduleStateSave();
   }
 
   function onDifficultyChange() {
-    const wasQuizMode = quizMode;
     const focusSnapshot = lastStudyFocus ? {...lastStudyFocus} : null;
-
     renderStudy();
 
-    if (wasQuizMode && focusSnapshot) {
+    if (isInputStudyMode() && focusSnapshot) {
       requestAnimationFrame(() => focusMatchingLine(focusSnapshot));
     }
     scheduleStateSave();
@@ -311,61 +309,72 @@
       if (delta > 0) {
         chooseRandomUnit();
         renderStudy();
-        if (quizMode) requestAnimationFrame(() => focusFirstEmpty());
+        if (isInputStudyMode()) requestAnimationFrame(() => focusFirstEmpty());
       }
       return;
     }
     const sequence = getUnitSequence();
     currentAreaIndex = Math.max(0, Math.min(sequence.length - 1, currentAreaIndex + delta));
     renderStudy();
-    if (quizMode) requestAnimationFrame(() => focusFirstEmpty());
+    if (isInputStudyMode()) requestAnimationFrame(() => focusFirstEmpty());
     scheduleStateSave();
   }
 
-  function startQuiz() {
-    // 랜덤 모드에서는 미리보기에서 이미 뽑힌 단원을 그대로 시작한다.
-    // 새 추첨은 최초 진입 또는 단원 완료/다음 랜덤 이동 시점에만 수행한다.
+  function setStudyMode(mode) {
+    if (!["original", "mask", "trace", "fill"].includes(mode)) return;
+
     if (document.getElementById("areaSelect").value === "random" && !currentRandomUnit) {
       chooseRandomUnit();
     }
 
-    quizMode = true;
+    studyMode = mode;
     renderStudy();
-    if (window.matchMedia("(max-width: 720px)").matches) toggleMobileSettings(true);
-    requestAnimationFrame(() => focusFirstEmpty());
+
+    if (isInputStudyMode()) {
+      if (window.matchMedia("(max-width: 720px)").matches) toggleMobileSettings(true);
+      requestAnimationFrame(() => focusFirstEmpty());
+    }
     scheduleStateSave();
   }
 
-  function clearCurrentUnitState() {
+  function clearCurrentUnitState(mode = studyMode) {
     const unit = getCurrentUnit();
     if (!unit.subject || !unit.area) return;
     const difficulty = getCurrentDifficulty();
     const selectedGroup = getCurrentGroup();
     const groups = selectedGroup === "all" ? ["content-system", "achievement"] : [selectedGroup];
+    const basePrefixes = groups.map(group => [unit.subject, unit.area, group, difficulty].join("|") + "|");
+    const tracePrefixes = basePrefixes.map(prefix => `trace|${prefix}`);
+
     Object.keys(fieldState).forEach(key => {
-      if (groups.some(group => key.startsWith([unit.subject, unit.area, group, difficulty].join("|") + "|"))) delete fieldState[key];
+      if (mode === "trace") {
+        if (tracePrefixes.some(prefix => key.startsWith(prefix))) delete fieldState[key];
+      } else if (mode === "fill") {
+        if (basePrefixes.some(prefix => key.startsWith(prefix))) delete fieldState[key];
+      }
     });
   }
 
-  // 원문 보기는 풀이 기록을 보존하고
-  // 원문 학습 화면으로 돌아간다.
-  function showOriginalAndReset() {
-    // 원문 보기는 현재 입력/채점 상태를 보존한다. 삭제는 '현재 단원 초기화'에서만 수행한다.
-    quizMode = false;
-    renderStudy();
-    scheduleStateSave();
-  }
-
   function updateStudyControls() {
-    const startButton = document.getElementById("startQuizButton");
+    const modeButtons = {
+      original: document.getElementById("originalButton"),
+      mask: document.getElementById("maskButton"),
+      trace: document.getElementById("traceButton"),
+      fill: document.getElementById("fillButton")
+    };
+    Object.entries(modeButtons).forEach(([mode, button]) => {
+      if (!button) return;
+      const active = studyMode === mode;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
     const gradeButton = document.getElementById("gradeAllButton");
     const resetButton = document.getElementById("resetUnitButton");
-    const originalButton = document.getElementById("originalButton");
-
-    if (startButton) startButton.classList.toggle("hidden", quizMode);
-    if (gradeButton) gradeButton.classList.toggle("hidden", !quizMode);
-    if (resetButton) resetButton.classList.toggle("hidden", !quizMode);
-    if (originalButton) originalButton.classList.toggle("hidden", !quizMode);
+    const score = document.getElementById("scoreText");
+    if (gradeButton) gradeButton.classList.toggle("hidden", studyMode !== "fill");
+    if (resetButton) resetButton.classList.toggle("hidden", !isInputStudyMode());
+    if (score) score.classList.toggle("hidden-mode-score", studyMode !== "fill");
   }
 
   function getUnitData(subject, area, group) {
@@ -393,15 +402,13 @@
     return explicitId || `${stableHash(sectionTitle)}-${stableHash(lineText)}`;
   }
 
-  function makeStateKey(sectionIndex, lineIndex, gapIndex, lineId = "", gapId = "", answerOccurrence = 0, sourceGroup = "") {
+  function makeStateKey(sectionIndex, lineIndex, gapIndex, lineId = "", gapId = "", answerOccurrence = 0, sourceGroup = "", mode = "fill") {
     const unit = getCurrentUnit();
     const intrinsicGroup = sourceGroup || getCurrentGroup();
-
-    if (lineId && gapId) {
-      return [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), lineId, gapId, answerOccurrence].join("|");
-    }
-
-    return [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
+    const base = lineId && gapId
+      ? [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), lineId, gapId, answerOccurrence].join("|")
+      : [unit.subject, unit.area, intrinsicGroup, getCurrentDifficulty(), sectionIndex, lineIndex, gapIndex].join("|");
+    return mode === "trace" ? `trace|${base}` : base;
   }
 
   // -------------------------
@@ -431,14 +438,20 @@
     return { prefix, sentences: sentences.length ? sentences : [body.trim()].filter(Boolean) };
   }
 
+  function hasCustomYaho(line) {
+    return Array.isArray(line?.yaho) && line.yaho.length > 0;
+  }
+
   function configuredGapEntries(line, difficulty) {
     if (difficulty === "yaho") {
-      const sentences = splitSentenceUnits(line.text).sentences;
+      const answers = hasCustomYaho(line) ? line.yaho : splitSentenceUnits(line.text).sentences;
       const ids = line.gapIds?.yaho || [];
-      return sentences.map((answer, index) => ({
-        answer,
-        gapId: ids[index] || `y${String(index + 1).padStart(2, "0")}`
-      }));
+      return answers
+        .map((answer, index) => ({
+          answer,
+          gapId: ids[index] || `y${String(index + 1).padStart(2, "0")}`
+        }))
+        .filter(entry => entry.answer && line.text.includes(entry.answer));
     }
 
     const configured = difficulty === "easy" ? (line.easy || []) : (line.normal || []);
@@ -498,19 +511,36 @@
     return accepted;
   }
 
-  function createGapInput(spec, sectionIndex, lineIndex, gapIndex, lineId = "", answerOccurrence = 0, sourceGroup = "", sectionTitle = "") {
+  function normalizeTrace(value) {
+    return String(value || "")
+      .normalize("NFKC")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function createGapInput(spec, sectionIndex, lineIndex, gapIndex, lineId = "", answerOccurrence = 0, sourceGroup = "", sectionTitle = "", mode = "fill") {
+    const traceMode = mode === "trace";
     const wrap = document.createElement("span");
-    wrap.className = "gap-wrap" + (spec.sentence ? " sentence-gap-wrap" : "");
+    wrap.className = (traceMode ? "gap-wrap trace-gap-wrap" : "gap-wrap") + (spec.sentence ? " sentence-gap-wrap" : "");
+
+    if (traceMode) {
+      const guide = document.createElement("span");
+      guide.className = "trace-guide";
+      guide.textContent = spec.answer;
+      guide.setAttribute("aria-hidden", "true");
+      wrap.appendChild(guide);
+    }
 
     const input = document.createElement("input");
     input.type = "text";
     input.className = "gap-input" + (spec.sentence ? " sentence-gap" : "");
     const inputDifficulty = getCurrentDifficulty();
     input.dataset.difficulty = inputDifficulty;
+    input.dataset.learningMode = mode;
     input.dataset.answer = spec.answer;
     input.dataset.gapId = spec.gapId || `legacy-${gapIndex}`;
     input.dataset.aliases = JSON.stringify(spec.aliases || []);
-    input.dataset.stateKey = makeStateKey(sectionIndex, lineIndex, gapIndex, lineId, input.dataset.gapId, answerOccurrence, sourceGroup);
+    input.dataset.stateKey = makeStateKey(sectionIndex, lineIndex, gapIndex, lineId, input.dataset.gapId, answerOccurrence, sourceGroup, mode);
     input.dataset.sectionIndex = String(sectionIndex);
     input.dataset.lineIndex = String(lineIndex);
     input.dataset.gapIndex = String(gapIndex);
@@ -522,47 +552,71 @@
     input.spellcheck = false;
     input.enterKeyHint = "next";
     input.setAttribute("enterkeyhint", "next");
-    input.setAttribute("aria-label", `${sectionTitle || "학습"} · ${lineIndex + 1}번째 문장 · ${gapIndex + 1}번째 빈칸`);
+    input.setAttribute("aria-label", `${sectionTitle || "학습"} · ${lineIndex + 1}번째 문장 · ${gapIndex + 1}번째 ${traceMode ? "따라치기" : "빈칸"}`);
 
     const saved = fieldState[input.dataset.stateKey];
     if (saved) {
       input.value = saved.value || "";
-      if (saved.status === "correct") input.classList.add("correct");
-      if (saved.status === "wrong") input.classList.add("wrong");
+      if (!traceMode && saved.status === "correct") input.classList.add("correct");
+      if (!traceMode && saved.status === "wrong") input.classList.add("wrong");
+      if (traceMode && saved.status === "trace-correct") input.classList.add("trace-correct");
+      if (traceMode && saved.status === "trace-wrong") input.classList.add("trace-wrong");
     }
 
-    const selectFilledGapText = () => {
+    let selectionCycle = false;
+    let pointerFocused = false;
+
+    const selectFilledGapText = (markCycle = true) => {
       if (!input.value) return;
+      if (markCycle) selectionCycle = true;
       requestAnimationFrame(() => {
         if (document.activeElement !== input || !input.value) return;
-        try {
-          input.setSelectionRange(0, input.value.length);
-        } catch {
-          input.select?.();
-        }
+        try { input.setSelectionRange(0, input.value.length); }
+        catch { input.select?.(); }
       });
     };
 
+    input.addEventListener("pointerdown", () => {
+      pointerFocused = document.activeElement !== input;
+    });
+
     input.addEventListener("focus", () => {
       lastStudyFocus = { sectionIndex, lineIndex };
-      // Tab, 오답 재진입, 프로그램 이동 모두 기존 답안을 즉시 덮어쓸 수 있게 전체 선택한다.
-      selectFilledGapText();
+      // 마우스로 처음 진입한 경우 click 단계에서 1회 전체 선택한다.
+      // Tab/프로그램 이동으로 진입한 경우에는 focus 단계에서 전체 선택한다.
+      if (!pointerFocused) selectFilledGapText(true);
     });
 
     input.addEventListener("click", () => {
-      // 이미 포커스된 입력칸을 다시 클릭한 경우에도 커서 한 점이 아니라 기존 답 전체를 선택한다.
-      selectFilledGapText();
+      if (!input.value) {
+        selectionCycle = false;
+        pointerFocused = false;
+        return;
+      }
+      if (!selectionCycle) {
+        // 첫 클릭: 전체 선택
+        selectFilledGapText(true);
+      } else {
+        // 두 번째 클릭: 브라우저가 배치한 클릭 위치 커서를 그대로 둔다.
+        selectionCycle = false;
+      }
+      pointerFocused = false;
+    });
+
+    input.addEventListener("blur", () => {
+      pointerFocused = false;
+      selectionCycle = false;
     });
 
     input.addEventListener("input", () => {
+      selectionCycle = false;
       const state = fieldState[input.dataset.stateKey] || {};
       state.value = input.value;
       if (state.status) delete state.status;
-      // 사용자가 실제로 답을 수정했다면 같은 문자열로 되돌아오더라도 다음 채점은 새 학습 이벤트다.
       delete state.lastCountedSignature;
       fieldState[input.dataset.stateKey] = state;
       scheduleStateSave();
-      input.classList.remove("correct","wrong");
+      input.classList.remove("correct", "wrong", "trace-correct", "trace-wrong");
       const result = wrap.querySelector(".gap-result");
       if (result) result.remove();
       input.removeAttribute("aria-describedby");
@@ -570,12 +624,29 @@
       updateScore();
     });
 
+    const checkTraceAndAdvance = () => {
+      const ok = normalizeTrace(input.value) === normalizeTrace(spec.answer);
+      const state = fieldState[input.dataset.stateKey] || {};
+      state.value = input.value;
+      state.status = ok ? "trace-correct" : "trace-wrong";
+      fieldState[input.dataset.stateKey] = state;
+      input.classList.toggle("trace-correct", ok);
+      input.classList.toggle("trace-wrong", !ok);
+      input.setAttribute("aria-invalid", ok ? "false" : "true");
+      scheduleStateSave();
+      if (!ok) {
+        input.focus();
+        selectFilledGapText(true);
+        return;
+      }
+      requestAnimationFrame(() => advanceAfterGrade(input));
+    };
+
     const gradeAndAdvance = () => {
       const correct = gradeOne(input); // 빈 입력도 오답으로 처리한다.
       if (!correct) {
-        // 오답은 현재 빈칸에 머문다. 입력값이 있으면 즉시 덮어쓸 수 있게 전체 선택한다.
         input.focus();
-        selectFilledGapText();
+        selectFilledGapText(true);
         return;
       }
       if (reviewActive) return;
@@ -585,29 +656,78 @@
     input.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.keyCode === 13) {
         event.preventDefault();
-        gradeAndAdvance();
+        if (traceMode) checkTraceAndAdvance();
+        else gradeAndAdvance();
       }
     });
 
     wrap.appendChild(input);
-    if (saved?.status) appendResult(wrap, saved.status, spec.answer);
+    if (!traceMode && saved?.status) appendResult(wrap, saved.status, spec.answer);
     return wrap;
   }
 
-  function renderLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
+  function createMaskToken(spec, sentence = false) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "mask-token" + (sentence ? " sentence-mask" : "");
+    button.textContent = spec.answer;
+    button.setAttribute("aria-label", "가린 답. 눌러서 확인");
+    button.setAttribute("aria-pressed", "false");
+    button.title = "눌러서 정답 확인";
+    button.addEventListener("click", () => {
+      const revealed = button.classList.toggle("revealed");
+      button.setAttribute("aria-pressed", revealed ? "true" : "false");
+      button.setAttribute("aria-label", revealed ? `정답: ${spec.answer}. 다시 누르면 가리기` : "가린 답. 눌러서 확인");
+      button.title = revealed ? "다시 눌러 가리기" : "눌러서 정답 확인";
+    });
+    return button;
+  }
+
+  function renderMaskLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
+    const p = document.createElement("div");
+    p.className = "line-item mask-line";
+    const difficulty = getCurrentDifficulty();
+    const specs = buildGapSpecs(line, difficulty);
+
+    if (difficulty === "yaho" && !hasCustomYaho(line)) {
+      const sentenceUnits = splitSentenceUnits(line.text);
+      if (sentenceUnits.prefix) p.appendChild(document.createTextNode(sentenceUnits.prefix));
+      specs.forEach((spec, index) => {
+        if (index > 0) p.appendChild(document.createTextNode(" "));
+        p.appendChild(createMaskToken(spec, true));
+      });
+      return p;
+    }
+
+    const occurrences = findOccurrences(line.text, specs);
+    if (!occurrences.length) {
+      p.textContent = line.text;
+      return p;
+    }
+
+    let cursor = 0;
+    occurrences.forEach(o => {
+      if (o.start > cursor) p.appendChild(document.createTextNode(line.text.slice(cursor, o.start)));
+      p.appendChild(createMaskToken(o.spec, Boolean(o.spec.sentence)));
+      cursor = o.end;
+    });
+    if (cursor < line.text.length) p.appendChild(document.createTextNode(line.text.slice(cursor)));
+    return p;
+  }
+
+  function renderLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "", mode = studyMode) {
     const p = document.createElement("div");
     p.className = "line-item";
     const difficulty = getCurrentDifficulty();
     const specs = buildGapSpecs(line, difficulty);
     const lineId = makeLineStableId(sectionTitle, line.text, line.id || "");
 
-    if (difficulty === "yaho") {
-      p.innerHTML = "";
+    if (difficulty === "yaho" && !hasCustomYaho(line)) {
       const sentenceUnits = splitSentenceUnits(line.text);
       if (sentenceUnits.prefix) p.appendChild(document.createTextNode(sentenceUnits.prefix));
       specs.forEach((spec, index) => {
         if (index > 0) p.appendChild(document.createTextNode(" "));
-        p.appendChild(createGapInput(spec, sectionIndex, lineIndex, index, lineId, index, sourceGroup, sectionTitle));
+        p.appendChild(createGapInput(spec, sectionIndex, lineIndex, index, lineId, index, sourceGroup, sectionTitle, mode));
       });
       return p;
     }
@@ -637,7 +757,8 @@
         lineId,
         answerOccurrence,
         sourceGroup,
-        sectionTitle
+        sectionTitle,
+        mode
       ));
 
       cursor = o.end;
@@ -662,9 +783,13 @@
     document.getElementById("studyTitle").textContent =
       subject && area ? `${subjectLabel} · ${area}` : "학습 내용";
 
-    document.getElementById("studyStatus").textContent = quizMode
-      ? (window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점")
-      : "";
+    const statusByMode = {
+      original: "",
+      mask: "가린 부분을 눌러 확인",
+      trace: window.matchMedia("(max-width: 720px)").matches ? "다음: 확인" : "Enter: 확인",
+      fill: window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점"
+    };
+    document.getElementById("studyStatus").textContent = statusByMode[studyMode] || "";
 
     const nav = document.getElementById("unitNav");
     const randomMode = document.getElementById("areaSelect").value === "random";
@@ -721,8 +846,10 @@
       const td = document.createElement("td");
 
       section.lines.forEach((line, lineIndex) => {
-        if (quizMode) {
-          td.appendChild(renderLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group));
+        if (studyMode === "mask") {
+          td.appendChild(renderMaskLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group));
+        } else if (isInputStudyMode()) {
+          td.appendChild(renderLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group, studyMode));
         } else {
           const p = document.createElement("div");
           p.className = "line-item";
@@ -776,7 +903,7 @@
       difficulty: getCurrentDifficulty(),
       currentAreaIndex,
       currentRandomUnit,
-      quizMode,
+      studyMode,
       lastStudyFocus,
       generalCategory: document.getElementById("generalCategory")?.value || "all",
       generalIndex,
@@ -823,7 +950,9 @@
 
     currentAreaIndex = Number.isFinite(Number(saved.currentAreaIndex)) ? Math.max(0, Number(saved.currentAreaIndex)) : 0;
     currentRandomUnit = saved.currentRandomUnit && typeof saved.currentRandomUnit === "object" ? saved.currentRandomUnit : null;
-    quizMode = Boolean(saved.quizMode);
+    studyMode = ["original","mask","trace","fill"].includes(saved.studyMode)
+      ? saved.studyMode
+      : (saved.quizMode ? "fill" : "original");
     lastStudyFocus = saved.lastStudyFocus && typeof saved.lastStudyFocus === "object" ? saved.lastStudyFocus : null;
     generalIndex = Number.isFinite(Number(saved.generalIndex)) ? Math.max(0, Number(saved.generalIndex)) : 0;
     generalShuffleState = saved.generalShuffleState && typeof saved.generalShuffleState === "object" ? saved.generalShuffleState : null;
@@ -1027,12 +1156,12 @@
           nextKey = migrateSubjectConceptKey(key);
         }
         if (nextKey !== key) changed = true;
-        const retiredNormalTargets = nextKey.startsWith("subject|")
-          ? normalSplitTargetConceptKeys(nextKey)
+        const retiredSplitTargets = nextKey.startsWith("subject|")
+          ? [...normalSplitTargetConceptKeys(nextKey), ...yahoSplitTargetConceptKeys(nextKey)]
           : [];
-        // v6.3에서 폐기된 정밀 composite ID는 저장소에 남겨 두지 않고 자식 gap으로 이관한다.
-        if (retiredNormalTargets.length) {
-          retiredNormalTargets.forEach(targetKey => merge(targetKey, item || {}));
+        // 폐기된 정밀 composite 또는 야~호! 전체문장 ID는 현재 자식 gap으로 이관한다.
+        if (retiredSplitTargets.length) {
+          retiredSplitTargets.forEach(targetKey => merge(targetKey, item || {}));
           changed = true;
         } else if (!nextKey.startsWith("subject|") || isCurrentSubjectConceptKey(nextKey)) {
           merge(nextKey, item || {});
@@ -1173,6 +1302,25 @@
     if (!meta) return [];
     const oldGapId = String(gapToken).slice(4);
     const targets = meta.line.normalSplitMigrations?.[oldGapId];
+    if (!Array.isArray(targets) || !targets.length) return [];
+    return targets.map(gapId => conceptKeyForSubject(
+      {subject:subjectKey, area:areaName},
+      meta.sourceGroup || sourceGroup,
+      meta.line.id,
+      gapId,
+      Number(occurrence || 0)
+    ));
+  }
+
+  function yahoSplitTargetConceptKeys(key) {
+    const parts = String(key || "").split("|");
+    if (parts[0] !== "subject" || parts.length < 7) return [];
+    const [, subjectKey, areaName, sourceGroup, lineId, gapToken, occurrence] = parts;
+    if (!String(gapToken || "").startsWith("gap:")) return [];
+    const meta = findLineIdentity(subjectKey, areaName, lineId, "");
+    if (!meta) return [];
+    const oldGapId = String(gapToken).slice(4);
+    const targets = meta.line.yahoSplitMigrations?.[oldGapId];
     if (!Array.isArray(targets) || !targets.length) return [];
     return targets.map(gapId => conceptKeyForSubject(
       {subject:subjectKey, area:areaName},
@@ -1366,13 +1514,15 @@
         });
 
       // 과거 composite 오답은 현재의 분할된 stable gap들에 이어 준다.
-      // v6.2 핵심 분할과 v6.3 정밀 장문 분할을 모두 지원한다.
+      // 핵심/정밀 분할과 v6.6 야~호! 장문 청크 분할을 모두 지원한다.
       let migrated = migratedBase.flatMap(copy => {
-        if (copy.type !== "subject" || !["easy","normal"].includes(copy.difficultyKey)) return [copy];
+        if (copy.type !== "subject" || !["easy","normal","yaho"].includes(copy.difficultyKey)) return [copy];
         const meta = findLineIdentity(copy.subjectKey, copy.area, copy.lineId || "", copy.context || "");
         const splitMap = copy.difficultyKey === "easy"
           ? meta?.line?.coreSplitMigrations
-          : meta?.line?.normalSplitMigrations;
+          : copy.difficultyKey === "normal"
+            ? meta?.line?.normalSplitMigrations
+            : meta?.line?.yahoSplitMigrations;
         const targets = splitMap?.[copy.gapId];
         if (!Array.isArray(targets) || !targets.length) return [copy];
         changed = true;
@@ -1664,7 +1814,7 @@
 
       currentAreaIndex = 0;
       currentRandomUnit = null;
-      quizMode = true;
+      studyMode = "fill";
 
         activeReviewConceptKey = item.conceptKey || null;
 
@@ -2249,7 +2399,7 @@
   }
 
   function gradeAllVisible() {
-    if (!quizMode) return;
+    if (studyMode !== "fill") return;
     const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
     inputs.forEach(gradeOne); // 미입력도 오답으로 채점한다.
     const wrongCount = inputs.filter(input => fieldState[input.dataset.stateKey]?.status === "wrong").length;
@@ -2264,8 +2414,8 @@
   }
 
   function resetVisible() {
-    if (!quizMode) return;
-    clearCurrentUnitState();
+    if (!isInputStudyMode()) return;
+    clearCurrentUnitState(studyMode);
     renderStudy();
     focusFirstEmpty();
   }

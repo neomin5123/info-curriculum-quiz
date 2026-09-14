@@ -1267,3 +1267,212 @@
   max-width: min(204px, calc(100vw - 64px));
   flex: 0 0 auto;
 }
+
+/* =========================================================
+   v6.5.0 학습 방식 UI: 원문 · 마스킹 · 따라치기 · 빈칸 채우기
+   ========================================================= */
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.brand-row h1 { margin-bottom: 6px; }
+.brand-row .theme-toggle { margin-bottom: 6px; }
+
+.study-mode-toolbar {
+  align-items: center;
+}
+
+.mode-button.active,
+.mode-button[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #f8faf8;
+}
+
+.mode-button.active:hover,
+.mode-button[aria-pressed="true"]:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line);
+  margin: 0 2px;
+  flex: 0 0 auto;
+}
+
+.mask-token {
+  display: inline-block;
+  max-width: 100%;
+  margin: 1px 2px;
+  padding: 1px 5px;
+  border: 1px solid color-mix(in srgb, var(--text) 18%, var(--line));
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--text) 84%, var(--panel));
+  color: transparent;
+  text-shadow: none;
+  font: inherit;
+  line-height: 1.65;
+  vertical-align: baseline;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color .12s ease, color .12s ease, border-color .12s ease;
+}
+
+.mask-token:hover,
+.mask-token:focus-visible {
+  background: color-mix(in srgb, var(--text) 72%, var(--panel));
+}
+
+.mask-token.revealed {
+  color: var(--text);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.mask-token.sentence-mask {
+  display: inline-block;
+  width: auto;
+  min-width: min(280px, 72vw);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.trace-gap-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  max-width: 100%;
+  margin: 3px 3px 5px;
+  vertical-align: middle;
+}
+
+.trace-guide {
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.25;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.trace-gap-wrap .gap-input {
+  margin: 0;
+}
+
+.trace-gap-wrap.sentence-gap-wrap {
+  display: flex;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.trace-gap-wrap.sentence-gap-wrap .trace-guide {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.gap-input.trace-correct {
+  border-color: var(--good);
+  background: var(--good-bg);
+}
+
+.gap-input.trace-wrong {
+  border-color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.study-mode-toolbar .score.hidden-mode-score {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .header-top {
+    align-items: center;
+  }
+
+  .brand-row {
+    gap: 6px;
+  }
+
+  .brand-row h1,
+  .brand-row .theme-toggle {
+    margin-bottom: 4px;
+  }
+
+  .brand-row .theme-toggle {
+    min-height: 30px;
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .study-mode-toolbar {
+    gap: 5px;
+  }
+
+  .study-mode-toolbar .mode-button {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 0;
+  }
+
+  .toolbar-divider {
+    display: none;
+  }
+
+  .mask-token.sentence-mask {
+    min-width: min(230px, 78vw);
+  }
+}
+
+@media (min-width: 721px) {
+  #subjectPage .study-mode-toolbar .mode-button {
+    flex: 0 0 auto;
+  }
+}
+
+/* v6.5.0: 네 학습 방식은 화면 폭과 관계없이 한 줄 그룹으로 유지한다. */
+.mode-button-group,
+.mode-utility-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.mode-button-group { flex: 0 1 auto; }
+.mode-utility-group { flex: 0 1 auto; flex-wrap: wrap; }
+
+@media (max-width: 720px) {
+  .study-mode-toolbar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+  }
+  .mode-button-group {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+    gap: 4px;
+  }
+  .study-mode-toolbar .mode-button {
+    min-width: 0;
+    width: 100%;
+    padding: 7px 4px;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+  .mode-utility-group {
+    width: 100%;
+    gap: 5px;
+  }
+}
