@@ -74,8 +74,8 @@
   let activeReviewConceptKey = null;
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.7.0";
-  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7 실전 회전 빈칸·지연 재인출·취약 복습; 성격·목표·교수학습·평가 기출연계 원문 보강; 기존 공식 원문 550문장 lock 유지";
+  const APP_VERSION = "6.7.1";
+  const MANUAL_GAP_REVIEW = "2026-09-14 / v6.7.1 실전 다음 세트·재인출 자동 포커스·입력 커서 개선·저가치 빈칸 제외·단원 자동이동 제거; v6.7 학습 엔진 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -404,9 +404,11 @@
 
     const gradeButton = document.getElementById("gradeAllButton");
     const resetButton = document.getElementById("resetUnitButton");
+    const nextPracticalButton = document.getElementById("nextPracticalSetButton");
     const score = document.getElementById("scoreText");
     if (gradeButton) gradeButton.classList.toggle("hidden", studyMode !== "fill");
     if (resetButton) resetButton.classList.toggle("hidden", !isInputStudyMode());
+    if (nextPracticalButton && !(studyMode === "fill" && getCurrentDifficulty() === "practical")) nextPracticalButton.classList.add("hidden");
     if (score) score.classList.toggle("hidden-mode-score", studyMode !== "fill");
   }
 
@@ -471,6 +473,14 @@
     return `${practicalLineKey(line)}|${gapId}`;
   }
 
+  // 실전은 임용에서 변별력이 낮은 일반 서술어를 굳이 단독 빈칸으로 만들지 않는다.
+  // '필요성'·'중요성'처럼 교육과정의 명시적 개념은 남기고, 단독 술어만 제외한다.
+  const PRACTICAL_LOW_VALUE_TERMS = new Set(["필요", "도움", "중요", "가능"]);
+
+  function isPracticalLowValueEntry(entry) {
+    return PRACTICAL_LOW_VALUE_TERMS.has(normalize(entry?.answer));
+  }
+
   function practicalPresentationToken(line) {
     return practicalPresentationTokens.get(practicalLineKey(line)) || "";
   }
@@ -512,7 +522,9 @@
   function selectPracticalEntries(line) {
     const cacheKey = practicalLineKey(line);
     const cached = practicalComboCache.get(cacheKey);
-    const base = rawConfiguredEntries(line, "normal").length ? rawConfiguredEntries(line, "normal") : rawConfiguredEntries(line, "easy");
+    const normalEntries = rawConfiguredEntries(line, "normal").filter(entry => !isPracticalLowValueEntry(entry));
+    const easyEntries = rawConfiguredEntries(line, "easy").filter(entry => !isPracticalLowValueEntry(entry));
+    const base = normalEntries.length ? normalEntries : easyEntries;
     if (!base.length) return [];
     if (cached?.length) {
       const byId = new Map(base.map(entry => [entry.gapId, entry]));
@@ -645,6 +657,16 @@
     activePracticalRetry = null;
   }
 
+  function focusPracticalRetryInput() {
+    const panel = document.getElementById("practicalRetryPanel");
+    const input = document.getElementById("practicalRetryInput");
+    if (!panel || panel.classList.contains("hidden") || !input) return;
+    requestAnimationFrame(() => {
+      input.focus({preventScroll:true});
+      input.scrollIntoView({block:"center", behavior:"smooth"});
+    });
+  }
+
   function blankNth(text, answer, occurrence = 0) {
     const source = String(text || "");
     const target = String(answer || "");
@@ -679,6 +701,7 @@
     if (input) { input.value = ""; input.classList.remove("correct","wrong"); }
     if (feedback) feedback.textContent = "아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.";
     panel.classList.remove("hidden");
+    focusPracticalRetryInput();
   }
 
   function recordPracticalRetryStat(record, result) {
@@ -711,7 +734,11 @@
       practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
       activePracticalRetry = null;
       persistPracticalRetryState();
-      setTimeout(() => { hidePracticalRetryPanel(); maybeShowPracticalRetry(); }, 650);
+      setTimeout(() => {
+        hidePracticalRetryPanel();
+        maybeShowPracticalRetry();
+        focusFirstEmpty();
+      }, 650);
       return;
     }
 
@@ -725,7 +752,10 @@
     if (feedback) feedback.textContent = `정답: ${item.correctAnswer} · 몇 문제 뒤 다시 확인합니다.`;
     activePracticalRetry = null;
     persistPracticalRetryState();
-    setTimeout(() => hidePracticalRetryPanel(), 1250);
+    setTimeout(() => {
+      hidePracticalRetryPanel();
+      focusFirstEmpty();
+    }, 1250);
   }
 
   function deferPracticalRetry() {
@@ -734,6 +764,7 @@
     activePracticalRetry = null;
     persistPracticalRetryState();
     hidePracticalRetryPanel();
+    focusFirstEmpty();
   }
 
   function makeStateKey(sectionIndex, lineIndex, gapIndex, lineId = "", gapId = "", answerOccurrence = 0, sourceGroup = "", mode = "fill") {
@@ -889,12 +920,12 @@
       if (traceMode && saved.status === "trace-wrong") input.classList.add("trace-wrong");
     }
 
-    let selectionCycle = false;
+    let selectedAllThisFocus = false;
     let pointerFocused = false;
 
-    const selectFilledGapText = (markCycle = true) => {
+    const selectFilledGapText = (markSelected = true) => {
       if (!input.value) return;
-      if (markCycle) selectionCycle = true;
+      if (markSelected) selectedAllThisFocus = true;
       requestAnimationFrame(() => {
         if (document.activeElement !== input || !input.value) return;
         try { input.setSelectionRange(0, input.value.length); }
@@ -908,34 +939,30 @@
 
     input.addEventListener("focus", () => {
       lastStudyFocus = { sectionIndex, lineIndex };
-      // 마우스로 처음 진입한 경우 click 단계에서 1회 전체 선택한다.
-      // Tab/프로그램 이동으로 진입한 경우에는 focus 단계에서 전체 선택한다.
+      selectedAllThisFocus = false;
+      // 마우스로 처음 진입한 경우 첫 click에서만 전체 선택한다.
+      // Tab/프로그램 이동으로 진입한 경우 focus 단계에서 1회 전체 선택한다.
       if (!pointerFocused) selectFilledGapText(true);
     });
 
     input.addEventListener("click", () => {
       if (!input.value) {
-        selectionCycle = false;
         pointerFocused = false;
         return;
       }
-      if (!selectionCycle) {
-        // 첫 클릭: 전체 선택
+      if (!selectedAllThisFocus) {
+        // 첫 클릭만 전체 선택. 두 번째 클릭부터는 계속 브라우저의 클릭 위치 커서를 유지한다.
         selectFilledGapText(true);
-      } else {
-        // 두 번째 클릭: 브라우저가 배치한 클릭 위치 커서를 그대로 둔다.
-        selectionCycle = false;
       }
       pointerFocused = false;
     });
 
     input.addEventListener("blur", () => {
       pointerFocused = false;
-      selectionCycle = false;
+      selectedAllThisFocus = false;
     });
 
     input.addEventListener("input", () => {
-      selectionCycle = false;
       const state = fieldState[input.dataset.stateKey] || {};
       state.value = input.value;
       if (state.status) delete state.status;
@@ -975,7 +1002,7 @@
         selectFilledGapText(true);
         return;
       }
-      if (reviewActive) return;
+      if (reviewActive || activePracticalRetry) return;
       requestAnimationFrame(() => advanceAfterGrade(input));
     };
 
@@ -2926,7 +2953,23 @@
     focusFirstEmpty();
   }
 
+  function nextPracticalSet() {
+    if (studyMode !== "fill" || getCurrentDifficulty() !== "practical") return;
+    clearCurrentUnitState("fill");
+    practicalComboCache.clear();
+    practicalPresentationTokens.clear();
+    hidePracticalRetryPanel();
+    renderStudy();
+    const announcer = document.getElementById("gradingAnnouncer");
+    if (announcer) announcer.textContent = "새 실전 세트를 만들었습니다. 같은 원문에서 다른 핵심 빈칸을 다시 인출합니다.";
+    requestAnimationFrame(() => focusFirstEmpty());
+  }
+
   function focusMatchingLine(snapshot) {
+    if (activePracticalRetry) {
+      focusPracticalRetryInput();
+      return;
+    }
     if (!snapshot) return;
 
     const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
@@ -2959,22 +3002,19 @@
       return;
     }
 
-    if (document.getElementById("areaSelect").value === "random") {
-      chooseRandomUnit();
-        renderStudy();
-      requestAnimationFrame(() => focusFirstEmpty());
-      return;
-    }
-
-    const sequence = getUnitSequence();
-    if (currentAreaIndex < sequence.length - 1) {
-      currentAreaIndex++;
-      renderStudy();
-      requestAnimationFrame(() => focusFirstEmpty());
+    // 단원의 마지막 답을 맞혀도 다음 단원/랜덤 단원으로 자동 이동하지 않는다.
+    // 정답 표시를 확인한 뒤 사용자가 '다음 단원' 또는 '다음 실전 세트'를 직접 선택한다.
+    if (current) {
+      current.focus({preventScroll:true});
+      requestAnimationFrame(() => current.scrollIntoView({block:"center", behavior:"smooth"}));
     }
   }
 
   function focusFirstEmpty() {
+    if (activePracticalRetry) {
+      focusPracticalRetryInput();
+      return;
+    }
     const inputs = [...document.querySelectorAll("#studyArea .gap-input")];
     const target = inputs.find(i => !i.value) || inputs[0];
     if (target) target.focus();
@@ -3027,6 +3067,12 @@
     const lineText = lineGroups.size ? ` · 문장 ${completedLines}/${lineGroups.size}` : "";
     document.getElementById("scoreText").textContent =
       `현재 ${currentCorrect}✓ ${currentWrong}✕${lineText}`;
+
+    const nextPracticalButton = document.getElementById("nextPracticalSetButton");
+    if (nextPracticalButton) {
+      const complete = studyMode === "fill" && getCurrentDifficulty() === "practical" && lineGroups.size > 0 && completedLines === lineGroups.size;
+      nextPracticalButton.classList.toggle("hidden", !complete);
+    }
   }
 
   // -------------------------
