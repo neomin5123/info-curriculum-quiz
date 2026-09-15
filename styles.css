@@ -1662,3 +1662,8 @@
   .review-session-actions { justify-content:stretch; }
   .review-session-actions .btn { flex:1; }
 }
+
+/* v6.8.0: 실전 기출형 미니 체크 */
+.exam-challenge{margin-top:18px;padding:18px;border:1px solid var(--border);border-radius:16px;background:var(--panel)}
+.exam-challenge .practical-retry-row{margin-top:12px}
+.exam-challenge.hidden{display:none}
