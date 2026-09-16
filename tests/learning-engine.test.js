@@ -36,6 +36,28 @@ const deduped = L.dedupeReviewByLine([
   {item:{type:'subject',subjectKey:'middle-info',area:'데이터',sourceGroup:'content-system',lineId:'x'}, state:{wrongCount:4}}
 ], r => r.state.wrongCount);
 assert.equal(deduped.length, 1); assert.equal(deduped[0].state.wrongCount, 4);
+
+// Daily review plan must not be consumed by a practical answer.
+// If a practical success actually advanced a due schedule today, v6.8.1 can recover it into today's plan.
+const practicalAdvanced = {
+  correctStreak: 2,
+  lastSuccessAt: t0,
+  nextReviewAt: t0 + 3 * day,
+  lastEventToken: `subject|${t0}|1|x`
+};
+assert.equal(L.wasScheduleAdvancedTodayOutsideReview(practicalAdvanced, t0 + 1000), true);
+assert.equal(L.isDailyReviewCandidate(practicalAdvanced, t0 + 1000), true);
+
+// Extra practice before the due date must not be mistaken for today's scheduled review.
+const extraPractice = {
+  correctStreak: 2,
+  lastSuccessAt: t0,
+  nextReviewAt: t0 + 2 * day, // not recomputed from this success
+  lastEventToken: `subject|${t0}|2|y`
+};
+assert.equal(L.wasScheduleAdvancedTodayOutsideReview(extraPractice, t0 + 1000), false);
+assert.equal(L.isDailyReviewCandidate(extraPractice, t0 + 1000), false);
+
 console.log('learning-engine tests: OK');
 const G = require('../js/grading-engine.js');
 assert.equal(G.classify('비교 분석한다', '비교·분석한다'), 'correct');

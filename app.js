@@ -76,8 +76,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.8.0";
-  const MANUAL_GAP_REVIEW = "2026-09-15 / v6.8.0 학습 엔진 정제: 실전 중요도·실제 제출 기반 통계·간격 확장·당일 중복 제거·표기확인 분리·문제 단위 재인출·안전 초기화·엔진 모듈화";
+  const APP_VERSION = "6.8.2";
+  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.8.2 유사답안 유예 확장: 조사·오타·유사어·부분정답을 단계적으로 유예하고 공식 표현을 재인출";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -88,6 +88,7 @@
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
+  const DAILY_REVIEW_PLAN_KEY = "curriloop-daily-review-plan-v1";
   const practicalComboCache = new Map();
   const practicalPresentationTokens = new Map();
   let practicalPresentationSerial = 0;
@@ -151,6 +152,11 @@
       renderHistory();
     }
     scheduleStateSave();
+  }
+
+  function goHome() {
+    showTab("general");
+    requestAnimationFrame(() => window.scrollTo({top:0, left:0, behavior:"auto"}));
   }
 
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
@@ -752,7 +758,8 @@
     const input = document.getElementById("practicalRetryInput");
     const feedback = document.getElementById("practicalRetryFeedback");
     if (!item || !input) return;
-    const status = classifyRawAnswer(input.value, item.correctAnswer, item.aliases || []);
+    const grading = classifyRawAnswerDetailed(input.value, item.correctAnswer, item.aliases || []);
+    const status = grading.status;
     const signature = `${normalize(input.value) || "__blank__"}|retry|${status}`;
     const eventToken = makeGradingEventToken("practical-retry", item.conceptKey, signature);
     const masteryItem = updateMastery(item.conceptKey, status, eventToken);
@@ -775,11 +782,20 @@
     if (status === "near") {
       input.classList.add("correct");
       item.retryReason = "near";
-      item.dueAt = practicalGradeSerial + 3;
-      if (feedback) feedback.textContent = `표기 확인: ${item.correctAnswer} · 숙련도는 올리지 않고 몇 문장 뒤 다시 확인합니다.`;
+      item.nearReason = grading.reason;
+      item.nearRetries = Number(item.nearRetries || 0) + 1;
+      const capReached = item.nearRetries >= 2;
+      if (capReached) {
+        practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
+      } else {
+        item.dueAt = practicalGradeSerial + 3;
+      }
+      if (feedback) feedback.textContent = capReached
+        ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer} · 이번 세션에서는 여기까지, 다음 복습에서 정확히 확인합니다.`
+        : `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer} · 몇 문장 뒤 한 번 더 확인합니다.`;
       activePracticalRetry = null;
       persistPracticalRetryState();
-      setTimeout(() => { hidePracticalRetryPanel(); focusFirstEmpty(); }, 1100);
+      setTimeout(() => { hidePracticalRetryPanel(); focusFirstEmpty(); }, capReached ? 1500 : 1250);
       return;
     }
 
@@ -1768,8 +1784,10 @@
   }
 
   function updateMastery(conceptKey, result, eventToken) {
-    const all = loadMastery();
     const now = Date.now();
+    // 탭을 밤새 열어 둔 경우에도 그날 첫 학습 이벤트 전에 복습 계획을 먼저 고정한다.
+    ensureDailyReviewPlan(now);
+    const all = loadMastery();
     const status = result === true ? "correct" : result === false ? "wrong" : (result || "wrong");
     const applied = LearningEngine.applyMasteryEvent(all[conceptKey] || {}, status, now, eventToken);
     const item = applied.item;
@@ -2305,6 +2323,84 @@
     return keys;
   }
 
+  function loadDailyReviewPlan() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(DAILY_REVIEW_PLAN_KEY) || "null");
+      if (!parsed || typeof parsed !== "object" || !Array.isArray(parsed.items) || !Array.isArray(parsed.completed)) return null;
+      return parsed;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveDailyReviewPlan(plan) {
+    if (!plan) {
+      localStorage.removeItem(DAILY_REVIEW_PLAN_KEY);
+      return;
+    }
+    safeSetLocalStorage(DAILY_REVIEW_PLAN_KEY, JSON.stringify(plan));
+  }
+
+  function buildDailyReviewPlan(now = Date.now()) {
+    const mastery = loadMastery();
+    const records = Object.entries(mastery)
+      .filter(([, state]) => LearningEngine.isDailyReviewCandidate(state, now))
+      .map(([conceptKey, state]) => ({item:reviewItemFromConceptKey(conceptKey), state, conceptKey}))
+      .filter(({item}) => Boolean(item));
+
+    const deduped = LearningEngine.dedupeReviewByLine(records, record => {
+      const state = record.state || {};
+      const overdue = Number(state.nextReviewAt || 0) > 0 && Number(state.nextReviewAt || 0) <= now ? 1000 : 0;
+      return overdue + Number(state.wrongCount || 0) * 10 + (state.lastResult === "wrong" ? 8 : state.lastResult === "near" ? 4 : 0);
+    }).sort((a,b) => {
+      const aDue = Number(a.state?.nextReviewAt || 0);
+      const bDue = Number(b.state?.nextReviewAt || 0);
+      const aOverdue = aDue > 0 && aDue <= now;
+      const bOverdue = bDue > 0 && bDue <= now;
+      if (aOverdue !== bOverdue) return aOverdue ? -1 : 1;
+      return aDue - bDue;
+    });
+
+    const plan = {
+      version: 1,
+      dayKey: LearningEngine.localDayKey(now),
+      createdAt: now,
+      items: deduped.map(record => ({
+        conceptKey: record.item.conceptKey,
+        lineKey: LearningEngine.reviewLineKey(record.item)
+      })),
+      completed: []
+    };
+    saveDailyReviewPlan(plan);
+    return plan;
+  }
+
+  function ensureDailyReviewPlan(now = Date.now(), {force = false} = {}) {
+    const dayKey = LearningEngine.localDayKey(now);
+    const existing = loadDailyReviewPlan();
+    if (!force && existing?.dayKey === dayKey) return existing;
+    return buildDailyReviewPlan(now);
+  }
+
+  function remainingDailyReviewItems(now = Date.now()) {
+    const plan = ensureDailyReviewPlan(now);
+    const completed = new Set(plan.completed || []);
+    return (plan.items || [])
+      .filter(entry => entry?.conceptKey && !completed.has(entry.conceptKey))
+      .map(entry => reviewItemFromConceptKey(entry.conceptKey))
+      .filter(Boolean);
+  }
+
+  function markDailyReviewCompleted(conceptKey, now = Date.now()) {
+    if (!conceptKey) return;
+    const plan = ensureDailyReviewPlan(now);
+    if (!(plan.items || []).some(entry => entry?.conceptKey === conceptKey)) return;
+    if (!plan.completed.includes(conceptKey)) {
+      plan.completed.push(conceptKey);
+      saveDailyReviewPlan(plan);
+    }
+  }
+
   function startWrongReview(dueOnly = true) {
     const mastery = loadMastery();
     const now = Date.now();
@@ -2312,19 +2408,7 @@
     const completedLinesToday = successfulLineKeysToday(mastery, now);
 
     if (dueOnly) {
-      const records = Object.entries(mastery)
-        .filter(([, state]) => Number(state?.nextReviewAt || 0) > 0 && Number(state.nextReviewAt) <= now)
-        .map(([conceptKey, state]) => ({item:reviewItemFromConceptKey(conceptKey), state}))
-        .filter(({item}) => Boolean(item))
-        .filter(({item}) => !completedLinesToday.has(LearningEngine.reviewLineKey(item)));
-      reviewQueue = LearningEngine.dedupeReviewByLine(records, record => {
-        const state = record.state || {};
-        return Number(state.wrongCount || 0) * 10 + (state.lastResult === "wrong" ? 8 : state.lastResult === "near" ? 4 : 0) - Number(state.nextReviewAt || 0) / 1e15;
-      }).sort((a,b) => {
-        const aWrong = Number(a.state?.wrongCount || 0), bWrong = Number(b.state?.wrongCount || 0);
-        if (aWrong !== bWrong) return bWrong - aWrong;
-        return Number(a.state?.nextReviewAt || 0) - Number(b.state?.nextReviewAt || 0);
-      }).map(({item}) => ({...item, _sessionFailures:0}));
+      reviewQueue = remainingDailyReviewItems(now).map(item => ({...item, _sessionFailures:0, _dailyReview:true}));
       if (!reviewQueue.length) { alert("오늘 복습할 항목이 없습니다."); return; }
     } else {
       const records = loadHistory()
@@ -2370,13 +2454,14 @@
     const primary = document.getElementById("reviewPrimaryButton");
     if (!item || !input || reviewGraded) return;
 
-    let status = "wrong";
+    let grading = {status:"wrong", reason:"meaning"};
     if (item.type === "general") {
       const q = generalBank.find(q => q.id === item.generalId);
-      status = q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong";
+      grading = {status:q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong", reason:"exact"};
     } else {
-      status = classifyRawAnswer(input.value, item.correctAnswer || item.answerText || "", item.aliases || []);
+      grading = classifyRawAnswerDetailed(input.value, item.correctAnswer || item.answerText || "", item.aliases || []);
     }
+    const status = grading.status;
     const success = status !== "wrong";
     const signature = `${normalize(input.value) || "__blank__"}|review|${status}`;
     const eventToken = makeGradingEventToken("review", item.conceptKey, signature);
@@ -2390,10 +2475,11 @@
     if (primary) primary.textContent = "다음";
 
     if (success) {
+      if (status === "correct") markDailyReviewCompleted(item.conceptKey, Date.now());
       if (feedback) {
         feedback.className = "review-feedback good";
         feedback.textContent = status === "near"
-          ? `표기 확인: ${item.correctAnswer || item.answerText || ""} · 오답은 아니지만 숙련도는 올리지 않습니다.`
+          ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer || item.answerText || ""} · 오답은 쌓지 않고 숙련도도 올리지 않습니다.`
           : `✓ 정답 · ${item.correctAnswer || item.answerText || item.correctAnswer || ""}`;
       }
       if (status === "near" && !item._nearRetried) {
@@ -2578,6 +2664,7 @@
       }
 
       await clearPreimportSnapshot();
+      ensureDailyReviewPlan(Date.now(), {force:true});
       renderHistory();
       await refreshUndoImportButton();
       alert("백업 가져오기 직전의 기록으로 되돌렸습니다.");
@@ -2692,7 +2779,7 @@
     const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    const date = new Date().toISOString().slice(0,10);
+    const date = LearningEngine.localDayKey(Date.now());
     a.href = url;
     a.download = `CurriLoop_backup_${date}.json`;
     document.body.appendChild(a);
@@ -2781,6 +2868,7 @@
         }
 
         await persistLearningStateNow();
+        ensureDailyReviewPlan(Date.now(), {force:true});
 
         // 실제 저장소를 다시 읽어 개수와 구조를 검증한다.
         if (learningStorageMode === "indexeddb" && learningDb) {
@@ -2856,6 +2944,7 @@
     Object.keys(practicalStats).forEach(key => delete practicalStats[key]);
     localStorage.removeItem(PRACTICAL_STATS_KEY);
     sessionStorage.removeItem(PRACTICAL_RETRY_KEY);
+    localStorage.removeItem(DAILY_REVIEW_PLAN_KEY);
     hidePracticalRetryPanel();
     localStorage.removeItem(HISTORY_KEY);
     localStorage.removeItem(MASTERY_KEY);
@@ -2961,12 +3050,7 @@
     const mastery = loadMastery();
     const now = Date.now();
     const completedLinesToday = successfulLineKeysToday(mastery, now);
-    const dueRecords = Object.entries(mastery)
-      .filter(([, state]) => Number(state?.nextReviewAt || 0) > 0 && Number(state.nextReviewAt) <= now)
-      .map(([conceptKey, state]) => ({item:reviewItemFromConceptKey(conceptKey), state}))
-      .filter(({item}) => Boolean(item))
-      .filter(({item}) => !completedLinesToday.has(LearningEngine.reviewLineKey(item)));
-    const dueCount = LearningEngine.dedupeReviewByLine(dueRecords, record => Number(record.state?.wrongCount || 0)).length;
+    const dueCount = remainingDailyReviewItems(now).length;
     const weakList = loadHistory().filter(item => isWeakHistoryItem(item, mastery) && isReviewWorthyHistoryItem(item));
     const weakCount = LearningEngine.dedupeReviewByLine(
       weakList.filter(item => !LearningEngine.wasExactSuccessToday(mastery[item.conceptKey], now))
@@ -3065,21 +3149,33 @@
   // -------------------------
   // 8) 채점
   // -------------------------
+  function classifyRawAnswerDetailed(rawUser, expected, aliases = []) {
+    return GradingEngine.classifyDetailed(rawUser, expected, aliases);
+  }
+
   function classifyRawAnswer(rawUser, expected, aliases = []) {
-    return GradingEngine.classify(rawUser, expected, aliases);
+    return classifyRawAnswerDetailed(rawUser, expected, aliases).status;
+  }
+
+  function classifyInputDetailed(input) {
+    const expected = input.dataset.answer;
+    const aliases = JSON.parse(input.dataset.aliases || "[]");
+    return classifyRawAnswerDetailed(input.value, expected, aliases);
   }
 
   function classifyInput(input) {
-    const expected = input.dataset.answer;
-    const aliases = JSON.parse(input.dataset.aliases || "[]");
-    return classifyRawAnswer(input.value, expected, aliases);
+    return classifyInputDetailed(input).status;
+  }
+
+  function nearReasonText(detail) {
+    return GradingEngine.reasonLabel(detail?.reason || "");
   }
 
   function isCorrect(input) {
     return classifyInput(input) !== "wrong";
   }
 
-  function appendResult(wrap, status, answer) {
+  function appendResult(wrap, status, answer, detail = null) {
     const old = wrap.querySelector(".gap-result");
     if (old) old.remove();
     const input = wrap.querySelector(".gap-input");
@@ -3087,7 +3183,7 @@
     const good = status === "correct" || status === "near";
     span.className = "gap-result " + (good ? "good" : "bad") + (status === "near" ? " near" : "");
     span.id = `gap-result-${stableHash(input?.dataset.stateKey || `${answer}|${status}`)}`;
-    span.textContent = status === "correct" ? "✓" : status === "near" ? `≈ 표기 확인: ${answer}` : `✕ 정답: ${answer}`;
+    span.textContent = status === "correct" ? "✓" : status === "near" ? `≈ 유예 · ${nearReasonText(detail)} · 공식 표기: ${answer}` : `✕ 정답: ${answer}`;
     wrap.appendChild(span);
     if (input) {
       input.setAttribute("aria-describedby", span.id);
@@ -3097,7 +3193,8 @@
 
   function gradeOne(input) {
     const normalizedValue = normalize(input.value);
-    const answerStatus = normalizedValue ? classifyInput(input) : "wrong";
+    const grading = normalizedValue ? classifyInputDetailed(input) : {status:"wrong", reason:"empty"};
+    const answerStatus = grading.status;
     const correct = answerStatus !== "wrong";
     const practical = getCurrentDifficulty() === "practical";
     input.classList.remove("correct","wrong");
@@ -3106,23 +3203,29 @@
     const state = fieldState[input.dataset.stateKey] || {};
     state.value = input.value;
     state.status = answerStatus;
+    state.nearReason = answerStatus === "near" ? grading.reason : "";
 
     const gradingSignature = `${normalizedValue || "__blank__"}|${answerStatus}`;
     // 한 번 제시된 빈칸에서 답을 여러 번 고쳐도 같은 결과(정답/오답)는 1회만 누적한다.
     // 실전은 첫 결과 자체를 1회만 세고, 실패 뒤의 진짜 회복은 지연 재인출에서 판정한다.
-    const outcomeAlreadyCounted = correct ? Boolean(state.correctOutcomeCounted) : Boolean(state.wrongOutcomeCounted);
+    const outcomeAlreadyCounted = answerStatus === "correct"
+      ? Boolean(state.correctOutcomeCounted)
+      : answerStatus === "near"
+        ? Boolean(state.nearOutcomeCounted)
+        : Boolean(state.wrongOutcomeCounted);
     const practicalAlreadyCounted = practical && Boolean(state.practicalOutcomeCounted);
     const isNewGradingEvent = !practicalAlreadyCounted && !outcomeAlreadyCounted && state.lastCountedSignature !== gradingSignature;
     if (isNewGradingEvent) {
       state.lastCountedSignature = gradingSignature;
-      if (correct) state.correctOutcomeCounted = true;
+      if (answerStatus === "correct") state.correctOutcomeCounted = true;
+      else if (answerStatus === "near") state.nearOutcomeCounted = true;
       else state.wrongOutcomeCounted = true;
       if (practical) state.practicalOutcomeCounted = true;
     }
     fieldState[input.dataset.stateKey] = state;
     scheduleStateSave();
 
-    appendResult(input.parentElement, state.status, input.dataset.answer);
+    appendResult(input.parentElement, state.status, input.dataset.answer, grading);
 
     const unit = getCurrentUnit();
     const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
@@ -3158,7 +3261,7 @@
       if (practical) schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"wrong"});
     } else if (answerStatus === "near" && isNewGradingEvent && practical) {
       // 표기 확인은 오답으로 쌓지 않지만, 숙련 성공도 아니므로 몇 문장 뒤 정확 표기를 다시 확인한다.
-      schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"near"});
+      schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"near", nearReason:grading.reason});
     }
 
     updateScore();
@@ -3398,12 +3501,13 @@
     const input = document.getElementById("practicalExamInput");
     const feedback = document.getElementById("practicalExamFeedback");
     if (!challenge || !input) return;
-    const status = classifyRawAnswer(input.value, challenge.answer, challenge.aliases || []);
+    const grading = classifyRawAnswerDetailed(input.value, challenge.answer, challenge.aliases || []);
+    const status = grading.status;
     const ok = status !== "wrong";
     input.classList.toggle("correct", ok);
     input.classList.toggle("wrong", !ok);
     if (feedback) feedback.textContent = ok
-      ? (status === "near" ? `거의 맞음 · 공식 표기: ${challenge.answer}` : `✓ 정답 · ${challenge.answer}`)
+      ? (status === "near" ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${challenge.answer}` : `✓ 정답 · ${challenge.answer}`)
       : `✕ 정답: ${challenge.answer}`;
   }
 
@@ -3946,6 +4050,7 @@
   // -------------------------
   async function bootstrapCurriLoop() {
     await initializeLearningStorage();
+    ensureDailyReviewPlan(Date.now());
     restorePracticalRetryState();
     restoreUiState();
     const restoredGeneralAnswer = restoreDraftState();

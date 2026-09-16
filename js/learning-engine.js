@@ -72,6 +72,31 @@
     return {item, changed:true, due:true};
   }
 
+  function masteryEventScope(item) {
+    return String(item?.lastEventToken || "").split("|", 1)[0] || "";
+  }
+
+  // 오늘 비복습 학습에서 "원래 복습 시점이었던 항목"의 일정이 실제로 전진했는지 판별한다.
+  // 단순 추가 연습은 nextReviewAt이 lastSuccessAt 기준으로 다시 계산되지 않으므로 제외된다.
+  function wasScheduleAdvancedTodayOutsideReview(item, now = Date.now()) {
+    const source = normalizeMasteryItem(item);
+    const successAt = Number(source.lastSuccessAt || 0);
+    const nextReviewAt = Number(source.nextReviewAt || 0);
+    const streak = Number(source.correctStreak || 0);
+    if (!successAt || !nextReviewAt || streak < 2) return false;
+    if (localDayKey(successAt) !== localDayKey(now)) return false;
+    const scope = masteryEventScope(source);
+    if (scope !== "subject" && scope !== "practical-retry") return false;
+    const expected = successAt + reviewIntervalDays(streak) * DAY_MS;
+    return Math.abs(nextReviewAt - expected) <= 60 * 1000;
+  }
+
+  function isDailyReviewCandidate(item, now = Date.now()) {
+    const source = normalizeMasteryItem(item);
+    const dueAt = Number(source.nextReviewAt || 0);
+    return (dueAt > 0 && dueAt <= now) || wasScheduleAdvancedTodayOutsideReview(source, now);
+  }
+
   function wasExactSuccessToday(item, now = Date.now()) {
     const timestamp = Number(item?.lastSuccessAt || 0);
     return timestamp > 0 && localDayKey(timestamp) === localDayKey(now);
@@ -109,6 +134,9 @@
     reviewIntervalDays,
     normalizeMasteryItem,
     applyMasteryEvent,
+    masteryEventScope,
+    wasScheduleAdvancedTodayOutsideReview,
+    isDailyReviewCandidate,
     wasExactSuccessToday,
     reviewLineKey,
     reviewLineKeyFromConceptKey,
