@@ -23,7 +23,11 @@ expectStatus('생활 속 문제 해결', '실생활 문제 해결', 'near');
 expectStatus('진로', '진로 결정', 'near', 'partial');
 expectStatus('찾아내는 데 도움', '찾는 데 도움', 'near');
 expectStatus('유의해야 할', '주의해야 할 위험 요소', 'near');
-expectStatus('탐구', '탐색', 'near', 'synonym');
+expectStatus('탐구', '탐색', 'wrong');
+expectStatus('발견', '탐색', 'wrong');
+expectStatus('처리 가능한 형태', '해결 가능한 형태', 'wrong');
+expectStatus('다양한 해결 전략', '다양한 설계 전략', 'wrong');
+expectStatus('구성되는 컴퓨팅 시스템', '동작하는 컴퓨팅 시스템', 'wrong');
 
 // Concept/stage substitutions must still be real errors.
 expectStatus('활용', '선택', 'wrong');
@@ -34,6 +38,6 @@ expectStatus('분석', '구조화', 'wrong');
 expectStatus('인공지능 시스템', '인공지능 학습', 'wrong');
 expectStatus('문제 해결', '문제 분석', 'wrong');
 expectStatus('자세', '가치', 'wrong');
-expectStatus('', '디지털 윤리', 'wrong');
+expectStatus('', '디지털 윤리', 'unknown', 'empty');
 
 console.log('grading-engine tests: OK');

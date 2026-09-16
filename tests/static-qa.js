@@ -34,11 +34,11 @@ if (subjects !== 6) throw new Error(`subjects ${subjects}`);
 if (invalid) throw new Error(`invalid gaps ${invalid}`);
 if (dupIds) throw new Error(`duplicate line ids ${dupIds}`);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.8.2','/js/practical-engine.js?v=6.8.2','/js/grading-engine.js?v=6.8.2','/app.js?v=6.8.2']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=6.9.0','/js/practical-engine.js?v=6.9.0','/js/grading-engine.js?v=6.9.0','/js/review-engine.js?v=6.9.0','/js/history-engine.js?v=6.9.0','/js/storage-engine.js?v=6.9.0','/app.js?v=6.9.0']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
 
 if(!html.includes('class="brand-home-link"')) throw new Error('brand home link missing');
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
-for (const marker of ['curriloop-daily-review-plan-v1','remainingDailyReviewItems','ensureDailyReviewPlan']) if(!app.includes(marker)) throw new Error(`missing review plan marker ${marker}`);
+for (const marker of ['curriloop-daily-review-plan-v1','remainingDailyReviewItems','ensureDailyReviewPlan','curriloop-grading-overrides-v1','curriloop-practical-exam-progress-v1','practicalSetSummary','nextReviewInfo']) if(!app.includes(marker)) throw new Error(`missing review plan marker ${marker}`);
 const sw=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.8.2','/js/practical-engine.js?v=6.8.2','/js/grading-engine.js?v=6.8.2']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=6.9.0','/js/practical-engine.js?v=6.9.0','/js/grading-engine.js?v=6.9.0','/js/review-engine.js?v=6.9.0','/js/history-engine.js?v=6.9.0','/js/storage-engine.js?v=6.9.0']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
 console.log(JSON.stringify({subjects,areas,lines,gaps,invalid,dupIds},null,2));

@@ -67,6 +67,7 @@
   let generalLastGradedValue = "";
   let generalCorrectCounted = false;
   let generalWrongCounted = false;
+  let generalUnknownCounted = false;
   let generalShuffleState = null;
   let reviewQueue = [];
   let reviewPosition = -1;
@@ -76,19 +77,24 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.8.2";
-  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.8.2 유사답안 유예 확장: 조사·오타·유사어·부분정답을 단계적으로 유예하고 공식 표현을 재인출";
+  const APP_VERSION = "6.9.0";
+  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.9.0 채점·복습 정제: 핵심 행동어 엄격화, 모름 분리, 3세트 기출 체크, 해설·적용 고려사항 강도 차등";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
   const LearningEngine = window.CurriLoopLearningEngine;
   const PracticalEngine = window.CurriLoopPracticalEngine;
   const GradingEngine = window.CurriLoopGradingEngine;
-  if (!LearningEngine || !PracticalEngine || !GradingEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
+  const ReviewEngine = window.CurriLoopReviewEngine;
+  const HistoryEngine = window.CurriLoopHistoryEngine;
+  const StorageEngine = window.CurriLoopStorageEngine;
+  if (!LearningEngine || !PracticalEngine || !GradingEngine || !ReviewEngine || !HistoryEngine || !StorageEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
   const DAILY_REVIEW_PLAN_KEY = "curriloop-daily-review-plan-v1";
+  const GRADING_OVERRIDE_KEY = "curriloop-grading-overrides-v1";
+  const PRACTICAL_EXAM_PROGRESS_KEY = "curriloop-practical-exam-progress-v1";
   const practicalComboCache = new Map();
   const practicalPresentationTokens = new Map();
   let practicalPresentationSerial = 0;
@@ -98,6 +104,9 @@
   const practicalCompletedLineTokens = new Set();
   let activePracticalExamChallenge = null;
   let practicalExamOfferedSetKey = "";
+  const practicalCountedCompletedSets = new Set();
+  let practicalSetRecoveryCount = 0;
+  let practicalSummaryUnitKey = "";
 
   // -------------------------
   // 5) 공통 유틸
@@ -469,18 +478,19 @@
       const stats = parsed && typeof parsed === "object" ? parsed : {};
       stats.targets = stats.targets && typeof stats.targets === "object" ? stats.targets : {};
       stats.lines = stats.lines && typeof stats.lines === "object" ? stats.lines : {};
-      // v1은 화면에 표시만 되어도 shown이 늘었다. v2부터 실제 제출 횟수로 교정한다.
-      if (Number(stats._version || 0) < 2) {
+      // v1은 화면 노출도 shown으로 세었다. v2부터 실제 제출만, v3부터 모름을 오답과 분리한다.
+      if (Number(stats._version || 0) < 3) {
         Object.values(stats.targets).forEach(stat => {
           if (!stat || typeof stat !== "object") return;
-          stat.shown = Number(stat.correct || 0) + Number(stat.wrong || 0) + Number(stat.near || 0);
+          stat.unknown = Number(stat.unknown || 0);
+          stat.shown = Number(stat.correct || 0) + Number(stat.wrong || 0) + Number(stat.near || 0) + stat.unknown;
           if (!Array.isArray(stat.successDays)) stat.successDays = [];
         });
-        stats._version = 2;
+        stats._version = 3;
         try { localStorage.setItem(PRACTICAL_STATS_KEY, JSON.stringify(stats)); } catch {}
       }
       return stats;
-    } catch { return {_version:2, targets:{}, lines:{}}; }
+    } catch { return {_version:3, targets:{}, lines:{}}; }
   }
 
   const practicalStats = loadPracticalStats();
@@ -496,13 +506,14 @@
     }
     practicalStats.targets = practicalStats.targets && typeof practicalStats.targets === "object" ? practicalStats.targets : {};
     practicalStats.lines = practicalStats.lines && typeof practicalStats.lines === "object" ? practicalStats.lines : {};
-    if (Number(practicalStats._version || 0) < 2) {
+    if (Number(practicalStats._version || 0) < 3) {
       Object.values(practicalStats.targets).forEach(stat => {
         if (!stat || typeof stat !== "object") return;
-        stat.shown = Number(stat.correct || 0) + Number(stat.wrong || 0) + Number(stat.near || 0);
+        stat.unknown = Number(stat.unknown || 0);
+        stat.shown = Number(stat.correct || 0) + Number(stat.wrong || 0) + Number(stat.near || 0) + stat.unknown;
         if (!Array.isArray(stat.successDays)) stat.successDays = [];
       });
-      practicalStats._version = 2;
+      practicalStats._version = 3;
     }
     savePracticalStats();
   }
@@ -524,6 +535,7 @@
       explicitPriority: explicit,
       coreLike,
       sourceGroup: line?._sourceGroup || getCurrentGroup(),
+      sectionTitle: line?._sectionTitle || "",
       lineText: line?.text || ""
     });
   }
@@ -598,7 +610,7 @@
     const lineStats = practicalStats.lines[cacheKey] || {lastCombo:[], presentations:0};
     const scored = base.map(entry => {
       const key = practicalTargetKey(line, entry.gapId);
-      const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, wrong:0, lastResult:"", successDays:[]};
+      const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, unknown:0, wrong:0, lastResult:"", successDays:[]};
       let score = PracticalEngine.scoreTarget(stat, entry.priority, {
         wasLastCombo:(lineStats.lastCombo || []).includes(entry.gapId),
         jitter:Math.random() * 0.55
@@ -610,7 +622,10 @@
 
     const statsForLine = base.map(entry => practicalStats.targets[practicalTargetKey(line, entry.gapId)] || {});
     const visibleChars = normalize(line.text).length || line.text.length || 1;
-    const desired = PracticalEngine.desiredBlankCount(visibleChars, scored.length, statsForLine);
+    const desired = PracticalEngine.desiredBlankCount(visibleChars, scored.length, statsForLine, {
+      sourceGroup:line?._sourceGroup || getCurrentGroup(),
+      sectionTitle:line?._sectionTitle || ""
+    });
     const maxCoverage = PracticalEngine.coverageLimit(statsForLine);
     const maxChars = Math.max(2, Math.floor(visibleChars * maxCoverage));
 
@@ -643,9 +658,9 @@
     if (!line || !gapId) return;
     practicalStats.targets = practicalStats.targets || {};
     const key = practicalTargetKey(line, gapId);
-    const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, wrong:0, lastResult:"", successDays:[]};
+    const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, unknown:0, wrong:0, lastResult:"", successDays:[]};
     practicalStats.targets[key] = PracticalEngine.noteResult(stat, result, LearningEngine.localDayKey(Date.now()), Date.now(), true);
-    practicalStats._version = 2;
+    practicalStats._version = 3;
     savePracticalStats();
   }
 
@@ -738,7 +753,7 @@
       meta.textContent = [`과목: ${subject}`, `영역: ${area}`, group ? `출제 항목: ${group}` : ""].filter(Boolean).join("  ·  ");
     }
     if (prompt) prompt.textContent = blankNth(due.context || "", due.correctAnswer, Number(due.answerOccurrence || 0));
-    if (input) { input.value = ""; input.classList.remove("correct","wrong"); }
+    if (input) { input.value = ""; input.classList.remove("correct","wrong","unknown"); }
     if (feedback) feedback.textContent = "아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.";
     panel.classList.remove("hidden");
     focusPracticalRetryInput();
@@ -747,9 +762,9 @@
   function recordPracticalRetryStat(record, result) {
     practicalStats.targets = practicalStats.targets || {};
     const key = `${record.subjectKey}|${record.area}|${record.lineId}|${record.gapId}`;
-    const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, wrong:0, lastResult:"", successDays:[]};
+    const stat = practicalStats.targets[key] || {shown:0, correct:0, near:0, unknown:0, wrong:0, lastResult:"", successDays:[]};
     practicalStats.targets[key] = PracticalEngine.noteResult(stat, result, LearningEngine.localDayKey(Date.now()), Date.now(), true);
-    practicalStats._version = 2;
+    practicalStats._version = 3;
     savePracticalStats();
   }
 
@@ -768,12 +783,16 @@
     if (status === "correct") {
       input.classList.add("correct");
       if (feedback) feedback.textContent = "회복 완료 ✓";
+      const unit = getCurrentUnit();
+      if (unit.subject === item.subjectKey && unit.area === item.area) practicalSetRecoveryCount += 1;
       practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
       activePracticalRetry = null;
       persistPracticalRetryState();
       setTimeout(() => {
         hidePracticalRetryPanel();
         maybeShowPracticalRetry();
+        updateScore();
+        maybeOfferPracticalExamChallenge();
         focusFirstEmpty();
       }, 650);
       return;
@@ -785,17 +804,25 @@
       item.nearReason = grading.reason;
       item.nearRetries = Number(item.nearRetries || 0) + 1;
       const capReached = item.nearRetries >= 2;
-      if (capReached) {
-        practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
-      } else {
-        item.dueAt = practicalGradeSerial + 3;
-      }
+      if (capReached) practicalRetryQueue = practicalRetryQueue.filter(candidate => candidate !== item);
+      else item.dueAt = practicalGradeSerial + 3;
       if (feedback) feedback.textContent = capReached
         ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer} · 이번 세션에서는 여기까지, 다음 복습에서 정확히 확인합니다.`
         : `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer} · 몇 문장 뒤 한 번 더 확인합니다.`;
       activePracticalRetry = null;
       persistPracticalRetryState();
-      setTimeout(() => { hidePracticalRetryPanel(); focusFirstEmpty(); }, capReached ? 1500 : 1250);
+      setTimeout(() => { hidePracticalRetryPanel(); updateScore(); maybeOfferPracticalExamChallenge(); focusFirstEmpty(); }, capReached ? 1500 : 1250);
+      return;
+    }
+
+    if (status === "unknown") {
+      input.classList.add("unknown");
+      item.retryReason = "unknown";
+      item.dueAt = practicalGradeSerial + 3;
+      if (feedback) feedback.textContent = `모름 · 정답: ${item.correctAnswer} · 오답 표현으로 기록하지 않고 몇 문장 뒤 다시 확인합니다.`;
+      activePracticalRetry = null;
+      persistPracticalRetryState();
+      setTimeout(() => { hidePracticalRetryPanel(); updateScore(); maybeOfferPracticalExamChallenge(); focusFirstEmpty(); }, 1250);
       return;
     }
 
@@ -811,6 +838,8 @@
     persistPracticalRetryState();
     setTimeout(() => {
       hidePracticalRetryPanel();
+      updateScore();
+      maybeOfferPracticalExamChallenge();
       focusFirstEmpty();
     }, 1250);
   }
@@ -973,6 +1002,7 @@
       input.value = saved.value || "";
       if (!traceMode && saved.status === "correct") input.classList.add("correct");
       if (!traceMode && saved.status === "wrong") input.classList.add("wrong");
+      if (!traceMode && saved.status === "unknown") input.classList.add("unknown");
       if (traceMode && saved.status === "trace-correct") input.classList.add("trace-correct");
       if (traceMode && saved.status === "trace-wrong") input.classList.add("trace-wrong");
     }
@@ -1026,7 +1056,7 @@
       delete state.lastCountedSignature;
       fieldState[input.dataset.stateKey] = state;
       scheduleStateSave();
-      input.classList.remove("correct", "wrong", "trace-correct", "trace-wrong");
+      input.classList.remove("correct", "wrong", "unknown", "trace-correct", "trace-wrong");
       const result = wrap.querySelector(".gap-result");
       if (result) result.remove();
       input.removeAttribute("aria-describedby");
@@ -1053,7 +1083,7 @@
     };
 
     const gradeAndAdvance = () => {
-      const correct = gradeOne(input); // 빈 입력도 오답으로 처리한다.
+      const correct = gradeOne(input); // 빈 입력은 오답 표현이 아니라 ‘모름’으로 분리한다.
       if (!correct) {
         input.focus();
         selectFilledGapText(true);
@@ -1575,6 +1605,8 @@
           ...prev,
           ...(nextSeen >= prevSeen ? item : {}),
           correctCount: Math.max(Number(prev.correctCount || 0), Number(item.correctCount || 0)),
+          nearCount: Math.max(Number(prev.nearCount || 0), Number(item.nearCount || 0)),
+          unknownCount: Math.max(Number(prev.unknownCount || 0), Number(item.unknownCount || 0)),
           wrongCount: Math.max(Number(prev.wrongCount || 0), Number(item.wrongCount || 0)),
           correctStreak: Math.max(Number(prev.correctStreak || 0), Number(item.correctStreak || 0)),
           mastered: Boolean(prev.mastered || item.mastered),
@@ -2198,7 +2230,7 @@
   function isWeakHistoryItem(item, mastery = loadMastery()) {
     if (!item || item.resolved) return false;
     const masteryItem = mastery[item.conceptKey] || null;
-    return Number(item.attempts || 0) >= 2 || Number(masteryItem?.wrongCount || 0) >= 2;
+    return HistoryEngine.isWeak(item, masteryItem);
   }
 
   function isReviewWorthyHistoryItem(item) {
@@ -2297,7 +2329,7 @@
     prompt.textContent = item.type === "general"
       ? (item.question || item.context || "")
       : blankNth(item.context || "", item.correctAnswer || item.answerText || "", Number(item.answerOccurrence || 0));
-    input.classList.remove("hidden", "correct", "wrong");
+    input.classList.remove("hidden", "correct", "wrong", "unknown");
     input.readOnly = false;
     input.value = "";
     input.placeholder = item.type === "general" ? "필요한 답을 모두 입력" : "정답을 떠올려 입력";
@@ -2351,7 +2383,7 @@
     const deduped = LearningEngine.dedupeReviewByLine(records, record => {
       const state = record.state || {};
       const overdue = Number(state.nextReviewAt || 0) > 0 && Number(state.nextReviewAt || 0) <= now ? 1000 : 0;
-      return overdue + Number(state.wrongCount || 0) * 10 + (state.lastResult === "wrong" ? 8 : state.lastResult === "near" ? 4 : 0);
+      return overdue + Number(state.wrongCount || 0) * 10 + (state.lastResult === "wrong" ? 8 : state.lastResult === "unknown" ? 6 : state.lastResult === "near" ? 4 : 0);
     }).sort((a,b) => {
       const aDue = Number(a.state?.nextReviewAt || 0);
       const bDue = Number(b.state?.nextReviewAt || 0);
@@ -2454,15 +2486,15 @@
     const primary = document.getElementById("reviewPrimaryButton");
     if (!item || !input || reviewGraded) return;
 
-    let grading = {status:"wrong", reason:"meaning"};
+    let grading = {status:"unknown", reason:"empty"};
     if (item.type === "general") {
       const q = generalBank.find(q => q.id === item.generalId);
-      grading = {status:q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong", reason:"exact"};
+      if (normalize(input.value)) grading = {status:q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong", reason:"exact"};
     } else {
       grading = classifyRawAnswerDetailed(input.value, item.correctAnswer || item.answerText || "", item.aliases || []);
     }
     const status = grading.status;
-    const success = status !== "wrong";
+    const success = status === "correct" || status === "near";
     const signature = `${normalize(input.value) || "__blank__"}|review|${status}`;
     const eventToken = makeGradingEventToken("review", item.conceptKey, signature);
     const masteryItem = updateMastery(item.conceptKey, status, eventToken);
@@ -2470,8 +2502,8 @@
     reviewGraded = true;
     reviewLastStatus = status;
     input.readOnly = true;
-    input.classList.toggle("correct", success);
-    input.classList.toggle("wrong", !success);
+    input.classList.remove("correct","wrong","unknown");
+    input.classList.add(success ? "correct" : status === "unknown" ? "unknown" : "wrong");
     if (primary) primary.textContent = "다음";
 
     if (success) {
@@ -2481,36 +2513,74 @@
         feedback.textContent = status === "near"
           ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${item.correctAnswer || item.answerText || ""} · 오답은 쌓지 않고 숙련도도 올리지 않습니다.`
           : `✓ 정답 · ${item.correctAnswer || item.answerText || item.correctAnswer || ""}`;
+        if (status === "near" && item.type === "subject") {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "grading-override-button";
+          button.textContent = "오답으로 처리";
+          button.addEventListener("click", () => forceCurrentReviewNearWrong());
+          feedback.appendChild(document.createTextNode(" "));
+          feedback.appendChild(button);
+        }
       }
       if (status === "near" && !item._nearRetried) {
         const retry = {...item, _nearRetried:true};
         const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
         reviewQueue.splice(insertAt, 0, retry);
       }
-    } else {
-      const failures = Number(item._sessionFailures || 0) + 1;
-      item._sessionFailures = failures;
-      if (Number(masteryItem?.wrongCount || 0) >= 2) {
-        addWrongHistory({
-          ...item,
-          key:item.key || item.conceptKey,
-          conceptKey:item.conceptKey,
-          userAnswer:input.value,
-          correctAnswer:item.correctAnswer || item.answerText || "",
-          attempts:Number(masteryItem.wrongCount || 2)
-        }, eventToken);
-      }
-      // 한 세션에서 무한 반복시키지 않는다. 첫 실패만 3개 정도 뒤에 한 번 재인출한다.
-      if (failures < 2) {
-        const retry = {...item, _sessionFailures:failures};
-        const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
-        reviewQueue.splice(insertAt, 0, retry);
-      }
-      if (feedback) {
-        feedback.className = "review-feedback bad";
-        feedback.textContent = `✕ 정답: ${item.correctAnswer || item.answerText || ""}${failures < 2 ? " · 몇 문제 뒤 한 번 더 확인합니다." : " · 다음 복습에서도 다시 확인합니다."}`;
-      }
+      return;
     }
+
+    const failures = Number(item._sessionFailures || 0) + 1;
+    item._sessionFailures = failures;
+    if (status === "wrong" && Number(masteryItem?.wrongCount || 0) >= 2) {
+      addWrongHistory({
+        ...item,
+        key:item.key || item.conceptKey,
+        conceptKey:item.conceptKey,
+        userAnswer:input.value,
+        correctAnswer:item.correctAnswer || item.answerText || "",
+        attempts:Number(masteryItem.wrongCount || 2)
+      }, eventToken);
+    }
+    if (failures < 2) {
+      const retry = {...item, _sessionFailures:failures};
+      const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
+      reviewQueue.splice(insertAt, 0, retry);
+    }
+    if (feedback) {
+      feedback.className = status === "unknown" ? "review-feedback" : "review-feedback bad";
+      feedback.textContent = status === "unknown"
+        ? `? 모름 · 정답: ${item.correctAnswer || item.answerText || ""} · 오답 표현으로 기록하지 않습니다.${failures < 2 ? " 몇 문제 뒤 한 번 더 확인합니다." : " 다음 복습에서도 다시 확인합니다."}`
+        : `✕ 정답: ${item.correctAnswer || item.answerText || ""}${failures < 2 ? " · 몇 문제 뒤 한 번 더 확인합니다." : " · 다음 복습에서도 다시 확인합니다."}`;
+    }
+  }
+
+  function forceCurrentReviewNearWrong() {
+    const item = currentReviewItem();
+    const input = document.getElementById("reviewAnswer");
+    const feedback = document.getElementById("reviewFeedback");
+    if (!item || !input || reviewLastStatus !== "near") return;
+    const expected = item.correctAnswer || item.answerText || "";
+    if (!rememberStrictGradingPair(input.value, expected)) return;
+    const all = loadMastery();
+    let masteryItem = LearningEngine.normalizeMasteryItem(all[item.conceptKey] || {});
+    if (masteryItem.nearCount > 0) masteryItem.nearCount -= 1;
+    const eventToken = makeGradingEventToken("review-override", item.conceptKey, `${normalize(input.value)}|wrong`);
+    masteryItem = LearningEngine.applyMasteryEvent(masteryItem, "wrong", Date.now(), eventToken).item;
+    all[item.conceptKey] = masteryItem;
+    saveMastery(all);
+    reviewLastStatus = "wrong";
+    input.classList.remove("correct","unknown");
+    input.classList.add("wrong");
+    if (Number(masteryItem.wrongCount || 0) >= 2) {
+      addWrongHistory({...item, userAnswer:input.value, correctAnswer:expected, attempts:Number(masteryItem.wrongCount || 2)}, eventToken);
+    }
+    if (feedback) {
+      feedback.className = "review-feedback bad";
+      feedback.textContent = `✕ 오답으로 변경 · 정답: ${expected} · 같은 표현은 다음부터 바로 오답 처리합니다.`;
+    }
+    renderHistory({passive:true});
   }
 
   function reviewPrimaryAction() {
@@ -2641,6 +2711,8 @@
     const before = learningStateSnapshot();
     const beforePracticalStats = cloneJson(practicalStats, {});
     const beforeTheme = localStorage.getItem("coreloop-theme");
+    const beforeGradingOverrides = loadGradingOverrides();
+    const beforeExamProgress = loadPracticalExamProgress();
 
     try {
       if (!validLearningStateRecord(snapshot.learning)) throw new Error("복구본 학습 기록 형식이 올바르지 않습니다.");
@@ -2654,6 +2726,8 @@
       learningStateMemory.mastery = loadMastery();
       await persistLearningStateNow();
       replacePracticalStats(snapshot.practicalStats || {});
+      if (snapshot.gradingOverrides && isPlainRecord(snapshot.gradingOverrides)) safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(snapshot.gradingOverrides));
+      if (snapshot.practicalExamProgress && isPlainRecord(snapshot.practicalExamProgress)) safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(snapshot.practicalExamProgress));
 
       if (snapshot.theme === "light" || snapshot.theme === "dark") {
         safeSetLocalStorage("coreloop-theme", snapshot.theme);
@@ -2678,6 +2752,8 @@
       };
       await persistLearningStateNow();
       replacePracticalStats(beforePracticalStats);
+      safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(beforeGradingOverrides));
+      safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(beforeExamProgress));
       if (beforeTheme) localStorage.setItem("coreloop-theme", beforeTheme);
       else localStorage.removeItem("coreloop-theme");
       alert("가져오기 이전 기록을 복구하지 못했습니다. 현재 기록은 변경하지 않았습니다.");
@@ -2717,7 +2793,7 @@
 
   function validateBackupMasteryRecord(value) {
     if (!isPlainRecord(value)) return false;
-    for (const field of ["correctCount","nearCount","wrongCount","correctStreak","nextReviewAt","lastSeenAt","lastSuccessAt"]) {
+    for (const field of ["correctCount","nearCount","unknownCount","wrongCount","correctStreak","nextReviewAt","lastSeenAt","lastSuccessAt"]) {
       if (value[field] !== undefined) {
         const number = Number(value[field]);
         if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
@@ -2737,7 +2813,7 @@
 
     for (const [key, stat] of Object.entries(targets)) {
       if (typeof key !== "string" || key.length > 2000 || !isPlainRecord(stat)) return false;
-      for (const field of ["shown","correct","near","wrong","lastShownAt","lastResultAt"]) {
+      for (const field of ["shown","correct","near","unknown","wrong","lastShownAt","lastResultAt"]) {
         if (stat[field] !== undefined) {
           const number = Number(stat[field]);
           if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
@@ -2764,18 +2840,13 @@
   function exportStudyData() {
     const history = loadHistory();
     const mastery = loadMastery();
-    const payload = {
-      schemaVersion: 7,
-      app: "CurriLoop",
-      appVersion: APP_VERSION,
-      coreSplitMigrationVersion: Number(learningStateMemory.coreSplitMigrationVersion || CORE_SPLIT_MIGRATION_VERSION),
-      exportedAt: new Date().toISOString(),
-      counts: {history: history.length, mastery: Object.keys(mastery).length},
-      history,
-      mastery,
-      practicalStats: cloneJson(practicalStats, {}),
-      theme: localStorage.getItem("coreloop-theme") || null
-    };
+    const payload = StorageEngine.buildBackupPayload({
+      appVersion:APP_VERSION,
+      coreSplitMigrationVersion:Number(learningStateMemory.coreSplitMigrationVersion || CORE_SPLIT_MIGRATION_VERSION),
+      history, mastery, practicalStats:cloneJson(practicalStats, {}),
+      gradingOverrides:loadGradingOverrides(), practicalExamProgress:loadPracticalExamProgress(),
+      theme:localStorage.getItem("coreloop-theme") || null, exportedAt:new Date().toISOString()
+    });
     const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -2803,6 +2874,8 @@
       const before = learningStateSnapshot();
       const beforePracticalStats = cloneJson(practicalStats, {});
       const oldTheme = localStorage.getItem("coreloop-theme");
+      const oldGradingOverrides = loadGradingOverrides();
+      const oldExamProgress = loadPracticalExamProgress();
       let snapshotSaved = false;
 
       try {
@@ -2811,7 +2884,7 @@
         if (data.app && data.app !== "CurriLoop") throw new Error("CurriLoop 백업 파일이 아닙니다.");
 
         const schemaVersion = Number(data.schemaVersion || 1);
-        if (!Number.isInteger(schemaVersion) || schemaVersion < 1 || schemaVersion > 7) {
+        if (!StorageEngine.schemaSupported(schemaVersion)) {
           throw new Error("지원하지 않는 백업 버전입니다.");
         }
         if (!Array.isArray(data.history) || !isPlainRecord(data.mastery)) {
@@ -2831,6 +2904,15 @@
         if (!validateBackupPracticalStats(data.practicalStats)) {
           throw new Error("손상되었거나 형식이 다른 실전 학습 기록이 포함되어 있습니다.");
         }
+        if (data.gradingOverrides !== undefined) {
+          if (!isPlainRecord(data.gradingOverrides) || Object.keys(data.gradingOverrides).length > 5000 ||
+              !Object.entries(data.gradingOverrides).every(([key,value]) => typeof key === "string" && key.length <= 1000 && isPlainRecord(value) && value.mode === "wrong")) {
+            throw new Error("손상되었거나 형식이 다른 채점 보정 기록이 포함되어 있습니다.");
+          }
+        }
+        if (data.practicalExamProgress !== undefined && (!isPlainRecord(data.practicalExamProgress) || Number(data.practicalExamProgress.completedSinceChallenge || 0) < 0)) {
+          throw new Error("손상되었거나 형식이 다른 기출 미니 체크 기록이 포함되어 있습니다.");
+        }
 
         if (data.counts !== undefined) {
           if (!isPlainRecord(data.counts) ||
@@ -2845,6 +2927,8 @@
         await savePreimportSnapshot({
           learning: before,
           practicalStats: beforePracticalStats,
+          gradingOverrides: oldGradingOverrides,
+          practicalExamProgress: oldExamProgress,
           theme: oldTheme,
           savedAt: new Date().toISOString()
         });
@@ -2861,6 +2945,8 @@
         learningStateMemory.history = loadHistory();
         learningStateMemory.mastery = loadMastery();
         replacePracticalStats(data.practicalStats || {});
+        if (data.gradingOverrides !== undefined) safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(data.gradingOverrides || {}));
+        if (data.practicalExamProgress !== undefined) safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(data.practicalExamProgress || {}));
 
         if (data.theme === "light" || data.theme === "dark") {
           if (!safeSetLocalStorage("coreloop-theme", data.theme)) throw new Error("테마 설정을 저장하지 못했습니다.");
@@ -2900,6 +2986,8 @@
         };
         await persistLearningStateNow();
         replacePracticalStats(beforePracticalStats);
+        safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(oldGradingOverrides));
+        safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(oldExamProgress));
         if (oldTheme === "light" || oldTheme === "dark") {
           safeSetLocalStorage("coreloop-theme", oldTheme);
           applyTheme(oldTheme);
@@ -2945,6 +3033,10 @@
     localStorage.removeItem(PRACTICAL_STATS_KEY);
     sessionStorage.removeItem(PRACTICAL_RETRY_KEY);
     localStorage.removeItem(DAILY_REVIEW_PLAN_KEY);
+    localStorage.removeItem(GRADING_OVERRIDE_KEY);
+    localStorage.removeItem(PRACTICAL_EXAM_PROGRESS_KEY);
+    practicalCountedCompletedSets.clear();
+    practicalSetRecoveryCount = 0;
     hidePracticalRetryPanel();
     localStorage.removeItem(HISTORY_KEY);
     localStorage.removeItem(MASTERY_KEY);
@@ -2975,59 +3067,9 @@
       .replace(/'/g, "&#039;");
   }
 
-  function historyWrongCount(item) {
-    const attempts = Number(item?.attempts || 0);
-    const events = Array.isArray(item?.wrongEvents) ? item.wrongEvents.length : 0;
-    const archived = Number(item?.archivedWrongEvents || 0);
-    return Math.max(attempts, events + archived);
-  }
-
-  function historyWrongDayCount(item) {
-    const timestamps = [];
-    if (Array.isArray(item?.wrongEvents)) {
-      item.wrongEvents.forEach(event => { if (event?.at) timestamps.push(event.at); });
-    }
-    if (item?.firstWrongAt) timestamps.push(item.firstWrongAt);
-    if (item?.lastWrongAt) timestamps.push(item.lastWrongAt);
-    const days = new Set();
-    timestamps.forEach(value => {
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return;
-      days.add(`${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`);
-    });
-    return days.size;
-  }
-
-  function historyTimeValue(value) {
-    const n = new Date(value || 0).getTime();
-    return Number.isFinite(n) ? n : 0;
-  }
-
-  function sortHistoryRecords(list, filter) {
-    return [...list].sort((a, b) => {
-      // 해결됨 목록은 최근에 해결된 항목부터 확인한다.
-      if (filter === "resolved") {
-        const resolvedDiff = historyTimeValue(b?.resolvedAt || b?.lastWrongAt) - historyTimeValue(a?.resolvedAt || a?.lastWrongAt);
-        if (resolvedDiff) return resolvedDiff;
-        return historyWrongCount(b) - historyWrongCount(a);
-      }
-
-      // 그 외 기록은 실제로 다시 볼 가치가 큰 항목을 위로 보낸다.
-      // 1) 미해결  2) 누적 오답 횟수  3) 여러 날짜에 걸친 반복 오답  4) 최근 오답
-      if (Boolean(a?.resolved) !== Boolean(b?.resolved)) return a?.resolved ? 1 : -1;
-
-      const wrongDiff = historyWrongCount(b) - historyWrongCount(a);
-      if (wrongDiff) return wrongDiff;
-
-      const dayDiff = historyWrongDayCount(b) - historyWrongDayCount(a);
-      if (dayDiff) return dayDiff;
-
-      const recentDiff = historyTimeValue(b?.lastWrongAt) - historyTimeValue(a?.lastWrongAt);
-      if (recentDiff) return recentDiff;
-
-      return String(a?.context || a?.question || "").localeCompare(String(b?.context || b?.question || ""), "ko");
-    });
-  }
+  function historyWrongCount(item) { return HistoryEngine.wrongCount(item); }
+  function historyWrongDayCount(item) { return HistoryEngine.wrongDayCount(item); }
+  function sortHistoryRecords(list, filter) { return HistoryEngine.sortRecords(list, filter); }
 
   function renderHistory(options = {}) {
     // 기록 필터/검색 변경은 사용자가 보고 있는 기록 영역에서만 갱신한다.
@@ -3072,6 +3114,21 @@
     if (weakButton) {
       weakButton.textContent = weakCount ? `추가 보강 · ${weakCount}` : "추가 보강 없음";
       weakButton.disabled = weakCount === 0;
+    }
+    const nextReviewInfo = document.getElementById("nextReviewInfo");
+    if (nextReviewInfo) {
+      if (dueCount > 0) {
+        nextReviewInfo.textContent = "오늘 복습을 완료하면 다음 예정 일정을 표시합니다.";
+      } else {
+        const futureEntries = Object.entries(mastery).map(([conceptKey, state]) => {
+          const item = reviewItemFromConceptKey(conceptKey);
+          return item ? {conceptKey, nextReviewAt:Number(state?.nextReviewAt || 0), lineKey:LearningEngine.reviewLineKey(item)} : null;
+        }).filter(Boolean);
+        const bucket = ReviewEngine.nextDueBucket(futureEntries, now);
+        nextReviewInfo.textContent = bucket
+          ? `다음 복습: ${ReviewEngine.relativeDayLabel(bucket.dayKey, now)} · ${bucket.count}개`
+          : "다음 복습 일정 없음";
+      }
     }
 
     if (reviewActive && currentTab === "history" && !passive) renderReviewSession();
@@ -3149,8 +3206,33 @@
   // -------------------------
   // 8) 채점
   // -------------------------
+  function loadGradingOverrides() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(GRADING_OVERRIDE_KEY) || "{}");
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch { return {}; }
+  }
+
+  function gradingOverrideKey(rawUser, expected) {
+    return `${normalize(rawUser)}=>${normalize(expected)}`;
+  }
+
+  function rememberStrictGradingPair(rawUser, expected) {
+    if (!normalize(rawUser) || !normalize(expected)) return false;
+    const overrides = loadGradingOverrides();
+    overrides[gradingOverrideKey(rawUser, expected)] = {mode:"wrong", savedAt:new Date().toISOString()};
+    return safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(overrides));
+  }
+
   function classifyRawAnswerDetailed(rawUser, expected, aliases = []) {
-    return GradingEngine.classifyDetailed(rawUser, expected, aliases);
+    const detail = GradingEngine.classifyDetailed(rawUser, expected, aliases);
+    if (detail.status === "near") {
+      const overrides = loadGradingOverrides();
+      if (overrides[gradingOverrideKey(rawUser, expected)]?.mode === "wrong") {
+        return {status:"wrong", reason:"user-strict", confidence:1, matched:String(expected || "")};
+      }
+    }
+    return detail;
   }
 
   function classifyRawAnswer(rawUser, expected, aliases = []) {
@@ -3172,7 +3254,7 @@
   }
 
   function isCorrect(input) {
-    return classifyInput(input) !== "wrong";
+    return ["correct","near"].includes(classifyInput(input));
   }
 
   function appendResult(wrap, status, answer, detail = null) {
@@ -3181,9 +3263,22 @@
     const input = wrap.querySelector(".gap-input");
     const span = document.createElement("span");
     const good = status === "correct" || status === "near";
-    span.className = "gap-result " + (good ? "good" : "bad") + (status === "near" ? " near" : "");
+    span.className = "gap-result " + (good ? "good" : status === "unknown" ? "unknown" : "bad") + (status === "near" ? " near" : "");
     span.id = `gap-result-${stableHash(input?.dataset.stateKey || `${answer}|${status}`)}`;
-    span.textContent = status === "correct" ? "✓" : status === "near" ? `≈ 유예 · ${nearReasonText(detail)} · 공식 표기: ${answer}` : `✕ 정답: ${answer}`;
+    const text = document.createElement("span");
+    text.textContent = status === "correct" ? "✓"
+      : status === "near" ? `≈ 유예 · ${nearReasonText(detail)} · 공식 표기: ${answer}`
+      : status === "unknown" ? `? 모름 · 정답: ${answer}`
+      : `✕ 정답: ${answer}`;
+    span.appendChild(text);
+    if (status === "near" && input) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "grading-override-button";
+      button.textContent = "오답으로 처리";
+      button.addEventListener("click", () => forceNearAsWrong(input));
+      span.appendChild(button);
+    }
     wrap.appendChild(span);
     if (input) {
       input.setAttribute("aria-describedby", span.id);
@@ -3191,42 +3286,7 @@
     }
   }
 
-  function gradeOne(input) {
-    const normalizedValue = normalize(input.value);
-    const grading = normalizedValue ? classifyInputDetailed(input) : {status:"wrong", reason:"empty"};
-    const answerStatus = grading.status;
-    const correct = answerStatus !== "wrong";
-    const practical = getCurrentDifficulty() === "practical";
-    input.classList.remove("correct","wrong");
-    input.classList.add(correct ? "correct" : "wrong");
-
-    const state = fieldState[input.dataset.stateKey] || {};
-    state.value = input.value;
-    state.status = answerStatus;
-    state.nearReason = answerStatus === "near" ? grading.reason : "";
-
-    const gradingSignature = `${normalizedValue || "__blank__"}|${answerStatus}`;
-    // 한 번 제시된 빈칸에서 답을 여러 번 고쳐도 같은 결과(정답/오답)는 1회만 누적한다.
-    // 실전은 첫 결과 자체를 1회만 세고, 실패 뒤의 진짜 회복은 지연 재인출에서 판정한다.
-    const outcomeAlreadyCounted = answerStatus === "correct"
-      ? Boolean(state.correctOutcomeCounted)
-      : answerStatus === "near"
-        ? Boolean(state.nearOutcomeCounted)
-        : Boolean(state.wrongOutcomeCounted);
-    const practicalAlreadyCounted = practical && Boolean(state.practicalOutcomeCounted);
-    const isNewGradingEvent = !practicalAlreadyCounted && !outcomeAlreadyCounted && state.lastCountedSignature !== gradingSignature;
-    if (isNewGradingEvent) {
-      state.lastCountedSignature = gradingSignature;
-      if (answerStatus === "correct") state.correctOutcomeCounted = true;
-      else if (answerStatus === "near") state.nearOutcomeCounted = true;
-      else state.wrongOutcomeCounted = true;
-      if (practical) state.practicalOutcomeCounted = true;
-    }
-    fieldState[input.dataset.stateKey] = state;
-    scheduleStateSave();
-
-    appendResult(input.parentElement, state.status, input.dataset.answer, grading);
-
+  function learningContextForInput(input) {
     const unit = getCurrentUnit();
     const sections = getUnitData(unit.subject, unit.area, getCurrentGroup());
     const sectionIndex = Number(input.dataset.sectionIndex);
@@ -3238,35 +3298,147 @@
     const sourceGroup = input.dataset.sourceGroup || sections?.[sectionIndex]?._sourceGroup || getCurrentGroup();
     const gapId = input.dataset.gapId || resolveGapIdForLine(line, getCurrentDifficulty(), input.dataset.answer, Number(input.dataset.gapIndex || -1));
     const conceptKey = conceptKeyForSubject(unit, sourceGroup, lineId, gapId, answerOccurrence);
-    const eventToken = isNewGradingEvent ? makeGradingEventToken("subject", conceptKey, gradingSignature) : "";
+    return {unit, sections, sectionIndex, lineIndex, line, context, lineId, answerOccurrence, sourceGroup, gapId, conceptKey};
+  }
+
+  function gradeOne(input) {
+    const normalizedValue = normalize(input.value);
+    const grading = classifyInputDetailed(input);
+    const answerStatus = grading.status;
+    const correct = answerStatus === "correct" || answerStatus === "near";
+    const practical = getCurrentDifficulty() === "practical";
+    input.classList.remove("correct","wrong","unknown");
+    input.classList.add(correct ? "correct" : answerStatus === "unknown" ? "unknown" : "wrong");
+
+    const state = fieldState[input.dataset.stateKey] || {};
+    state.value = input.value;
+    state.status = answerStatus;
+    state.nearReason = answerStatus === "near" ? grading.reason : "";
+
+    const gradingSignature = `${normalizedValue || "__blank__"}|${answerStatus}`;
+    const outcomeAlreadyCounted = answerStatus === "correct"
+      ? Boolean(state.correctOutcomeCounted)
+      : answerStatus === "near"
+        ? Boolean(state.nearOutcomeCounted)
+        : answerStatus === "unknown"
+          ? Boolean(state.unknownOutcomeCounted)
+          : Boolean(state.wrongOutcomeCounted);
+    const practicalAlreadyCounted = practical && Boolean(state.practicalOutcomeCounted);
+    const isNewGradingEvent = !practicalAlreadyCounted && !outcomeAlreadyCounted && state.lastCountedSignature !== gradingSignature;
+    if (isNewGradingEvent) {
+      state.lastCountedSignature = gradingSignature;
+      if (answerStatus === "correct") state.correctOutcomeCounted = true;
+      else if (answerStatus === "near") state.nearOutcomeCounted = true;
+      else if (answerStatus === "unknown") state.unknownOutcomeCounted = true;
+      else state.wrongOutcomeCounted = true;
+      if (practical) {
+        state.practicalOutcomeCounted = true;
+        state.practicalInitialStatus = answerStatus;
+      }
+    }
+    fieldState[input.dataset.stateKey] = state;
+    scheduleStateSave();
+
+    appendResult(input.parentElement, state.status, input.dataset.answer, grading);
+
+    const meta = learningContextForInput(input);
+    const eventToken = isNewGradingEvent ? makeGradingEventToken("subject", meta.conceptKey, gradingSignature) : "";
 
     let masteryItem = null;
     if (isNewGradingEvent) {
-      masteryItem = updateMastery(conceptKey, answerStatus, eventToken);
-      if (practical) recordPracticalTargetResult(line, gapId, answerStatus);
+      masteryItem = updateMastery(meta.conceptKey, answerStatus, eventToken);
+      if (practical) recordPracticalTargetResult(meta.line, meta.gapId, answerStatus);
     }
 
     const historyPayload = {
-      type: "subject", key: conceptKey, conceptKey, subjectKey: unit.subject,
-      groupKey: sourceGroup, sourceGroup, difficultyKey: getCurrentDifficulty(),
-      sectionIndex, lineIndex, gapIndex: Number(input.dataset.gapIndex || 0), lineId, gapId, answerOccurrence,
-      answerText: input.dataset.answer, subjectLabel: subjectLabels[unit.subject] || unit.subject, area: unit.area,
-      groupLabel: groupLabels[sourceGroup] || sourceGroup, difficultyLabel: difficultyLabel(getCurrentDifficulty()),
-      context, userAnswer: input.value, correctAnswer: input.dataset.answer
+      type: "subject", key: meta.conceptKey, conceptKey: meta.conceptKey, subjectKey: meta.unit.subject,
+      groupKey: meta.sourceGroup, sourceGroup: meta.sourceGroup, difficultyKey: getCurrentDifficulty(),
+      sectionIndex: meta.sectionIndex, lineIndex: meta.lineIndex, gapIndex: Number(input.dataset.gapIndex || 0), lineId: meta.lineId, gapId: meta.gapId, answerOccurrence: meta.answerOccurrence,
+      answerText: input.dataset.answer, subjectLabel: subjectLabels[meta.unit.subject] || meta.unit.subject, area: meta.unit.area,
+      groupLabel: groupLabels[meta.sourceGroup] || meta.sourceGroup, difficultyLabel: difficultyLabel(getCurrentDifficulty()),
+      context: meta.context, userAnswer: input.value, correctAnswer: input.dataset.answer
     };
 
-    if (!correct && isNewGradingEvent) {
-      // 첫 실수는 영구 오답으로 쌓지 않는다. 같은 개념의 반복 실패부터 취약 기록으로 승격한다.
+    if (answerStatus === "wrong" && isNewGradingEvent) {
       if (Number(masteryItem?.wrongCount || 0) >= 2) addWrongHistory({...historyPayload, attempts:Number(masteryItem.wrongCount || 2)}, eventToken);
       if (practical) schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"wrong"});
+    } else if (answerStatus === "unknown" && isNewGradingEvent) {
+      // '모름'은 기억 실패이므로 복습 시점은 당기되, 사용자가 입력한 오답 표현으로는 기록하지 않는다.
+      if (practical) schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"unknown"});
     } else if (answerStatus === "near" && isNewGradingEvent && practical) {
-      // 표기 확인은 오답으로 쌓지 않지만, 숙련 성공도 아니므로 몇 문장 뒤 정확 표기를 다시 확인한다.
       schedulePracticalRetry({...historyPayload, aliases: JSON.parse(input.dataset.aliases || "[]"), retryReason:"near", nearReason:grading.reason});
     }
 
     updateScore();
-
     return correct;
+  }
+
+  function forceNearAsWrong(input) {
+    if (!input) return;
+    const state = fieldState[input.dataset.stateKey];
+    if (!state || state.status !== "near") return;
+    const expected = input.dataset.answer || "";
+    if (!rememberStrictGradingPair(input.value, expected)) return;
+
+    const meta = learningContextForInput(input);
+    const all = loadMastery();
+    let masteryItem = LearningEngine.normalizeMasteryItem(all[meta.conceptKey] || {});
+    const nearWasCounted = Boolean(state.nearOutcomeCounted);
+    const wrongWasCounted = Boolean(state.wrongOutcomeCounted);
+    if (nearWasCounted && masteryItem.nearCount > 0) masteryItem.nearCount -= 1;
+
+    let eventToken = "";
+    if (!wrongWasCounted) {
+      eventToken = makeGradingEventToken("subject-override", meta.conceptKey, `${normalize(input.value)}|wrong`);
+      masteryItem = LearningEngine.applyMasteryEvent(masteryItem, "wrong", Date.now(), eventToken).item;
+    } else {
+      // 같은 제시에서 이미 오답으로 한 번 기록된 뒤 유사답안으로 고친 경우에는 오답 횟수를 중복 가산하지 않는다.
+      masteryItem.correctStreak = 0;
+      masteryItem.mastered = false;
+      masteryItem.nextReviewAt = Date.now();
+      masteryItem.lastResult = "wrong";
+      masteryItem.lastSeenAt = Date.now();
+    }
+    all[meta.conceptKey] = masteryItem;
+    saveMastery(all);
+
+    const convertPracticalStat = getCurrentDifficulty() === "practical" && state.practicalInitialStatus === "near" && meta.line && meta.gapId;
+    if (convertPracticalStat) {
+      const key = practicalTargetKey(meta.line, meta.gapId);
+      const stat = practicalStats.targets?.[key];
+      if (stat) {
+        stat.near = Math.max(0, Number(stat.near || 0) - 1);
+        stat.shown = Math.max(0, Number(stat.shown || 0) - 1);
+        practicalStats.targets[key] = PracticalEngine.noteResult(stat, "wrong", LearningEngine.localDayKey(Date.now()), Date.now(), true);
+        practicalStats._version = 3;
+        savePracticalStats();
+      }
+    }
+
+    state.status = "wrong";
+    state.nearReason = "";
+    state.nearOutcomeCounted = false;
+    state.wrongOutcomeCounted = true;
+    if (state.practicalInitialStatus === "near") state.practicalInitialStatus = "wrong";
+    state.lastCountedSignature = `${normalize(input.value) || "__blank__"}|wrong`;
+    fieldState[input.dataset.stateKey] = state;
+    scheduleStateSave();
+    input.classList.remove("correct","unknown");
+    input.classList.add("wrong");
+    appendResult(input.parentElement, "wrong", expected, {reason:"user-strict"});
+
+    const payload = {
+      type:"subject", key:meta.conceptKey, conceptKey:meta.conceptKey, subjectKey:meta.unit.subject,
+      groupKey:meta.sourceGroup, sourceGroup:meta.sourceGroup, difficultyKey:getCurrentDifficulty(),
+      sectionIndex:meta.sectionIndex, lineIndex:meta.lineIndex, gapIndex:Number(input.dataset.gapIndex || 0), lineId:meta.lineId, gapId:meta.gapId, answerOccurrence:meta.answerOccurrence,
+      answerText:expected, subjectLabel:subjectLabels[meta.unit.subject] || meta.unit.subject, area:meta.unit.area,
+      groupLabel:groupLabels[meta.sourceGroup] || meta.sourceGroup, difficultyLabel:difficultyLabel(getCurrentDifficulty()),
+      context:meta.context, userAnswer:input.value, correctAnswer:expected
+    };
+    if (!wrongWasCounted && Number(masteryItem.wrongCount || 0) >= 2) addWrongHistory({...payload, attempts:Number(masteryItem.wrongCount || 2)}, eventToken);
+    if (getCurrentDifficulty() === "practical") schedulePracticalRetry({...payload, aliases:JSON.parse(input.dataset.aliases || "[]"), retryReason:"wrong"});
+    updateScore();
+    renderHistory({passive:true});
   }
 
 
@@ -3329,6 +3501,9 @@
       practicalPresentationTokens.clear();
       practicalCompletedLineTokens.clear();
       hidePracticalExamChallenge();
+      practicalSetRecoveryCount = 0;
+      practicalExamOfferedSetKey = "";
+      document.getElementById("practicalSetSummary")?.classList.add("hidden");
     }
     renderStudy();
     focusFirstEmpty();
@@ -3342,6 +3517,9 @@
     practicalCompletedLineTokens.clear();
     hidePracticalRetryPanel();
     hidePracticalExamChallenge();
+    practicalSetRecoveryCount = 0;
+    practicalExamOfferedSetKey = "";
+    document.getElementById("practicalSetSummary")?.classList.add("hidden");
     renderStudy();
     const announcer = document.getElementById("gradingAnnouncer");
     if (announcer) announcer.textContent = "새 실전 세트를 만들었습니다. 같은 원문에서 다른 핵심 빈칸을 다시 인출합니다.";
@@ -3426,23 +3604,79 @@
     activePracticalExamChallenge = null;
   }
 
+  function loadPracticalExamProgress() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PRACTICAL_EXAM_PROGRESS_KEY) || "{}");
+      return {
+        completedSinceChallenge:Math.max(0, Number(parsed?.completedSinceChallenge || 0)),
+        lastType:String(parsed?.lastType || "")
+      };
+    } catch { return {completedSinceChallenge:0, lastType:""}; }
+  }
+
+  function savePracticalExamProgress(progress) {
+    safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify({
+      completedSinceChallenge:Math.max(0, Number(progress?.completedSinceChallenge || 0)),
+      lastType:String(progress?.lastType || "")
+    }));
+  }
+
+  function recordPracticalSetCompletion(setKey) {
+    if (!setKey || practicalCountedCompletedSets.has(setKey)) return loadPracticalExamProgress();
+    practicalCountedCompletedSets.add(setKey);
+    const progress = loadPracticalExamProgress();
+    progress.completedSinceChallenge += 1;
+    savePracticalExamProgress(progress);
+    return progress;
+  }
+
+  function studiedLineKeysForSubject(subjectKey) {
+    const set = new Set();
+    Object.entries(practicalStats.targets || {}).forEach(([key, stat]) => {
+      if (!stat || Number(stat.shown || 0) <= 0) return;
+      const parts = String(key).split("|");
+      if (parts[0] === subjectKey && parts.length >= 4) set.add(`${parts[1]}|${parts[2]}`);
+    });
+    Object.keys(loadMastery()).forEach(conceptKey => {
+      const parts = String(conceptKey).split("|");
+      if (parts[0] === "subject" && parts[1] === subjectKey && parts.length >= 5) set.add(`${parts[2]}|${parts[4]}`);
+    });
+    return set;
+  }
+
   function challengeCandidatesForCurrentSubject() {
     const unit = getCurrentUnit();
     const subject = curriculumData[unit.subject] || {};
+    const studied = studiedLineKeysForSubject(unit.subject);
     const category = [];
     const area = [];
     Object.entries(subject).forEach(([areaName, groups]) => {
       if (areaName === COMMON_AREA) return;
       (groups["content-system"] || []).forEach(section => {
         if (["핵심 아이디어","지식·이해","과정·기능","가치·태도"].includes(section.title)) {
-          (section.lines || []).forEach(line => category.push({type:"category", text:line.text, answer:section.title, area:areaName}));
+          (section.lines || []).forEach(line => {
+            const lineId = line.id || makeLineStableId(section.title, line.text, "");
+            if (studied.has(`${areaName}|${lineId}`)) category.push({type:"category", text:line.text, answer:section.title, area:areaName});
+          });
         }
       });
       ["content-system","achievement"].forEach(group => (groups[group] || []).forEach(section => (section.lines || []).forEach(line => {
-        area.push({type:"area", text:line.text, answer:areaName, section:section.title});
+        const lineId = line.id || makeLineStableId(section.title, line.text, "");
+        if (studied.has(`${areaName}|${lineId}`)) area.push({type:"area", text:line.text, answer:areaName, section:section.title});
       })));
     });
     return {category, area};
+  }
+
+  function nextChallengeType(available, lastType) {
+    const order = ["category","area","correction"];
+    if (!available.length) return "";
+    const start = Math.max(-1, order.indexOf(lastType));
+    for (let step = 1; step <= order.length; step++) {
+      const candidate = order[(start + step + order.length) % order.length];
+      if (available.includes(candidate)) return candidate;
+    }
+    return available[0];
   }
 
   function buildPracticalExamChallenge() {
@@ -3455,7 +3689,8 @@
     if (area.length) types.push("area");
     if (correctionPool.length) types.push("correction");
     if (!types.length) return null;
-    const type = types[Math.floor(Math.random() * types.length)];
+    const progress = loadPracticalExamProgress();
+    const type = nextChallengeType(types, progress.lastType);
 
     if (type === "correction") {
       const item = correctionPool.slice().sort((a,b) => historyWrongCount(b) - historyWrongCount(a))[0];
@@ -3476,23 +3711,27 @@
 
   function maybeOfferPracticalExamChallenge() {
     const panel = document.getElementById("practicalExamChallenge");
-    if (!panel || activePracticalRetry || currentTab !== "subject" || getCurrentDifficulty() !== "practical" || studyMode !== "fill") return;
+    if (!panel || currentTab !== "subject" || getCurrentDifficulty() !== "practical" || studyMode !== "fill") return;
     const setKey = currentPracticalSetKey();
-    if (!setKey || practicalExamOfferedSetKey === setKey) return;
-    practicalExamOfferedSetKey = setKey;
-    // 빈칸 학습이 주가 되도록 약 12%의 완료 세트에서만 한 문제를 제시한다.
-    if (Math.random() >= 0.12) { hidePracticalExamChallenge(); return; }
+    if (!setKey || practicalExamOfferedSetKey === setKey || activePracticalExamChallenge) return;
+    const progress = loadPracticalExamProgress();
+    if (progress.completedSinceChallenge < 3) { hidePracticalExamChallenge(); return; }
+    if (activePracticalRetry) return; // 재인출을 먼저 끝낸 뒤 같은 완료 세트에서 제시한다.
     const challenge = buildPracticalExamChallenge();
     if (!challenge) return;
+    practicalExamOfferedSetKey = setKey;
     activePracticalExamChallenge = challenge;
+    progress.completedSinceChallenge = 0;
+    progress.lastType = challenge.type;
+    savePracticalExamProgress(progress);
     const meta = document.getElementById("practicalExamMeta");
     const prompt = document.getElementById("practicalExamPrompt");
     const input = document.getElementById("practicalExamInput");
     const feedback = document.getElementById("practicalExamFeedback");
-    if (meta) meta.textContent = challenge.meta;
+    if (meta) meta.textContent = `${challenge.meta} · 실전 3세트 누적 체크`;
     if (prompt) prompt.textContent = challenge.prompt;
-    if (input) { input.value = ""; input.classList.remove("correct","wrong"); }
-    if (feedback) feedback.textContent = "공식 원문과 실제 오답만 사용한 짧은 판별 문제입니다.";
+    if (input) { input.value = ""; input.classList.remove("correct","wrong","unknown"); }
+    if (feedback) feedback.textContent = "이미 학습한 공식 원문과 실제 오답만 사용합니다.";
     panel.classList.remove("hidden");
   }
 
@@ -3503,12 +3742,12 @@
     if (!challenge || !input) return;
     const grading = classifyRawAnswerDetailed(input.value, challenge.answer, challenge.aliases || []);
     const status = grading.status;
-    const ok = status !== "wrong";
-    input.classList.toggle("correct", ok);
-    input.classList.toggle("wrong", !ok);
+    const ok = status === "correct" || status === "near";
+    input.classList.remove("correct","wrong","unknown");
+    input.classList.add(ok ? "correct" : status === "unknown" ? "unknown" : "wrong");
     if (feedback) feedback.textContent = ok
       ? (status === "near" ? `유사 답안 유예 · ${nearReasonText(grading)} · 공식 표기: ${challenge.answer}` : `✓ 정답 · ${challenge.answer}`)
-      : `✕ 정답: ${challenge.answer}`;
+      : status === "unknown" ? `? 모름 · 정답: ${challenge.answer}` : `✕ 정답: ${challenge.answer}`;
   }
 
   function skipPracticalExamChallenge() {
@@ -3525,27 +3764,37 @@
       ? scoreGroups.map(group => [unit.subject, unit.area, group, getCurrentDifficulty()].join("|") + "|")
       : [];
 
+    const summaryUnitKey = `${unit.subject}|${unit.area}|${selectedGroup}`;
+    if (summaryUnitKey !== practicalSummaryUnitKey) {
+      practicalSummaryUnitKey = summaryUnitKey;
+      practicalSetRecoveryCount = 0;
+    }
+
     let currentCorrect = 0;
+    let currentNear = 0;
     let currentWrong = 0;
+    let currentUnknown = 0;
 
     const visibleInputs = [...document.querySelectorAll("#studyArea .gap-input")];
     if (getCurrentDifficulty() === "practical") {
-      // 실전은 같은 문장이 다른 빈칸 조합으로 반복되므로 현재 화면에 보이는 제시만 점수에 반영한다.
       visibleInputs.forEach(input => {
         const state = fieldState[input.dataset.stateKey];
-        if (state?.status === "correct" || state?.status === "near") currentCorrect++;
-        if (state?.status === "wrong") currentWrong++;
+        if (state?.status === "correct") currentCorrect++;
+        else if (state?.status === "near") currentNear++;
+        else if (state?.status === "wrong") currentWrong++;
+        else if (state?.status === "unknown") currentUnknown++;
       });
     } else {
       Object.entries(fieldState).forEach(([key, state]) => {
         if (currentPrefixes.some(prefix => key.startsWith(prefix))) {
-          if (state.status === "correct" || state.status === "near") currentCorrect++;
-          if (state.status === "wrong") currentWrong++;
+          if (state.status === "correct") currentCorrect++;
+          else if (state.status === "near") currentNear++;
+          else if (state.status === "wrong") currentWrong++;
+          else if (state.status === "unknown") currentUnknown++;
         }
       });
     }
     const lineGroups = new Map();
-
     visibleInputs.forEach(input => {
       const key = input.dataset.lineKey || "line";
       if (!lineGroups.has(key)) lineGroups.set(key, []);
@@ -3554,21 +3803,32 @@
 
     let completedLines = 0;
     lineGroups.forEach(inputs => {
-      if (inputs.length && inputs.every(input => ["correct","near"].includes(fieldState[input.dataset.stateKey]?.status))) {
-        completedLines++;
-      }
+      if (inputs.length && inputs.every(input => ["correct","near"].includes(fieldState[input.dataset.stateKey]?.status))) completedLines++;
     });
 
     const lineText = lineGroups.size ? ` · 문장 ${completedLines}/${lineGroups.size}` : "";
-    document.getElementById("scoreText").textContent =
-      `현재 ${currentCorrect}✓ ${currentWrong}✕${lineText}`;
+    const nearText = currentNear ? ` ${currentNear}≈` : "";
+    const unknownText = currentUnknown ? ` ${currentUnknown}?` : "";
+    document.getElementById("scoreText").textContent = `현재 ${currentCorrect}✓${nearText} ${currentWrong}✕${unknownText}${lineText}`;
 
     const nextPracticalButton = document.getElementById("nextPracticalSetButton");
+    const summaryPanel = document.getElementById("practicalSetSummary");
     if (nextPracticalButton) {
       const complete = studyMode === "fill" && getCurrentDifficulty() === "practical" && lineGroups.size > 0 && completedLines === lineGroups.size;
       nextPracticalButton.classList.toggle("hidden", !complete);
-      if (complete) maybeOfferPracticalExamChallenge();
-      else hidePracticalExamChallenge();
+      if (complete) {
+        const setKey = currentPracticalSetKey();
+        recordPracticalSetCompletion(setKey);
+        if (summaryPanel) {
+          const summary = ReviewEngine.summarizePracticalStates(visibleInputs.map(input => fieldState[input.dataset.stateKey] || {}));
+          summaryPanel.textContent = `실전 완료 · 정확 ${summary.correct} · 유예 ${summary.near} · 오답 ${summary.wrong} · 모름 ${summary.unknown} · 재인출 회복 ${practicalSetRecoveryCount}`;
+          summaryPanel.classList.remove("hidden");
+        }
+        maybeOfferPracticalExamChallenge();
+      } else {
+        if (!activePracticalExamChallenge) hidePracticalExamChallenge();
+        if (summaryPanel) summaryPanel.classList.add("hidden");
+      }
     }
   }
 
@@ -3623,6 +3883,7 @@
     generalLastGradedValue = "";
     generalCorrectCounted = false;
     generalWrongCounted = false;
+    generalUnknownCounted = false;
 
     document.getElementById("generalQuestion").textContent = list[generalIndex].q;
     updateGeneralProgress();
@@ -3694,30 +3955,34 @@
     const list = filteredGeneral();
     const q = list[generalIndex];
     const answerEl = document.getElementById("generalAnswer");
-    const rawUser = forceUnknown ? "(모름)" : answerEl.value;
-    const ok = forceUnknown ? false : (normalize(rawUser) ? isGeneralAnswerCorrect(q, rawUser) : false);
+    const rawUser = forceUnknown ? "" : answerEl.value;
+    const status = forceUnknown || !normalize(rawUser) ? "unknown" : (isGeneralAnswerCorrect(q, rawUser) ? "correct" : "wrong");
+    const ok = status === "correct";
     const box = document.getElementById("generalResult");
-    box.className = "general-result " + (ok ? "good" : "bad");
+    box.className = "general-result " + (ok ? "good" : status === "unknown" ? "" : "bad");
     box.innerHTML = ok
       ? `<strong>✓ 정답</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong>${q.display}</strong>`
-      : `<strong style="color:var(--bad)">✕ 오답</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong style="color:var(--bad)">${q.display}</strong>`;
+      : status === "unknown"
+        ? `<strong>? 모름</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong>${q.display}</strong><br><span style="color:var(--muted)">오답 표현으로 기록하지 않고 복습 일정만 당깁니다.</span>`
+        : `<strong style="color:var(--bad)">✕ 오답</strong><br><span style="color:var(--muted)">공식 정답</span><br><strong style="color:var(--bad)">${q.display}</strong>`;
     box.classList.remove("hidden");
 
-    const signature = `${normalize(rawUser) || "__blank__"}|${ok ? "correct" : "wrong"}`;
-    const duplicate = ok ? generalCorrectCounted : generalWrongCounted;
+    const signature = `${normalize(rawUser) || "__blank__"}|${status}`;
+    const duplicate = status === "correct" ? generalCorrectCounted : status === "unknown" ? generalUnknownCounted : generalWrongCounted;
 
     generalGraded = true;
     generalLastGradedValue = signature;
     if (!duplicate) {
-      if (ok) generalCorrectCounted = true;
+      if (status === "correct") generalCorrectCounted = true;
+      else if (status === "unknown") generalUnknownCounted = true;
       else generalWrongCounted = true;
     }
 
     const conceptKey = conceptKeyForGeneral(q.id);
     const eventToken = duplicate ? "" : makeGradingEventToken("general", conceptKey, signature);
-    const masteryItem = !duplicate ? updateMastery(conceptKey, ok, eventToken) : null;
+    const masteryItem = !duplicate ? updateMastery(conceptKey, status, eventToken) : null;
 
-    if (!ok && !duplicate && Number(masteryItem?.wrongCount || 0) >= 2) {
+    if (status === "wrong" && !duplicate && Number(masteryItem?.wrongCount || 0) >= 2) {
       addWrongHistory({
         type: "general",
         key: conceptKey,

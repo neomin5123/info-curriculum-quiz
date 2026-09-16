@@ -27,6 +27,7 @@
       ...item,
       correctCount: Number(item.correctCount || 0),
       nearCount: Number(item.nearCount || 0),
+      unknownCount: Number(item.unknownCount || 0),
       wrongCount: Number(item.wrongCount || 0),
       correctStreak: Number(item.correctStreak || 0),
       mastered: Boolean(item.mastered),
@@ -36,8 +37,9 @@
     };
   }
 
-  // status: correct | near | wrong
+  // status: correct | near | unknown | wrong
   // exact retrieval only advances the long-term schedule. 'near' is neither a failure nor mastery evidence.
+  // 'unknown' is a recall failure for scheduling, but is kept separate from a typed wrong answer/history.
   function applyMasteryEvent(source, status, now = Date.now(), eventToken = '') {
     const item = normalizeMasteryItem(source);
     if (eventToken && item.lastEventToken === eventToken) return {item, changed:false, due:false};
@@ -62,6 +64,15 @@
       const softRecheckAt = now + 6 * 60 * 60 * 1000;
       if (!item.nextReviewAt || item.nextReviewAt <= now || item.nextReviewAt > softRecheckAt) item.nextReviewAt = softRecheckAt;
       return {item, changed:true, due:false};
+    }
+
+    if (status === 'unknown') {
+      item.unknownCount += 1;
+      item.correctStreak = 0;
+      item.mastered = false;
+      item.nextReviewAt = now + 6 * 60 * 60 * 1000;
+      item.lastResult = 'unknown';
+      return {item, changed:true, due:true};
     }
 
     item.wrongCount += 1;

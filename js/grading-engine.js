@@ -13,12 +13,10 @@
   // 의미가 가까운 경우에만 near(유예)로 판정한다. 사용자 오답에서 반복된 패턴을 일반화한 규칙이다.
   const SEMANTIC_GROUPS = [
     ['특성','특징'],
-    ['구별','구분','분류'],
+    ['구별','구분'],
     ['발전','발달'],
     ['주의','유의'],
-    ['활용','사용'],
-    ['탐색','탐구','발견'],
-    ['해결','수정']
+    ['활용','사용']
   ];
 
   const SEMANTIC_MAP = (() => {
@@ -31,6 +29,27 @@
     ['생활속', '실생활', '일상생활'],
     ['디지털세상', '디지털사회']
   ];
+
+  // 임용 답안에서 서로 바뀌면 의미 단계가 달라지는 핵심 행동어.
+  // 한쪽이 이런 행동어를 쓰고 다른 쪽이 다른/없는 행동어라면 단순 유사어로 유예하지 않는다.
+  const STRICT_ACTION_TERMS = [
+    '시뮬레이션','모델링','구조화','프로그래밍','분석','비교','설계','구현','평가','선택','탐색','발견','추출','표현','수집','가공','분류','처리','개발','검증','예측','학습','해결','적용','판단','설명','추론'
+  ].sort((a,b) => b.length - a.length);
+
+  function strictActionSet(value) {
+    const source = normalize(value);
+    const found = new Set();
+    STRICT_ACTION_TERMS.forEach(term => { if (source.includes(term)) found.add(term); });
+    return found;
+  }
+
+  function strictActionConflict(a, b) {
+    const aa = strictActionSet(a), bb = strictActionSet(b);
+    if (!aa.size || !bb.size) return false;
+    if (aa.size !== bb.size) return true;
+    for (const term of aa) if (!bb.has(term)) return true;
+    return false;
+  }
 
   function normalize(value) {
     return String(value || '')
@@ -225,15 +244,17 @@
     if (!user || !expected || user === expected) return null;
 
     if (particleEquivalent(rawUser, candidate)) return {reason:'particle', confidence:0.99};
+    if (likelyTypo(rawUser, candidate)) return {reason:'typo', confidence:0.94};
+    if (strictActionConflict(rawUser, candidate)) return null;
 
     const semanticUser = semanticCanonical(rawUser);
     const semanticExpected = semanticCanonical(candidate);
     if (semanticUser && semanticUser === semanticExpected) return {reason:'synonym', confidence:0.95};
     if (semanticParticleEquivalent(rawUser, candidate)) return {reason:'synonym', confidence:0.94};
 
-    if (likelyTypo(rawUser, candidate)) return {reason:'typo', confidence:0.94};
     if (strongPartialMatch(semanticUser, semanticExpected)) return {reason:'partial', confidence:0.86};
-    if (strongTokenOverlap(preprocessSemanticPhrases(rawUser), preprocessSemanticPhrases(candidate))) return {reason:'overlap', confidence:0.82};
+    // 단어 2개가 겹친다는 이유만으로 핵심 술어가 바뀐 문장을 유예하지 않는다.
+    // (예: 구성되는 컴퓨팅 시스템 ↔ 동작하는 컴퓨팅 시스템)
 
     const maxLen = Math.max(user.length, expected.length);
     const similarity = maxLen ? 1 - levenshtein(user, expected) / maxLen : 0;
@@ -243,7 +264,7 @@
 
   function classifyDetailed(rawUser, expected, aliases = []) {
     const user = normalize(rawUser);
-    if (!user) return {status:'wrong', reason:'empty', confidence:1, matched:''};
+    if (!user) return {status:'unknown', reason:'empty', confidence:1, matched:''};
     const candidates = [expected, ...(aliases || [])].filter(value => String(value || '').trim());
     for (const candidate of candidates) {
       if (normalize(candidate) === user) return {status:'correct', reason:'exact', confidence:1, matched:candidate};
@@ -277,6 +298,8 @@
     likelyTypo,
     strongPartialMatch,
     strongTokenOverlap,
+    strictActionSet,
+    strictActionConflict,
     reasonLabel,
     classifyDetailed,
     classify
