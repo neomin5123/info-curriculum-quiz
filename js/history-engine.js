@@ -31,8 +31,34 @@
     return Number.isFinite(n) ? n : 0;
   }
 
-  function sortRecords(list, filter) {
+  function lastStudyTime(item, masteryItem) {
+    return timeValue(masteryItem?.lastSeenAt || item?.lastWrongAt || item?.resolvedAt || item?.firstWrongAt);
+  }
+
+  function sortRecords(list, filter, sortMode = 'weak', mastery = {}) {
     return [...(list || [])].sort((a,b) => {
+      const masteryA = mastery?.[a?.conceptKey || a?.key] || {};
+      const masteryB = mastery?.[b?.conceptKey || b?.key] || {};
+      const labelDiff = () => String(a?.context || a?.question || '').localeCompare(String(b?.context || b?.question || ''), 'ko');
+
+      if (sortMode === 'recent' || sortMode === 'oldest') {
+        const ta = lastStudyTime(a, masteryA);
+        const tb = lastStudyTime(b, masteryB);
+        const timeDiff = sortMode === 'recent' ? tb - ta : ta - tb;
+        if (timeDiff) return timeDiff;
+        const wrongDiff = wrongCount(b) - wrongCount(a);
+        return wrongDiff || labelDiff();
+      }
+
+      if (sortMode === 'wrong') {
+        if (Boolean(a?.resolved) !== Boolean(b?.resolved)) return a?.resolved ? 1 : -1;
+        const wrongDiff = wrongCount(b) - wrongCount(a);
+        if (wrongDiff) return wrongDiff;
+        const recentDiff = lastStudyTime(b, masteryB) - lastStudyTime(a, masteryA);
+        return recentDiff || labelDiff();
+      }
+
+      // 기본값: 기존 취약 우선 정렬을 그대로 유지한다.
       if (filter === 'resolved') {
         const resolvedDiff = timeValue(b?.resolvedAt || b?.lastWrongAt) - timeValue(a?.resolvedAt || a?.lastWrongAt);
         if (resolvedDiff) return resolvedDiff;
@@ -43,9 +69,9 @@
       if (wrongDiff) return wrongDiff;
       const dayDiff = wrongDayCount(b) - wrongDayCount(a);
       if (dayDiff) return dayDiff;
-      const recentDiff = timeValue(b?.lastWrongAt) - timeValue(a?.lastWrongAt);
+      const recentDiff = lastStudyTime(b, masteryB) - lastStudyTime(a, masteryA);
       if (recentDiff) return recentDiff;
-      return String(a?.context || a?.question || '').localeCompare(String(b?.context || b?.question || ''), 'ko');
+      return labelDiff();
     });
   }
 
@@ -54,5 +80,5 @@
     return Number(item.attempts || 0) >= 2 || Number(masteryItem?.wrongCount || 0) >= 2;
   }
 
-  return { wrongCount, wrongDayCount, timeValue, sortRecords, isWeak };
+  return { wrongCount, wrongDayCount, timeValue, lastStudyTime, sortRecords, isWeak };
 });

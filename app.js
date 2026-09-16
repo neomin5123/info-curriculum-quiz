@@ -44,9 +44,12 @@
   const curriculumData = window.CURRILOOP_CURRICULUM_DATA;
   const generalBank = window.CURRILOOP_GENERAL_BANK;
   const COMMON_AREA = window.CURRILOOP_COMMON_AREA || "과목 공통";
-  const SUBJECT_GROUPS = ["character-goal", "content-system", "achievement", "teaching-evaluation"];
+  const SUBJECT_GROUPS = ["character-goal", "core-achievement", "achievement-guidance", "teaching-evaluation"];
   const groupLabels = {
     "character-goal":"성격·목표",
+    "core-achievement":"내용체계 + 성취기준",
+    "achievement-guidance":"해설 + 적용 시 고려사항",
+    // 아래 두 라벨은 학습 기록의 실제 원문 출처 키를 위해 유지한다.
     "content-system":"내용 체계",
     "achievement":"성취기준",
     "teaching-evaluation":"교수학습·평가"
@@ -77,8 +80,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.9.0";
-  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.9.0 채점·복습 정제: 핵심 행동어 엄격화, 모름 분리, 3세트 기출 체크, 해설·적용 고려사항 강도 차등";
+  const APP_VERSION = "6.9.1";
+  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.9.1 출제 묶음 재구성 및 복습 기록 정렬: 내용체계+성취기준, 해설+고려사항, 취약/오답/최근/오래된 순";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -169,7 +172,27 @@
   }
 
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
-  function getCurrentGroup() { return document.getElementById("groupSelect").value; }
+  function normalizeSelectedGroup(group) {
+    if (group === "content-system" || group === "achievement") return "core-achievement";
+    return group;
+  }
+  function getCurrentGroup() { return normalizeSelectedGroup(document.getElementById("groupSelect").value); }
+  function isAchievementStandardSection(section) {
+    return String(section?.title || "").trim() === "성취기준";
+  }
+  function isAchievementGuidanceSection(section) {
+    const title = String(section?.title || "");
+    return title.includes("성취기준 해설") || title.includes("성취기준 적용 시 고려");
+  }
+  function selectionGroupForHistoryItem(item) {
+    const sourceGroup = item?.sourceGroup || item?.groupKey || "";
+    if (sourceGroup === "content-system") return "core-achievement";
+    if (sourceGroup === "achievement") {
+      const meta = findLineIdentity(item?.subjectKey, item?.area, item?.lineId, item?.context || "");
+      return isAchievementGuidanceSection({title:meta?.sectionTitle}) ? "achievement-guidance" : "core-achievement";
+    }
+    return SUBJECT_GROUPS.includes(sourceGroup) ? sourceGroup : "all";
+  }
   function getCurrentDifficulty() { return document.getElementById("difficultySelect").value; }
   function getStudyMode() { return studyMode; }
   function isInputStudyMode(mode = studyMode) { return mode === "fill" || mode === "trace"; }
@@ -177,8 +200,9 @@
 
   function areasForSubject(subject, group = getCurrentGroup()) {
     const regular = subjectAreas[subject] || [];
+    group = normalizeSelectedGroup(group);
     if (group === "character-goal" || group === "teaching-evaluation") return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA] : [];
-    if (group === "content-system" || group === "achievement") return [...regular];
+    if (group === "core-achievement" || group === "achievement-guidance") return [...regular];
     return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA, ...regular] : [...regular];
   }
 
@@ -394,22 +418,11 @@
   }
 
   function clearCurrentUnitState(mode = studyMode) {
-    const unit = getCurrentUnit();
-    if (!unit.subject || !unit.area) return;
-    const difficulty = getCurrentDifficulty();
-    const selectedGroup = getCurrentGroup();
-    const groups = selectedGroup === "all"
-      ? (unit.area === COMMON_AREA ? ["character-goal", "teaching-evaluation"] : ["content-system", "achievement"])
-      : [selectedGroup];
-    const basePrefixes = groups.map(group => [unit.subject, unit.area, group, difficulty].join("|") + "|");
-    const tracePrefixes = basePrefixes.map(prefix => `trace|${prefix}`);
-
-    Object.keys(fieldState).forEach(key => {
-      if (mode === "trace") {
-        if (tracePrefixes.some(prefix => key.startsWith(prefix))) delete fieldState[key];
-      } else if (mode === "fill") {
-        if (basePrefixes.some(prefix => key.startsWith(prefix))) delete fieldState[key];
-      }
+    // 현재 화면에 실제로 표시된 입력만 초기화한다.
+    // 가상 출제 묶음(내용체계+성취기준 / 해설+고려사항) 사이의 기록을 잘못 지우지 않는다.
+    const selector = mode === "trace" ? "#studyArea .gap-input[data-learning-mode=\"trace\"]" : "#studyArea .gap-input[data-learning-mode=\"fill\"]";
+    document.querySelectorAll(selector).forEach(input => {
+      if (input.dataset.stateKey) delete fieldState[input.dataset.stateKey];
     });
   }
 
@@ -440,6 +453,7 @@
   function getUnitData(subject, area, group) {
     const unit = curriculumData[subject]?.[area];
     if (!unit) return [];
+    group = normalizeSelectedGroup(group);
     const tagged = (sections, sourceGroup) => (sections || []).map(section => ({
       ...section,
       _sourceGroup: sourceGroup,
@@ -454,6 +468,15 @@
         ...tagged(unit["content-system"], "content-system"),
         ...tagged(unit.achievement, "achievement")
       ];
+    }
+    if (group === "core-achievement") {
+      return [
+        ...tagged(unit["content-system"], "content-system"),
+        ...tagged((unit.achievement || []).filter(isAchievementStandardSection), "achievement")
+      ];
+    }
+    if (group === "achievement-guidance") {
+      return tagged((unit.achievement || []).filter(isAchievementGuidanceSection), "achievement");
     }
     return tagged(unit[group], group);
   }
@@ -1407,7 +1430,8 @@
 
     const subject = (saved.subject === "all" || Object.prototype.hasOwnProperty.call(subjectAreas, saved.subject)) ? saved.subject : "all";
     document.getElementById("subjectSelect").value = subject || "all";
-    if (["all", ...SUBJECT_GROUPS].includes(saved.group)) document.getElementById("groupSelect").value = saved.group;
+    const restoredGroup = normalizeSelectedGroup(saved.group || "all");
+    if (["all", ...SUBJECT_GROUPS].includes(restoredGroup)) document.getElementById("groupSelect").value = restoredGroup;
     if (["easy","normal","yaho","practical"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
     if (["all","competency","history","hours","subjects"].includes(saved.generalCategory)) document.getElementById("generalCategory").value = saved.generalCategory;
 
@@ -2643,9 +2667,7 @@
     }
     if (item.type !== "subject" || !item.subjectKey || !item.area) return;
     document.getElementById("subjectSelect").value = item.subjectKey;
-    if (["all", ...SUBJECT_GROUPS].includes(item.sourceGroup || item.groupKey)) {
-      document.getElementById("groupSelect").value = item.sourceGroup || item.groupKey;
-    }
+    document.getElementById("groupSelect").value = selectionGroupForHistoryItem(item);
     fillAreaSelect();
     const areaSelect = document.getElementById("areaSelect");
     if ([...areaSelect.options].some(option => option.value === item.area)) areaSelect.value = item.area;
@@ -3069,7 +3091,7 @@
 
   function historyWrongCount(item) { return HistoryEngine.wrongCount(item); }
   function historyWrongDayCount(item) { return HistoryEngine.wrongDayCount(item); }
-  function sortHistoryRecords(list, filter) { return HistoryEngine.sortRecords(list, filter); }
+  function sortHistoryRecords(list, filter, sortMode, mastery) { return HistoryEngine.sortRecords(list, filter, sortMode, mastery); }
 
   function renderHistory(options = {}) {
     // 기록 필터/검색 변경은 사용자가 보고 있는 기록 영역에서만 갱신한다.
@@ -3085,6 +3107,7 @@
     const container = document.getElementById("historyList");
     const count = document.getElementById("historyCount");
     const filter = document.getElementById("historyFilter")?.value || "weak";
+    const sortMode = document.getElementById("historySort")?.value || "weak";
     const search = normalize(document.getElementById("historySearch")?.value || "");
 
     if (!container || !count) { restorePassiveScroll(); return; }
@@ -3140,7 +3163,7 @@
     if (search) {
       list = list.filter(item => normalize([item.context, item.question, item.correctAnswer, item.userAnswer, item.area, item.subjectLabel].filter(Boolean).join(" ")).includes(search));
     }
-    list = sortHistoryRecords(list, filter);
+    list = sortHistoryRecords(list, filter, sortMode, mastery);
 
     count.textContent = `${list.length}개`;
     container.innerHTML = "";
@@ -3757,12 +3780,6 @@
   function updateScore() {
     const unit = getCurrentUnit();
     const selectedGroup = getCurrentGroup();
-    const scoreGroups = selectedGroup === "all"
-      ? (unit.area === COMMON_AREA ? ["character-goal", "teaching-evaluation"] : ["content-system", "achievement"])
-      : [selectedGroup];
-    const currentPrefixes = unit.subject && unit.area
-      ? scoreGroups.map(group => [unit.subject, unit.area, group, getCurrentDifficulty()].join("|") + "|")
-      : [];
 
     const summaryUnitKey = `${unit.subject}|${unit.area}|${selectedGroup}`;
     if (summaryUnitKey !== practicalSummaryUnitKey) {
@@ -3776,24 +3793,13 @@
     let currentUnknown = 0;
 
     const visibleInputs = [...document.querySelectorAll("#studyArea .gap-input")];
-    if (getCurrentDifficulty() === "practical") {
-      visibleInputs.forEach(input => {
-        const state = fieldState[input.dataset.stateKey];
-        if (state?.status === "correct") currentCorrect++;
-        else if (state?.status === "near") currentNear++;
-        else if (state?.status === "wrong") currentWrong++;
-        else if (state?.status === "unknown") currentUnknown++;
-      });
-    } else {
-      Object.entries(fieldState).forEach(([key, state]) => {
-        if (currentPrefixes.some(prefix => key.startsWith(prefix))) {
-          if (state.status === "correct") currentCorrect++;
-          else if (state.status === "near") currentNear++;
-          else if (state.status === "wrong") currentWrong++;
-          else if (state.status === "unknown") currentUnknown++;
-        }
-      });
-    }
+    visibleInputs.forEach(input => {
+      const state = fieldState[input.dataset.stateKey];
+      if (state?.status === "correct") currentCorrect++;
+      else if (state?.status === "near") currentNear++;
+      else if (state?.status === "wrong") currentWrong++;
+      else if (state?.status === "unknown") currentUnknown++;
+    });
     const lineGroups = new Map();
     visibleInputs.forEach(input => {
       const key = input.dataset.lineKey || "line";
