@@ -6,7 +6,7 @@ for (const file of ['data/curriculum-data.js','data/supplemental-data.js','data/
 const data=ctx.window.CURRILOOP_CURRICULUM_DATA;
 const bank=ctx.window.CURRILOOP_PRACTICE_BANK;
 if(!bank || !Array.isArray(bank.questions) || !bank.questions.length) throw new Error('practice bank missing');
-if(bank.questions.length!==65) throw new Error(`exam-core bank count ${bank.questions.length}`);
+if(bank.questions.length!==150) throw new Error(`exam-core bank count ${bank.questions.length}`);
 const sourceIds=new Set();
 for(const subject of Object.values(data)) for(const groups of Object.values(subject)) for(const sections of Object.values(groups)) if(Array.isArray(sections)) for(const section of sections) for(const line of section.lines||[]) sourceIds.add(line.id);
 const coverage=new Set(); let multi=0, compare=0;
@@ -28,9 +28,9 @@ for(const q of bank.questions){
 }
 if(coverage.size!==27) throw new Error(`concrete area coverage ${coverage.size}`);
 if(multi<5) throw new Error(`multi-subject tagging too low ${multi}`);
-if(compare!==4) throw new Error(`comparison count ${compare}`);
+if(compare!==1) throw new Error(`comparison count ${compare}`);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 for(const marker of ['id="practiceSubject"','id="practiceArea"','id="practiceVersion"','id="practiceQuestionArea"']) if(!html.includes(marker)) throw new Error(`practice UI missing ${marker}`);
 for(const forbidden of ['id="practicePattern"','id="practiceDifficulty"','<label for="practicePattern">문제 유형</label>']) if(html.includes(forbidden)) throw new Error(`legacy learner taxonomy still visible: ${forbidden}`);
 if(!html.includes('과목과 영역은 한 문제에 여러 개가 걸리면 모두 표시')) throw new Error('multi-tag help missing');
-console.log(`v6.12 exam-core QA: OK (${bank.questions.length} questions, comparison=${compare}, multi=${multi}, concreteAreas=${coverage.size})`);
+console.log(`v6.12+ exam-core regression QA: OK (${bank.questions.length} questions, comparison=${compare}, multi=${multi}, concreteAreas=${coverage.size})`);

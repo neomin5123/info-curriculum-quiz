@@ -103,15 +103,17 @@
     return true;
   }
 
+  function scopesFor(q) {
+    return Engine.questionScopes ? Engine.questionScopes(q) : (Array.isArray(q?.curriculumScopes) ? q.curriculumScopes : []);
+  }
+
   function populateAreas(preferred = 'all') {
     const select = document.getElementById('practiceArea');
     if (!select) return;
     const subject = document.getElementById('practiceSubject')?.value || 'all';
-    const candidates = bank.questions.filter(q => {
-      const subjects = Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean);
-      return subject === 'all' || subjects.includes(subject);
-    });
-    const areas = [...new Set(candidates.flatMap(q => Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)))]
+    const areas = [...new Set(bank.questions.flatMap(q => scopesFor(q)
+      .filter(scope => subject === 'all' || scope.subject === subject)
+      .map(scope => scope.area)))]
       .filter(area => area && area !== '과목 공통')
       .sort((a,b) => a.localeCompare(b,'ko'));
     select.innerHTML = '<option value="all">전체</option>' + areas.map(area => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`).join('');
@@ -199,12 +201,10 @@
     if (prev) prev.disabled = index <= 0;
     if (next) next.disabled = index >= order.length - 1;
 
-    const subjectBadges = (Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean)).map(s => subjectLabels[s] || s);
-    const areaBadges = (Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)).filter(a => a && a !== '과목 공통');
+    const scopeBadges = scopesFor(q).map(scope => `${subjectLabels[scope.subject] || scope.subject} · ${scope.area}`);
     const score = Number(q.points || (q.tasks || []).reduce((sum, task) => sum + Number(task.points || 0), 0));
     const badges = [
-      ...subjectBadges,
-      ...areaBadges,
+      ...scopeBadges,
       `${score}점`,
       q.comparison2015 ? '15·22 비교' : '2022 개정'
     ];
@@ -401,12 +401,11 @@
     const q = currentQuestion();
     if (!q) return;
     if (root.CurriLoopSourceModal?.openIds) {
-      const subjects = (Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean));
-      const areas = (Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)).filter(a => a && a !== '과목 공통');
+      const scopes = scopesFor(q);
       root.CurriLoopSourceModal.openIds(q.sourceIds || [], {
         title:'근거 원문 보기',
-        meta:[q.questionId, ...subjects.map(s => subjectLabels[s] || s), ...areas].filter(Boolean).join(' · '),
-        subject:subjects[0] || '',
+        meta:[q.questionId, ...scopes.map(scope => `${subjectLabels[scope.subject] || scope.subject} · ${scope.area}`)].filter(Boolean).join(' · '),
+        subject:scopes[0]?.subject || '',
         note:q.comparison2015
           ? '강조된 문장은 2022 개정 쪽 직접 근거입니다. 2015 개정 비교 근거는 기출 인용 범위로 제한되어 문제의 비교근거 제한 배지와 함께 관리합니다.'
           : '강조된 문장이 이 문제의 2022 개정 직접 근거입니다. 팝업을 닫으면 작성 중인 답안과 문제 위치가 그대로 유지됩니다.'

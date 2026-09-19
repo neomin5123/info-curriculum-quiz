@@ -326,8 +326,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.12.0";
-  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.12.0 연습문제 실전형 재설계 + 다중 과목·영역 태그";
+  const APP_VERSION = "6.14.0";
+  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.14.0 과목↔영역 scope 정규화 + 150문항 커버리지·편향 QA";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 

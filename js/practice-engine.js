@@ -164,13 +164,27 @@
     return {earned,total,results,correctCount,unknownCount,nearCount,wrongCount,perfect:total > 0 && earned === total};
   }
 
+  function questionScopes(q) {
+    if (Array.isArray(q?.curriculumScopes) && q.curriculumScopes.length) {
+      return q.curriculumScopes.filter(scope => scope && scope.subject && scope.area);
+    }
+    // Legacy fallback only. New production data must use curriculumScopes[] to preserve subject↔area pairing.
+    const subjects = Array.isArray(q?.subjects) ? q.subjects : [q?.subject].filter(Boolean);
+    const areas = Array.isArray(q?.areas) ? q.areas : [q?.area].filter(Boolean);
+    if (subjects.length === 1) return areas.map(area => ({subject:subjects[0], area}));
+    if (areas.length === 1) return subjects.map(subject => ({subject, area:areas[0]}));
+    return [];
+  }
+
   function filterQuestions(questions, filters) {
     const f = filters || {};
     return (questions || []).filter(q => {
-      const subjects = Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean);
-      const areas = Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean);
-      if (f.subject && f.subject !== 'all' && !subjects.includes(f.subject)) return false;
-      if (f.area && f.area !== 'all' && !areas.includes(f.area)) return false;
+      const scopes = questionScopes(q);
+      if (f.subject && f.subject !== 'all') {
+        if (f.area && f.area !== 'all') {
+          if (!scopes.some(scope => scope.subject === f.subject && scope.area === f.area)) return false;
+        } else if (!scopes.some(scope => scope.subject === f.subject)) return false;
+      } else if (f.area && f.area !== 'all' && !scopes.some(scope => scope.area === f.area)) return false;
       if (f.version === '2022' && q.comparison2015) return false;
       if (f.version === 'comparison' && !q.comparison2015) return false;
       return true;
@@ -187,5 +201,5 @@
     return out;
   }
 
-  return {normalize, containsNormalized, isNegatedForbidden, gradeAnyOf, gradeRequiredConcepts, hasContradictionMarker, contradictionMarkerCount, contrastIsSafe, gradeAnswer, gradeQuestion, filterQuestions, shuffleIds};
+  return {normalize, containsNormalized, isNegatedForbidden, gradeAnyOf, gradeRequiredConcepts, hasContradictionMarker, contradictionMarkerCount, contrastIsSafe, gradeAnswer, gradeQuestion, questionScopes, filterQuestions, shuffleIds};
 });

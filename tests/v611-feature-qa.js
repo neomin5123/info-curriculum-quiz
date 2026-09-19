@@ -21,7 +21,7 @@ const requiredApp=[
 for(const marker of requiredApp) if(!app.includes(marker)) throw new Error(`v611 app missing ${marker}`);
 for(const marker of ['togglePracticeWeakLink','weightedQuestionIds','CurriLoopSourceModal?.openIds','lastGradeSignature','취약 연동']) if(!ui.includes(marker)) throw new Error(`v611 practice UI missing ${marker}`);
 for(const marker of ['.source-modal {','.source-modal-line.highlighted','.practice-link-note','#practiceWeakLinkButton.active']) if(!css.includes(marker)) throw new Error(`v611 css missing ${marker}`);
-for(const marker of ['/js/practice-ui.js?v=6.12.0','/app.js?v=6.12.0']) if(!sw.includes(marker)) throw new Error(`v611 feature asset missing ${marker}`);
+for(const marker of ['/js/practice-ui.js?v=6.14.0','/app.js?v=6.14.0']) if(!sw.includes(marker)) throw new Error(`v611 feature asset missing ${marker}`);
 if(!storage.includes('BACKUP_SCHEMA_VERSION = 9') || !storage.includes('practiceSourceLink') || !storage.includes('practiceQuestionStats')) throw new Error('v611 backup schema not upgraded');
 console.log('v6.11.1 feature QA: OK (source modal + weakness bridge + draft restore + backup v9)');
 
