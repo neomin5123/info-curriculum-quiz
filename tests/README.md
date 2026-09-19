@@ -8,3 +8,10 @@ node tests/grading-engine.test.js
 node tests/support-engines.test.js
 node tests/static-qa.js
 ```
+
+v6.11.1 기능 검사는 다음도 포함합니다.
+
+```bash
+node tests/v610-feature-qa.js
+node tests/v611-feature-qa.js
+```

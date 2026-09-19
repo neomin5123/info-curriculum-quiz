@@ -55,29 +55,248 @@
     "teaching-evaluation":"교수학습·평가"
   };
 
-  // 중학교 정보의 공식 내용체계·성취기준을 암기용 흐름으로 재구성한 보조 지도.
+  // 각 과목의 공식 내용체계·성취기준을 암기용 구조로 재구성한 보조 지도.
   // 원문 보기에서만 표시하며, 공식 교수·학습 순서를 의미하지 않는다.
   const CORE_FLOW_MAP = Object.freeze({
     "middle-info": Object.freeze({
       "컴퓨팅 시스템": Object.freeze({
-        summary: ["원리", "운영체제", "피지컬", "가치", "구상"],
-        detail: "컴퓨팅 시스템 구성요소·동작 원리 → 운영 체제 기능 분석 → 피지컬 컴퓨팅 개념·생활 속 사례 → 필요성·가치 판단 → 목적에 맞는 구성요소 선택 → 시스템 구상"
+        summary: "시스템 원리·OS / 피지컬 이해·구상",
+        kind: "2축형",
+        sections: [
+          {label:"컴퓨팅 시스템 이해", text:"구성요소·동작 원리 ↔ 운영 체제 기능"},
+          {label:"피지컬 컴퓨팅 활용", text:"개념·사례 → 필요성·가치 판단 → 구성요소 선택 → 시스템 구상"}
+        ]
       }),
       "데이터": Object.freeze({
-        summary: ["표현", "수집·관리", "구조화", "해석", "해결"],
-        detail: "디지털 데이터 표현·가치 탐색 → 문제 해결용 데이터 수집·구분·관리 → 표·다이어그램 등으로 구조화 → 데이터 간 관계 파악·의미 해석 → 데이터 수집·분석으로 융합 문제 해결"
+        summary: "표현 → 관리 → 구조화 → 해석 → 해결",
+        kind: "단계형",
+        sections: [
+          {label:"처리 흐름", text:"디지털 표현 → 수집·분류·관리 → 구조화 → 관계 파악·의미 해석 → 데이터 기반 문제 해결"},
+          {label:"함께 기억", text:"디지털 활용의 가치 · 데이터에 기반하여 현상을 보는 관점"}
+        ]
       }),
       "알고리즘과 프로그래밍": Object.freeze({
-        summary: ["상태", "추상화", "알고리즘", "설계", "프로그래밍", "협력"],
-        detail: "문제 상태 정의·구조화 → 추상화·핵심요소 추출 → 알고리즘 표현·비교·분석 → 전략 선택·알고리즘 설계 → 저장 구조·논리 연산·중첩 제어·함수·디버깅으로 프로그램 작성 → 실생활 문제 해결 → 협력하여 소프트웨어 개발"
+        summary: "문제·추상화 → 알고리즘 → 구현·디버깅 → 실생활·협력",
+        kind: "단계형",
+        sections: [
+          {label:"문제 이해", text:"상태 정의·구조화 → 핵심요소 추출·추상화"},
+          {label:"해결 방법 설계", text:"알고리즘 표현 → 비교·분석 → 전략 선택·설계"},
+          {label:"프로그램 구현", text:"순차적 데이터 저장 + 논리 연산 + 중첩 제어 구조 + 함수 + 디버깅"},
+          {label:"확장", text:"실생활 문제 해결 → 협력적 소프트웨어 개발"}
+        ]
       }),
       "인공지능": Object.freeze({
-        summary: ["개념", "데이터", "시스템", "문제해결", "윤리"],
-        detail: "인공지능 개념·특성·소프트웨어 구별 → 학습 데이터의 중요성·수집·분류 → 데이터를 활용한 인공지능 시스템 구성·적용 → 해결 가능한 문제 발견·적합한 시스템 적용 → 데이터 수집·활용의 윤리 문제 해결 방안 구상"
+        summary: "AI 이해 / 학습 데이터 / 시스템 적용 / 데이터 윤리",
+        kind: "4축형",
+        sections: [
+          {label:"AI 이해", text:"개념·특성 → 인공지능 소프트웨어 구별"},
+          {label:"데이터", text:"학습 데이터의 중요성 → 수집·분류"},
+          {label:"시스템 활용", text:"시스템 구성 → 문제 발견 → 적합한 시스템 적용"},
+          {label:"윤리", text:"데이터 수집·활용 문제 → 해결 방안"}
+        ]
       }),
       "디지털 문화": Object.freeze({
-        summary: ["사회", "직업", "규칙·윤리", "권리 보호"],
-        detail: "디지털 사회의 특성 탐구 → 사회 변화에 따른 직업 변화 탐구 → 편리하고 안전한 생활을 위한 규칙을 민주적으로 논의·실천 → 개인 정보·권리·저작권 보호 방법 탐구"
+        summary: "사회·직업 / 규칙·권리·보호",
+        kind: "2축형",
+        sections: [
+          {label:"사회 변화", text:"디지털 사회 특성 → 직업 변화 → 삶·진로"},
+          {label:"디지털 시민", text:"생활 규칙 → 실천 방안 / 개인 정보·권리·저작권 → 보호"}
+        ]
+      })
+    }),
+    "high-info": Object.freeze({
+      "컴퓨팅 시스템": Object.freeze({
+        summary: "네트워크 연결·공유 / IoT 원리·변화·설계",
+        kind: "2축형",
+        sections: [
+          {label:"네트워크", text:"유·무선 네트워크 특성 → 시스템 연결 → 공유·협력·소통"},
+          {label:"사물인터넷", text:"구성·동작 원리 → 삶·사회 변화 예측 → 장치 선택 → IoT 시스템 설계"}
+        ]
+      }),
+      "데이터": Object.freeze({
+        summary: "압축·암호화 / 빅데이터 수집·분석·해석",
+        kind: "2축형",
+        sections: [
+          {label:"데이터 관리", text:"압축: 개념·필요성 → 효율성 분석·평가 / 암호화: 개념 → 안전한 관리 사례 비교·분석"},
+          {label:"빅데이터 활용", text:"개념·특징 → 데이터 수집 → 시각화 → 의미·가치 해석"},
+          {label:"함께 기억", text:"효율성 · 안전성 · 사회·윤리적 성찰"}
+        ]
+      }),
+      "알고리즘과 프로그래밍": Object.freeze({
+        summary: "모델링·알고리즘 / 프로그래밍 요소 / 협력·평가",
+        kind: "3층형",
+        sections: [
+          {label:"문제·알고리즘", text:"문제 분해·모델링 / 정렬·탐색 알고리즘 비교·분석"},
+          {label:"프로그램 표현 수단", text:"자료형 · 입출력 · 다차원 데이터 · 복합 제어 구조 · 클래스·인스턴스"},
+          {label:"종합 문제 해결", text:"협력적 설계·구현 → 성능 평가 → 공유"}
+        ]
+      }),
+      "인공지능": Object.freeze({
+        summary: "지능 에이전트·인간 / 기계학습 유형·적용",
+        kind: "2축형",
+        sections: [
+          {label:"지능 에이전트", text:"개념·특성 → 인간과 인공지능의 관계"},
+          {label:"기계학습", text:"개념 → 지도학습 ↔ 비지도학습 → 적용 가능한 문제 판단 → 사회문제에 적용"}
+        ]
+      }),
+      "디지털 문화": Object.freeze({
+        summary: "기술 변화·진로 / 정보 보호·보안·윤리",
+        kind: "2축형",
+        sections: [
+          {label:"미래", text:"디지털 기술의 영향 → 발전 방향 예측 → 진로 설계"},
+          {label:"안전", text:"보호 정보 ↔ 공유 정보 구분 → 정보 보호 실천 → 정보보안 기술 활용 → 디지털 윤리"}
+        ]
+      })
+    }),
+    "ai-basic": Object.freeze({
+      "인공지능의 이해": Object.freeze({
+        summary: "AI 판단 / 탐색 / 지식·추론",
+        kind: "3축형",
+        sections: [
+          {label:"AI의 역할", text:"지능적 판단 → 문제 해결 사례"},
+          {label:"탐색", text:"탐색 과정 설계 → 맹목적 탐색 ↔ 정보 이용 탐색 → 정보 이용 탐색 적용"},
+          {label:"지식·추론", text:"규칙·사실로 지식 표현 → 새로운 지식 추론"}
+        ]
+      }),
+      "인공지능과 학습": Object.freeze({
+        summary: "문제 → 데이터 → 전처리 → 모델 → 학습·평가 + 딥러닝",
+        kind: "단계형",
+        sections: [
+          {label:"기계학습 파이프라인", text:"문제 정의 → 데이터 선정·수집 → 가공·핵심 속성 추출 → 학습 유형·알고리즘 선정 → 훈련 → 테스트·성능 평가"},
+          {label:"딥러닝 확장", text:"인공신경망·딥러닝 특성 → 활용 분야 탐색 → 문제 해결 → 성능 평가"}
+        ]
+      }),
+      "인공지능의 사회적 영향": Object.freeze({
+        summary: "사회 변화 / 삶·직업 / 공존·윤리",
+        kind: "3관점형",
+        sections: [
+          {label:"사회", text:"인공지능 발전 → 사회 변화 → 해결 가능한 사회문제"},
+          {label:"개인", text:"삶·직업 변화 → 진로 탐색"},
+          {label:"공존과 윤리", text:"인간-인공지능 공존 방안 / 활용 사례·윤리적 딜레마 분석"}
+        ]
+      }),
+      "인공지능 프로젝트": Object.freeze({
+        summary: "SDGs·주제 → 계획 → 개발 → 평가·개선",
+        kind: "순환형",
+        sections: [
+          {label:"프로젝트 순환", text:"지속가능발전목표에서 문제 탐색 → 인공지능 적용 방안 → 주제 도출 → 수행 계획 → 협력적 인공지능 소프트웨어 개발 → 사회적 영향 고려 → 평가 → 성능 개선 ↺"}
+        ]
+      })
+    }),
+    "data-science": Object.freeze({
+      "데이터 과학의 이해": Object.freeze({
+        summary: "의사결정 / 데이터 특성 / 데이터셋·DB·통합 / 사회·진로",
+        kind: "층위형",
+        sections: [
+          {label:"왜?", text:"데이터 기반 의사 결정"},
+          {label:"무엇을?", text:"정형·비정형 데이터 / 속성·잠재적 가치"},
+          {label:"어떻게 조직?", text:"데이터셋 → 데이터베이스 → 데이터 통합"},
+          {label:"어디에?", text:"사회 변화 / 진로·직업의 데이터 기반 문제 해결"}
+        ]
+      }),
+      "데이터 준비와 분석": Object.freeze({
+        summary: "수집 → 전처리 → 시각화·관계 → 분석 비교",
+        kind: "단계형",
+        sections: [
+          {label:"분석 준비", text:"편향되지 않게 수집 → 데이터 특성 분석 → 이상치·결측치 탐색 → 정규화 등 전처리"},
+          {label:"분석", text:"시각화 → 속성 간 관계 파악·통합 → 서로 다른 분석 방법 적용 → 결과 비교"}
+        ]
+      }),
+      "데이터 모델링과 평가": Object.freeze({
+        summary: "모델·도구 → {회귀 / 군집 / 연관} → 비교·평가 → 선택",
+        kind: "분기형",
+        sections: [
+          {label:"공통 기반", text:"데이터 모델 이해 + 분석 도구 탐색"},
+          {label:"회귀", text:"통계적 회귀 ↔ 기계학습 회귀 → 결과 해석 비교"},
+          {label:"군집", text:"유사성 측정 → 군집 형성 → 군집 의미 해석"},
+          {label:"연관", text:"데이터 간 관계·연관성 파악 → 결과 의미 해석"},
+          {label:"종합", text:"분석 결과 비교·평가 → 목적에 가장 적합한 분석 방법 선택·적용"}
+        ]
+      }),
+      "데이터 과학 프로젝트": Object.freeze({
+        summary: "주제 → 탐색 → 복수 분석 → 해석 → 성찰·활용",
+        kind: "탐구형",
+        sections: [
+          {label:"탐구 흐름", text:"사례 조사·주제 탐색 → 적합성 판단 → 탐색적 데이터 분석 → 데이터 속 의미 파악 → 창의적 해결 방법 구상 → 2개 이상 분석 방법 적용·비교 → 결과 의미 해석 → 전 과정 성찰 → 사회적 영향을 고려한 활용"}
+        ]
+      })
+    }),
+    "software-life": Object.freeze({
+      "세상을 변화시키는 소프트웨어": Object.freeze({
+        summary: "사회 변화·미래 / SW 관점·융합 문제 해결",
+        kind: "2축형",
+        sections: [
+          {label:"사회 변화", text:"변화 사례 → 영향 분석 → 미래 사회 예측"},
+          {label:"융합 문제 해결", text:"실세계 문제를 소프트웨어 관점으로 보기 → 학문 분야와 소프트웨어 융합 사례 → 문제 해결 방법 비교·분석"}
+        ]
+      }),
+      "창작을 지원하는 소프트웨어": Object.freeze({
+        summary: "도구 이해·구성 → {미디어 아트 / 웨어러블} → SW 가치",
+        kind: "분기형",
+        sections: [
+          {label:"공통 기반", text:"피지컬 컴퓨팅 작품 분석 → 센서·액추에이터 선택 → 시스템 구성"},
+          {label:"미디어 아트", text:"창작 → 소프트웨어 가치 파악"},
+          {label:"웨어러블 장치", text:"창작 → 공유 → 소프트웨어 가치 확산"}
+        ]
+      }),
+      "현상을 분석하는 소프트웨어": Object.freeze({
+        summary: "가치·탐색 → 수집·관리 → 분석·해석 → 윤리적 활용",
+        kind: "단계형",
+        sections: [
+          {label:"분석 흐름", text:"사회 현상 데이터의 가치 인식 → 데이터 탐색·활용 방안 → 유형에 맞는 수집 → 처리·관리 → 분석·시각화 → 현상의 의미 해석 → 윤리적 활용"}
+        ]
+      }),
+      "모의 실험하는 소프트웨어": Object.freeze({
+        summary: "이해·활용 → 모델링 → 구현",
+        kind: "단계형",
+        sections: [
+          {label:"시뮬레이션", text:"개념·구성요소 → 가치 이해 → 활용 분야·방안 탐색 → 현실의 문제·현상 모델링 → 시뮬레이션 모델 표현 → 소프트웨어로 구현"}
+        ]
+      }),
+      "가치를 창출하는 소프트웨어": Object.freeze({
+        summary: "스타트업 이해 → 요구·아이디어 → 설계·구현 → 3관점 평가",
+        kind: "프로젝트형",
+        sections: [
+          {label:"배경 이해", text:"소프트웨어 스타트업 개념 → 사례 분석"},
+          {label:"프로젝트", text:"사용자 요구 분석 → 아이디어 구안 → 협력적 설계 → 구현"},
+          {label:"가치 검토", text:"사회적 + 기능적 + 윤리적 관점 평가"}
+        ]
+      })
+    }),
+    "info-science": Object.freeze({
+      "프로그래밍": Object.freeze({
+        summary: "함수 → 재귀관계·구현 → 반복과 재귀 비교",
+        kind: "심화형",
+        sections: [
+          {label:"함수", text:"정의·호출 → 매개변수 활용"},
+          {label:"재귀", text:"재귀관계 발견 → 재귀함수 구현"},
+          {label:"비교", text:"반복구조 ↔ 재귀구조 → 문제 해결 방식 비교·분석"}
+        ]
+      }),
+      "데이터 구조": Object.freeze({
+        summary: "스택·큐 ↔ 트리·그래프 : 이해 → 구현 → 활용",
+        kind: "대응형",
+        sections: [
+          {label:"선형 구조", text:"스택·큐: 원리 이해 → 순차적 데이터 구조로 구현 → 문제 해결에 활용"},
+          {label:"비선형 구조", text:"트리·그래프: 구조 이해 → 인접행렬·인접리스트로 구현 → 문제 해결에 활용"},
+          {label:"공통 관점", text:"문제에 맞는 데이터 구조 선택 → 효율적 문제 해결"}
+        ]
+      }),
+      "알고리즘": Object.freeze({
+        summary: "탐색기반 / 관계기반 → 복잡도 비교",
+        kind: "2전략+평가형",
+        sections: [
+          {label:"탐색기반", text:"상태 공간으로 구조화 → 모두 탐색 → 일부 상태 배제 → 기존 탐색과 비교"},
+          {label:"관계기반", text:"전체 문제를 부분 문제로 분해 → 전체-부분 관계 발견 → 부분 문제 결과로 전체 해결 → 중복 적용 제거 → 기존 관계기반 알고리즘과 비교"},
+          {label:"공통 평가", text:"빅오 표기법 → 복잡도 표현 → 알고리즘 성능 비교"}
+        ]
+      }),
+      "정보과학 프로젝트": Object.freeze({
+        summary: "발견 → 분석·설계 → 활용·구현 → 검증 → 평가·공유",
+        kind: "프로젝트형",
+        sections: [
+          {label:"프로젝트 흐름", text:"여러 학문 분야에서 문제 발견 → 컴퓨터과학으로 해결 가능성 판단 → 문제 분석 → 프로젝트 설계 → 오픈소스·라이브러리 활용 → 협력적 구현 → 테스트·디버깅 → 기능적·윤리적 평가 → 공유"}
+        ]
       })
     })
   });
@@ -107,8 +326,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.9.2";
-  const MANUAL_GAP_REVIEW = "2026-09-19 / v6.9.2 출제 선택 세분화 및 핵심 흐름: 내용체계/성취기준/통합 선택, 중학교 정보 원문 보기 핵심 흐름";
+  const APP_VERSION = "6.11.1";
+  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.11.1 Pilot100 실사용 QA + 채점 안전장치 + 연습문제 초안 복원";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -160,12 +379,14 @@
     const pages = {
       general: document.getElementById("generalPage"),
       subject: document.getElementById("subjectPage"),
+      practice: document.getElementById("practicePage"),
       history: document.getElementById("historyPage")
     };
 
     const tabs = {
       general: document.getElementById("generalTab"),
       subject: document.getElementById("subjectTab"),
+      practice: document.getElementById("practiceTab"),
       history: document.getElementById("historyTab")
     };
 
@@ -185,6 +406,10 @@
       requestAnimationFrame(maybeShowPracticalRetry);
     } else {
       hidePracticalRetryPanel();
+    }
+
+    if (tab === "practice") {
+      window.CurriLoopPracticeUI?.onShow?.();
     }
 
     if (tab === "history") {
@@ -1295,38 +1520,45 @@
 
     const top = document.createElement("div");
     top.className = "core-flow-top";
+    const titleWrap = document.createElement("div");
+    titleWrap.className = "core-flow-heading";
     const title = document.createElement("strong");
     title.className = "core-flow-title";
     title.textContent = "핵심 흐름";
+    const kind = document.createElement("span");
+    kind.className = "core-flow-kind";
+    kind.textContent = flow.kind || "구조형";
+    titleWrap.appendChild(title);
+    titleWrap.appendChild(kind);
     const summary = document.createElement("div");
     summary.className = "core-flow-summary";
-    flow.summary.forEach((item, index) => {
-      if (index > 0) {
-        const arrow = document.createElement("span");
-        arrow.className = "core-flow-arrow";
-        arrow.textContent = "→";
-        arrow.setAttribute("aria-hidden", "true");
-        summary.appendChild(arrow);
-      }
-      const chip = document.createElement("span");
-      chip.className = "core-flow-chip";
-      chip.textContent = item;
-      summary.appendChild(chip);
-    });
-    top.appendChild(title);
+    summary.textContent = flow.summary;
+    top.appendChild(titleWrap);
     top.appendChild(summary);
     card.appendChild(top);
 
     const details = document.createElement("details");
     details.className = "core-flow-details";
     const detailSummary = document.createElement("summary");
-    detailSummary.textContent = "세부 흐름 보기";
+    detailSummary.textContent = "구조 펼쳐 보기";
     const detail = document.createElement("div");
     detail.className = "core-flow-detail";
-    detail.textContent = flow.detail;
+    (flow.sections || []).forEach(section => {
+      const row = document.createElement("div");
+      row.className = "core-flow-section";
+      const label = document.createElement("strong");
+      label.className = "core-flow-section-label";
+      label.textContent = section.label;
+      const text = document.createElement("div");
+      text.className = "core-flow-section-text";
+      text.textContent = section.text;
+      row.appendChild(label);
+      row.appendChild(text);
+      detail.appendChild(row);
+    });
     const note = document.createElement("div");
     note.className = "core-flow-note";
-    note.textContent = "암기 편의를 위한 요약 흐름이며 공식 교수·학습 순서를 의미하지 않습니다.";
+    note.textContent = "※ 암기와 회상을 위한 요약 구조이며 공식 교수·학습 순서나 교육과정 원문 자체를 의미하지 않습니다.";
     details.appendChild(detailSummary);
     details.appendChild(detail);
     details.appendChild(note);
@@ -1334,9 +1566,6 @@
     return card;
   }
 
-  // -------------------------
-  // 7) 학습 화면 렌더링
-  // -------------------------
   function renderStudy() {
     const unit = getCurrentUnit();
     const subject = unit.subject;
@@ -1532,7 +1761,7 @@
     lastStudyFocus = saved.lastStudyFocus && typeof saved.lastStudyFocus === "object" ? saved.lastStudyFocus : null;
     generalIndex = Number.isFinite(Number(saved.generalIndex)) ? Math.max(0, Number(saved.generalIndex)) : 0;
     generalShuffleState = saved.generalShuffleState && typeof saved.generalShuffleState === "object" ? saved.generalShuffleState : null;
-    currentTab = ["general","subject","history"].includes(saved.currentTab) ? saved.currentTab : "general";
+    currentTab = ["general","subject","practice","history"].includes(saved.currentTab) ? saved.currentTab : "general";
     return saved;
   }
 
@@ -2396,7 +2625,7 @@
   function reviewMetaText(item) {
     if (!item) return "";
     if (item.type === "general") return ["총론", item.categoryLabel].filter(Boolean).join(" · ");
-    return [item.subjectLabel, item.area, item.groupLabel].filter(Boolean).join(" · ");
+    return [item.subjectLabel, item.area, item.groupLabel, item._practiceLinked ? "연습문제 연동" : ""].filter(Boolean).join(" · ");
   }
 
   function renderReviewSession(completed = false) {
@@ -2528,7 +2757,10 @@
     const completed = new Set(plan.completed || []);
     return (plan.items || [])
       .filter(entry => entry?.conceptKey && !completed.has(entry.conceptKey))
-      .map(entry => reviewItemFromConceptKey(entry.conceptKey))
+      .map(entry => {
+        const item = reviewItemFromConceptKey(entry.conceptKey);
+        return item ? {...item, _practiceLinked:Boolean(entry.practiceLinked), _practiceLinkedAt:Number(entry.linkedAt || 0)} : null;
+      })
       .filter(Boolean);
   }
 
@@ -2541,6 +2773,221 @@
       saveDailyReviewPlan(plan);
     }
   }
+
+  const PRACTICE_SOURCE_LINK_KEY = "curriloop-practice-source-link-v1";
+  let practiceSourceMetaCache = null;
+
+  function loadPracticeSourceLinkState() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(PRACTICE_SOURCE_LINK_KEY) || "{}");
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function savePracticeSourceLinkState(state) {
+    try { localStorage.setItem(PRACTICE_SOURCE_LINK_KEY, JSON.stringify(state || {})); } catch {}
+  }
+
+  function buildPracticeSourceMetaCache() {
+    const cache = new Map();
+    Object.entries(curriculumData || {}).forEach(([subjectKey, subject]) => {
+      Object.entries(subject || {}).forEach(([areaName, area]) => {
+        SOURCE_GROUPS.forEach(sourceGroup => {
+          (area?.[sourceGroup] || []).forEach(section => (section.lines || []).forEach(line => {
+            if (!line?.id || cache.has(line.id)) return;
+            cache.set(line.id, {subjectKey, areaName, sourceGroup, sectionTitle:section.title || "", line});
+          }));
+        });
+      });
+    });
+    return cache;
+  }
+
+  function sourceMetaFromId(sourceId) {
+    if (!practiceSourceMetaCache) practiceSourceMetaCache = buildPracticeSourceMetaCache();
+    return practiceSourceMetaCache.get(String(sourceId || "")) || null;
+  }
+
+  function representativeConceptForSource(sourceId) {
+    const meta = sourceMetaFromId(sourceId);
+    if (!meta) return null;
+    const levels = ["easy", "normal", "yaho"];
+    for (const level of levels) {
+      const entries = configuredGapEntries(meta.line, level)
+        .filter(entry => entry?.gapId && !isPracticalLowValueEntry(entry, meta.line));
+      if (!entries.length) continue;
+      const entry = entries[0];
+      return {
+        conceptKey: conceptKeyForSubject(
+          {subject:meta.subjectKey, area:meta.areaName},
+          meta.sourceGroup,
+          meta.line.id,
+          entry.gapId,
+          0
+        ),
+        meta,
+        gapId:entry.gapId,
+        answer:entry.answer,
+        difficultyKey:level
+      };
+    }
+    return null;
+  }
+
+  function sourceLineMasteryPriority(sourceId, mastery = loadMastery(), now = Date.now()) {
+    let best = 0;
+    Object.entries(mastery || {}).forEach(([conceptKey, raw]) => {
+      const parts = String(conceptKey || "").split("|");
+      if (parts[0] !== "subject" || parts[4] !== sourceId) return;
+      const state = LearningEngine.normalizeMasteryItem(raw || {});
+      let score = 0;
+      if (state.nextReviewAt > 0 && state.nextReviewAt <= now) score += 1.5;
+      if (state.lastResult === "wrong") score += 2.6;
+      else if (state.lastResult === "unknown") score += 2.0;
+      else if (state.lastResult === "near") score += 0.9;
+      if (state.practiceLinkPending) score += 1.7;
+      score += Math.min(2.4, state.wrongCount * 0.8);
+      score += Math.min(1.5, state.unknownCount * 0.45);
+      score += Math.min(0.8, state.nearCount * 0.2);
+      score -= Math.min(1.5, state.correctStreak * 0.45);
+      best = Math.max(best, score);
+    });
+    return Math.max(0, best);
+  }
+
+  function sourcePracticeLinkPriority(sourceId, state = loadPracticeSourceLinkState()) {
+    return Math.max(0, Number(state?.[sourceId]?.deficit || 0));
+  }
+
+  function practiceQuestionPriority(question) {
+    const sourceIds = [...new Set((question?.sourceIds || []).filter(Boolean))];
+    if (!sourceIds.length) return 0;
+    const mastery = loadMastery();
+    const linked = loadPracticeSourceLinkState();
+    const scores = sourceIds.map(sourceId =>
+      sourceLineMasteryPriority(sourceId, mastery) + sourcePracticeLinkPriority(sourceId, linked)
+    );
+    scores.sort((a,b) => b-a);
+    const top = scores.slice(0, Math.min(2, scores.length));
+    return top.reduce((sum, value) => sum + value, 0) / Math.max(1, top.length);
+  }
+
+  function weightedPracticeQuestionIds(questions, randomFn = Math.random) {
+    const rng = typeof randomFn === "function" ? randomFn : Math.random;
+    return (questions || []).map(question => {
+      const priority = practiceQuestionPriority(question);
+      const weight = 1 + Math.min(8, Math.max(0, priority));
+      const u = Math.max(Number.EPSILON, Math.min(1 - Number.EPSILON, rng()));
+      return {id:question.questionId, key:-Math.log(u) / weight, priority};
+    }).sort((a,b) => a.key - b.key).map(entry => entry.id);
+  }
+
+  function practiceGradeStatus(grade) {
+    if (grade?.perfect) return "correct";
+    if (Number(grade?.wrongCount || 0) > 0) return "wrong";
+    if (Number(grade?.unknownCount || 0) > 0) return "unknown";
+    if (Number(grade?.nearCount || 0) > 0) return "near";
+    return "wrong";
+  }
+
+  function notePracticeSourceLink(sourceId, status, scale = 1, now = Date.now()) {
+    const state = loadPracticeSourceLinkState();
+    const current = state[sourceId] && typeof state[sourceId] === "object" ? {...state[sourceId]} : {};
+    const deltaMap = {wrong:2.0, unknown:1.5, near:0.75, correct:-0.85};
+    current.deficit = Math.max(0, Math.min(8, Number(current.deficit || 0) + Number(deltaMap[status] || 0) * scale));
+    current.attempts = Number(current.attempts || 0) + 1;
+    current[`${status}Count`] = Number(current[`${status}Count`] || 0) + 1;
+    current.lastResult = status;
+    current.lastAt = now;
+    state[sourceId] = current;
+    savePracticeSourceLinkState(state);
+    return current;
+  }
+
+  function injectPracticeLinkedReview(conceptKey, now = Date.now()) {
+    if (!conceptKey) return false;
+    const plan = ensureDailyReviewPlan(now);
+    const lineKey = LearningEngine.reviewLineKeyFromConceptKey(conceptKey);
+    plan.items = Array.isArray(plan.items) ? plan.items : [];
+    plan.completed = Array.isArray(plan.completed) ? plan.completed : [];
+
+    const existing = plan.items.find(entry => entry?.lineKey === lineKey);
+    if (existing) {
+      existing.conceptKey = conceptKey;
+      existing.practiceLinked = true;
+      existing.linkedAt = now;
+    } else {
+      plan.items.push({conceptKey, lineKey, practiceLinked:true, linkedAt:now});
+    }
+    plan.completed = plan.completed.filter(key => LearningEngine.reviewLineKeyFromConceptKey(key) !== lineKey);
+    saveDailyReviewPlan(plan);
+    return true;
+  }
+
+  function scheduleSourceReviewFromPractice(sourceId, status, questionId, now = Date.now()) {
+    if (!['wrong','unknown','near'].includes(status)) return null;
+    const representative = representativeConceptForSource(sourceId);
+    if (!representative) return null;
+    const all = loadMastery();
+    const item = LearningEngine.normalizeMasteryItem(all[representative.conceptKey] || {});
+    const targetAt = status === 'near' ? now + 6 * 60 * 60 * 1000 : now;
+    if (!item.nextReviewAt || item.nextReviewAt > targetAt) item.nextReviewAt = targetAt;
+    item.practiceLinkCount = Number(item.practiceLinkCount || 0) + 1;
+    item.practiceLinkPending = true;
+    item.lastPracticeLinkAt = now;
+    item.lastPracticeQuestionId = questionId || '';
+    // 적용형 문제의 실패를 원문 직접 오답으로 간주하지 않는다.
+    // 정확 인출 streak/wrongCount는 건드리지 않고 복습 시점만 앞당긴다.
+    all[representative.conceptKey] = item;
+    saveMastery(all);
+    if (status !== 'near') injectPracticeLinkedReview(representative.conceptKey, now);
+    return representative;
+  }
+
+  function clearPracticeLinkPending(conceptKey) {
+    if (!conceptKey) return;
+    const all = loadMastery();
+    const item = all[conceptKey];
+    if (!item || !item.practiceLinkPending) return;
+    item.practiceLinkPending = false;
+    item.practiceLinkResolvedAt = Date.now();
+    all[conceptKey] = item;
+    saveMastery(all);
+  }
+
+  function recordPracticeLinkedGrade(question, grade) {
+    const sourceIds = [...new Set((question?.sourceIds || []).filter(Boolean))];
+    if (!sourceIds.length || !grade) return {status:'none', linked:0};
+    const status = practiceGradeStatus(grade);
+    const now = Date.now();
+    const scale = 1 / Math.max(1, Math.sqrt(sourceIds.length));
+    let linked = 0;
+    sourceIds.forEach(sourceId => {
+      notePracticeSourceLink(sourceId, status, scale, now);
+      if (status !== 'correct' && scheduleSourceReviewFromPractice(sourceId, status, question.questionId, now)) linked += 1;
+    });
+    if (linked && typeof renderHistory === 'function') renderHistory({passive:true});
+    return {status, linked, sourceCount:sourceIds.length};
+  }
+
+  function practiceSourceLinkSummary() {
+    const state = loadPracticeSourceLinkState();
+    const entries = Object.entries(state).filter(([, item]) => Number(item?.deficit || 0) > 0);
+    return {
+      weakSources:entries.length,
+      totalDeficit:entries.reduce((sum, [, item]) => sum + Number(item?.deficit || 0), 0)
+    };
+  }
+
+  window.CurriLoopPracticeBridge = {
+    recordGrade:recordPracticeLinkedGrade,
+    questionPriority:practiceQuestionPriority,
+    weightedQuestionIds:weightedPracticeQuestionIds,
+    summary:practiceSourceLinkSummary,
+    representativeConceptForSource
+  };
 
   function startWrongReview(dueOnly = true) {
     const mastery = loadMastery();
@@ -2607,6 +3054,7 @@
     const signature = `${normalize(input.value) || "__blank__"}|review|${status}`;
     const eventToken = makeGradingEventToken("review", item.conceptKey, signature);
     const masteryItem = updateMastery(item.conceptKey, status, eventToken);
+    if (item._practiceLinked) clearPracticeLinkPending(item.conceptKey);
 
     reviewGraded = true;
     reviewLastStatus = status;
@@ -2741,33 +3189,17 @@
   function openHistorySource(item) {
     if (!item) return;
     if (item.type === "general") {
-      const index = generalBank.findIndex(q => q.id === item.generalId);
-      if (index < 0) return;
-      generalShuffleState = null;
-      document.getElementById("generalCategory").value = "all";
-      generalIndex = index;
-      showTab("general");
-      renderGeneral();
+      openGeneralSourceModal(item);
       return;
     }
-    if (item.type !== "subject" || !item.subjectKey || !item.area) return;
-    document.getElementById("subjectSelect").value = item.subjectKey;
-    document.getElementById("groupSelect").value = selectionGroupForHistoryItem(item);
-    fillAreaSelect();
-    const areaSelect = document.getElementById("areaSelect");
-    if ([...areaSelect.options].some(option => option.value === item.area)) areaSelect.value = item.area;
-    currentAreaIndex = 0;
-    currentRandomUnit = null;
-    studyMode = "original";
-    showTab("subject");
-    requestAnimationFrame(() => {
-      const target = [...document.querySelectorAll("#studyArea .line-item[data-line-id]")]
-        .find(line => line.dataset.lineId === item.lineId);
-      if (target) {
-        target.classList.add("source-highlight");
-        target.scrollIntoView({block:"center", behavior:"smooth"});
-        setTimeout(() => target.classList.remove("source-highlight"), 1800);
-      }
+    if (item.type !== "subject" || !item.lineId) return;
+    openSourceModalByIds([item.lineId], {
+      title:"원문 보기",
+      meta:[item.subjectLabel, item.area, item.groupLabel].filter(Boolean).join(" · "),
+      subject:item.subjectKey || "",
+      note:item._practiceLinked
+        ? "연습문제에서 취약 신호가 발생해 연결된 원문입니다. 팝업을 닫으면 복습 세션이 그대로 유지됩니다."
+        : "현재 복습 항목의 공식 원문입니다. 팝업을 닫으면 복습 세션이 그대로 유지됩니다."
     });
   }
 
@@ -2776,6 +3208,7 @@
   }
 
   const PREIMPORT_BACKUP_KEY = "curriloop-preimport-backup-v1"; // v6.0 이하 fallback 호환
+  const PRACTICE_QUESTION_STATS_KEY = "curriloop-practice-stats-v1";
 
   async function getPreimportSnapshot() {
     if (learningStorageMode === "indexeddb" && learningDb) {
@@ -2820,6 +3253,8 @@
     const beforeTheme = localStorage.getItem("coreloop-theme");
     const beforeGradingOverrides = loadGradingOverrides();
     const beforeExamProgress = loadPracticalExamProgress();
+    const beforePracticeSourceLink = loadPracticeSourceLinkState();
+    const beforePracticeQuestionStats = loadLocalRecord(PRACTICE_QUESTION_STATS_KEY);
 
     try {
       if (!validLearningStateRecord(snapshot.learning)) throw new Error("복구본 학습 기록 형식이 올바르지 않습니다.");
@@ -2833,6 +3268,8 @@
       learningStateMemory.mastery = loadMastery();
       await persistLearningStateNow();
       replacePracticalStats(snapshot.practicalStats || {});
+      savePracticeSourceLinkState(snapshot.practiceSourceLink || {});
+      if (snapshot.practiceQuestionStats && isPlainRecord(snapshot.practiceQuestionStats)) safeSetLocalStorage(PRACTICE_QUESTION_STATS_KEY, JSON.stringify(snapshot.practiceQuestionStats));
       if (snapshot.gradingOverrides && isPlainRecord(snapshot.gradingOverrides)) safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(snapshot.gradingOverrides));
       if (snapshot.practicalExamProgress && isPlainRecord(snapshot.practicalExamProgress)) safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(snapshot.practicalExamProgress));
 
@@ -2859,6 +3296,8 @@
       };
       await persistLearningStateNow();
       replacePracticalStats(beforePracticalStats);
+      savePracticeSourceLinkState(beforePracticeSourceLink);
+      safeSetLocalStorage(PRACTICE_QUESTION_STATS_KEY, JSON.stringify(beforePracticeQuestionStats));
       safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(beforeGradingOverrides));
       safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(beforeExamProgress));
       if (beforeTheme) localStorage.setItem("coreloop-theme", beforeTheme);
@@ -2870,6 +3309,15 @@
   function isPlainRecord(value) {
     return Boolean(value) && typeof value === "object" && !Array.isArray(value);
   }
+  function loadLocalRecord(key) {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || "{}");
+      return isPlainRecord(parsed) ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
 
   function isSafeBackupString(value, maxLength = 20000) {
     return value === undefined || value === null || (typeof value === "string" && value.length <= maxLength);
@@ -2900,14 +3348,15 @@
 
   function validateBackupMasteryRecord(value) {
     if (!isPlainRecord(value)) return false;
-    for (const field of ["correctCount","nearCount","unknownCount","wrongCount","correctStreak","nextReviewAt","lastSeenAt","lastSuccessAt"]) {
+    for (const field of ["correctCount","nearCount","unknownCount","wrongCount","correctStreak","nextReviewAt","lastSeenAt","lastSuccessAt","practiceLinkCount","lastPracticeLinkAt","practiceLinkResolvedAt"]) {
       if (value[field] !== undefined) {
         const number = Number(value[field]);
         if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
       }
     }
     if (value.mastered !== undefined && typeof value.mastered !== "boolean") return false;
-    return isSafeBackupString(value.lastResult, 20) && isSafeBackupString(value.lastEventToken, 500);
+    if (value.practiceLinkPending !== undefined && typeof value.practiceLinkPending !== "boolean") return false;
+    return isSafeBackupString(value.lastResult, 20) && isSafeBackupString(value.lastEventToken, 500) && isSafeBackupString(value.lastPracticeQuestionId, 500);
   }
 
   function validateBackupPracticalStats(value) {
@@ -2944,6 +3393,44 @@
     return true;
   }
 
+  function validateBackupPracticeSourceLink(value) {
+    if (value === undefined || value === null) return true;
+    if (!isPlainRecord(value) || Object.keys(value).length > 5000) return false;
+    return Object.entries(value).every(([key, item]) => {
+      if (typeof key !== 'string' || key.length > 500 || !isPlainRecord(item)) return false;
+      for (const field of ['deficit','attempts','wrongCount','unknownCount','nearCount','correctCount','lastAt']) {
+        if (item[field] !== undefined) {
+          const number = Number(item[field]);
+          if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
+        }
+      }
+      return isSafeBackupString(item.lastResult, 30);
+    });
+  }
+
+  function validateBackupPracticeQuestionStats(value) {
+    if (value === undefined || value === null) return true;
+    if (!isPlainRecord(value)) return false;
+    const questions = value.questions === undefined ? {} : value.questions;
+    if (!isPlainRecord(questions) || Object.keys(questions).length > 5000) return false;
+    for (const field of ['version','totalAttempts','totalPerfect']) {
+      if (value[field] !== undefined) {
+        const number = Number(value[field]);
+        if (!Number.isFinite(number) || number < 0 || number > 1e12) return false;
+      }
+    }
+    return Object.entries(questions).every(([key, item]) => {
+      if (typeof key !== 'string' || key.length > 500 || !isPlainRecord(item)) return false;
+      for (const field of ['attempts','bestScore','maxScore','lastScore','perfect']) {
+        if (item[field] !== undefined) {
+          const number = Number(item[field]);
+          if (!Number.isFinite(number) || number < 0 || number > 1e9) return false;
+        }
+      }
+      return isSafeBackupString(item.lastAt, 80);
+    });
+  }
+
   function exportStudyData() {
     const history = loadHistory();
     const mastery = loadMastery();
@@ -2951,6 +3438,7 @@
       appVersion:APP_VERSION,
       coreSplitMigrationVersion:Number(learningStateMemory.coreSplitMigrationVersion || CORE_SPLIT_MIGRATION_VERSION),
       history, mastery, practicalStats:cloneJson(practicalStats, {}),
+      practiceSourceLink:loadPracticeSourceLinkState(), practiceQuestionStats:loadLocalRecord(PRACTICE_QUESTION_STATS_KEY),
       gradingOverrides:loadGradingOverrides(), practicalExamProgress:loadPracticalExamProgress(),
       theme:localStorage.getItem("coreloop-theme") || null, exportedAt:new Date().toISOString()
     });
@@ -2983,6 +3471,8 @@
       const oldTheme = localStorage.getItem("coreloop-theme");
       const oldGradingOverrides = loadGradingOverrides();
       const oldExamProgress = loadPracticalExamProgress();
+      const oldPracticeSourceLink = loadPracticeSourceLinkState();
+      const oldPracticeQuestionStats = loadLocalRecord(PRACTICE_QUESTION_STATS_KEY);
       let snapshotSaved = false;
 
       try {
@@ -3011,6 +3501,12 @@
         if (!validateBackupPracticalStats(data.practicalStats)) {
           throw new Error("손상되었거나 형식이 다른 실전 학습 기록이 포함되어 있습니다.");
         }
+        if (!validateBackupPracticeSourceLink(data.practiceSourceLink)) {
+          throw new Error("손상되었거나 형식이 다른 연습문제-원문 연동 기록이 포함되어 있습니다.");
+        }
+        if (!validateBackupPracticeQuestionStats(data.practiceQuestionStats)) {
+          throw new Error("손상되었거나 형식이 다른 연습문제 풀이 기록이 포함되어 있습니다.");
+        }
         if (data.gradingOverrides !== undefined) {
           if (!isPlainRecord(data.gradingOverrides) || Object.keys(data.gradingOverrides).length > 5000 ||
               !Object.entries(data.gradingOverrides).every(([key,value]) => typeof key === "string" && key.length <= 1000 && isPlainRecord(value) && value.mode === "wrong")) {
@@ -3034,6 +3530,8 @@
         await savePreimportSnapshot({
           learning: before,
           practicalStats: beforePracticalStats,
+          practiceSourceLink: oldPracticeSourceLink,
+          practiceQuestionStats: oldPracticeQuestionStats,
           gradingOverrides: oldGradingOverrides,
           practicalExamProgress: oldExamProgress,
           theme: oldTheme,
@@ -3052,6 +3550,8 @@
         learningStateMemory.history = loadHistory();
         learningStateMemory.mastery = loadMastery();
         replacePracticalStats(data.practicalStats || {});
+        savePracticeSourceLinkState(data.practiceSourceLink || {});
+        if (data.practiceQuestionStats !== undefined) safeSetLocalStorage(PRACTICE_QUESTION_STATS_KEY, JSON.stringify(data.practiceQuestionStats || {}));
         if (data.gradingOverrides !== undefined) safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(data.gradingOverrides || {}));
         if (data.practicalExamProgress !== undefined) safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(data.practicalExamProgress || {}));
 
@@ -3093,6 +3593,8 @@
         };
         await persistLearningStateNow();
         replacePracticalStats(beforePracticalStats);
+        savePracticeSourceLinkState(oldPracticeSourceLink);
+        safeSetLocalStorage(PRACTICE_QUESTION_STATS_KEY, JSON.stringify(oldPracticeQuestionStats));
         safeSetLocalStorage(GRADING_OVERRIDE_KEY, JSON.stringify(oldGradingOverrides));
         safeSetLocalStorage(PRACTICAL_EXAM_PROGRESS_KEY, JSON.stringify(oldExamProgress));
         if (oldTheme === "light" || oldTheme === "dark") {
@@ -3142,6 +3644,9 @@
     localStorage.removeItem(DAILY_REVIEW_PLAN_KEY);
     localStorage.removeItem(GRADING_OVERRIDE_KEY);
     localStorage.removeItem(PRACTICAL_EXAM_PROGRESS_KEY);
+    localStorage.removeItem(PRACTICE_SOURCE_LINK_KEY);
+    localStorage.removeItem(PRACTICE_QUESTION_STATS_KEY);
+    localStorage.removeItem("curriloop-practice-ui-v1");
     practicalCountedCompletedSets.clear();
     practicalSetRecoveryCount = 0;
     hidePracticalRetryPanel();
@@ -3297,7 +3802,7 @@
 
         <div class="history-actions">
           <button class="btn" type="button" data-history-review="${escapeHtml(item.key)}">이 페이지에서 복습</button>
-          <button class="btn soft" type="button" data-history-source="${escapeHtml(item.key)}">원문에서 보기</button>
+          <button class="btn soft" type="button" data-history-source="${escapeHtml(item.key)}">원문 보기</button>
           <button class="btn soft" type="button" data-history-key="${escapeHtml(item.key)}">삭제</button>
         </div>
       `;
@@ -4320,12 +4825,175 @@
 
 
 
+  let sourceModalReturnFocus = null;
+
+  function sourceModalGroupLabel(sourceGroup) {
+    return groupLabels[sourceGroup] || sourceGroup || "원문";
+  }
+
+  function sourceSectionHtml({subjectKey, areaName, sourceGroup, sectionTitle, lines}, highlightedIds = new Set()) {
+    const label = subjectKey ? (subjectLabels[subjectKey] || subjectKey) : "";
+    const heading = [label, areaName].filter(Boolean).join(" · ") || "원문";
+    const lineHtml = (lines || []).map(line => {
+      const highlighted = highlightedIds.has(line.id);
+      return `<div class="source-modal-line${highlighted ? ' highlighted' : ''}" data-source-id="${escapeHtml(line.id || '')}">
+        <div class="source-modal-line-text">${escapeHtml(line.text || '')}</div>
+        ${line.id ? `<code class="source-modal-id">${escapeHtml(line.id)}</code>` : ''}
+      </div>`;
+    }).join("");
+    return `<section class="source-modal-section">
+      <div class="source-modal-section-head">
+        <strong>${escapeHtml(heading)}</strong>
+        <span>${escapeHtml(sourceModalGroupLabel(sourceGroup))}${sectionTitle ? ` · ${escapeHtml(sectionTitle)}` : ''}</span>
+      </div>
+      <div class="source-modal-lines">${lineHtml}</div>
+    </section>`;
+  }
+
+  function sourceContextsForIds(sourceIds = []) {
+    const wanted = new Set((sourceIds || []).filter(Boolean));
+    const contexts = [];
+    Object.entries(curriculumData || {}).forEach(([subjectKey, subject]) => {
+      Object.entries(subject || {}).forEach(([areaName, area]) => {
+        SOURCE_GROUPS.forEach(sourceGroup => {
+          (area?.[sourceGroup] || []).forEach(section => {
+            const lines = section.lines || [];
+            if (!lines.some(line => wanted.has(line.id))) return;
+            contexts.push({subjectKey, areaName, sourceGroup, sectionTitle:section.title || "", lines});
+          });
+        });
+      });
+    });
+    return contexts;
+  }
+
+  function openSourceModalPayload({title="원문 보기", meta="", contexts=[], highlightedIds=[], officialSubject="", note=""} = {}) {
+    const backdrop = document.getElementById("sourceModalBackdrop");
+    const body = document.getElementById("sourceModalBody");
+    if (!backdrop || !body) return;
+    if (!document.getElementById("helpModalBackdrop")?.classList.contains("hidden")) closeHelpModal();
+    sourceModalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const titleEl = document.getElementById("sourceModalTitle");
+    const metaEl = document.getElementById("sourceModalMeta");
+    if (titleEl) titleEl.textContent = title;
+    if (metaEl) metaEl.textContent = meta;
+    const ids = new Set((highlightedIds || []).filter(Boolean));
+    const content = contexts.length
+      ? contexts.map(context => sourceSectionHtml(context, ids)).join("")
+      : `<div class="source-modal-empty">표시할 원문을 찾지 못했습니다.</div>`;
+    body.innerHTML = `${note ? `<div class="source-modal-note">${escapeHtml(note)}</div>` : ''}${content}`;
+    const link = document.getElementById("sourceModalOfficialLink");
+    const sourceMeta = subjectSourceMeta[officialSubject] || null;
+    if (link) {
+      link.classList.toggle("hidden", !sourceMeta?.url);
+      if (sourceMeta?.url) {
+        link.href = sourceMeta.url;
+        link.title = sourceMeta.label || "공식 교육과정 출처";
+      }
+    }
+    backdrop.classList.remove("hidden");
+    document.body.dataset.modalOpen = "true";
+    setModalBackgroundInert(true, "sourceModalBackdrop");
+    requestAnimationFrame(() => {
+      const highlighted = backdrop.querySelector(".source-modal-line.highlighted");
+      highlighted?.scrollIntoView({block:"center", behavior:"auto"});
+      backdrop.querySelector("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])")?.focus({preventScroll:true});
+    });
+  }
+
+  function openSourceModalByIds(sourceIds, options = {}) {
+    const ids = [...new Set((sourceIds || []).filter(Boolean))];
+    const contexts = sourceContextsForIds(ids);
+    const first = contexts[0] || null;
+    const subjects = [...new Set(contexts.map(context => context.subjectKey))];
+    const areas = [...new Set(contexts.map(context => context.areaName))];
+    openSourceModalPayload({
+      title:options.title || "근거 원문 보기",
+      meta:options.meta || [subjects.map(key => subjectLabels[key] || key).join(" · "), areas.join(" · ")].filter(Boolean).join(" · "),
+      contexts,
+      highlightedIds:ids,
+      officialSubject:subjects.length === 1 ? subjects[0] : (options.subject || first?.subjectKey || ""),
+      note:options.note || "강조된 문장이 현재 항목의 직접 근거입니다. 팝업을 닫으면 학습 위치와 답안이 그대로 유지됩니다."
+    });
+  }
+
+  function openCurrentUnitSourceModal() {
+    const unit = getCurrentUnit();
+    if (!unit?.subject || !unit?.area) return;
+    const group = getCurrentGroup();
+    const sections = getUnitData(unit.subject, unit.area, group);
+    const contexts = sections.map(section => ({
+      subjectKey:unit.subject,
+      areaName:unit.area,
+      sourceGroup:section._sourceGroup || normalizeSelectedGroup(group),
+      sectionTitle:section.title || "",
+      lines:section.lines || []
+    }));
+    openSourceModalPayload({
+      title:"원문 보기",
+      meta:[subjectLabels[unit.subject] || unit.subject, unit.area, groupLabels[group] || (group === 'all' ? '전체' : group)].filter(Boolean).join(" · "),
+      contexts,
+      highlightedIds:[],
+      officialSubject:unit.subject,
+      note:"공식 교육과정 원문만 표시합니다. CurriLoop의 핵심 흐름은 학습용 보조자료이므로 이 팝업에는 포함하지 않습니다."
+    });
+  }
+
+  function openGeneralSourceModal(item) {
+    const q = generalBank.find(entry => entry.id === item?.generalId);
+    if (!q) return;
+    openSourceModalPayload({
+      title:"총론 학습 원문 보기",
+      meta:generalCategoryLabels[q.category] || q.category || "총론",
+      contexts:[{
+        subjectKey:"",
+        areaName:"총론",
+        sourceGroup:"",
+        sectionTitle:"CurriLoop 총론 학습 항목",
+        lines:[{id:q.id, text:q.q}, {id:"", text:`정답: ${q.display}`}]
+      }],
+      highlightedIds:[q.id],
+      note:"총론 학습은행 항목을 현재 위치를 유지한 채 표시합니다. 각론 원문 팝업과 달리 이 화면은 총론 문제은행의 학습 항목입니다."
+    });
+  }
+
+  function closeSourceModal(event = null) {
+    const backdrop = document.getElementById("sourceModalBackdrop");
+    if (!backdrop) return;
+    if (event && event.target !== backdrop) return;
+    backdrop.classList.add("hidden");
+    delete document.body.dataset.modalOpen;
+    setModalBackgroundInert(false);
+    const target = sourceModalReturnFocus && document.contains(sourceModalReturnFocus) ? sourceModalReturnFocus : document.getElementById("sourceModalButton");
+    sourceModalReturnFocus = null;
+    target?.focus?.({preventScroll:true});
+  }
+
+  function trapSourceModalFocus(event) {
+    const backdrop = document.getElementById("sourceModalBackdrop");
+    if (!backdrop || backdrop.classList.contains("hidden") || event.key !== "Tab") return false;
+    const focusable = [...backdrop.querySelectorAll("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])")]
+      .filter(element => !element.disabled && element.getClientRects().length);
+    if (!focusable.length) return false;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault(); last.focus(); return true;
+    }
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault(); first.focus(); return true;
+    }
+    return false;
+  }
+
+  window.CurriLoopSourceModal = {openIds:openSourceModalByIds, openCurrent:openCurrentUnitSourceModal, close:closeSourceModal};
+
   let helpModalReturnFocus = null;
 
-  function setModalBackgroundInert(enabled) {
-    const backdrop = document.getElementById("helpModalBackdrop");
+  function setModalBackgroundInert(enabled, activeBackdropId = "") {
+    const activeBackdrop = activeBackdropId ? document.getElementById(activeBackdropId) : null;
     [...document.body.children].forEach(element => {
-      if (element === backdrop || element.tagName === "SCRIPT") return;
+      if (element === activeBackdrop || element.tagName === "SCRIPT") return;
       if (enabled) element.setAttribute("inert", "");
       else element.removeAttribute("inert");
     });
@@ -4337,7 +5005,7 @@
     helpModalReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     backdrop.classList.remove("hidden");
     document.body.dataset.modalOpen = "true";
-    setModalBackgroundInert(true);
+    setModalBackgroundInert(true, "helpModalBackdrop");
     requestAnimationFrame(() => backdrop.querySelector("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])")?.focus());
   }
 
@@ -4393,11 +5061,13 @@
   }
 
   document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && !document.getElementById("helpModalBackdrop")?.classList.contains("hidden")) {
-      event.preventDefault();
-      closeHelpModal();
-      return;
+    if (event.key === "Escape" && !document.getElementById("sourceModalBackdrop")?.classList.contains("hidden")) {
+      event.preventDefault(); closeSourceModal(); return;
     }
+    if (event.key === "Escape" && !document.getElementById("helpModalBackdrop")?.classList.contains("hidden")) {
+      event.preventDefault(); closeHelpModal(); return;
+    }
+    if (trapSourceModalFocus(event)) return;
     trapHelpModalFocus(event);
   });
 
@@ -4426,7 +5096,7 @@
     renderHistory();
     await refreshUndoImportButton();
     const requestedTab = new URLSearchParams(location.search).get("tab");
-    const initialTab = ["general","subject","history"].includes(requestedTab) ? requestedTab : currentTab;
+    const initialTab = ["general","subject","practice","history"].includes(requestedTab) ? requestedTab : currentTab;
     showTab(initialTab);
     statePersistenceReady = true;
     saveCurrentState();

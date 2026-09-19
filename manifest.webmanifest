@@ -41,6 +41,17 @@
       ]
     },
     {
+      "name": "연습 문제",
+      "short_name": "연습",
+      "url": "/?tab=practice",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
       "name": "복습",
       "short_name": "복습",
       "url": "/?tab=history",

@@ -4,10 +4,10 @@
   if (root) root.CurriLoopStorageEngine = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
-  const BACKUP_SCHEMA_VERSION = 8;
-  const MAX_SUPPORTED_BACKUP_SCHEMA = 8;
+  const BACKUP_SCHEMA_VERSION = 9;
+  const MAX_SUPPORTED_BACKUP_SCHEMA = 9;
 
-  function buildBackupPayload({appVersion, coreSplitMigrationVersion, history, mastery, practicalStats, theme, gradingOverrides, practicalExamProgress, exportedAt}) {
+  function buildBackupPayload({appVersion, coreSplitMigrationVersion, history, mastery, practicalStats, practiceSourceLink, practiceQuestionStats, theme, gradingOverrides, practicalExamProgress, exportedAt}) {
     return {
       schemaVersion:BACKUP_SCHEMA_VERSION,
       app:'CurriLoop',
@@ -18,6 +18,8 @@
       history:history || [],
       mastery:mastery || {},
       practicalStats:practicalStats || {},
+      practiceSourceLink:practiceSourceLink || {},
+      practiceQuestionStats:practiceQuestionStats || {},
       gradingOverrides:gradingOverrides || {},
       practicalExamProgress:practicalExamProgress || {},
       theme:theme || null
