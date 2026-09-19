@@ -29,7 +29,11 @@ const q={tasks:[{id:'a',points:1},{id:'b',points:1}],answerUnits:[{taskId:'a',ke
 const grade=Practice.gradeQuestion(q,{a:'함수',b:'디버거'},Grading);
 assert.equal(grade.earned,2); assert.equal(grade.total,2); assert.equal(grade.perfect,true);
 
-const list=[{questionId:'1',subject:'a',area:'x',patternType:'R1',difficulty:'D1',comparison2015:false},{questionId:'2',subject:'b',area:'y',patternType:'R9',difficulty:'D3',comparison2015:true}];
-assert.deepEqual(Practice.filterQuestions(list,{subject:'a',area:'all',pattern:'all',difficulty:'all',version:'all'}).map(x=>x.questionId),['1']);
-assert.deepEqual(Practice.filterQuestions(list,{subject:'all',area:'all',pattern:'all',difficulty:'all',version:'comparison'}).map(x=>x.questionId),['2']);
+const list=[
+  {questionId:'1',subjects:['a','b'],areas:['x'],comparison2015:false},
+  {questionId:'2',subjects:['b'],areas:['y','z'],comparison2015:true}
+];
+assert.deepEqual(Practice.filterQuestions(list,{subject:'a',area:'all',version:'all'}).map(x=>x.questionId),['1']);
+assert.deepEqual(Practice.filterQuestions(list,{subject:'b',area:'z',version:'all'}).map(x=>x.questionId),['2']);
+assert.deepEqual(Practice.filterQuestions(list,{subject:'all',area:'all',version:'comparison'}).map(x=>x.questionId),['2']);
 console.log('practice-engine tests: OK');

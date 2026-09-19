@@ -13,11 +13,6 @@
     'middle-info':'중학교 정보','high-info':'고등학교 정보','ai-basic':'인공지능 기초',
     'data-science':'데이터 과학','software-life':'소프트웨어와 생활','info-science':'정보과학'
   };
-  const patternLabels = {
-    R1:'정확 회상', R2:'구조 분류', R3:'대응·매핑', R4:'구별', R5:'사례 적용',
-    R6:'오류 탐지·수정', R7:'평가·피드백', R8:'전공 통합', R9:'15·22 비교'
-  };
-  const difficultyLabels = {D1:'D1 회상',D2:'D2 판별',D3:'D3 적용',D4:'D4 복합',D5:'D5 실전'};
 
   let filtered = [];
   let order = [];
@@ -80,8 +75,6 @@
     return {
       subject: document.getElementById('practiceSubject')?.value || 'all',
       area: document.getElementById('practiceArea')?.value || 'all',
-      pattern: document.getElementById('practicePattern')?.value || 'all',
-      difficulty: document.getElementById('practiceDifficulty')?.value || 'all',
       version: document.getElementById('practiceVersion')?.value || 'all'
     };
   }
@@ -101,8 +94,6 @@
     };
     setIf('practiceSubject', f.subject || 'all');
     populateAreas(f.area || 'all');
-    setIf('practicePattern', f.pattern || 'all');
-    setIf('practiceDifficulty', f.difficulty || 'all');
     setIf('practiceVersion', f.version || 'all');
     const base = Engine.filterQuestions(bank.questions, currentFilters());
     const validIds = new Set(base.map(q => q.questionId));
@@ -116,7 +107,12 @@
     const select = document.getElementById('practiceArea');
     if (!select) return;
     const subject = document.getElementById('practiceSubject')?.value || 'all';
-    const areas = [...new Set(bank.questions.filter(q => subject === 'all' || q.subject === subject).map(q => q.area))]
+    const candidates = bank.questions.filter(q => {
+      const subjects = Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean);
+      return subject === 'all' || subjects.includes(subject);
+    });
+    const areas = [...new Set(candidates.flatMap(q => Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)))]
+      .filter(area => area && area !== '과목 공통')
       .sort((a,b) => a.localeCompare(b,'ko'));
     select.innerHTML = '<option value="all">전체</option>' + areas.map(area => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`).join('');
     if ([...select.options].some(o => o.value === preferred)) select.value = preferred;
@@ -172,11 +168,13 @@
   }
 
   function renderStats() {
-    const total = Number(stats.totalAttempts || 0);
-    const perfect = Number(stats.totalPerfect || 0);
-    const seen = Object.keys(stats.questions || {}).filter(id => Number(stats.questions[id]?.attempts || 0) > 0).length;
+    const validIds = new Set((bank.questions || []).map(q => q.questionId));
+    const current = Object.entries(stats.questions || {}).filter(([id]) => validIds.has(id));
+    const total = current.reduce((sum,[,item]) => sum + Number(item?.attempts || 0), 0);
+    const perfect = current.reduce((sum,[,item]) => sum + Number(item?.perfect || 0), 0);
+    const seen = current.filter(([,item]) => Number(item?.attempts || 0) > 0).length;
     const text = document.getElementById('practiceStats');
-    if (text) text.textContent = `풀이 ${total}회 · 만점 ${perfect}회 · 경험 ${seen}/100문항`;
+    if (text) text.textContent = `풀이 ${total}회 · 만점 ${perfect}회 · 경험 ${seen}/${bank.questions.length}문항`;
   }
 
   function renderEmpty() {
@@ -201,12 +199,13 @@
     if (prev) prev.disabled = index <= 0;
     if (next) next.disabled = index >= order.length - 1;
 
+    const subjectBadges = (Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean)).map(s => subjectLabels[s] || s);
+    const areaBadges = (Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)).filter(a => a && a !== '과목 공통');
+    const score = Number(q.points || (q.tasks || []).reduce((sum, task) => sum + Number(task.points || 0), 0));
     const badges = [
-      subjectLabels[q.subject] || q.subject,
-      q.area,
-      patternLabels[q.patternType] || q.patternType,
-      difficultyLabels[q.difficulty] || q.difficulty,
-      q.examStyle,
+      ...subjectBadges,
+      ...areaBadges,
+      `${score}점`,
       q.comparison2015 ? '15·22 비교' : '2022 개정'
     ];
     const qStat = stats.questions?.[q.questionId] || {};
@@ -214,7 +213,7 @@
     const linkedHint = weakLinkEnabled && priority > 0.05 ? `<span class="practice-linked-priority" title="원문 학습·복습 기록을 반영한 출제 우선도">취약 연동 ${priority.toFixed(1)}</span>` : '';
     const prior = qStat.attempts ? `<span class="practice-prior">이전 최고 ${Number(qStat.bestScore || 0)}/${Number(qStat.maxScore || 0)}점 · ${qStat.attempts}회</span>` : '';
     const taskHtml = q.tasks.map((task, i) => {
-      const multiline = q.examStyle === '4점형' || String(task.prompt || '').length > 38;
+      const multiline = Number(task.points || 0) >= 2 || String(task.prompt || '').length > 38;
       const input = multiline
         ? `<textarea class="practice-answer" data-task-id="${escapeHtml(task.id)}" rows="3" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}"></textarea>`
         : `<input class="practice-answer" data-task-id="${escapeHtml(task.id)}" type="text" autocomplete="off" spellcheck="false" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}">`;
@@ -223,9 +222,9 @@
         ${input}<div class="practice-task-feedback" data-feedback-for="${escapeHtml(task.id)}"></div>
       </div>`;
     }).join('');
-    const validation = q.validationStatus === 'v0.6-production-ready-2022'
-      ? '<span class="practice-validation ready">2022 검수완료</span>'
-      : '<span class="practice-validation legacy">비교근거 제한</span>';
+    const validation = q.comparison2015
+      ? '<span class="practice-validation legacy">비교근거 제한</span>'
+      : '<span class="practice-validation ready">실전형 검수완료</span>';
     const area = document.getElementById('practiceQuestionArea');
     area.innerHTML = `<article class="practice-card" data-question-id="${escapeHtml(q.questionId)}">
       <div class="practice-meta-row"><div class="practice-badges">${badges.map(b => `<span>${escapeHtml(b)}</span>`).join('')}</div>${validation}</div>
@@ -378,28 +377,36 @@
         for (const section of sections) for (const line of section.lines || []) {
           if (!wanted.includes(line.id)) continue;
           const mappedGroup = groupKey === 'achievement' ? 'achievement' : groupKey === 'teaching-evaluation' ? 'teaching-evaluation' : groupKey === 'character-goal' ? 'character-goal' : 'content-system';
-          return {id:line.id, subject:q.subject, area:areaName, group:mappedGroup};
+          return {id:line.id, subject:subjectKey, area:areaName, group:mappedGroup};
         }
       }
       return null;
     };
-    const preferred = scanArea(q.subject, q.area);
-    if (preferred) return preferred;
-    for (const areaName of Object.keys(data?.[q.subject] || {})) {
-      const found = scanArea(q.subject, areaName);
-      if (found) return found;
+    const subjects = Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean);
+    const areas = Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean);
+    for (const subjectKey of subjects) {
+      for (const preferredArea of areas) {
+        const preferred = scanArea(subjectKey, preferredArea);
+        if (preferred) return preferred;
+      }
+      for (const areaName of Object.keys(data?.[subjectKey] || {})) {
+        const found = scanArea(subjectKey, areaName);
+        if (found) return found;
+      }
     }
-    return {id:wanted[0] || '', subject:q.subject, area:q.area, group:'achievement'};
+    return {id:wanted[0] || '', subject:subjects[0] || '', area:areas[0] || '', group:'achievement'};
   }
 
   function openSource() {
     const q = currentQuestion();
     if (!q) return;
     if (root.CurriLoopSourceModal?.openIds) {
+      const subjects = (Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean));
+      const areas = (Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean)).filter(a => a && a !== '과목 공통');
       root.CurriLoopSourceModal.openIds(q.sourceIds || [], {
         title:'근거 원문 보기',
-        meta:[q.questionId, subjectLabels[q.subject] || q.subject, q.area].filter(Boolean).join(' · '),
-        subject:q.subject,
+        meta:[q.questionId, ...subjects.map(s => subjectLabels[s] || s), ...areas].filter(Boolean).join(' · '),
+        subject:subjects[0] || '',
         note:q.comparison2015
           ? '강조된 문장은 2022 개정 쪽 직접 근거입니다. 2015 개정 비교 근거는 기출 인용 범위로 제한되어 문제의 비교근거 제한 배지와 함께 관리합니다.'
           : '강조된 문장이 이 문제의 2022 개정 직접 근거입니다. 팝업을 닫으면 작성 중인 답안과 문제 위치가 그대로 유지됩니다.'

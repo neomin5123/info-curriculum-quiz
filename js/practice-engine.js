@@ -167,10 +167,10 @@
   function filterQuestions(questions, filters) {
     const f = filters || {};
     return (questions || []).filter(q => {
-      if (f.subject && f.subject !== 'all' && q.subject !== f.subject) return false;
-      if (f.area && f.area !== 'all' && q.area !== f.area) return false;
-      if (f.pattern && f.pattern !== 'all' && q.patternType !== f.pattern) return false;
-      if (f.difficulty && f.difficulty !== 'all' && q.difficulty !== f.difficulty) return false;
+      const subjects = Array.isArray(q.subjects) ? q.subjects : [q.subject].filter(Boolean);
+      const areas = Array.isArray(q.areas) ? q.areas : [q.area].filter(Boolean);
+      if (f.subject && f.subject !== 'all' && !subjects.includes(f.subject)) return false;
+      if (f.area && f.area !== 'all' && !areas.includes(f.area)) return false;
       if (f.version === '2022' && q.comparison2015) return false;
       if (f.version === 'comparison' && !q.comparison2015) return false;
       return true;

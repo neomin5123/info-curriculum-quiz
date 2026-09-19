@@ -326,8 +326,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.11.1";
-  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.11.1 Pilot100 실사용 QA + 채점 안전장치 + 연습문제 초안 복원";
+  const APP_VERSION = "6.12.0";
+  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.12.0 연습문제 실전형 재설계 + 다중 과목·영역 태그";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
