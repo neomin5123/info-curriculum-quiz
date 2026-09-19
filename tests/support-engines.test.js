@@ -32,7 +32,7 @@ assert.equal(H.sortRecords(sortable,'weak','wrong',sortMastery)[0].key, 'a', 'wr
 assert.equal(H.sortRecords(sortable,'weak','recent',sortMastery)[0].key, 'b', 'recent sort should use lastSeenAt');
 assert.equal(H.sortRecords(sortable,'weak','oldest',sortMastery)[0].key, 'a', 'oldest sort should use lastSeenAt ascending');
 
-const payload = S.buildBackupPayload({appVersion:'6.9.1',history:[],mastery:{},practicalStats:{},gradingOverrides:{x:{mode:'wrong'}},practicalExamProgress:{completedSinceChallenge:2}});
+const payload = S.buildBackupPayload({appVersion:'6.9.2',history:[],mastery:{},practicalStats:{},gradingOverrides:{x:{mode:'wrong'}},practicalExamProgress:{completedSinceChallenge:2}});
 assert.equal(payload.schemaVersion, 8);
 assert.equal(S.schemaSupported(7), true, 'v1~v7 backups must remain importable');
 assert.equal(S.schemaSupported(8), true);

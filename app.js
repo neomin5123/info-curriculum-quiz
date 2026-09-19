@@ -44,16 +44,43 @@
   const curriculumData = window.CURRILOOP_CURRICULUM_DATA;
   const generalBank = window.CURRILOOP_GENERAL_BANK;
   const COMMON_AREA = window.CURRILOOP_COMMON_AREA || "과목 공통";
-  const SUBJECT_GROUPS = ["character-goal", "core-achievement", "achievement-guidance", "teaching-evaluation"];
+  const SUBJECT_GROUPS = ["character-goal", "content-system", "achievement", "core-achievement", "achievement-guidance", "teaching-evaluation"];
+  const SOURCE_GROUPS = ["character-goal", "content-system", "achievement", "teaching-evaluation"];
   const groupLabels = {
     "character-goal":"성격·목표",
+    "content-system":"내용체계",
+    "achievement":"성취기준",
     "core-achievement":"내용체계 + 성취기준",
     "achievement-guidance":"해설 + 적용 시 고려사항",
-    // 아래 두 라벨은 학습 기록의 실제 원문 출처 키를 위해 유지한다.
-    "content-system":"내용 체계",
-    "achievement":"성취기준",
     "teaching-evaluation":"교수학습·평가"
   };
+
+  // 중학교 정보의 공식 내용체계·성취기준을 암기용 흐름으로 재구성한 보조 지도.
+  // 원문 보기에서만 표시하며, 공식 교수·학습 순서를 의미하지 않는다.
+  const CORE_FLOW_MAP = Object.freeze({
+    "middle-info": Object.freeze({
+      "컴퓨팅 시스템": Object.freeze({
+        summary: ["원리", "운영체제", "피지컬", "가치", "구상"],
+        detail: "컴퓨팅 시스템 구성요소·동작 원리 → 운영 체제 기능 분석 → 피지컬 컴퓨팅 개념·생활 속 사례 → 필요성·가치 판단 → 목적에 맞는 구성요소 선택 → 시스템 구상"
+      }),
+      "데이터": Object.freeze({
+        summary: ["표현", "수집·관리", "구조화", "해석", "해결"],
+        detail: "디지털 데이터 표현·가치 탐색 → 문제 해결용 데이터 수집·구분·관리 → 표·다이어그램 등으로 구조화 → 데이터 간 관계 파악·의미 해석 → 데이터 수집·분석으로 융합 문제 해결"
+      }),
+      "알고리즘과 프로그래밍": Object.freeze({
+        summary: ["상태", "추상화", "알고리즘", "설계", "프로그래밍", "협력"],
+        detail: "문제 상태 정의·구조화 → 추상화·핵심요소 추출 → 알고리즘 표현·비교·분석 → 전략 선택·알고리즘 설계 → 저장 구조·논리 연산·중첩 제어·함수·디버깅으로 프로그램 작성 → 실생활 문제 해결 → 협력하여 소프트웨어 개발"
+      }),
+      "인공지능": Object.freeze({
+        summary: ["개념", "데이터", "시스템", "문제해결", "윤리"],
+        detail: "인공지능 개념·특성·소프트웨어 구별 → 학습 데이터의 중요성·수집·분류 → 데이터를 활용한 인공지능 시스템 구성·적용 → 해결 가능한 문제 발견·적합한 시스템 적용 → 데이터 수집·활용의 윤리 문제 해결 방안 구상"
+      }),
+      "디지털 문화": Object.freeze({
+        summary: ["사회", "직업", "규칙·윤리", "권리 보호"],
+        detail: "디지털 사회의 특성 탐구 → 사회 변화에 따른 직업 변화 탐구 → 편리하고 안전한 생활을 위한 규칙을 민주적으로 논의·실천 → 개인 정보·권리·저작권 보호 방법 탐구"
+      })
+    })
+  });
 
   // -------------------------
   // 4) 상태
@@ -80,8 +107,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.9.1";
-  const MANUAL_GAP_REVIEW = "2026-09-16 / v6.9.1 출제 묶음 재구성 및 복습 기록 정렬: 내용체계+성취기준, 해설+고려사항, 취약/오답/최근/오래된 순";
+  const APP_VERSION = "6.9.2";
+  const MANUAL_GAP_REVIEW = "2026-09-19 / v6.9.2 출제 선택 세분화 및 핵심 흐름: 내용체계/성취기준/통합 선택, 중학교 정보 원문 보기 핵심 흐름";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -173,8 +200,7 @@
 
   function getCurrentSubject() { return document.getElementById("subjectSelect").value; }
   function normalizeSelectedGroup(group) {
-    if (group === "content-system" || group === "achievement") return "core-achievement";
-    return group;
+    return group || "all";
   }
   function getCurrentGroup() { return normalizeSelectedGroup(document.getElementById("groupSelect").value); }
   function isAchievementStandardSection(section) {
@@ -186,10 +212,10 @@
   }
   function selectionGroupForHistoryItem(item) {
     const sourceGroup = item?.sourceGroup || item?.groupKey || "";
-    if (sourceGroup === "content-system") return "core-achievement";
+    if (sourceGroup === "content-system") return "content-system";
     if (sourceGroup === "achievement") {
       const meta = findLineIdentity(item?.subjectKey, item?.area, item?.lineId, item?.context || "");
-      return isAchievementGuidanceSection({title:meta?.sectionTitle}) ? "achievement-guidance" : "core-achievement";
+      return isAchievementGuidanceSection({title:meta?.sectionTitle}) ? "achievement-guidance" : "achievement";
     }
     return SUBJECT_GROUPS.includes(sourceGroup) ? sourceGroup : "all";
   }
@@ -202,7 +228,7 @@
     const regular = subjectAreas[subject] || [];
     group = normalizeSelectedGroup(group);
     if (group === "character-goal" || group === "teaching-evaluation") return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA] : [];
-    if (group === "core-achievement" || group === "achievement-guidance") return [...regular];
+    if (["content-system", "achievement", "core-achievement", "achievement-guidance"].includes(group)) return [...regular];
     return curriculumData[subject]?.[COMMON_AREA] ? [COMMON_AREA, ...regular] : [...regular];
   }
 
@@ -468,6 +494,12 @@
         ...tagged(unit["content-system"], "content-system"),
         ...tagged(unit.achievement, "achievement")
       ];
+    }
+    if (group === "content-system") {
+      return tagged(unit["content-system"], "content-system");
+    }
+    if (group === "achievement") {
+      return tagged((unit.achievement || []).filter(isAchievementStandardSection), "achievement");
     }
     if (group === "core-achievement") {
       return [
@@ -1252,6 +1284,56 @@
     return p;
   }
 
+  function renderCoreFlowCard(subject, area) {
+    if (studyMode !== "original" || area === COMMON_AREA) return null;
+    const flow = CORE_FLOW_MAP[subject]?.[area];
+    if (!flow) return null;
+
+    const card = document.createElement("section");
+    card.className = "core-flow-card";
+    card.setAttribute("aria-label", `${area} 핵심 흐름`);
+
+    const top = document.createElement("div");
+    top.className = "core-flow-top";
+    const title = document.createElement("strong");
+    title.className = "core-flow-title";
+    title.textContent = "핵심 흐름";
+    const summary = document.createElement("div");
+    summary.className = "core-flow-summary";
+    flow.summary.forEach((item, index) => {
+      if (index > 0) {
+        const arrow = document.createElement("span");
+        arrow.className = "core-flow-arrow";
+        arrow.textContent = "→";
+        arrow.setAttribute("aria-hidden", "true");
+        summary.appendChild(arrow);
+      }
+      const chip = document.createElement("span");
+      chip.className = "core-flow-chip";
+      chip.textContent = item;
+      summary.appendChild(chip);
+    });
+    top.appendChild(title);
+    top.appendChild(summary);
+    card.appendChild(top);
+
+    const details = document.createElement("details");
+    details.className = "core-flow-details";
+    const detailSummary = document.createElement("summary");
+    detailSummary.textContent = "세부 흐름 보기";
+    const detail = document.createElement("div");
+    detail.className = "core-flow-detail";
+    detail.textContent = flow.detail;
+    const note = document.createElement("div");
+    note.className = "core-flow-note";
+    note.textContent = "암기 편의를 위한 요약 흐름이며 공식 교수·학습 순서를 의미하지 않습니다.";
+    details.appendChild(detailSummary);
+    details.appendChild(detail);
+    details.appendChild(note);
+    card.appendChild(details);
+    return card;
+  }
+
   // -------------------------
   // 7) 학습 화면 렌더링
   // -------------------------
@@ -1319,6 +1401,9 @@
       updateScore();
       return;
     }
+
+    const coreFlowCard = renderCoreFlowCard(subject, area);
+    if (coreFlowCard) studyArea.appendChild(coreFlowCard);
 
     const table = document.createElement("table");
     table.className = "section-table";
@@ -1721,7 +1806,7 @@
     const byText = new Map();
     Object.entries(curriculumData).forEach(([subjectKey, subject]) => {
       Object.entries(subject).forEach(([areaName, area]) => {
-        SUBJECT_GROUPS.forEach(sourceGroup => {
+        SOURCE_GROUPS.forEach(sourceGroup => {
           (area[sourceGroup] || []).forEach(section => (section.lines || []).forEach(line => {
             const meta = {subjectKey, areaName, sourceGroup, sectionTitle:section.title, line};
             byExplicit.set(`${subjectKey}|${areaName}|${line.id}`, meta);

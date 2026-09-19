@@ -49,12 +49,12 @@ for (const subjectData of Object.values(data)) {
 }
 if (!achievementAreas) throw new Error('achievement split QA found no areas');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.9.1','/js/practical-engine.js?v=6.9.1','/js/grading-engine.js?v=6.9.1','/js/review-engine.js?v=6.9.1','/js/history-engine.js?v=6.9.1','/js/storage-engine.js?v=6.9.1','/app.js?v=6.9.1']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=6.9.2','/js/practical-engine.js?v=6.9.2','/js/grading-engine.js?v=6.9.2','/js/review-engine.js?v=6.9.2','/js/history-engine.js?v=6.9.2','/js/storage-engine.js?v=6.9.2','/app.js?v=6.9.2']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
 
 if(!html.includes('class="brand-home-link"')) throw new Error('brand home link missing');
-for (const marker of ['value="core-achievement"','value="achievement-guidance"','id="historySort"','value="recent"','value="oldest"']) if(!html.includes(marker)) throw new Error(`missing UI marker ${marker}`);
+for (const marker of ['value="content-system"','value="achievement"','value="core-achievement"','value="achievement-guidance"','id="historySort"','value="recent"','value="oldest"']) if(!html.includes(marker)) throw new Error(`missing UI marker ${marker}`);
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
-for (const marker of ['curriloop-daily-review-plan-v1','remainingDailyReviewItems','ensureDailyReviewPlan','curriloop-grading-overrides-v1','curriloop-practical-exam-progress-v1','practicalSetSummary','nextReviewInfo','core-achievement','achievement-guidance','historySort']) if(!app.includes(marker)) throw new Error(`missing review plan marker ${marker}`);
+for (const marker of ['curriloop-daily-review-plan-v1','remainingDailyReviewItems','ensureDailyReviewPlan','curriloop-grading-overrides-v1','curriloop-practical-exam-progress-v1','practicalSetSummary','nextReviewInfo','core-achievement','achievement-guidance','historySort','CORE_FLOW_MAP','핵심 흐름','SOURCE_GROUPS']) if(!app.includes(marker)) throw new Error(`missing review plan marker ${marker}`);
 const sw=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.9.1','/js/practical-engine.js?v=6.9.1','/js/grading-engine.js?v=6.9.1','/js/review-engine.js?v=6.9.1','/js/history-engine.js?v=6.9.1','/js/storage-engine.js?v=6.9.1']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=6.9.2','/js/practical-engine.js?v=6.9.2','/js/grading-engine.js?v=6.9.2','/js/review-engine.js?v=6.9.2','/js/history-engine.js?v=6.9.2','/js/storage-engine.js?v=6.9.2']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
 console.log(JSON.stringify({subjects,areas,lines,gaps,invalid,dupIds},null,2));
