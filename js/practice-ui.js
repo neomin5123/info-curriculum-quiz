@@ -8,10 +8,20 @@
 
   const UI_KEY = 'curriloop-practice-ui-v1';
   const STATS_KEY = 'curriloop-practice-stats-v1';
+  const EXAM_SET_SIZE = 5;
   const subjectLabels = {
     'all':'전체',
     'middle-info':'중학교 정보','high-info':'고등학교 정보','ai-basic':'인공지능 기초',
     'data-science':'데이터 과학','software-life':'소프트웨어와 생활','info-science':'정보과학'
+  };
+  // 교육과정 원문에 제시된 과목별 영역 순서. 연습문제 필터도 이 순서를 그대로 따른다.
+  const areaOrderBySubject = {
+    'middle-info':['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'],
+    'high-info':['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'],
+    'ai-basic':['인공지능의 이해','인공지능과 학습','인공지능의 사회적 영향','인공지능 프로젝트'],
+    'data-science':['데이터 과학의 이해','데이터 준비와 분석','데이터 모델링과 평가','데이터 과학 프로젝트'],
+    'software-life':['세상을 변화시키는 소프트웨어','창작을 지원하는 소프트웨어','현상을 분석하는 소프트웨어','모의 실험하는 소프트웨어','가치를 창출하는 소프트웨어'],
+    'info-science':['프로그래밍','데이터 구조','알고리즘','정보과학 프로젝트']
   };
 
   let filtered = [];
@@ -24,6 +34,12 @@
   let lastGradeSignature = '';
   let drafts = {};
   let draftSaveTimer = 0;
+  let setMode = false;
+  let setIds = [];
+  let setAnswers = {};
+  let setSubmitted = false;
+  let setGrades = {};
+  let setNotice = '';
   let stats = loadJson(STATS_KEY, {version:1,questions:{},totalAttempts:0,totalPerfect:0});
 
   function loadJson(key, fallback) {
@@ -57,10 +73,15 @@
   function captureCurrentDraft() {
     const q = currentQuestion();
     if (!q) return;
-    storeDraft(q, collectVisibleAnswers(q));
+    const answers = collectVisibleAnswers(q);
+    if (setMode) {
+      setAnswers[q.questionId] = Object.fromEntries(q.tasks.map(task => [task.id, String(answers[task.id] || '')]));
+      return;
+    }
+    storeDraft(q, answers);
   }
   function restoreDraft(q) {
-    const saved = drafts?.[q?.questionId];
+    const saved = setMode ? setAnswers?.[q?.questionId] : drafts?.[q?.questionId];
     if (!saved || !q) return;
     q.tasks.forEach(task => {
       const input = document.querySelector(`.practice-answer[data-task-id="${CSS.escape(task.id)}"]`);
@@ -69,7 +90,7 @@
   }
   function scheduleDraftPersist() {
     clearTimeout(draftSaveTimer);
-    draftSaveTimer = setTimeout(() => { captureCurrentDraft(); persistUi(); }, 160);
+    draftSaveTimer = setTimeout(() => { captureCurrentDraft(); persistUi(); syncSetControls(); }, 160);
   }
   function currentFilters() {
     return {
@@ -79,7 +100,7 @@
     };
   }
   function persistUi(extra = {}) {
-    const state = {version:3,filters:currentFilters(),order,index,weakLinkEnabled,drafts,...extra,savedAt:new Date().toISOString()};
+    const state = {version:4,filters:currentFilters(),order,index,weakLinkEnabled,drafts,setMode,setIds,setAnswers,setSubmitted,...extra,savedAt:new Date().toISOString()};
     saveJson(UI_KEY, state);
   }
   function restoreUi() {
@@ -87,6 +108,11 @@
     if (!saved || typeof saved !== 'object') return false;
     weakLinkEnabled = saved.weakLinkEnabled !== false;
     drafts = saved.drafts && typeof saved.drafts === 'object' && !Array.isArray(saved.drafts) ? saved.drafts : {};
+    setMode = saved.setMode === true;
+    setIds = Array.isArray(saved.setIds) ? saved.setIds.map(String) : [];
+    setAnswers = saved.setAnswers && typeof saved.setAnswers === 'object' && !Array.isArray(saved.setAnswers) ? saved.setAnswers : {};
+    setSubmitted = saved.setSubmitted === true;
+    setGrades = {};
     const f = saved.filters || {};
     const setIf = (id, value) => {
       const el = document.getElementById(id);
@@ -95,6 +121,22 @@
     setIf('practiceSubject', f.subject || 'all');
     populateAreas(f.area || 'all');
     setIf('practiceVersion', f.version || 'all');
+    const allIds = new Set((bank.questions || []).map(q => q.questionId));
+    if (setMode) {
+      setIds = setIds.filter(id => allIds.has(id));
+      if (setIds.length) {
+        order = [...setIds];
+        index = Math.min(Math.max(0, Number(saved.index || 0)), Math.max(0, order.length - 1));
+        if (setSubmitted) {
+          for (const id of setIds) {
+            const q = questionById(id);
+            if (q) setGrades[id] = Engine.gradeQuestion(q, setAnswers[id] || {}, GradingEngine);
+          }
+        }
+        return true;
+      }
+      setMode = false; setSubmitted = false; setAnswers = {}; setGrades = {};
+    }
     const base = Engine.filterQuestions(bank.questions, currentFilters());
     const validIds = new Set(base.map(q => q.questionId));
     order = Array.isArray(saved.order) ? saved.order.filter(id => validIds.has(id)) : [];
@@ -111,11 +153,23 @@
     const select = document.getElementById('practiceArea');
     if (!select) return;
     const subject = document.getElementById('practiceSubject')?.value || 'all';
-    const areas = [...new Set(bank.questions.flatMap(q => scopesFor(q)
+    const present = new Set(bank.questions.flatMap(q => scopesFor(q)
       .filter(scope => subject === 'all' || scope.subject === subject)
-      .map(scope => scope.area)))]
-      .filter(area => area && area !== '과목 공통')
-      .sort((a,b) => a.localeCompare(b,'ko'));
+      .map(scope => scope.area))
+      .filter(area => area && area !== '과목 공통'));
+    let areas;
+    if (subject !== 'all' && areaOrderBySubject[subject]) {
+      areas = areaOrderBySubject[subject].filter(area => present.has(area));
+      // 향후 교육과정 데이터에 새 영역이 추가되어도 누락되지 않도록 미등록 영역만 뒤에 붙인다.
+      [...present].forEach(area => { if (!areas.includes(area)) areas.push(area); });
+    } else {
+      // 전체 과목에서는 과목의 공식 순서를 차례로 합치고, 동명 영역은 한 번만 보여 준다.
+      areas = [];
+      Object.keys(areaOrderBySubject).forEach(key => areaOrderBySubject[key].forEach(area => {
+        if (present.has(area) && !areas.includes(area)) areas.push(area);
+      }));
+      [...present].forEach(area => { if (!areas.includes(area)) areas.push(area); });
+    }
     select.innerHTML = '<option value="all">전체</option>' + areas.map(area => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`).join('');
     if ([...select.options].some(o => o.value === preferred)) select.value = preferred;
   }
@@ -141,15 +195,58 @@
     button.textContent = weakLinkEnabled ? '취약 연동 켬' : '취약 연동 끔';
     button.setAttribute('aria-pressed', weakLinkEnabled ? 'true' : 'false');
     button.classList.toggle('active', weakLinkEnabled);
+    button.disabled = setMode;
+  }
+
+  function setAnsweredQuestionCount() {
+    return setIds.filter(id => {
+      const q = questionById(id);
+      const answers = setAnswers[id] || {};
+      return q && q.tasks.some(task => String(answers[task.id] || '').trim());
+    }).length;
+  }
+
+  function setScore() {
+    const grades = Object.values(setGrades || {});
+    return grades.reduce((acc, grade) => ({earned:acc.earned + Number(grade?.earned || 0), total:acc.total + Number(grade?.total || 0)}), {earned:0,total:0});
+  }
+
+  function syncSetControls() {
+    const setButton = document.getElementById('practiceSetButton');
+    const submitButton = document.getElementById('practiceSetSubmitButton');
+    const status = document.getElementById('practiceSetStatus');
+    const shuffleButton = document.getElementById('practiceShuffleButton');
+    const subject = document.getElementById('practiceSubject');
+    const area = document.getElementById('practiceArea');
+    const version = document.getElementById('practiceVersion');
+    if (setButton) {
+      setButton.textContent = setMode ? '세트 종료' : `실전 세트 ${EXAM_SET_SIZE}문항`;
+      setButton.classList.toggle('active', setMode);
+      setButton.setAttribute('aria-pressed', setMode ? 'true' : 'false');
+    }
+    if (submitButton) {
+      submitButton.classList.toggle('hidden', !setMode);
+      submitButton.disabled = !setMode || setSubmitted;
+      submitButton.textContent = setSubmitted ? '제출 완료' : '세트 제출';
+    }
+    if (shuffleButton) shuffleButton.disabled = setMode;
+    [subject,area,version].forEach(el => { if (el) el.disabled = setMode; });
+    if (status) {
+      if (!setMode) status.textContent = setNotice;
+      else if (!setSubmitted) status.textContent = `답안 작성 ${setAnsweredQuestionCount()}/${setIds.length}문항 · 마지막에 일괄 채점`;
+      else { const score = setScore(); status.textContent = `세트 점수 ${score.earned}/${score.total}점`; }
+    }
   }
 
   function toggleWeakLink() {
+    if (setMode) return;
     weakLinkEnabled = !weakLinkEnabled;
     syncWeakLinkButton();
     rebuild({keepCurrent:true, shuffle:weakLinkEnabled});
   }
 
   function rebuild({keepCurrent=false, shuffle=false} = {}) {
+    if (setMode) return;
     captureCurrentDraft();
     const previousId = keepCurrent ? currentQuestion()?.questionId : '';
     filtered = Engine.filterQuestions(bank.questions, currentFilters());
@@ -176,7 +273,7 @@
     const perfect = current.reduce((sum,[,item]) => sum + Number(item?.perfect || 0), 0);
     const seen = current.filter(([,item]) => Number(item?.attempts || 0) > 0).length;
     const text = document.getElementById('practiceStats');
-    if (text) text.textContent = `풀이 ${total}회 · 만점 ${perfect}회 · 경험 ${seen}/${bank.questions.length}문항`;
+    if (text) text.textContent = `풀이 ${total}회 · 경험 ${seen}/${bank.questions.length}문항`;
   }
 
   function renderEmpty() {
@@ -190,7 +287,8 @@
   function render() {
     renderStats();
     const count = document.getElementById('practiceFilteredCount');
-    if (count) count.textContent = `${order.length}문항`;
+    if (count) count.textContent = setMode ? `실전 세트 · ${order.length}문항` : `${order.length}문항`;
+    syncSetControls();
     if (!order.length) { renderEmpty(); return; }
     const q = currentQuestion();
     if (!q) { renderEmpty(); return; }
@@ -210,13 +308,14 @@
     ];
     const qStat = stats.questions?.[q.questionId] || {};
     const priority = currentQuestionPriority(q);
-    const linkedHint = weakLinkEnabled && priority > 0.05 ? `<span class="practice-linked-priority" title="원문 학습·복습 기록을 반영한 출제 우선도">취약 연동 ${priority.toFixed(1)}</span>` : '';
+    const linkedHint = weakLinkEnabled && priority > 0.05 ? `<span class="practice-linked-priority" title="원문·과목/영역·공식 원문 층위의 누적 취약도를 반영한 출제 우선도">취약 연동 ${priority.toFixed(1)}</span>` : '';
     const prior = qStat.attempts ? `<span class="practice-prior">이전 최고 ${Number(qStat.bestScore || 0)}/${Number(qStat.maxScore || 0)}점 · ${qStat.attempts}회</span>` : '';
     const taskHtml = q.tasks.map((task, i) => {
       const multiline = Number(task.points || 0) >= 2 || String(task.prompt || '').length > 38;
+      const readonly = setMode && setSubmitted ? ' readonly' : '';
       const input = multiline
-        ? `<textarea class="practice-answer" data-task-id="${escapeHtml(task.id)}" rows="3" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}"></textarea>`
-        : `<input class="practice-answer" data-task-id="${escapeHtml(task.id)}" type="text" autocomplete="off" spellcheck="false" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}">`;
+        ? `<textarea class="practice-answer" data-task-id="${escapeHtml(task.id)}" rows="3" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}"${readonly}></textarea>`
+        : `<input class="practice-answer" data-task-id="${escapeHtml(task.id)}" type="text" autocomplete="off" spellcheck="false" placeholder="답안을 입력하세요." aria-label="${escapeHtml(task.prompt)}"${readonly}>`;
       return `<div class="practice-task">
         <div class="practice-task-head"><span class="practice-task-num">${String.fromCharCode(97+i)}.</span><strong>${escapeHtml(task.prompt)}</strong><span>${Number(task.points || 0)}점</span></div>
         ${input}<div class="practice-task-feedback" data-feedback-for="${escapeHtml(task.id)}"></div>
@@ -225,34 +324,43 @@
     const validation = q.comparison2015
       ? '<span class="practice-validation legacy">비교근거 제한</span>'
       : '<span class="practice-validation ready">실전형 검수완료</span>';
+    const actionHtml = setMode
+      ? (setSubmitted
+        ? `<span class="practice-set-note">세트 제출 답안입니다.</span><button class="btn" type="button" onclick="openPracticeSource()">근거 원문 보기</button>`
+        : `<span class="practice-set-note">실전 세트에서는 정답과 근거를 제출 전까지 공개하지 않습니다.</span>`)
+      : `<button class="btn primary" type="button" onclick="gradePracticeQuestion()">채점</button>
+        <button class="btn soft" type="button" onclick="markPracticeUnknown()">모름</button>
+        <button class="btn" type="button" onclick="openPracticeSource()">근거 원문 보기</button>`;
     const area = document.getElementById('practiceQuestionArea');
     area.innerHTML = `<article class="practice-card" data-question-id="${escapeHtml(q.questionId)}">
       <div class="practice-meta-row"><div class="practice-badges">${badges.map(b => `<span>${escapeHtml(b)}</span>`).join('')}</div>${validation}</div>
       <div class="practice-id-row"><span>${escapeHtml(q.questionId)}</span>${prior}${linkedHint}</div>
       <h2 class="practice-stem">${escapeHtml(q.stem)}</h2>
       <div class="practice-tasks">${taskHtml}</div>
-      <div class="practice-actions">
-        <button class="btn primary" type="button" onclick="gradePracticeQuestion()">채점</button>
-        <button class="btn soft" type="button" onclick="markPracticeUnknown()">모름</button>
-        <button class="btn" type="button" onclick="openPracticeSource()">근거 원문 보기</button>
-      </div>
+      <div class="practice-actions">${actionHtml}</div>
       <section id="practiceExplanation" class="practice-explanation hidden" aria-live="polite"></section>
     </article>`;
     restoreDraft(q);
     bindAnswerKeys();
     graded = false; lastGrade = null; lastGradeSignature = '';
+    if (setMode && setSubmitted && setGrades[q.questionId]) renderStoredSetGrade(q, setGrades[q.questionId]);
     syncWeakLinkButton();
+    syncSetControls();
     persistUi();
   }
 
   function bindAnswerKeys() {
     document.querySelectorAll('.practice-answer').forEach(input => {
       input.addEventListener('keydown', event => {
+        if (setMode) {
+          if (!setSubmitted && (event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); submitSet(); }
+          return;
+        }
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); grade(); }
         else if (input.tagName === 'INPUT' && event.key === 'Enter') { event.preventDefault(); grade(); }
       });
       input.addEventListener('input', scheduleDraftPersist);
-      input.addEventListener('blur', () => { captureCurrentDraft(); persistUi(); });
+      input.addEventListener('blur', () => { captureCurrentDraft(); persistUi(); syncSetControls(); });
     });
   }
 
@@ -268,6 +376,27 @@
     return `<div class="practice-feedback ${cls}"><strong>${statusLabel(result.status)} · ${result.earned}/${result.points}점</strong>
       <div><b>정답:</b> ${escapeHtml(unit.key || '')}</div>${extra}
       <div class="practice-rationale">${escapeHtml(unit.rationale || '')}</div></div>`;
+  }
+
+  function renderStoredSetGrade(q, result) {
+    if (!q || !result) return;
+    result.results.forEach(item => {
+      const target = document.querySelector(`[data-feedback-for="${CSS.escape(item.task.id)}"]`);
+      if (target) target.innerHTML = feedbackHtml(item);
+      const input = document.querySelector(`.practice-answer[data-task-id="${CSS.escape(item.task.id)}"]`);
+      if (input) {
+        input.classList.remove('answer-correct','answer-near','answer-wrong','answer-unknown');
+        input.classList.add(`answer-${item.status}`);
+      }
+    });
+    const exp = document.getElementById('practiceExplanation');
+    if (exp) {
+      const source = q.sourceIds.map(id => `<code>${escapeHtml(id)}</code>`).join(' ');
+      exp.classList.remove('hidden');
+      exp.innerHTML = `<div class="practice-score-line"><strong>${result.earned} / ${result.total}점</strong><span>${result.perfect ? '전부 정확합니다.' : '정답·근거를 확인하고 다시 인출해 보세요.'}</span></div>
+        <p>${escapeHtml(q.explanation || '')}</p>
+        <div class="practice-source-line"><b>근거:</b> ${source} · ${q.sourceType.map(escapeHtml).join(', ')}</div>`;
+    }
   }
 
   function recordGrade(q, grade) {
@@ -286,6 +415,7 @@
   }
 
   function grade() {
+    if (setMode) return;
     const q = currentQuestion();
     if (!q) return;
     const answers = collectAnswers(q);
@@ -326,6 +456,7 @@
   }
 
   function markUnknown() {
+    if (setMode) return;
     const q = currentQuestion();
     if (!q) return;
     q.tasks.forEach(task => {
@@ -345,7 +476,7 @@
   }
 
   function shuffle() {
-    if (!order.length) return;
+    if (setMode || !order.length) return;
     captureCurrentDraft();
     const current = currentQuestion()?.questionId;
     const questions = order.map(questionById).filter(Boolean);
@@ -358,12 +489,72 @@
   function restart() {
     captureCurrentDraft();
     index = 0;
-    if (weakLinkEnabled) {
+    if (!setMode && weakLinkEnabled) {
       const questions = Engine.filterQuestions(bank.questions, currentFilters());
       order = linkedOrder(questions, false);
     }
     lastGradeSignature = '';
     persistUi(); render();
+  }
+
+  function startSet() {
+    if (setMode) return;
+    captureCurrentDraft();
+    const pool = Engine.filterQuestions(bank.questions, currentFilters());
+    if (pool.length < EXAM_SET_SIZE) {
+      setNotice = `현재 필터에는 ${pool.length}문항만 있어 ${EXAM_SET_SIZE}문항 실전 세트를 만들 수 없습니다.`;
+      syncSetControls();
+      persistUi();
+      return;
+    }
+    setNotice = '';
+    setIds = Engine.buildExamSet ? Engine.buildExamSet(pool, {size:EXAM_SET_SIZE}) : Engine.shuffleIds(pool.map(q => q.questionId)).slice(0,EXAM_SET_SIZE);
+    setAnswers = {};
+    setGrades = {};
+    setSubmitted = false;
+    setMode = true;
+    order = [...setIds];
+    index = 0;
+    graded = false; lastGrade = null; lastGradeSignature = '';
+    persistUi(); render();
+  }
+
+  function endSet() {
+    if (!setMode) return;
+    setNotice = '';
+    captureCurrentDraft();
+    setMode = false;
+    setIds = [];
+    setAnswers = {};
+    setGrades = {};
+    setSubmitted = false;
+    filtered = Engine.filterQuestions(bank.questions, currentFilters());
+    order = linkedOrder(filtered, false);
+    index = 0;
+    persistUi(); render();
+  }
+
+  function toggleSet() {
+    if (setMode) endSet();
+    else startSet();
+  }
+
+  function submitSet() {
+    if (!setMode || setSubmitted || !setIds.length) return;
+    captureCurrentDraft();
+    const grades = {};
+    for (const id of setIds) {
+      const q = questionById(id);
+      if (!q) continue;
+      const gradeResult = Engine.gradeQuestion(q, setAnswers[id] || {}, GradingEngine);
+      grades[id] = gradeResult;
+      recordGrade(q, gradeResult);
+      bridge()?.recordGrade?.(q, gradeResult);
+    }
+    setGrades = grades;
+    setSubmitted = true;
+    persistUi();
+    render();
   }
 
   function locateSource(q) {
@@ -398,6 +589,7 @@
   }
 
   function openSource() {
+    if (setMode && !setSubmitted) return;
     const q = currentQuestion();
     if (!q) return;
     if (root.CurriLoopSourceModal?.openIds) {
@@ -414,6 +606,8 @@
   }
 
   function onFilterChange(sourceChanged=false) {
+    if (setMode) return;
+    setNotice = '';
     const preferred = sourceChanged ? 'all' : (document.getElementById('practiceArea')?.value || 'all');
     if (sourceChanged) populateAreas(preferred);
     rebuild({keepCurrent:false});
@@ -435,7 +629,7 @@
 
   function onShow() { init(); render(); }
 
-  root.CurriLoopPracticeUI = {init,onShow,render,rebuild,grade,markUnknown,move,shuffle,restart,openSource,onFilterChange,toggleWeakLink};
+  root.CurriLoopPracticeUI = {init,onShow,render,rebuild,grade,markUnknown,move,shuffle,restart,openSource,onFilterChange,toggleWeakLink,startSet,endSet,toggleSet,submitSet};
   root.onPracticeFilterChange = onFilterChange;
   root.gradePracticeQuestion = grade;
   root.markPracticeUnknown = markUnknown;
@@ -445,4 +639,6 @@
   root.restartPracticeQuestions = restart;
   root.openPracticeSource = openSource;
   root.togglePracticeWeakLink = toggleWeakLink;
+  root.togglePracticeExamSet = toggleSet;
+  root.submitPracticeExamSet = submitSet;
 })(typeof globalThis !== 'undefined' ? globalThis : window);

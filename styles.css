@@ -1754,10 +1754,12 @@
 .practice-head-status { min-width:150px; text-align:right; display:flex; flex-direction:column; gap:4px; }
 .practice-head-status strong { font-size:1.15rem; }
 .practice-head-status span { color:var(--muted); font-size:.88rem; }
-.practice-controls { grid-template-columns:repeat(5,minmax(130px,1fr)); }
+.practice-controls { grid-template-columns:repeat(3,minmax(160px,1fr)); }
 .practice-controls select { min-height:44px; }
 .practice-toolbar { align-items:center; }
 .practice-key-hint { margin-left:auto; color:var(--muted); font-size:.84rem; }
+.practice-set-status { color:var(--muted); font-size:.84rem; font-weight:750; }
+.practice-set-note { color:var(--muted); font-size:.9rem; line-height:1.5; align-self:center; }
 .practice-progress { min-width:72px; text-align:right; }
 .practice-question-area { scroll-margin-top:138px; }
 .practice-card { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:22px; box-shadow:var(--shadow); }

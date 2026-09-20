@@ -37,3 +37,35 @@ assert.deepEqual(Practice.filterQuestions(list,{subject:'a',area:'all',version:'
 assert.deepEqual(Practice.filterQuestions(list,{subject:'b',area:'z',version:'all'}).map(x=>x.questionId),['2']);
 assert.deepEqual(Practice.filterQuestions(list,{subject:'all',area:'all',version:'comparison'}).map(x=>x.questionId),['2']);
 console.log('practice-engine tests: OK');
+
+function seededRandom(seed) {
+  let x = seed >>> 0;
+  return () => { x = (1664525 * x + 1013904223) >>> 0; return x / 4294967296; };
+}
+const examPool = [
+  {questionId:'s1',curriculumScopes:[{subject:'a',area:'x'}],sourceIds:['A'],comparison2015:false},
+  {questionId:'s2',curriculumScopes:[{subject:'b',area:'y'}],sourceIds:['B'],comparison2015:false},
+  {questionId:'s3',curriculumScopes:[{subject:'c',area:'z'}],sourceIds:['C'],comparison2015:false},
+  {questionId:'s4',curriculumScopes:[{subject:'d',area:'w'}],sourceIds:['D'],comparison2015:false},
+  {questionId:'s5',curriculumScopes:[{subject:'e',area:'v'}],sourceIds:['E'],comparison2015:false},
+  {questionId:'s6',curriculumScopes:[{subject:'a',area:'x'}],sourceIds:['A'],comparison2015:true},
+  {questionId:'s7',curriculumScopes:[{subject:'b',area:'y'}],sourceIds:['B'],comparison2015:true}
+];
+const examSet = Practice.buildExamSet(examPool,{size:5,randomFn:seededRandom(7)});
+assert.equal(examSet.length,5);
+assert.equal(new Set(examSet).size,5);
+const selectedSet = examSet.map(id => examPool.find(q => q.questionId === id));
+assert.equal(new Set(selectedSet.flatMap(q => q.sourceIds)).size,5,'set generator should avoid repeated sourceIds when alternatives exist');
+assert.ok(new Set(selectedSet.flatMap(q => q.curriculumScopes.map(s => s.subject))).size >= 4,'set generator should diversify subjects');
+assert.ok(selectedSet.filter(q => q.comparison2015).length <= 1,'set generator should avoid clustering comparison items');
+
+const adaptiveQuestion={questionId:'a1',curriculumScopes:[{subject:'middle-info',area:'데이터'}],sourceType:['성취기준','평가 방법','과정·기능']};
+let adaptive=Practice.updateAdaptiveState({},adaptiveQuestion,'wrong',1000);
+assert.ok(adaptive.scopes['middle-info::데이터'].deficit>0,'wrong answer should raise scope deficit');
+assert.ok(adaptive.sourceTypes['평가 방법'].deficit>0,'wrong answer should raise official source-layer deficit');
+assert.ok(adaptive.sourceTypes['과정·기능'].deficit>0,'content-system source layer should be tracked');
+assert.equal(adaptive.sourceTypes['성취기준'],undefined,'ubiquitous achievement-standard layer should not dominate adaptive ranking');
+const adaptivePriority=Practice.adaptiveDimensionPriority(adaptive,adaptiveQuestion);
+assert.ok(adaptivePriority>0,'adaptive deficit should raise question priority');
+for(let i=0;i<4;i++) adaptive=Practice.updateAdaptiveState(adaptive,adaptiveQuestion,'correct',1100+i);
+assert.ok(Practice.adaptiveDimensionPriority(adaptive,adaptiveQuestion)<adaptivePriority,'repeated correct answers should reduce adaptive priority');

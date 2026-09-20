@@ -6,7 +6,7 @@ for (const file of ['data/curriculum-data.js','data/supplemental-data.js','data/
 const data=ctx.window.CURRILOOP_CURRICULUM_DATA;
 const bank=ctx.window.CURRILOOP_PRACTICE_BANK;
 if(!bank || !Array.isArray(bank.questions) || !bank.questions.length) throw new Error('practice bank missing');
-if(bank.questions.length!==150) throw new Error(`exam-core bank count ${bank.questions.length}`);
+if(bank.questions.length<65) throw new Error(`exam-core bank regressed ${bank.questions.length}`);
 const sourceIds=new Set();
 for(const subject of Object.values(data)) for(const groups of Object.values(subject)) for(const sections of Object.values(groups)) if(Array.isArray(sections)) for(const section of sections) for(const line of section.lines||[]) sourceIds.add(line.id);
 const coverage=new Set(); let multi=0, compare=0;

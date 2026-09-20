@@ -201,5 +201,137 @@
     return out;
   }
 
-  return {normalize, containsNormalized, isNegatedForbidden, gradeAnyOf, gradeRequiredConcepts, hasContradictionMarker, contradictionMarkerCount, contrastIsSafe, gradeAnswer, gradeQuestion, questionScopes, filterQuestions, shuffleIds};
+
+  function buildExamSet(questions, options) {
+    const opts = options || {};
+    const pool = (questions || []).filter(q => q && q.questionId);
+    const target = Math.max(1, Math.min(Number(opts.size || 5), pool.length));
+    const rng = typeof opts.randomFn === 'function' ? opts.randomFn : Math.random;
+    if (!pool.length) return [];
+
+    const remaining = pool.map((q, index) => ({q, index, noise:rng()}));
+    const selected = [];
+    const usedSources = new Set();
+    const usedPairs = new Set();
+    const subjectCounts = new Map();
+    let comparisonCount = 0;
+    let multiScopeCount = 0;
+
+    const pairKey = scope => `${scope.subject}::${scope.area}`;
+    while (selected.length < target && remaining.length) {
+      let bestAt = 0;
+      let bestScore = -Infinity;
+      for (let i = 0; i < remaining.length; i++) {
+        const item = remaining[i];
+        const q = item.q;
+        const scopes = questionScopes(q);
+        const subjects = [...new Set(scopes.map(scope => scope.subject).filter(Boolean))];
+        const pairs = [...new Set(scopes.map(pairKey))];
+        const sources = [...new Set((q.sourceIds || []).filter(Boolean))];
+        const sourceOverlap = sources.filter(id => usedSources.has(id)).length;
+        const newSources = sources.length - sourceOverlap;
+        const newPairs = pairs.filter(key => !usedPairs.has(key)).length;
+        const newSubjects = subjects.filter(subject => !subjectCounts.has(subject)).length;
+        const subjectLoad = subjects.reduce((sum, subject) => sum + Number(subjectCounts.get(subject) || 0), 0);
+        const pairOverlap = pairs.length - newPairs;
+
+        // 실전 세트는 약점 우선순위보다 범위 다양성과 독립성을 우선한다.
+        // 같은 sourceId가 겹치거나 한 과목에 몰리는 후보를 강하게 감점하되,
+        // 필터가 좁아 대안이 없을 때는 완전히 배제하지 않는다.
+        let score = 0;
+        score += Math.min(newSubjects, 1) * 22 + Math.max(0, newSubjects - 1) * 4;
+        score += Math.min(newPairs, 1) * 10 + Math.max(0, newPairs - 1) * 2;
+        score += Math.min(newSources, 4) * 2;
+        score -= sourceOverlap * 55;
+        score -= pairOverlap * 8;
+        score -= subjectLoad * 5;
+        score -= Math.max(0, scopes.length - 1) * 5;
+        if (scopes.length > 1 && multiScopeCount >= 2) score -= 70;
+        if (q.comparison2015 && comparisonCount >= 1) score -= 80;
+        if (q.comparison2015 && comparisonCount === 0) score += 1;
+        score += item.noise * 3;
+
+        if (score > bestScore) { bestScore = score; bestAt = i; }
+      }
+
+      const [{q}] = remaining.splice(bestAt, 1);
+      selected.push(q.questionId);
+      for (const id of q.sourceIds || []) usedSources.add(id);
+      for (const scope of questionScopes(q)) {
+        usedPairs.add(pairKey(scope));
+        subjectCounts.set(scope.subject, Number(subjectCounts.get(scope.subject) || 0) + 1);
+      }
+      if (q.comparison2015) comparisonCount += 1;
+      if (questionScopes(q).length > 1) multiScopeCount += 1;
+    }
+    return selected;
+  }
+
+
+  function normalizeAdaptiveState(state) {
+    const raw = state && typeof state === 'object' && !Array.isArray(state) ? state : {};
+    const cleanBucket = bucket => {
+      const out = {};
+      if (!bucket || typeof bucket !== 'object' || Array.isArray(bucket)) return out;
+      for (const [key, value] of Object.entries(bucket)) {
+        if (!key || !value || typeof value !== 'object' || Array.isArray(value)) continue;
+        out[key] = {
+          deficit:Math.max(0, Math.min(6, Number(value.deficit || 0))),
+          attempts:Math.max(0, Number(value.attempts || 0)),
+          wrongCount:Math.max(0, Number(value.wrongCount || 0)),
+          unknownCount:Math.max(0, Number(value.unknownCount || 0)),
+          nearCount:Math.max(0, Number(value.nearCount || 0)),
+          correctCount:Math.max(0, Number(value.correctCount || 0)),
+          lastResult:String(value.lastResult || ''),
+          lastAt:Math.max(0, Number(value.lastAt || 0))
+        };
+      }
+      return out;
+    };
+    return {version:1, scopes:cleanBucket(raw.scopes), sourceTypes:cleanBucket(raw.sourceTypes)};
+  }
+
+  function adaptiveDimensionKeys(question) {
+    const scopes = [...new Set(questionScopes(question).map(scope => `${scope.subject}::${scope.area}`))];
+    // '성취기준'은 거의 모든 문제에 걸리므로 전역 우선순위 신호로 쓰지 않는다.
+    // 대신 해설·적용 고려사항·내용체계·교수학습·평가 등 공식 원문 층위를 구분한다.
+    const sourceTypes = [...new Set((question?.sourceType || []).filter(type => type && type !== '성취기준'))];
+    return {scopes, sourceTypes};
+  }
+
+  function updateAdaptiveState(state, question, status, now) {
+    const out = normalizeAdaptiveState(state);
+    const timestamp = Math.max(0, Number(now || Date.now()));
+    const delta = ({wrong:1.0, unknown:0.8, near:0.4, correct:-0.55})[status] || 0;
+    const keys = adaptiveDimensionKeys(question);
+    const bump = (bucket, key, scale) => {
+      const current = bucket[key] || {deficit:0,attempts:0,wrongCount:0,unknownCount:0,nearCount:0,correctCount:0,lastResult:'',lastAt:0};
+      current.deficit = Math.max(0, Math.min(6, Number(current.deficit || 0) + delta * scale));
+      current.attempts = Number(current.attempts || 0) + 1;
+      if (['wrong','unknown','near','correct'].includes(status)) current[`${status}Count`] = Number(current[`${status}Count`] || 0) + 1;
+      current.lastResult = String(status || '');
+      current.lastAt = timestamp;
+      bucket[key] = current;
+    };
+    const scopeScale = 1 / Math.max(1, Math.sqrt(keys.scopes.length));
+    const typeScale = 1 / Math.max(1, Math.sqrt(keys.sourceTypes.length));
+    keys.scopes.forEach(key => bump(out.scopes, key, scopeScale));
+    keys.sourceTypes.forEach(key => bump(out.sourceTypes, key, typeScale));
+    return out;
+  }
+
+  function adaptiveDimensionPriority(state, question) {
+    const clean = normalizeAdaptiveState(state);
+    const keys = adaptiveDimensionKeys(question);
+    const topAverage = values => {
+      const sorted = values.filter(Number.isFinite).sort((a,b) => b-a).slice(0,2);
+      return sorted.reduce((sum, value) => sum + value, 0) / Math.max(1, sorted.length);
+    };
+    const scopeScore = topAverage(keys.scopes.map(key => Number(clean.scopes[key]?.deficit || 0)));
+    const typeScore = topAverage(keys.sourceTypes.map(key => Number(clean.sourceTypes[key]?.deficit || 0)));
+    // sourceId 직접 취약도보다 낮은 보조 신호로 사용한다.
+    return Math.max(0, Math.min(3, scopeScore * 0.55 + typeScore * 0.30));
+  }
+
+  return {normalize, containsNormalized, isNegatedForbidden, gradeAnyOf, gradeRequiredConcepts, hasContradictionMarker, contradictionMarkerCount, contrastIsSafe, gradeAnswer, gradeQuestion, questionScopes, filterQuestions, shuffleIds, buildExamSet, normalizeAdaptiveState, adaptiveDimensionKeys, updateAdaptiveState, adaptiveDimensionPriority};
 });

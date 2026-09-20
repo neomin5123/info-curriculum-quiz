@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..');
 const ctx={window:{}}; vm.createContext(ctx);
 for(const file of ['data/curriculum-data.js','data/supplemental-data.js','data/practice-bank.js','js/practice-engine.js']) vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),ctx,{filename:file});
 const data=ctx.window.CURRILOOP_CURRICULUM_DATA, bank=ctx.window.CURRILOOP_PRACTICE_BANK, Engine=ctx.CurriLoopPracticeEngine;
-if(!bank||bank.questions?.length!==150) throw new Error('bank count');
+if(!bank||bank.questions?.length<150) throw new Error('bank count regression');
 const sourceMap=new Map();
 for(const [sub,subject] of Object.entries(data)) for(const [area,groups] of Object.entries(subject)) for(const sections of Object.values(groups)) if(Array.isArray(sections)) for(const section of sections) for(const line of section.lines||[]) sourceMap.set(line.id,{sub,area});
 const pairSet=new Set(); let multi=0;
@@ -42,8 +42,8 @@ if(Engine.filterQuestions([q],{subject:'middle-info',area:'데이터 과학 프�
 if(Engine.filterQuestions([q],{subject:'middle-info',area:'데이터',version:'all'}).length!==1) throw new Error('valid pair filtered out');
 if(Engine.filterQuestions([q],{subject:'data-science',area:'데이터 과학 프로젝트',version:'all'}).length!==1) throw new Error('second valid pair filtered out');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-if(!html.includes('v6.14.0')) throw new Error('version missing');
+if(!html.includes('v6.17.0')) throw new Error('version missing');
 if(!html.includes('<option value="all">전체</option><option value="2022">2022 개정</option><option value="comparison">15·22 비교</option>')) throw new Error('version filter labels');
 const ui=fs.readFileSync(path.join(root,'js/practice-ui.js'),'utf8');
 if(!ui.includes('scope.subject === subject')||!ui.includes('과목 · 영역')) { /* literal may be template */ }
-console.log(`v6.14 scope/filter QA: OK (questions=150, pairs=${pairSet.size}, multiScope=${multi})`);
+console.log(`v6.14+ scope/filter QA: OK (questions=${bank.questions.length}, pairs=${pairSet.size}, multiScope=${multi})`);

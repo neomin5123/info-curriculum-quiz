@@ -326,8 +326,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.14.0";
-  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.14.0 과목↔영역 scope 정규화 + 150문항 커버리지·편향 QA";
+  const APP_VERSION = "6.18.0";
+  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.18.0 기출형 코어 41문항 + 실전 세트 + 적응형 취약도";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -337,7 +337,8 @@
   const ReviewEngine = window.CurriLoopReviewEngine;
   const HistoryEngine = window.CurriLoopHistoryEngine;
   const StorageEngine = window.CurriLoopStorageEngine;
-  if (!LearningEngine || !PracticalEngine || !GradingEngine || !ReviewEngine || !HistoryEngine || !StorageEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
+  const PracticeEngine = window.CurriLoopPracticeEngine;
+  if (!LearningEngine || !PracticalEngine || !GradingEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
@@ -2871,7 +2872,9 @@
     );
     scores.sort((a,b) => b-a);
     const top = scores.slice(0, Math.min(2, scores.length));
-    return top.reduce((sum, value) => sum + value, 0) / Math.max(1, top.length);
+    const sourcePriority = top.reduce((sum, value) => sum + value, 0) / Math.max(1, top.length);
+    const adaptivePriority = PracticeEngine.adaptiveDimensionPriority(linked.__adaptive, question);
+    return Math.max(0, sourcePriority + adaptivePriority);
   }
 
   function weightedPracticeQuestionIds(questions, randomFn = Math.random) {
@@ -2968,16 +2971,23 @@
       notePracticeSourceLink(sourceId, status, scale, now);
       if (status !== 'correct' && scheduleSourceReviewFromPractice(sourceId, status, question.questionId, now)) linked += 1;
     });
+    const state = loadPracticeSourceLinkState();
+    state.__adaptive = PracticeEngine.updateAdaptiveState(state.__adaptive, question, status, now);
+    savePracticeSourceLinkState(state);
     if (linked && typeof renderHistory === 'function') renderHistory({passive:true});
     return {status, linked, sourceCount:sourceIds.length};
   }
 
   function practiceSourceLinkSummary() {
     const state = loadPracticeSourceLinkState();
-    const entries = Object.entries(state).filter(([, item]) => Number(item?.deficit || 0) > 0);
+    const entries = Object.entries(state).filter(([key, item]) => key !== '__adaptive' && Number(item?.deficit || 0) > 0);
+    const adaptive = PracticeEngine.normalizeAdaptiveState(state.__adaptive);
+    const weakScopes = Object.values(adaptive.scopes).filter(item => Number(item?.deficit || 0) > 0).length;
+    const weakSourceTypes = Object.values(adaptive.sourceTypes).filter(item => Number(item?.deficit || 0) > 0).length;
     return {
       weakSources:entries.length,
-      totalDeficit:entries.reduce((sum, [, item]) => sum + Number(item?.deficit || 0), 0)
+      totalDeficit:entries.reduce((sum, [, item]) => sum + Number(item?.deficit || 0), 0),
+      weakScopes, weakSourceTypes
     };
   }
 
@@ -3393,10 +3403,31 @@
     return true;
   }
 
+  function validateBackupPracticeAdaptive(value) {
+    if (value === undefined || value === null) return true;
+    if (!isPlainRecord(value)) return false;
+    for (const bucketName of ['scopes','sourceTypes']) {
+      const bucket = value[bucketName] === undefined ? {} : value[bucketName];
+      if (!isPlainRecord(bucket) || Object.keys(bucket).length > 5000) return false;
+      for (const [key, item] of Object.entries(bucket)) {
+        if (typeof key !== 'string' || key.length > 500 || !isPlainRecord(item)) return false;
+        for (const field of ['deficit','attempts','wrongCount','unknownCount','nearCount','correctCount','lastAt']) {
+          if (item[field] !== undefined) {
+            const number = Number(item[field]);
+            if (!Number.isFinite(number) || number < 0 || number > 1e15) return false;
+          }
+        }
+        if (!isSafeBackupString(item.lastResult, 30)) return false;
+      }
+    }
+    return value.version === undefined || Number(value.version) === 1;
+  }
+
   function validateBackupPracticeSourceLink(value) {
     if (value === undefined || value === null) return true;
     if (!isPlainRecord(value) || Object.keys(value).length > 5000) return false;
     return Object.entries(value).every(([key, item]) => {
+      if (key === '__adaptive') return validateBackupPracticeAdaptive(item);
       if (typeof key !== 'string' || key.length > 500 || !isPlainRecord(item)) return false;
       for (const field of ['deficit','attempts','wrongCount','unknownCount','nearCount','correctCount','lastAt']) {
         if (item[field] !== undefined) {
