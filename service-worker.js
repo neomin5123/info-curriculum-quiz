@@ -1,32 +1,36 @@
-const CACHE_NAME = "curriloop-v7-3-0-20260920";
+const CACHE_NAME = "curriloop-v7-5-1-middle-info-free-recall-20260921";
 const CACHE_PREFIX = "curriloop-";
 
 // 설치가 성공했다면 최소한 앱 본체와 설치 아이콘은 반드시 캐시에 존재하게 한다.
 const CORE_PRECACHE = [
   "/index.html",
-  "/styles.css?v=7.3.0",
-  "/data/curriculum-data.js?v=7.3.0",
-  "/data/supplemental-data.js?v=7.3.0",
-  "/js/learning-engine.js?v=7.3.0",
-  "/js/practical-engine.js?v=7.3.0",
-  "/js/grading-engine.js?v=7.3.0",
-  "/js/review-engine.js?v=7.3.0",
-  "/js/history-engine.js?v=7.3.0",
-  "/js/storage-engine.js?v=7.3.0",
-  "/data/practice-bank.js?v=7.3.0",
-  "/js/practice-engine.js?v=7.3.0",
-  "/js/practice-ui.js?v=7.3.0",
-  "/app.js?v=7.3.0",
+  "/assets/css/styles.css?v=7.5.1",
+  "/data/curriculum/2022/curriculum.js?v=7.5.1",
+  "/data/curriculum/2015/transition-reference.js?v=7.5.1",
+  "/data/curriculum/mappings/2015-2022.js?v=7.5.1",
+  "/data/learning-aids/general-bank.js?v=7.5.1",
+  "/data/learning-aids/core-flow.js?v=7.5.1",
+  "/js/engines/learning-engine.js?v=7.5.1",
+  "/js/engines/practical-engine.js?v=7.5.1",
+  "/js/engines/grading-engine.js?v=7.5.1",
+  "/js/engines/recall-engine.js?v=7.5.1",
+  "/js/engines/review-engine.js?v=7.5.1",
+  "/js/engines/history-engine.js?v=7.5.1",
+  "/js/engines/storage-engine.js?v=7.5.1",
+  "/data/questions/production.js?v=7.5.1",
+  "/js/practice/practice-engine.js?v=7.5.1",
+  "/js/practice/practice-ui.js?v=7.5.1",
+  "/js/app.js?v=7.5.1",
   "/manifest.webmanifest",
-  "/icons/icon-192.png",
-  "/icons/icon-512.png",
-  "/icons/apple-touch-icon.png"
+  "/assets/icons/icon-192.png",
+  "/assets/icons/icon-512.png",
+  "/assets/icons/apple-touch-icon.png"
 ];
 
 // 공유 카드·검색엔진 파일과 루트 별칭은 오프라인 핵심 동작을 막지 않는다.
 const OPTIONAL_PRECACHE = [
   "/",
-  "/icons/og-card.png",
+  "/assets/icons/og-card.png",
   "/robots.txt",
   "/sitemap.xml"
 ];
