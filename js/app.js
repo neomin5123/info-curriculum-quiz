@@ -88,8 +88,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.7.0";
-  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.7.0 시험 직전 학습 동결판 · 복습 75% 게이트 + D-day 역산 + 통회상 당일 재인출 + 홈 단일 시작";
+  const APP_VERSION = "7.7.1";
+  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.7.1 최종 Red Team 수정 · 하루 새 세션 1개 + 건너뛰기 이월";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -4060,14 +4060,18 @@
 
   function skipReviewItem() {
     if (!reviewActive) return;
-    // 건너뛴 항목은 학습 결과를 기록하지 않고 세션 맨 뒤로 한 번 보낸다.
     const item = currentReviewItem();
-    if (item && !item._skippedOnce) reviewQueue.push({...item, _skippedOnce:true});
+    const decision = ReviewEngine.reviewSkipAction(item || {});
+    // 첫 건너뛰기는 세션 맨 뒤로 한 번만 보낸다. 두 번째 건너뛰기는
+    // '성공'으로 기록하지 않고 오늘 미시도로 종료한 뒤, 일일 복습이면 다음 날 다시 예약한다.
+    if (decision.action === "requeue" && decision.nextItem) reviewQueue.push(decision.nextItem);
+    else if (decision.action === "defer-next-day" && item?.conceptKey) deferDailyReviewUnresolvedToNextDay(item.conceptKey, Date.now());
     reviewPosition += 1;
     if (reviewPosition >= reviewQueue.length) {
       reviewActive = false;
       activeReviewConceptKey = null;
       renderReviewSession(true);
+      renderHistory();
       return;
     }
     renderReviewSession();
@@ -6080,6 +6084,7 @@
     const coverage = document.getElementById("todayCoverage");
     const reason = document.getElementById("todayReason");
     const start = document.getElementById("todayStartButton");
+    if (start) start.disabled = false;
 
     if (reviewCount) reviewCount.textContent = `${scheduledDueCount}개`;
     if (reviewNote) reviewNote.textContent = scheduledDueCount
@@ -6131,6 +6136,7 @@
     else if (decision.mode === "consolidation") paceLabel = "누적 정리";
     else if (decision.mode === "new-reduced") paceLabel = "새 진도 감속";
     else if (decision.mode === "deadline-boost") paceLabel = "시험 역산 보정";
+    else if (decision.mode === "daily-new-complete") paceLabel = "오늘 새 진도 완료";
     else if (state.targetLines <= 12) paceLabel = "천천히";
     else if (state.targetLines >= 21) paceLabel = "빠르게";
     if (pace) pace.textContent = paceLabel;
@@ -6156,11 +6162,16 @@
       reason.textContent = `${plannerSessionLabel(session)} · 학습량 ${Number(session.workloadScore || session.lineCount || 0).toFixed(1).replace(/\.0$/, "")}점 · ${session.lineCount || 0}문장${hasActiveSession ? ` · ${plannerResumeNote(session)}` : ""}${dueCount > 0 ? ` · 잔여 복습 ${dueCount}개는 학습 뒤 마무리` : ""}`;
       if (start) start.textContent = hasActiveSession ? "이어 공부하기" : "새 범위 시작";
     } else {
-      title.textContent = progress.percent >= 100 ? "중등 정보 자동 첫 회독을 완료했습니다." : "오늘은 새 진도보다 누적 정리에 집중합니다.";
+      const dailyNewDone = decision.mode === "daily-new-complete";
+      title.textContent = progress.percent >= 100
+        ? "중등 정보 자동 첫 회독을 완료했습니다."
+        : (dailyNewDone ? "오늘의 새 학습량을 완료했습니다." : "오늘은 새 진도보다 누적 정리에 집중합니다.");
       reason.textContent = progress.percent >= 100
         ? "중등 정보의 자동 범위 확장은 여기서 멈춥니다. 완료된 내용은 장기 복습에서 계속 다시 꺼내며, 다른 과목은 각론에서 수동 학습할 수 있습니다."
         : decision.reason;
-      if (start) start.textContent = "복습 현황 보기";
+      if (start) start.textContent = dueCount > 0 ? "남은 복습 마무리" : "오늘 학습 완료";
+      if (start && dailyNewDone && dueCount === 0) start.disabled = true;
+      else if (start) start.disabled = false;
     }
   }
 

@@ -73,4 +73,16 @@ assert.equal(payload.gradingOverrides.x.mode, 'wrong');
 assert.equal(payload.practiceSourceLink['SRC-1'].deficit, 2, 'practice-source link state must be backed up');
 assert.equal(payload.practiceQuestionStats.questions['PB-001'].attempts, 1, 'practice question stats must be backed up');
 assert.equal(payload.plannerState.version,1,'planner state must be backed up');
+
+// v7.7.1 Red Team: review skip is finite and deterministic.
+const firstSkip=R.reviewSkipAction({conceptKey:'skip-1',_dailyReview:true});
+assert.equal(firstSkip.action,'requeue','first skip must requeue once');
+assert.equal(firstSkip.nextItem._skippedOnce,true,'first skip marker');
+const secondDailySkip=R.reviewSkipAction(firstSkip.nextItem);
+assert.equal(secondDailySkip.action,'defer-next-day','second daily skip must leave today queue and defer');
+const secondManualSkip=R.reviewSkipAction({_skippedOnce:true,_dailyReview:false});
+assert.equal(secondManualSkip.action,'finish','manual/non-daily second skip should simply end that ad-hoc item');
+// Repeated calls cannot recreate a requeue loop once the marker exists.
+for(let i=0;i<20;i++) assert.notEqual(R.reviewSkipAction({_skippedOnce:true,_dailyReview:true}).action,'requeue','second+ skip must never requeue infinitely');
+
 console.log('support-engine tests: OK');

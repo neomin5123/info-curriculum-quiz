@@ -264,7 +264,7 @@
   function normalizeState(source, now = Date.now()) {
     const state = source && typeof source === 'object' ? {...source} : {};
     return {
-      version:4,
+      version:5,
       firstDayKey:String(state.firstDayKey || localDayKey(now)), // legacy: v7.6.4 이하 백업 호환
       targetLines:Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(state.targetLines || DEFAULT_TARGET_LINES))),
       completedSectionIds:Array.isArray(state.completedSectionIds) ? [...new Set(state.completedSectionIds.map(String))] : [],
@@ -275,6 +275,7 @@
       studyDayKeys:normalizeDayKeys(state.studyDayKeys, 180),
       cycleStudyDayKeys:normalizeDayKeys(state.cycleStudyDayKeys, 6),
       consolidationDayKey:String(state.consolidationDayKey || ''),
+      lastNewSessionStartDayKey:String(state.lastNewSessionStartDayKey || ''),
       updatedAt:Number(state.updatedAt || 0)
     };
   }
@@ -355,8 +356,13 @@
     // 실제 학습일 6일을 채운 뒤의 다음 학습일은, 미완료 세션이 있어도 누적 정리를 먼저 한다.
     if (isConsolidationDay(normalized, now)) return {allowNew:false, mode:'consolidation', effectiveTargetLines:0, reviewBudget:load.budget, reason:'실제 학습일 6일을 채워 오늘은 누적 혼합 점검일입니다.'};
     if (normalized.activeSession?.sectionIds?.length) return {allowNew:true, mode:'continue', effectiveTargetLines:normalized.targetLines, reviewBudget:load.budget, reason:'진행 중인 범위를 먼저 마칩니다.'};
-    if (normalized.recoveryDayKey === localDayKey(now)) return {allowNew:false, mode:'review-recovery', effectiveTargetLines:0, reviewBudget:load.budget, reason:'오늘은 복습 적체를 해소하는 회복일입니다.'};
+    const today = localDayKey(now);
+    if (normalized.recoveryDayKey === today) return {allowNew:false, mode:'review-recovery', effectiveTargetLines:0, reviewBudget:load.budget, reason:'오늘은 복습 적체를 해소하는 회복일입니다.'};
     if (load.mode === 'pause') return {allowNew:false, mode:'review-recovery', effectiveTargetLines:0, reviewBudget:load.budget, reason:`복습 ${load.backlog}개가 쌓여 새 진도를 잠시 멈춥니다.`};
+    // 하루에 새로 시작하는 자동 진도 세션은 최대 1개다.
+    // 전날 시작한 미완료 세션을 오늘 마치는 것은 오늘의 새 세션 시작으로 세지 않는다.
+    // 다만 심한 복습 적체는 이 제한보다 먼저 review-recovery로 표시한다.
+    if (normalized.lastNewSessionStartDayKey === today) return {allowNew:false, mode:'daily-new-complete', effectiveTargetLines:0, reviewBudget:load.budget, reason:'오늘 시작한 새 범위를 이미 학습했습니다. 남은 복습만 마치고 오늘 학습을 종료합니다.'};
     if (load.mode === 'heavy-reduce' || load.mode === 'light-reduce') return {allowNew:true, mode:'new-reduced', effectiveTargetLines:load.effectiveTargetLines, reviewBudget:load.budget, reason:load.reason};
     const deadlineFloor = Math.max(0, Math.min(MAX_TARGET_LINES, Number(targetFloor || 0)));
     if (deadlineFloor > normalized.targetLines) return {allowNew:true, mode:'deadline-boost', effectiveTargetLines:deadlineFloor, reviewBudget:load.budget, reason:`시험 역산상 첫 회독 권장 마감에 맞추기 위해 오늘 학습량을 ${deadlineFloor}점으로 보정합니다.`};
@@ -424,7 +430,11 @@
   function startSession(state, session, now = Date.now()) {
     const normalized = normalizeState(state, now);
     if (!session) return normalized;
-    normalized.activeSession = {...session, startedDayKey:session.startedDayKey || localDayKey(now), startedAt:Number(session.startedAt || now), studyProgress:normalizeStudyProgress(session.studyProgress)};
+    const alreadyActive = Boolean(normalized.activeSession?.sectionIds?.length);
+    const today = localDayKey(now);
+    normalized.activeSession = {...session, startedDayKey:session.startedDayKey || today, startedAt:Number(session.startedAt || now), studyProgress:normalizeStudyProgress(session.studyProgress)};
+    // activeSession을 이어가는 호출은 새 세션으로 세지 않는다. 실제로 새 세션을 시작할 때만 기록한다.
+    if (!alreadyActive) normalized.lastNewSessionStartDayKey = today;
     normalized.updatedAt = now;
     return normalized;
   }

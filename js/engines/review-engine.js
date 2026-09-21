@@ -116,6 +116,14 @@
     return picked;
   }
 
+
+  function reviewSkipAction(item = {}) {
+    const input = item && typeof item === 'object' ? item : {};
+    if (!input._skippedOnce) return {action:'requeue', nextItem:{...input, _skippedOnce:true}};
+    if (input._dailyReview) return {action:'defer-next-day', nextItem:null};
+    return {action:'finish', nextItem:null};
+  }
+
   function summarizePracticalStates(states = []) {
     const summary = {correct:0, near:0, wrong:0, unknown:0};
     (states || []).forEach(state => {
@@ -125,5 +133,5 @@
     return summary;
   }
 
-  return { localDayKey, nextDueBucket, relativeDayLabel, selectLineReviewRecords, selectCumulativeReviewRecords, summarizePracticalStates };
+  return { localDayKey, nextDueBucket, relativeDayLabel, selectLineReviewRecords, selectCumulativeReviewRecords, reviewSkipAction, summarizePracticalStates };
 });

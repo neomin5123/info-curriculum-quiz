@@ -1,4 +1,4 @@
-# CurriLoop v7.7.0 — Study Freeze QA
+# CurriLoop v7.7.1 — Study Freeze QA
 
 ## Release state
 
@@ -16,7 +16,7 @@
 - exact-recall official lines: 59
 - middle-school Informatics achievement standards: 25
 
-## v7.7.0 release boundary
+## v7.7.1 release boundary
 
 `오늘` 플래너의 **자동 범위 확장은 중학교 정보에만 적용**한다. 고등 정보·선택 과목의 각론 내부 학습 동작은 기존 방식으로 유지하되, 새 암기 체계가 적용되기 전까지 자동 플래너가 해당 과목의 `핵심 → 정확화` 빈칸 루틴을 시작하지 않는다. 중등 정보 완료 후에는 자동 새 진도를 종료하고 장기 복습·누적 혼합만 계속한다.
 
@@ -152,6 +152,9 @@ node tests/data/static-qa.js
 node tests/data/middle-info-recall-qa.js
 node tests/release/current-release-qa.js
 node tests/simulation/planner-pace-simulation.js
+node tests/simulation/guided-scope-simulation.js
+node tests/simulation/final-study-freeze-simulation.js
+node tests/simulation/red-team-freeze-simulation.js
 ```
 
 추가 검증:
@@ -166,8 +169,16 @@ node tests/simulation/planner-pace-simulation.js
 현재 실행 컨테이너의 Chromium headless가 DBus 초기화 이후 종료되지 않아 실제 브라우저 DOM smoke는 완료하지 못했다. HTTP 정적 제공, JS syntax, 엔진/데이터/release QA, HTML/PWA 자산 경로 검사는 모두 통과했다.
 
 
-## v7.7.0 final study-freeze checks
+## v7.7.1 final study-freeze checks
 - 오늘 복습 예산 75% 처리 후 소량 잔여 복습과 새 학습 병행.
 - 기본 시험일 2026-11-28 / 중등 정보 첫 회독 권장 마감 D-35 역산.
 - 통회상 장기복습 첫 실패 당일 재인출, 두 번째 실패 다음 날 이월.
 - 홈의 카드별 시작 버튼 제거, `오늘 학습 시작` 단일 주 행동.
+
+
+## v7.7.1 Red Team invariants
+- 같은 날짜에 **새로 시작하는 자동 진도 세션은 최대 1개**다. D-day 보정, 복습 0개, 높은 정확도로도 우회할 수 없다.
+- 전날 시작한 active session을 오늘 마치는 것은 오늘 새 세션 시작 횟수에 포함하지 않으며, 그 뒤 오늘 새 세션 1개만 허용한다.
+- active session 이어하기는 일일 새 세션 제한으로 차단되지 않는다.
+- 일일 복습 `건너뛰기`는 최초 1회만 큐 뒤로 이동한다. 두 번째 건너뛰기는 성공 판정 없이 다음 날로 이월되고 오늘 계획에서는 닫힌다.
+- `red-team-freeze-simulation.js`는 수천 개의 날짜/적체/D-day 조합과 반복 skip 공격을 실행하며 위 불변식을 위반하면 즉시 실패한다.

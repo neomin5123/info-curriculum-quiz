@@ -138,4 +138,45 @@ if(deadlineDecision.mode!=='deadline-boost' || deadlineDecision.effectiveTargetL
 const blockedByReview=P.paceDecision({state:deadlineBase,dueCount:50,now:new Date(2026,9,20,12).getTime(),targetFloor:22});
 if(blockedByReview.mode==='deadline-boost') throw new Error('review burden must outrank deadline boost');
 
+
+// v7.7.1 Red Team: 하루에 '새로 시작하는' 자동 진도 세션은 정확히 1개만 허용한다.
+const capDay1=new Date(2026,8,21,9).getTime();
+const capDay2=new Date(2026,8,22,9).getTime();
+let capState=P.normalizeState({targetLines:18,completedSectionIds:[],cycleStudyDayKeys:[],studyDayKeys:[]},capDay1);
+const capFirst=P.createNextSession(guided,capState,0,capDay1,{targetFloor:22});
+if(!capFirst) throw new Error('daily cap: first new session must open');
+capState=P.startSession(capState,capFirst,capDay1);
+if(capState.lastNewSessionStartDayKey!==P.localDayKey(capDay1)) throw new Error('daily cap: new-session day marker missing');
+capState=stamp(capState,[.95,.9,.92,.88],'recall','cap-first');
+capState=P.completeActiveSession(capState,capDay1+3*60*60*1000).state;
+const capDecisionSame=P.paceDecision({state:capState,dueCount:0,now:capDay1+4*60*60*1000,targetFloor:22});
+if(capDecisionSame.allowNew || capDecisionSame.mode!=='daily-new-complete') throw new Error(`daily cap bypass via deadline boost: ${capDecisionSame.mode}`);
+if(P.createNextSession(guided,capState,0,capDay1+4*60*60*1000,{targetFloor:22})!==null) throw new Error('daily cap: second same-day new session opened');
+// 다음 날에는 새 세션이 정상적으로 다시 열린다.
+const capNext=P.createNextSession(guided,capState,0,capDay2,{targetFloor:22});
+if(!capNext) throw new Error('daily cap: next-day session must reopen');
+
+// 전날 시작한 미완료 세션을 오늘 끝낸 것은 오늘의 새 세션 한도를 소모하지 않는다.
+const prevDay=new Date(2026,8,23,9).getTime();
+const todayAfterCarry=new Date(2026,8,24,9).getTime();
+let carry=P.normalizeState({targetLines:18,completedSectionIds:[]},prevDay);
+const carrySession=P.createNextSession(guided,carry,0,prevDay);
+carry=P.startSession(carry,carrySession,prevDay);
+carry=stamp(carry,[.9,.9,.9],'recall','carry-prev');
+carry=P.completeActiveSession(carry,todayAfterCarry).state;
+if(carry.lastNewSessionStartDayKey!==P.localDayKey(prevDay)) throw new Error('carry completion must preserve original new-session day');
+const todayFresh=P.createNextSession(guided,carry,0,todayAfterCarry);
+if(!todayFresh) throw new Error('carry completion: one fresh session today must be allowed');
+carry=P.startSession(carry,todayFresh,todayAfterCarry);
+carry=stamp(carry,[.9,.9,.9],'recall','carry-today');
+carry=P.completeActiveSession(carry,todayAfterCarry+3*60*60*1000).state;
+if(P.createNextSession(guided,carry,0,todayAfterCarry+4*60*60*1000)!==null) throw new Error('carry completion: second fresh same-day session must be blocked');
+
+// 진행 중인 세션은 같은 날 새 세션 마커가 있어도 언제나 이어갈 수 있어야 한다.
+let continuation=P.normalizeState({targetLines:18,lastNewSessionStartDayKey:P.localDayKey(capDay1)},capDay1);
+const contSession={...capFirst,id:'cont-session',startedDayKey:P.localDayKey(capDay1),startedAt:capDay1};
+continuation.activeSession=contSession;
+const contDecision=P.paceDecision({state:continuation,dueCount:999,now:capDay1+60*60*1000,targetFloor:22});
+if(!contDecision.allowNew || contDecision.mode!=='continue') throw new Error('daily cap must never block an active-session continuation');
+
 console.log(`planner-engine tests: OK (sections=${sections.length})`);
