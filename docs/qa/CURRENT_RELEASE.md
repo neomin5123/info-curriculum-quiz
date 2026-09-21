@@ -1,4 +1,4 @@
-# CurriLoop v7.5.2 — Middle Info Recall + UI Hierarchy QA
+# CurriLoop v7.5.3 — Middle Info Recall + Structure Refinement QA
 
 ## Release state
 
@@ -16,7 +16,7 @@
 - exact-recall official lines: 59
 - middle-school Informatics achievement standards: 25
 
-## v7.5.2 pilot boundary
+## v7.5.3 pilot boundary
 
 새 학습 체계는 **중학교 정보 과목에만** 적용한다. 다른 과목은 v7.4의 기존 학습 동작을 유지한다.
 
@@ -36,6 +36,16 @@
 - 과정·기능: 항목 개수와 슬롯을 숨긴 단일 입력창에서 목록 전체 자유회상
 - 성취기준: 성취기준 코드만 보고 문장 전체 회상
 
+
+## Structure-practice checks
+
+- 구조 연습은 `내용체계 범주 구별`과 `성취기준 해설 ↔ 성취기준 연결` 두 유형만 사용한다.
+- 자명한 `원문 → 영역/출처 위치` 문제와 `위치 → 원문` 중복 훈련은 제거한다.
+- 범주 구별 선택지는 `지식·이해 / 과정·기능 / 가치·태도`로 고정한다.
+- 연결 문제의 성취기준 코드는 문제 본문에서 숨기고 채점 후에만 공개한다.
+- 영역별 세트는 최대 8문항이며 세트 내 문항 ID 중복을 허용하지 않는다.
+- 연결 가능한 성취기준 해설이 존재하는 5개 중등 정보 각론 영역은 매 세트에 연결 문항을 최소 1개 포함한다.
+- 구조 연습은 숙달 판정용 통회상과 별도이며 production 기출형 문제은행을 증가시키지 않는다.
 
 ## UI hierarchy checks
 
@@ -91,6 +101,7 @@ Release 전 다음을 모두 실행한다.
 node tests/engines/learning-engine.test.js
 node tests/engines/grading-engine.test.js
 node tests/engines/recall-engine.test.js
+node tests/engines/structure-engine.test.js
 node tests/engines/support-engines.test.js
 node tests/practice/practice-engine.test.js
 node tests/data/static-qa.js

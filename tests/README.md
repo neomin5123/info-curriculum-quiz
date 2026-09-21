@@ -9,6 +9,7 @@
 node tests/engines/learning-engine.test.js
 node tests/engines/grading-engine.test.js
 node tests/engines/recall-engine.test.js
+node tests/engines/structure-engine.test.js
 node tests/engines/support-engines.test.js
 node tests/practice/practice-engine.test.js
 node tests/data/static-qa.js

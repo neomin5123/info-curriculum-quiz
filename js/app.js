@@ -88,8 +88,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.5.2";
-  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.5.2 중등 정보 학습 패널 가독성 개선 + v7.5.1 자유 통회상·숙달 상태 유지";
+  const APP_VERSION = "7.5.3";
+  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.5.3 중등 정보 구조 연습 구별·연결 개편 + 자유 통회상·숙달·학습 패널 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -97,11 +97,12 @@
   const PracticalEngine = window.CurriLoopPracticalEngine;
   const GradingEngine = window.CurriLoopGradingEngine;
   const RecallEngine = window.CurriLoopRecallEngine;
+  const StructureEngine = window.StructureEngine;
   const ReviewEngine = window.CurriLoopReviewEngine;
   const HistoryEngine = window.CurriLoopHistoryEngine;
   const StorageEngine = window.CurriLoopStorageEngine;
   const PracticeEngine = window.CurriLoopPracticeEngine;
-  if (!LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
+  if (!LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !StructureEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
@@ -121,7 +122,8 @@
   let practicalSetRecoveryCount = 0;
   let practicalSummaryUnitKey = "";
   let activeStructureQuestion = null;
-  let structureQuestionSerial = 0;
+  let structureSession = null;
+  let structureSessionNonce = 0;
 
   // -------------------------
   // 5) 공통 유틸
@@ -382,7 +384,7 @@
 
   function onSubjectChange() {
     practicalComboCache.clear(); practicalPresentationTokens.clear();
-    activeStructureQuestion = null;
+    resetStructureSession();
     currentAreaIndex = 0;
     currentRandomUnit = null;
     fillAreaSelect();
@@ -438,7 +440,7 @@
 
   function onAreaChange() {
     practicalComboCache.clear(); practicalPresentationTokens.clear();
-    activeStructureQuestion = null;
+    resetStructureSession();
     currentAreaIndex = 0;
 
     if (document.getElementById("areaSelect").value === "random") {
@@ -453,7 +455,7 @@
 
   function onGroupChange() {
     practicalComboCache.clear(); practicalPresentationTokens.clear();
-    activeStructureQuestion = null;
+    resetStructureSession();
     currentAreaIndex = 0;
     currentRandomUnit = null;
     fillAreaSelect();
@@ -1761,87 +1763,202 @@
     return {status, section, repairIndices:[...repairIndices], masteryItem};
   }
 
+  function resetStructureSession() {
+    activeStructureQuestion = null;
+    structureSession = null;
+  }
+
+  function ensureStructureSession(area) {
+    if (!window.StructureEngine) return null;
+    if (!structureSession || structureSession.area !== area || !Array.isArray(structureSession.questions) || !structureSession.questions.length) {
+      const nonce = ++structureSessionNonce;
+      const questions = StructureEngine.buildSession(curriculumData, area, {limit:8, nonce});
+      structureSession = { area, nonce, questions, index:0, answered:0, correct:0, complete:false };
+    }
+    activeStructureQuestion = structureSession.questions[structureSession.index] || null;
+    return structureSession;
+  }
+
+  function renderStructureSessionComplete(studyArea, session) {
+    const card = document.createElement("section");
+    card.className = "structure-practice-card structure-session-complete";
+    const kicker = document.createElement("div");
+    kicker.className = "structure-kicker";
+    kicker.textContent = "구조 연습 · 세트 완료";
+    const title = document.createElement("div");
+    title.className = "structure-complete-title";
+    title.textContent = `${session.correct} / ${session.questions.length} 정답`;
+    const note = document.createElement("p");
+    note.className = "structure-complete-note";
+    note.textContent = "구조 연습은 많이 푸는 것보다 헷갈리는 범주와 성취기준–해설 연결을 구별하는 데 목적이 있습니다.";
+    const actions = document.createElement("div");
+    actions.className = "structure-actions";
+    const restart = document.createElement("button");
+    restart.type = "button";
+    restart.className = "btn primary";
+    restart.textContent = "새 8문항 세트";
+    restart.addEventListener("click", () => {
+      resetStructureSession();
+      renderStudy();
+    });
+    actions.appendChild(restart);
+    card.appendChild(kicker);
+    card.appendChild(title);
+    card.appendChild(note);
+    card.appendChild(actions);
+    studyArea.appendChild(card);
+  }
+
+  function makeStructureChoice(choice, q) {
+    const value = typeof choice === "string" ? choice : choice.value;
+    const text = typeof choice === "string" ? choice : choice.text;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = q.kind === "discriminate" ? "structure-choice structure-choice-chip" : "structure-choice structure-choice-card";
+    button.dataset.value = value;
+    button.setAttribute("role", "radio");
+    button.setAttribute("aria-checked", q.selected === value ? "true" : "false");
+    if (q.selected === value) button.classList.add("selected");
+    button.textContent = text;
+    button.addEventListener("click", () => {
+      if (q.graded) return;
+      q.selected = value;
+      document.querySelectorAll(".structure-choice").forEach(item => {
+        const selected = item.dataset.value === value;
+        item.classList.toggle("selected", selected);
+        item.setAttribute("aria-checked", selected ? "true" : "false");
+      });
+    });
+    return button;
+  }
+
   function renderStructurePractice(unit, studyArea) {
     studyArea.innerHTML = "";
-    const subject = curriculumData[unit.subject] || {};
-    const selectedArea = unit.area;
-    const groups = subject[selectedArea] || {};
-    const candidates = [];
-    (groups["content-system"] || []).forEach(section => {
-      (section.lines || []).forEach(line => candidates.push({kind:"position", area:selectedArea, sourceGroup:"content-system", sectionTitle:section.title, line}));
-      if (RecallEngine.holisticKind(section.title)) candidates.push({kind:"reverse", area:selectedArea, sourceGroup:"content-system", sectionTitle:section.title, section});
-    });
-    (groups.achievement || []).forEach(section => {
-      (section.lines || []).forEach(line => candidates.push({kind:"position", area:selectedArea, sourceGroup:"achievement", sectionTitle:section.title, line}));
-      if (section.title === "성취기준") candidates.push({kind:"reverse", area:selectedArea, sourceGroup:"achievement", sectionTitle:section.title, section});
-    });
-    if (!candidates.length) {
-      studyArea.innerHTML = '<div class="empty">이 영역에는 구조 연습 항목이 없습니다.</div>';
+    const session = ensureStructureSession(unit.area);
+    if (!session || !session.questions.length) {
+      studyArea.innerHTML = '<div class="empty">이 영역에는 구별·연결 구조 연습 항목이 없습니다.</div>';
       return;
     }
-    if (!activeStructureQuestion || activeStructureQuestion.area !== selectedArea) {
-      const index = Math.floor(Math.random() * candidates.length);
-      activeStructureQuestion = {...candidates[index], serial:++structureQuestionSerial};
+    if (session.complete || session.index >= session.questions.length) {
+      renderStructureSessionComplete(studyArea, session);
+      return;
     }
+
     const q = activeStructureQuestion;
     const card = document.createElement("section");
     card.className = "structure-practice-card";
+
+    const top = document.createElement("div");
+    top.className = "structure-card-top";
     const kicker = document.createElement("div");
     kicker.className = "structure-kicker";
-    kicker.textContent = q.kind === "reverse" ? "구조 연습 · 위치 → 원문" : "구조 연습 · 원문 → 위치";
+    kicker.textContent = q.kind === "connect" ? "구조 연습 · 성취기준 ↔ 해설 연결" : "구조 연습 · 내용체계 범주 구별";
+    const progress = document.createElement("div");
+    progress.className = "structure-progress";
+    progress.textContent = `${session.index + 1} / ${session.questions.length}`;
+    top.appendChild(kicker);
+    top.appendChild(progress);
+
+    const instruction = document.createElement("div");
+    instruction.className = "structure-instruction";
+    instruction.textContent = q.kind === "connect"
+      ? "다음 성취기준 해설과 직접 연결되는 성취기준을 고르세요."
+      : "다음 내용 요소가 어느 범주에 속하는지 고르세요.";
+
     const prompt = document.createElement("div");
     prompt.className = "structure-prompt";
-    if (q.kind === "reverse") {
-      prompt.textContent = `중학교 정보 · ${q.area} · ${q.sectionTitle}의 공식 항목을 모두 회상하세요.`;
-    } else {
-      prompt.textContent = q.line.text;
-    }
-    card.appendChild(kicker); card.appendChild(prompt);
+    prompt.textContent = q.prompt;
 
-    if (q.kind === "reverse") {
-      const tagged = {...q.section, _sourceGroup:q.sourceGroup, lines:q.section.lines.map(line => ({...line,_sourceGroup:q.sourceGroup,_sectionTitle:q.sectionTitle}))};
-      const block = createHolisticRecallBlock({subject:"middle-info", area:q.area}, tagged, {scope:`structure-${q.serial}`, persistDraft:false, showGradeButton:false});
-      if (block) { block.classList.add("structure-reverse-block"); card.appendChild(block); }
-    } else {
-      const row = document.createElement("div");
-      row.className = "structure-answer-grid";
-      const label = document.createElement("label"); label.textContent = q.sourceGroup === "content-system" ? "범주" : "출처 위치";
-      const select = document.createElement("select"); select.id = "structureSectionAnswer";
-      const choices = q.sourceGroup === "content-system"
-        ? ["핵심 아이디어","지식·이해","과정·기능","가치·태도"]
-        : ["성취기준","성취기준 해설","성취기준 적용 시 고려 사항"];
-      const placeholder = document.createElement("option"); placeholder.value = ""; placeholder.textContent = "선택"; select.appendChild(placeholder);
-      choices.forEach(choice => { const option=document.createElement("option"); option.value=choice; option.textContent=choice; select.appendChild(option); });
-      row.appendChild(label); row.appendChild(select); card.appendChild(row);
-    }
-    const feedback = document.createElement("div"); feedback.className = "structure-feedback"; feedback.id = "structureFeedback"; card.appendChild(feedback);
-    const actions = document.createElement("div"); actions.className = "structure-actions";
-    const grade = document.createElement("button"); grade.type="button"; grade.className="btn primary"; grade.textContent="채점"; grade.addEventListener("click", gradeStructureQuestion);
-    const next = document.createElement("button"); next.type="button"; next.className="btn soft"; next.textContent="다음 구조 문제"; next.addEventListener("click", nextStructureQuestion);
-    actions.appendChild(grade); actions.appendChild(next); card.appendChild(actions);
+    const choices = document.createElement("div");
+    choices.className = q.kind === "connect" ? "structure-choice-list connection" : "structure-choice-list category";
+    choices.setAttribute("role", "radiogroup");
+    q.choices.forEach(choice => choices.appendChild(makeStructureChoice(choice, q)));
+
+    const feedback = document.createElement("div");
+    feedback.className = "structure-feedback";
+    feedback.id = "structureFeedback";
+
+    const actions = document.createElement("div");
+    actions.className = "structure-actions";
+    const grade = document.createElement("button");
+    grade.type = "button";
+    grade.className = "btn primary";
+    grade.textContent = "채점";
+    grade.disabled = Boolean(q.graded);
+    grade.addEventListener("click", gradeStructureQuestion);
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "btn soft";
+    next.textContent = session.index === session.questions.length - 1 ? "결과 보기" : "다음 문제";
+    next.disabled = !q.graded;
+    next.id = "nextStructureQuestionButton";
+    next.addEventListener("click", nextStructureQuestion);
+    actions.appendChild(grade);
+    actions.appendChild(next);
+
+    card.appendChild(top);
+    card.appendChild(instruction);
+    card.appendChild(prompt);
+    card.appendChild(choices);
+    card.appendChild(feedback);
+    card.appendChild(actions);
     studyArea.appendChild(card);
+
+    if (q.graded) paintStructureGrade(card, q);
+  }
+
+  function paintStructureGrade(card, q) {
+    const feedback = card.querySelector("#structureFeedback");
+    const grade = card.querySelector(".structure-actions .primary");
+    const next = card.querySelector("#nextStructureQuestionButton");
+    card.querySelectorAll(".structure-choice").forEach(button => {
+      const isAnswer = button.dataset.value === q.answer;
+      const isSelected = button.dataset.value === q.selected;
+      button.disabled = true;
+      button.classList.toggle("answer", isAnswer);
+      button.classList.toggle("wrong-selected", isSelected && !isAnswer);
+    });
+    if (grade) grade.disabled = true;
+    if (next) next.disabled = false;
+    if (!feedback) return;
+    feedback.className = `structure-feedback ${q.correct ? "correct" : "wrong"}`;
+    if (q.kind === "connect") {
+      feedback.textContent = q.correct
+        ? `✓ 연결 정확 · [${q.answerCode}] ${q.answerText}`
+        : `정답: [${q.answerCode}] ${q.answerText}`;
+    } else {
+      feedback.textContent = q.correct ? `✓ ${q.answer}` : `정답: ${q.answer}`;
+    }
   }
 
   function gradeStructureQuestion() {
     const q = activeStructureQuestion;
     const card = document.querySelector(".structure-practice-card");
     const feedback = document.getElementById("structureFeedback");
-    if (!q || !card || !feedback) return;
-    if (q.kind === "reverse") {
-      const block = card.querySelector(".holistic-recall");
-      const result = gradeHolisticRecallBlock(block, {structureOnly:true});
-      feedback.className = `structure-feedback ${result.status}`;
-      feedback.textContent = result.status === "correct" ? "✓ 구조와 원문을 정확히 연결했습니다." : "공식 위치는 맞지만 원문 회상에서 보완할 항목이 있습니다.";
+    if (!q || !card || !feedback || !structureSession) return;
+    if (!q.selected) {
+      feedback.className = "structure-feedback warning";
+      feedback.textContent = "답을 먼저 선택하세요.";
       return;
     }
-    const select = document.getElementById("structureSectionAnswer");
-    const ok = select?.value === q.sectionTitle;
-    feedback.className = `structure-feedback ${ok ? "correct" : "wrong"}`;
-    feedback.textContent = ok ? `✓ ${q.sectionTitle}` : `정답: ${q.sectionTitle}`;
+    if (q.graded) return;
+    q.correct = q.selected === q.answer;
+    q.graded = true;
+    structureSession.answered += 1;
+    if (q.correct) structureSession.correct += 1;
+    paintStructureGrade(card, q);
   }
 
   function nextStructureQuestion() {
-    activeStructureQuestion = null;
+    const q = activeStructureQuestion;
+    if (!structureSession || !q || !q.graded) return;
+    if (structureSession.index >= structureSession.questions.length - 1) {
+      structureSession.complete = true;
+      activeStructureQuestion = null;
+    } else {
+      structureSession.index += 1;
+      activeStructureQuestion = structureSession.questions[structureSession.index];
+    }
     renderStudy();
   }
 
@@ -1921,7 +2038,7 @@
       mask: window.matchMedia("(hover: hover) and (pointer: fine)").matches ? "마우스를 올려 확인" : "눌러 확인",
       trace: "원문을 보며 문장 흐름 익히기 · 숙달 판정에는 직접 반영하지 않음",
       fill: window.matchMedia("(max-width: 720px)").matches ? "다음: 채점" : "Enter: 채점",
-      structure: "교육과정 문구의 영역·범주·출처 위치를 연결"
+      structure: "헷갈리는 내용체계 범주를 구별하고 성취기준과 해설을 연결"
     };
     const baseStatus = statusByMode[studyMode] || "";
     const pilotPractical = isMiddleInfoPilot(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical";

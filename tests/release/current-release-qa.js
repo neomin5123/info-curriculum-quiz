@@ -3,6 +3,7 @@ const path=require('path');
 const E=require('../../js/practice/practice-engine.js');
 const G=require('../../js/engines/grading-engine.js');
 const R=require('../../js/engines/recall-engine.js');
+const S=require('../../js/engines/structure-engine.js');
 const root=path.resolve(__dirname,'../..');
 const vm=require('vm');
 const bankCtx={window:{}}; vm.createContext(bankCtx); vm.runInContext(fs.readFileSync(path.join(root,'data/questions/production.js'),'utf8'),bankCtx);
@@ -36,11 +37,26 @@ assert(R.memoryTier('지식·이해').key==='exact','middle-info exact tier');
 assert(R.memoryTier('성취기준 해설').key==='coreplus','middle-info guidance tier');
 const recallProbe=R.matchRecallList(['B','A','C'],['A','B','C'],(u,e)=>G.classifyDetailed(u,e,[]));
 assert(recallProbe.contentExact===true && recallProbe.orderCorrect===false,'holistic recall content/order split');
+const curriculumCtx={window:{}}; vm.createContext(curriculumCtx); vm.runInContext(cur,curriculumCtx);
+const curriculumData=curriculumCtx.window.CURRILOOP_CURRICULUM_DATA;
+for (const area of ['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화']) {
+  const pool=S.buildQuestionPool(curriculumData,area);
+  assert(pool.some(q=>q.kind==='discriminate'),`${area} discrimination structure pool`);
+  assert(pool.some(q=>q.kind==='connect'),`${area} connection structure pool`);
+  const session=S.buildSession(curriculumData,area,{limit:8,nonce:7});
+  assert(session.length<=8 && session.length>0,`${area} structure session size`);
+  assert(new Set(session.map(q=>q.id)).size===session.length,`${area} structure duplicate`);
+  assert(session.some(q=>q.kind==='connect'),`${area} structure session connection`);
+  assert(session.every(q=>!/^\s*\[9정/.test(q.prompt)),`${area} structure code leak`);
+}
+assert(!app.includes('structureSectionAnswer'),'legacy structure dropdown removed');
+assert(app.includes('내용체계 범주 구별') && app.includes('성취기준 ↔ 해설 연결'),'new structure labels');
 assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.5.2'),'version label');
+assert(html.includes('v7.5.3'),'version label');
+assert(html.includes('/js/engines/structure-engine.js?v=7.5.3'),'structure engine script');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -154,4 +170,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.5.2 Middle Info Recall + UI QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.5.3 Middle Info Recall + Structure QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);

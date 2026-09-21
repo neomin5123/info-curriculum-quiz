@@ -11,6 +11,7 @@
 - `data/questions/production.js`: production 문제은행
 - `data/learning-aids/general-bank.js`: 총론·역사 등 일반 암기 문항
 - `data/learning-aids/core-flow.js`: 영역별 핵심 흐름 보조 지도
+- `js/engines/structure-engine.js`: 중등 정보 구조 연습의 범주 구별·성취기준 해설 연결 문항 생성
 - `tests/release/current-release-qa.js`: 현재 release 문제은행 QA
 
 ## v7.4 additions
