@@ -29,9 +29,26 @@ assert(html.includes('id="homePage"'),'today home UI');
 assert(html.includes('id="todayStartButton"'),'today start button');
 assert(html.includes('id="todayRecentAccuracy"'),'recent recall accuracy UI');
 assert(typeof P.noteSessionAssessment==='function' && typeof P.sessionPerformanceSummary==='function' && typeof P.adaptPace==='function','speed x accuracy planner API');
-assert(html.includes('/js/engines/planner-engine.js?v=7.6.1'),'planner engine script');
+assert(typeof P.noteSessionStudyProgress==='function','planner session progress persistence API');
+assert(html.includes('/js/engines/planner-engine.js?v=7.7.0'),'planner engine script');
 assert(app.includes('isLongTermReviewEligible'),'long-term review consolidation');
 assert(app.includes('startPlannedNewStudy') && app.includes('completePlannedStudy'),'daily planner orchestration');
+assert(app.includes('AUTO_PLANNER_SUBJECT_ORDER = ["middle-info"]'),'today auto planner limited to middle-info');
+assert(typeof P.reviewUnlockAllowance==='function' && P.reviewUnlockAllowance(18)===6,'75 percent review gate');
+assert(typeof P.deadlineGuidance==='function','deadline guidance API');
+assert(app.includes('blockingReviewCount') && app.includes('reviewUnlockAllowance'),'small residual review unlock');
+assert(app.includes('몇 문제 뒤 전체 묶음을 한 번 더 통회상합니다.'),'same-day whole recall retry');
+assert(app.includes('deadline.targetFloor') && app.includes('권장 첫 회독 마감'),'D-day reverse planning UI');
+assert(!html.includes('id="todayHomeReviewButton"') && !html.includes('id="todayNewRangeButton"') && !html.includes('id="todayCumulativeButton"'),'home per-card action buttons removed');
+assert(html.includes('id="todayExamDday"') && html.includes('id="todayFirstPassForecast"'),'home D-day stats');
+
+assert(!app.includes('const PLANNER_SUBJECT_ORDER = ["middle-info", "high-info"'),'legacy six-subject auto planner removed');
+assert(html.includes('중등 정보 자동 첫 회독'),'home labels guided scope honestly');
+assert(app.includes('PAUSED_LEGACY_AUTO_SESSION_KEY') && app.includes('!AUTO_PLANNER_SUBJECT_SET.has'),'unsupported legacy auto session safety pause');
+assert(app.includes('plannerResumeStepIndex') && app.includes('collectPlannerDraftFields') && app.includes('restorePlannerDraftFields'),'unfinished session stage/draft resume');
+assert(app.includes('gradedRecall') && app.includes('structureSession:step?.mode === "structure"'),'recall/structure progress resume');
+assert(app.includes('window.addEventListener("pagehide"'),'planner progress flush on pagehide');
+assert(app.includes('hasActiveSession ? "이어 공부하기"'),'same-day active session resume CTA');
 assert(app.includes('recordPlannerAssessmentOutcome'),'planner records first-attempt outcomes');
 assert(app.includes('plannerStepAttemptGate') && app.includes('실제 인출·채점 기록'),'completion requires real retrieval attempt');
 assert(app.includes('flushPlannerRetryIfNeeded'),'same-day delayed retry must be cleared before planner progression');
@@ -40,7 +57,12 @@ assert(app.includes('buildCumulativeReviewCandidates') && html.includes('id="tod
 assert(typeof P.completesArea==='function' && app.includes('이 영역의 마지막 세션'),'split area final session structure practice');
 assert(typeof P.reviewLoadDecision==='function','backlog-aware scope reduction API');
 assert(P.dailyReviewBudget(8)>=20,'slow learner review budget floor');
+assert(P.lineWorkload({text:'매우 긴 성취기준 해설 문장으로 학습자가 다양한 조건과 관계를 연결하여 이해하고 적용해야 하는 내용을 충분히 포함한다. 추가 설명과 여러 핵심어가 함께 제시되어 읽기와 인출 부담이 크다.',easy:['a','b','c','d','e']},'achievement','성취기준 해설','middle-info') > P.lineWorkload({text:'운영 체제의 기능',easy:['a','b']},'content-system','지식·이해','middle-info'),'weighted workload differentiates long guidance');
 assert(app.includes('completedLinesToday.has(entry.lineKey'),'same-day successful recall removed from remaining daily review');
+assert(app.includes('deferDailyReviewUnresolvedToNextDay'),'daily review unresolved deferral helper');
+assert(app.includes('current.nextReviewAt = now + LearningEngine.DAY_MS'),'unresolved daily review moves to next day');
+assert(app.includes('markDailyReviewCompleted(conceptKey, now)'),'unresolved daily review closes today plan without faking success');
+assert(app.includes('else if (status === "near" && item._nearRetried)'),'second near review also leaves today queue');
 
 assert(app.includes('빈칸 방식'),'middle-info fill variant label');
 assert(app.includes('setMiddleInfoFillVariant'),'middle-info segmented fill variant behavior');
@@ -82,8 +104,8 @@ assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.6.1'),'version label');
-assert(html.includes('/js/engines/structure-engine.js?v=7.6.1'),'structure engine script');
+assert(html.includes('v7.7.0'),'version label');
+assert(html.includes('/js/engines/structure-engine.js?v=7.7.0'),'structure engine script');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -197,4 +219,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.6.1 Retrieval Gate + Cumulative Review QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.7.0 Study Freeze QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);

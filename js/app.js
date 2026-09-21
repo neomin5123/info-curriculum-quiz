@@ -88,8 +88,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.6.1";
-  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.6.1 완료 인출 게이트 + backlog 감속 + 누적 혼합 점검 + 분할 영역 연결 확인";
+  const APP_VERSION = "7.7.0";
+  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.7.0 시험 직전 학습 동결판 · 복습 75% 게이트 + D-day 역산 + 통회상 당일 재인출 + 홈 단일 시작";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -127,14 +127,27 @@
   let activeStructureQuestion = null;
   let structureSession = null;
   let structureSessionNonce = 0;
-  const PLANNER_SUBJECT_ORDER = ["middle-info", "high-info", "ai-basic", "data-science", "software-life", "info-science"];
-  const plannerStudySections = PlannerEngine.buildStudySections(curriculumData, PLANNER_SUBJECT_ORDER, COMMON_AREA);
+  // v7.6.6: 오늘 플래너의 자동 진도는 새 암기 체계가 검증된 중등 정보만 연다.
+  // 다른 5과목은 각론에서 수동 학습할 수 있지만, 기존 핵심+정확화 빈칸 체계를 자동으로 밀어붙이지 않는다.
+  const AUTO_PLANNER_SUBJECT_ORDER = ["middle-info"];
+  const AUTO_PLANNER_SUBJECT_SET = new Set(AUTO_PLANNER_SUBJECT_ORDER);
+  const PAUSED_LEGACY_AUTO_SESSION_KEY = "curriloop-paused-legacy-auto-session-v1";
+  const plannerStudySections = PlannerEngine.buildStudySections(curriculumData, AUTO_PLANNER_SUBJECT_ORDER, COMMON_AREA);
   let plannerFocusActive = false;
   let plannerStep = 0; // 0 원문, 1 핵심, 2 실전/정확화, 3 완료
 
   function loadPlannerState() {
-    try { return PlannerEngine.normalizeState(JSON.parse(localStorage.getItem(DAILY_STUDY_PLANNER_KEY) || "{}")); }
-    catch { return PlannerEngine.normalizeState({}); }
+    let normalized;
+    try { normalized = PlannerEngine.normalizeState(JSON.parse(localStorage.getItem(DAILY_STUDY_PLANNER_KEY) || "{}")); }
+    catch { normalized = PlannerEngine.normalizeState({}); }
+    // 이전 버전에서 중등 정보 밖의 자동 세션이 이미 열려 있었다면 그대로 이어가지 않는다.
+    // 작성 중 진행 상태는 별도 로컬 백업으로 보존하고, 오늘 플래너에서는 안전하게 중단한다.
+    if (normalized.activeSession?.subjectKey && !AUTO_PLANNER_SUBJECT_SET.has(normalized.activeSession.subjectKey)) {
+      safeSetLocalStorage(PAUSED_LEGACY_AUTO_SESSION_KEY, JSON.stringify({pausedAt:Date.now(), session:normalized.activeSession}));
+      normalized.activeSession = null;
+      safeSetLocalStorage(DAILY_STUDY_PLANNER_KEY, JSON.stringify(normalized));
+    }
+    return normalized;
   }
 
   function savePlannerState(state) {
@@ -155,14 +168,116 @@
     return `${subjectLabel} · ${session.area}`;
   }
 
-  function recordPlannerAssessmentOutcome(key, status, kind = "core", accuracy = null) {
+  function plannerStepKey(step) {
+    if (!step) return "";
+    return `${step.mode || ""}|${step.difficulty || ""}|${step.label || ""}`;
+  }
+
+  function collectPlannerDraftFields() {
+    const draftFields = {};
+    document.querySelectorAll('#studyArea [data-state-key]').forEach(node => {
+      const key = node.dataset.stateKey;
+      if (!key || !fieldState[key] || typeof fieldState[key] !== "object") return;
+      draftFields[key] = {...fieldState[key]};
+    });
+    return draftFields;
+  }
+
+  function collectPlannerGradedRecall() {
+    const gradedRecall = {};
+    document.querySelectorAll('#studyArea .holistic-recall[data-concept-key]').forEach(block => {
+      const key = block.dataset.conceptKey;
+      const status = block.dataset.gradedStatus;
+      if (key && ["correct","near","wrong","unknown"].includes(status)) gradedRecall[key] = status;
+    });
+    return gradedRecall;
+  }
+
+  function plannerStudyProgressSnapshot() {
+    const steps = plannerStepsForCurrentSession();
+    const step = steps[Math.max(0, Math.min(plannerStep, steps.length - 1))] || null;
+    return {
+      stepIndex:Math.max(0, plannerStep),
+      stepKey:plannerStepKey(step),
+      stepLabel:step?.label || "",
+      draftFields:collectPlannerDraftFields(),
+      gradedRecall:collectPlannerGradedRecall(),
+      structureSession:step?.mode === "structure" && structureSession ? structureSession : null,
+      lastFocus:lastStudyFocus && typeof lastStudyFocus === "object" ? {...lastStudyFocus} : null
+    };
+  }
+
+  function persistPlannerStudyProgress() {
     if (!plannerFocusActive) return;
     const state = loadPlannerState();
+    if (!state.activeSession?.sectionIds?.length) return;
+    const next = PlannerEngine.noteSessionStudyProgress(state, plannerStudyProgressSnapshot(), Date.now());
+    savePlannerState(next);
+  }
+
+  function restorePlannerDraftFields(state) {
+    const progress = state?.activeSession?.studyProgress;
+    if (!progress?.draftFields || typeof progress.draftFields !== "object") return;
+    Object.entries(progress.draftFields).forEach(([key, value]) => {
+      if (key && value && typeof value === "object") fieldState[key] = {...value};
+    });
+  }
+
+  function plannerResumeStepIndex(state, steps) {
+    const progress = state?.activeSession?.studyProgress;
+    if (!progress || !steps.length) return 0;
+    if (progress.stepKey) {
+      const byKey = steps.findIndex(step => plannerStepKey(step) === progress.stepKey);
+      if (byKey >= 0) return byKey;
+    }
+    return Math.max(0, Math.min(Number(progress.stepIndex || 0), steps.length - 1));
+  }
+
+  function restorePlannerRenderedProgress() {
+    if (!plannerFocusActive) return;
+    const state = loadPlannerState();
+    const progress = state.activeSession?.studyProgress;
+    if (!progress) return;
+    const gradedRecall = progress.gradedRecall || {};
+    document.querySelectorAll('#studyArea .holistic-recall[data-concept-key]').forEach(block => {
+      const status = gradedRecall[block.dataset.conceptKey];
+      if (!["correct","near","wrong","unknown"].includes(status)) return;
+      block.dataset.gradedStatus = status;
+      const feedback = block.querySelector('.holistic-recall-feedback');
+      if (feedback && !feedback.textContent.includes('이전 학습')) {
+        feedback.className = `holistic-recall-feedback ${status}`;
+        feedback.textContent = `이전 학습에서 이미 채점한 묶음입니다 (${status === "correct" ? "정확" : status === "near" ? "표기 확인" : status === "unknown" ? "모름" : "오답"}). 답을 수정하면 다시 채점하세요.`;
+      }
+    });
+  }
+
+  function plannerResumeNote(session, steps = plannerStepsForCurrentSession()) {
+    const progress = session?.studyProgress;
+    if (!progress || !steps.length) return "";
+    const idx = plannerResumeStepIndex({activeSession:session}, steps);
+    const current = steps[idx];
+    if (!current) return "";
+    if (idx === 0) return `${current.label}부터 이어서 학습합니다.`;
+    return `${steps[idx - 1]?.label || "이전 단계"}까지 완료 · ${current.label}부터 이어서 학습합니다.`;
+  }
+
+  function recordPlannerStudyActivity(now = Date.now()) {
+    const state = loadPlannerState();
+    const next = PlannerEngine.recordStudyActivity(state, now);
+    savePlannerState(next);
+    return next;
+  }
+
+  function recordPlannerAssessmentOutcome(key, status, kind = "core", accuracy = null) {
+    const now = Date.now();
+    // 오늘 플래너 세션이 아니더라도 실제 인출/채점을 했다면 '실제 학습일'로 기록한다.
+    let state = recordPlannerStudyActivity(now);
+    if (!plannerFocusActive) return;
     const session = state.activeSession;
     if (!session?.sectionIds?.length) return;
     const unit = getCurrentUnit();
     if (!unit || unit.subject !== session.subjectKey || unit.area !== session.area) return;
-    const next = PlannerEngine.noteSessionAssessment(state, {key, status, kind, accuracy}, Date.now());
+    const next = PlannerEngine.noteSessionAssessment(state, {key, status, kind, accuracy}, now);
     savePlannerState(next);
   }
 
@@ -1879,6 +1994,7 @@
       }
     }
     updateScore();
+    scheduleStateSave();
     return {status, section, repairIndices:[...repairIndices], masteryItem};
   }
 
@@ -1969,6 +2085,7 @@
           item.setAttribute("aria-checked", isSelected ? "true" : "false");
         });
       }
+      scheduleStateSave();
     });
     return button;
   }
@@ -2093,6 +2210,7 @@
     structureSession.answered += 1;
     if (q.correct) structureSession.correct += 1;
     paintStructureGrade(card, q);
+    scheduleStateSave();
   }
 
   function nextStructureQuestion() {
@@ -2105,6 +2223,7 @@
       structureSession.index += 1;
       activeStructureQuestion = structureSession.questions[structureSession.index];
     }
+    scheduleStateSave();
     renderStudy();
   }
 
@@ -2296,6 +2415,7 @@
 
     table.appendChild(tbody);
     studyArea.appendChild(table);
+    restorePlannerRenderedProgress();
 
     updateStudyControls();
     updateScore();
@@ -2357,6 +2477,7 @@
     if (!statePersistenceReady) return;
     try { localStorage.setItem(UI_STATE_KEY, JSON.stringify(collectUiState())); } catch {}
     try { sessionStorage.setItem(DRAFT_STATE_KEY, JSON.stringify(collectDraftState())); } catch {}
+    try { persistPlannerStudyProgress(); } catch {}
   }
 
   function scheduleStateSave() {
@@ -3498,6 +3619,20 @@
     }
   }
 
+  // 오늘 복습에서 충분히 시도했지만 아직 회복하지 못한 항목은
+  // '오늘 성공'으로 바꾸지 않고, 오늘 할 일만 종료한 뒤 다음 날 다시 꺼낸다.
+  function deferDailyReviewUnresolvedToNextDay(conceptKey, now = Date.now()) {
+    if (!conceptKey) return null;
+    const all = loadMastery();
+    const current = LearningEngine.normalizeMasteryItem(all[conceptKey] || {});
+    current.mastered = false;
+    current.nextReviewAt = now + LearningEngine.DAY_MS;
+    all[conceptKey] = current;
+    saveMastery(all);
+    markDailyReviewCompleted(conceptKey, now);
+    return current;
+  }
+
   const PRACTICE_SOURCE_LINK_KEY = "curriloop-practice-source-link-v1";
   let practiceSourceMetaCache = null;
 
@@ -3777,14 +3912,24 @@
     if (item.type === "recall-section") {
       const block = document.querySelector("#reviewRecallArea .holistic-recall");
       const result = gradeHolisticRecallBlock(block, {review:true});
+      recordPlannerStudyActivity(Date.now());
       reviewGraded = true; reviewLastStatus = result.status;
       if (primary) primary.textContent = "다음";
       if (result.status === "correct") {
         markDailyReviewCompleted(item.conceptKey, Date.now());
         if (feedback) { feedback.className="review-feedback good"; feedback.textContent="✓ 통회상 성공 · 다음 간격으로 이동합니다."; }
       } else {
-        item._sessionFailures = Number(item._sessionFailures || 0) + 1;
-        if (feedback) { feedback.className="review-feedback bad"; feedback.textContent="공식 항목을 확인했습니다. 전체 묶음은 다음 날짜에 다시 꺼냅니다."; }
+        const failures = Number(item._sessionFailures || 0) + 1;
+        item._sessionFailures = failures;
+        if (failures < 2) {
+          const retry = {...item, _sessionFailures:failures};
+          const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
+          reviewQueue.splice(insertAt, 0, retry);
+          if (feedback) { feedback.className="review-feedback bad"; feedback.textContent="공식 항목을 확인했습니다. 몇 문제 뒤 전체 묶음을 한 번 더 통회상합니다."; }
+        } else {
+          deferDailyReviewUnresolvedToNextDay(item.conceptKey, Date.now());
+          if (feedback) { feedback.className="review-feedback bad"; feedback.textContent="두 번째 통회상에서도 회복하지 못했습니다. 오늘 시도는 종료하고 전체 묶음은 다음 날 다시 꺼냅니다."; }
+        }
       }
       return;
     }
@@ -3797,6 +3942,7 @@
       grading = classifyRawAnswerDetailed(input.value, item.correctAnswer || item.answerText || "", item.aliases || []);
     }
     const status = grading.status;
+    recordPlannerStudyActivity(Date.now());
     const success = status === "correct" || status === "near";
     const signature = `${normalize(input.value) || "__blank__"}|review|${status}`;
     const eventToken = makeGradingEventToken("review", item.conceptKey, signature);
@@ -3831,6 +3977,9 @@
         const retry = {...item, _nearRetried:true};
         const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
         reviewQueue.splice(insertAt, 0, retry);
+      } else if (status === "near" && item._nearRetried) {
+        deferDailyReviewUnresolvedToNextDay(item.conceptKey, Date.now());
+        if (feedback) feedback.appendChild(document.createTextNode(" 오늘은 여기서 마치고 다음 날 다시 확인합니다."));
       }
       return;
     }
@@ -3851,6 +4000,8 @@
       const retry = {...item, _sessionFailures:failures};
       const insertAt = Math.min(reviewPosition + 4, reviewQueue.length);
       reviewQueue.splice(insertAt, 0, retry);
+    } else {
+      deferDailyReviewUnresolvedToNextDay(item.conceptKey, Date.now());
     }
     if (feedback) {
       feedback.className = status === "unknown" ? "review-feedback" : "review-feedback bad";
@@ -5879,22 +6030,38 @@
     const scheduledDueCount = remainingReviews.length - cumulativeCount;
     const dueCount = remainingReviews.length;
     const backlogCount = Math.max(scheduledDueCount, Number(dailyPlan?.backlogTotal || scheduledDueCount));
-    let decision = PlannerEngine.paceDecision({state, dueCount:backlogCount, now});
+    const deadline = PlannerEngine.deadlineGuidance(plannerStudySections, state, {now});
+    let decision = PlannerEngine.paceDecision({state, dueCount:backlogCount, now, targetFloor:deadline.targetFloor});
     if (!state.activeSession && decision.mode === "review-recovery" && state.recoveryDayKey !== PlannerEngine.localDayKey(now)) {
       state.recoveryDayKey = PlannerEngine.localDayKey(now);
       state = savePlannerState(state);
-      decision = PlannerEngine.paceDecision({state, dueCount:backlogCount, now});
+      decision = PlannerEngine.paceDecision({state, dueCount:backlogCount, now, targetFloor:deadline.targetFloor});
     }
-    const session = state.activeSession || PlannerEngine.createNextSession(plannerStudySections, state, backlogCount, now);
+    const reviewBudget = Number(dailyPlan?.reviewBudget || PlannerEngine.dailyReviewBudget(state.targetLines));
+    const reviewUnlockAllowance = PlannerEngine.reviewUnlockAllowance(state.targetLines);
+    const consolidationToday = PlannerEngine.isConsolidationDay(state, now);
+    // 평상시에는 오늘 복습 예산의 75% 이상 처리하면 소량 잔여 복습과 새 진도를 병행할 수 있다.
+    // 누적 정리일에는 새 진도를 열지 않는다.
+    const blockingReviewCount = consolidationToday ? dueCount : Math.max(0, scheduledDueCount - reviewUnlockAllowance);
+    const canOpenNewAfterReview = !consolidationToday && blockingReviewCount === 0;
+    const session = decision.allowNew && canOpenNewAfterReview
+      ? (state.activeSession || PlannerEngine.createNextSession(plannerStudySections, state, backlogCount, now, {targetFloor:deadline.targetFloor}))
+      : null;
     const progress = PlannerEngine.progressSummary(plannerStudySections, state);
-    return {state, dueCount, scheduledDueCount, cumulativeCount, backlogCount, decision, session, progress, reviewBudget:Number(dailyPlan?.reviewBudget || 0)};
+    return {state, dueCount, scheduledDueCount, cumulativeCount, backlogCount, decision, session, progress, reviewBudget, reviewUnlockAllowance, blockingReviewCount, canOpenNewAfterReview, deadline};
+  }
+
+  function plannerDayKeyLabel(dayKey) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dayKey || ""));
+    if (!match) return String(dayKey || "-");
+    return `${Number(match[2])}/${Number(match[3])}`;
   }
 
   function renderTodayHome() {
     const title = document.getElementById("todayTitle");
     if (!title) return;
     const snapshot = getTodayPlannerSnapshot();
-    const {state, dueCount, scheduledDueCount, cumulativeCount, backlogCount, decision, session, progress, reviewBudget} = snapshot;
+    const {state, dueCount, scheduledDueCount, cumulativeCount, backlogCount, decision, session, progress, reviewBudget, reviewUnlockAllowance, blockingReviewCount, deadline} = snapshot;
     const reviewCount = document.getElementById("todayReviewCount");
     const reviewNote = document.getElementById("todayReviewNote");
     const reviewButton = document.getElementById("todayHomeReviewButton");
@@ -5908,72 +6075,114 @@
     const paceNote = document.getElementById("todayPaceNote");
     const target = document.getElementById("todayTargetLines");
     const recentAccuracy = document.getElementById("todayRecentAccuracy");
+    const examDday = document.getElementById("todayExamDday");
+    const firstPassForecast = document.getElementById("todayFirstPassForecast");
     const coverage = document.getElementById("todayCoverage");
     const reason = document.getElementById("todayReason");
     const start = document.getElementById("todayStartButton");
 
     if (reviewCount) reviewCount.textContent = `${scheduledDueCount}개`;
     if (reviewNote) reviewNote.textContent = scheduledDueCount
-      ? (backlogCount > scheduledDueCount ? `오늘 ${scheduledDueCount}개를 우선 처리 · 적체 ${backlogCount}개는 새 진도를 먼저 줄여 흡수` : "새 진도보다 먼저 처리합니다.")
+      ? (blockingReviewCount > 0
+          ? `오늘 ${scheduledDueCount}개 남음 · ${Math.max(0, scheduledDueCount - blockingReviewCount)}개를 더 처리하면 새 진도가 열립니다.`
+          : `잔여 ${scheduledDueCount}개는 허용 범위(${reviewUnlockAllowance}개 이하)입니다. 새 학습 뒤 오늘 안에 마무리합니다.`)
       : (backlogCount > 0 ? "오늘 예정 복습 예산은 처리했습니다. 남은 적체는 새 진도 감속으로 흡수합니다." : "오늘 예정된 장기 복습을 모두 처리했습니다.");
-    if (reviewButton) { reviewButton.textContent = scheduledDueCount ? "복습 시작" : "예정 복습 완료"; reviewButton.disabled = scheduledDueCount === 0; }
+    if (reviewButton) { reviewButton.textContent = scheduledDueCount ? "오늘 학습 시작" : "예정 복습 완료"; reviewButton.disabled = scheduledDueCount === 0; }
     if (cumulative) cumulative.textContent = `${cumulativeCount}개`;
-    if (cumulativeNote) cumulativeNote.textContent = PlannerEngine.isConsolidationDay(state, Date.now())
-      ? (cumulativeCount ? "이미 학습한 범위에서 오래 안 본 것·취약한 것을 섞어 다시 꺼냅니다." : "오늘의 누적 혼합 점검을 완료했습니다.")
-      : "7일 주기의 정리일에 학습한 범위에서 6개 안팎을 자동으로 섞습니다.";
-    if (cumulativeButton) { cumulativeButton.textContent = cumulativeCount ? "누적 점검 시작" : "누적 점검 없음"; cumulativeButton.disabled = cumulativeCount === 0; }
+    if (cumulativeNote) {
+      const consolidationToday = PlannerEngine.isConsolidationDay(state, Date.now());
+      const cycleDays = Math.min(6, Number(state.cycleStudyDayKeys?.length || 0));
+      cumulativeNote.textContent = consolidationToday
+        ? (cumulativeCount ? "이미 학습한 범위에서 오래 안 본 것·취약한 것을 섞어 다시 꺼냅니다." : "오늘 점검할 적격 항목이 없다면 정리일만 완료하고 다음 주기로 넘어갑니다.")
+        : (cycleDays >= 6 ? "일반 학습일 6일을 채웠습니다. 다음 실제 학습일이 누적 정리일입니다." : `현재 주기 ${cycleDays}/6 학습일 · ${6 - cycleDays}일을 더 실제로 공부하면 다음 학습일이 누적 정리일입니다.`);
+    }
+    if (cumulativeButton) {
+      const consolidationToday = PlannerEngine.isConsolidationDay(state, Date.now());
+      cumulativeButton.textContent = cumulativeCount ? "누적 점검 시작" : (consolidationToday ? "정리일 완료" : "누적 점검 없음");
+      cumulativeButton.disabled = cumulativeCount === 0 && !consolidationToday;
+    }
     if (coverage) coverage.textContent = `${progress.percent}%`;
-    if (target) target.textContent = decision.effectiveTargetLines && decision.effectiveTargetLines !== state.targetLines ? `${decision.effectiveTargetLines}문장 (기본 ${state.targetLines})` : `${state.targetLines}문장`;
+    if (target) target.textContent = decision.effectiveTargetLines && decision.effectiveTargetLines !== state.targetLines ? `${decision.effectiveTargetLines}점 (기본 ${state.targetLines})` : `${state.targetLines}점`;
     if (recentAccuracy) {
       const last = [...(state.completedSessions || [])].reverse().find(item => Number.isFinite(Number(item.firstRecallAccuracy)));
       recentAccuracy.textContent = last ? `${Math.round(Number(last.firstRecallAccuracy))}%` : "아직 없음";
     }
 
     const active = Boolean(session?.sectionIds?.length);
-    if (newRange) newRange.textContent = active ? plannerSessionLabel(session) : (decision.allowNew ? "다음 범위 준비" : "오늘 새 진도 없음");
+    const hasActiveSession = Boolean(state.activeSession?.sectionIds?.length);
+    const guidedComplete = progress.percent >= 100 && !active;
+    if (newRange) newRange.textContent = active ? plannerSessionLabel(session) : (guidedComplete ? "중등 정보 자동 진도 완료" : (decision.allowNew ? "다음 범위 준비" : "오늘 새 진도 없음"));
     if (newNote) {
       if (active) {
         const continued = session.startedDayKey && session.startedDayKey !== PlannerEngine.localDayKey(Date.now());
-        newNote.textContent = `${session.lineCount || 0}문장 · ${continued ? "어제 범위를 이어서 학습합니다." : "오늘 처음 보는 범위입니다."}`;
+        const resume = hasActiveSession ? plannerResumeNote(session) : "";
+        newNote.textContent = `${Number(session.workloadScore || session.lineCount || 0).toFixed(1).replace(/\.0$/, "")}점 · ${session.lineCount || 0}문장 · ${hasActiveSession ? (resume || (continued ? "어제 범위를 이어서 학습합니다." : "진행 중인 범위를 이어서 학습합니다.")) : "오늘 처음 보는 범위입니다."}`;
+      } else if (guidedComplete) {
+        newNote.textContent = "오늘 플래너의 자동 진도는 중등 정보까지만 적용합니다. 다른 과목은 개편 전까지 각론에서 수동으로 학습하세요.";
       } else newNote.textContent = decision.reason;
     }
     if (newButton) {
-      newButton.disabled = !active || dueCount > 0;
-      newButton.textContent = dueCount > 0 ? "복습 후 시작" : (active && session.startedDayKey !== PlannerEngine.localDayKey(Date.now()) ? "이어 공부하기" : "새 범위 시작");
+      newButton.disabled = guidedComplete || !active || blockingReviewCount > 0;
+      newButton.textContent = guidedComplete ? "자동 진도 종료" : (blockingReviewCount > 0 ? "복습 후 시작" : (hasActiveSession ? "이어 공부하기" : "새 범위 시작"));
     }
 
     let paceLabel = "표준";
     if (decision.mode === "review-recovery") paceLabel = "복습 회복";
     else if (decision.mode === "consolidation") paceLabel = "누적 정리";
     else if (decision.mode === "new-reduced") paceLabel = "새 진도 감속";
+    else if (decision.mode === "deadline-boost") paceLabel = "시험 역산 보정";
     else if (state.targetLines <= 12) paceLabel = "천천히";
     else if (state.targetLines >= 21) paceLabel = "빠르게";
     if (pace) pace.textContent = paceLabel;
-    if (paceNote) paceNote.textContent = state.activeSession
-      ? "끝내지 못하면 다음 날 같은 범위를 그대로 이어갑니다."
-      : decision.reason;
+    if (examDday) examDday.textContent = deadline.daysToExam >= 0 ? `D-${deadline.daysToExam}` : `D+${Math.abs(deadline.daysToExam)}`;
+    if (firstPassForecast) firstPassForecast.textContent = progress.percent >= 100 ? "완료" : plannerDayKeyLabel(deadline.estimatedCompletionDayKey);
+    if (paceNote) {
+      const deadlineText = progress.percent >= 100
+        ? `중등 정보 첫 회독 완료 · 1차 시험 ${plannerDayKeyLabel(deadline.examDayKey)}`
+        : `권장 첫 회독 마감 ${plannerDayKeyLabel(deadline.deadlineDayKey)}(D-35) · 예상 ${plannerDayKeyLabel(deadline.estimatedCompletionDayKey)}`;
+      paceNote.textContent = state.activeSession
+        ? `끝내지 못하면 다음 날 같은 범위를 그대로 이어갑니다. · ${deadlineText}`
+        : `${decision.reason} · ${deadlineText}`;
+    }
 
-    if (dueCount > 0) {
-      title.textContent = cumulativeCount ? `오늘은 예정 복습과 누적 점검 ${dueCount}개를 먼저 처리하세요.` : `먼저 오늘 복습 ${dueCount}개를 처리하세요.`;
-      reason.textContent = decision.mode === "review-recovery" ? `${decision.reason} 오늘은 새 범위를 열지 않습니다.` : (decision.mode === "consolidation" ? "예정 복습 뒤 누적 혼합 점검까지 마치면 오늘 학습이 끝납니다." : "복습을 마친 뒤 오늘의 새 범위로 이동합니다.");
-      if (start) start.textContent = "복습부터 시작";
+    if (blockingReviewCount > 0 || (decision.mode === "consolidation" && dueCount > 0)) {
+      title.textContent = cumulativeCount ? `오늘은 예정 복습과 누적 점검 ${dueCount}개를 먼저 처리하세요.` : `먼저 복습을 ${blockingReviewCount || dueCount}개 더 처리하세요.`;
+      reason.textContent = decision.mode === "review-recovery" ? `${decision.reason} 오늘은 새 범위를 열지 않습니다.` : (decision.mode === "consolidation" ? "예정 복습 뒤 누적 혼합 점검까지 마치면 오늘 학습이 끝납니다." : `복습 예산의 75%를 처리하면 새 범위를 열고 잔여 ${reviewUnlockAllowance}개 이하는 오늘 뒤에 마무리할 수 있습니다.`);
+      if (start) start.textContent = "오늘 학습 시작";
     } else if (active) {
-      title.textContent = session.startedDayKey !== PlannerEngine.localDayKey(Date.now()) ? "어제 범위를 이어서 마칩니다." : "오늘의 새 범위를 시작하세요.";
-      reason.textContent = `${plannerSessionLabel(session)} · 약 ${session.lineCount || 0}문장`;
-      if (start) start.textContent = "새 범위 시작";
+      title.textContent = hasActiveSession
+        ? (session.startedDayKey !== PlannerEngine.localDayKey(Date.now()) ? "어제 범위를 이어서 마칩니다." : "진행 중인 범위를 이어서 마칩니다.")
+        : "오늘의 새 범위를 시작하세요.";
+      reason.textContent = `${plannerSessionLabel(session)} · 학습량 ${Number(session.workloadScore || session.lineCount || 0).toFixed(1).replace(/\.0$/, "")}점 · ${session.lineCount || 0}문장${hasActiveSession ? ` · ${plannerResumeNote(session)}` : ""}${dueCount > 0 ? ` · 잔여 복습 ${dueCount}개는 학습 뒤 마무리` : ""}`;
+      if (start) start.textContent = hasActiveSession ? "이어 공부하기" : "새 범위 시작";
     } else {
-      title.textContent = progress.percent >= 100 ? "첫 회독 범위를 모두 열었습니다." : "오늘은 새 진도보다 누적 정리에 집중합니다.";
-      reason.textContent = decision.reason;
+      title.textContent = progress.percent >= 100 ? "중등 정보 자동 첫 회독을 완료했습니다." : "오늘은 새 진도보다 누적 정리에 집중합니다.";
+      reason.textContent = progress.percent >= 100
+        ? "중등 정보의 자동 범위 확장은 여기서 멈춥니다. 완료된 내용은 장기 복습에서 계속 다시 꺼내며, 다른 과목은 각론에서 수동 학습할 수 있습니다."
+        : decision.reason;
       if (start) start.textContent = "복습 현황 보기";
     }
   }
 
   function startTodayFromHome() {
-    const due = remainingDailyReviewItems(Date.now()).length;
-    if (due > 0) { showTab("history"); startWrongReview(true); return; }
-    const snapshot = getTodayPlannerSnapshot();
-    if (!snapshot.session) { showTab("history"); return; }
-    startPlannedNewStudy();
+    const now = Date.now();
+    const snapshot = getTodayPlannerSnapshot(now);
+    // 누적 정리일 또는 아직 75% 게이트를 넘지 못한 날은 복습이 항상 먼저다.
+    if ((snapshot.decision.mode === "consolidation" && snapshot.dueCount > 0) || snapshot.blockingReviewCount > 0) {
+      showTab("history"); startWrongReview(true); return;
+    }
+    // 복습을 충분히 처리했다면 소량의 잔여 복습이 있어도 진행 중/새 범위를 먼저 수행한다.
+    if (snapshot.session) { startPlannedNewStudy(); return; }
+    // 새 범위가 끝났거나 열 수 없는 상태에서 잔여 복습이 있으면 오늘 안에 마무리한다.
+    if (snapshot.dueCount > 0) { showTab("history"); startWrongReview(true); return; }
+    if (snapshot.decision.mode === "consolidation") {
+      const next = PlannerEngine.recordStudyActivity(snapshot.state, now);
+      savePlannerState(next);
+      ensureDailyReviewPlan(now, {force:true});
+      renderTodayHome();
+      return;
+    }
+    showTab("history");
   }
 
   function groupForPlannerSession(session) {
@@ -5993,30 +6202,49 @@
 
   function startPlannedNewStudy() {
     const snapshot = getTodayPlannerSnapshot();
-    if (snapshot.dueCount > 0) {
-      alert(`오늘 복습 ${snapshot.dueCount}개를 먼저 처리하세요. 복습이 끝나면 새 범위가 이어집니다.`);
+    if (snapshot.blockingReviewCount > 0 || snapshot.decision.mode === "consolidation") {
+      alert(`복습을 ${snapshot.blockingReviewCount || snapshot.dueCount}개 더 처리한 뒤 새 범위를 시작하세요. 오늘 복습 예산의 75%를 처리하면 소량 잔여 복습은 학습 뒤 마무리할 수 있습니다.`);
       showTab("history");
       return;
     }
     let session = snapshot.session;
     if (!session) { renderTodayHome(); return; }
+    let plannerState = snapshot.state;
     if (!snapshot.state.activeSession) {
-      const started = PlannerEngine.startSession(snapshot.state, session, Date.now());
-      savePlannerState(started);
-      session = started.activeSession;
+      plannerState = PlannerEngine.startSession(snapshot.state, session, Date.now());
+      savePlannerState(plannerState);
+      session = plannerState.activeSession;
+    } else {
+      plannerState = loadPlannerState();
+      session = plannerState.activeSession;
     }
     plannerFocusActive = true;
-    plannerStep = 0;
+    restorePlannerDraftFields(plannerState);
     document.getElementById("subjectSelect").value = session.subjectKey;
     document.getElementById("groupSelect").value = groupForPlannerSession(session);
     fillAreaSelect();
     const areaSelect = document.getElementById("areaSelect");
     if ([...areaSelect.options].some(option => option.value === session.area)) areaSelect.value = session.area;
     currentAreaIndex = 0;
-    studyMode = "original";
+    const steps = plannerStepsForCurrentSession();
+    plannerStep = plannerResumeStepIndex(plannerState, steps);
+    const resumedStep = steps[plannerStep] || steps[0];
+    const difficulty = document.getElementById("difficultySelect");
+    if (difficulty && resumedStep && [...difficulty.options].some(option => option.value === resumedStep.difficulty)) difficulty.value = resumedStep.difficulty;
+    studyMode = resumedStep?.mode || "original";
+    if (studyMode === "structure" && plannerState.activeSession?.studyProgress?.structureSession) {
+      structureSession = plannerState.activeSession.studyProgress.structureSession;
+      structureSessionNonce = Math.max(structureSessionNonce, Number(structureSession?.nonce || 0));
+      activeStructureQuestion = structureSession?.questions?.[structureSession.index] || null;
+    } else if (studyMode !== "structure") {
+      resetStructureSession();
+    }
     showTab("subject");
     renderStudy();
-    requestAnimationFrame(() => window.scrollTo({top:0, behavior:"auto"}));
+    requestAnimationFrame(() => {
+      if (isInputStudyMode()) focusFirstEmpty();
+      else window.scrollTo({top:0, behavior:"auto"});
+    });
   }
 
   function plannerStepsForCurrentSession() {
@@ -6051,6 +6279,7 @@
     if (enteringStructure) resetStructureSession();
     studyMode = step.mode;
     renderStudy();
+    persistPlannerStudyProgress();
     if (isInputStudyMode()) requestAnimationFrame(() => focusFirstEmpty());
   }
 
@@ -6226,6 +6455,13 @@
       console.warn(`CurriLoop: ${migrationQuarantineCount}개의 구형/손상 기록을 격리 보존했습니다.`);
     }
   }
+
+  window.addEventListener("pagehide", () => {
+    try { saveCurrentState(); } catch {}
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") { try { saveCurrentState(); } catch {} }
+  });
 
   bootstrapCurriLoop().catch(error => {
     console.error("CurriLoop 초기화 실패", error);

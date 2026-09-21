@@ -18,7 +18,7 @@ function run(capacity, accuracy, days){
     session=state.activeSession;
     if(!session) continue;
     partial += capacity;
-    if(partial >= session.lineCount){state=addEvidence(state,accuracy,serial++); state=P.completeActiveSession(state,now).state; partial=0;}
+    if(partial >= Number(session.workloadScore || session.lineCount || 0)){state=addEvidence(state,accuracy,serial++); state=P.completeActiveSession(state,now).state; partial=0;}
   }
   return {...P.progressSummary(sections,state), state, started, continued};
 }

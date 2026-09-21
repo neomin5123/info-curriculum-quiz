@@ -11,6 +11,38 @@
   const HIGH_ACCURACY = 0.85;
   const STABLE_ACCURACY = 0.70;
   const KIND_WEIGHTS = Object.freeze({core:0.35, recall:0.55, structure:0.10});
+  const DEFAULT_EXAM_DAY_KEY = '2026-11-28';
+  const FIRST_PASS_BUFFER_DAYS = 35;
+
+  // v7.6.4: 하루 분량은 단순 문장 수가 아니라 실제 학습 부담 점수로 계산한다.
+  // 기존 targetLines 저장값(8~22)은 그대로 승계하되 의미만 '학습량 점수'로 전환한다.
+  function lineWorkload(line, sourceGroup = '', sectionTitle = '', subjectKey = '') {
+    const text = String(line?.text || '').replace(/\s+/g, ' ').trim();
+    const length = text.length;
+    let score = length <= 30 ? 0.8 : length <= 60 ? 1.0 : length <= 100 ? 1.25 : length <= 160 ? 1.6 : length <= 240 ? 2.0 : 2.4;
+
+    if (sectionTitle === '성취기준') score += 0.35;
+    else if (sectionTitle === '성취기준 해설') score += 0.45;
+    else if (/성취기준 적용 시 고려 사항/.test(sectionTitle)) score += 0.35;
+    else if (sourceGroup === 'teaching-evaluation') score += 0.25;
+    else if (sourceGroup === 'character-goal') score += 0.20;
+
+    const coreGaps = Array.isArray(line?.easy) ? line.easy.length : 0;
+    score += Math.min(0.60, Math.max(0, coreGaps - 3) * 0.10);
+
+    // 중등 정보 외 과목은 아직 핵심+정확화 두 번의 빈칸 학습을 사용하므로
+    // normal 빈칸이 유난히 많은 문장은 하루 분량 계산에서 조금 더 무겁게 본다.
+    if (subjectKey && subjectKey !== 'middle-info') {
+      const normalGaps = Array.isArray(line?.normal) ? line.normal.length : 0;
+      score += Math.min(0.50, Math.max(0, normalGaps - coreGaps) * 0.04);
+    }
+    let weighted = score * 0.7;
+    // 중등 정보에서 통으로 외우기로 합의한 정확 암기 영역은 짧다는 이유만으로
+    // 지나치게 싸게 계산하지 않는다. 실제 자유회상/문장 전체 회상 부담을 반영한다.
+    if (subjectKey === 'middle-info' && (sectionTitle === '지식·이해' || sectionTitle === '과정·기능')) weighted = Math.max(weighted, 0.9);
+    if (subjectKey === 'middle-info' && sectionTitle === '성취기준') weighted = Math.max(weighted, 1.2);
+    return Math.max(0.4, Math.round(weighted * 10) / 10);
+  }
 
   function localDayKey(timestamp = Date.now()) {
     const d = new Date(Number(timestamp) || Date.now());
@@ -32,6 +64,78 @@
     return Math.max(0, Math.round((b.getTime() - a.getTime()) / (24 * 60 * 60 * 1000)));
   }
 
+  function signedDayDistance(fromKey, toKey) {
+    const a = parseDayKey(fromKey), b = parseDayKey(toKey);
+    if (!a || !b) return 0;
+    return Math.round((b.getTime() - a.getTime()) / (24 * 60 * 60 * 1000));
+  }
+
+  function shiftDayKey(dayKey, deltaDays) {
+    const d = parseDayKey(dayKey);
+    if (!d) return '';
+    d.setDate(d.getDate() + Number(deltaDays || 0));
+    return localDayKey(d.getTime());
+  }
+
+  function projectedNewStudyDays(state, deadlineDayKey, now = Date.now()) {
+    const normalized = normalizeState(state, now);
+    const today = localDayKey(now);
+    const days = signedDayDistance(today, deadlineDayKey);
+    if (days < 0) return 0;
+    let cycle = Math.max(0, Math.min(6, Number(normalized.cycleStudyDayKeys?.length || 0)));
+    let available = 0;
+    for (let offset = 0; offset <= days; offset++) {
+      if (cycle >= 6) { cycle = 0; continue; }
+      available += 1;
+      cycle += 1;
+    }
+    return available;
+  }
+
+  function estimateCompletionDayKey(state, remainingWorkload, targetWorkload, now = Date.now()) {
+    const normalized = normalizeState(state, now);
+    let sessionsNeeded = Math.max(0, Math.ceil(Number(remainingWorkload || 0) / Math.max(1, Number(targetWorkload || normalized.targetLines || DEFAULT_TARGET_LINES))));
+    if (!sessionsNeeded) return localDayKey(now);
+    let cycle = Math.max(0, Math.min(6, Number(normalized.cycleStudyDayKeys?.length || 0)));
+    let cursor = localDayKey(now);
+    for (let guard = 0; guard < 365 && sessionsNeeded > 0; guard++) {
+      if (cycle >= 6) {
+        cycle = 0;
+      } else {
+        sessionsNeeded -= 1;
+        cycle += 1;
+        if (sessionsNeeded <= 0) return cursor;
+      }
+      cursor = shiftDayKey(cursor, 1);
+    }
+    return cursor;
+  }
+
+  function deadlineGuidance(sections, state, {examDayKey = DEFAULT_EXAM_DAY_KEY, bufferDays = FIRST_PASS_BUFFER_DAYS, now = Date.now()} = {}) {
+    const normalized = normalizeState(state, now);
+    const progress = progressSummary(sections, normalized);
+    const deadlineDayKey = shiftDayKey(examDayKey, -Math.abs(Number(bufferDays || 0)));
+    const today = localDayKey(now);
+    const daysToExam = signedDayDistance(today, examDayKey);
+    const daysToDeadline = signedDayDistance(today, deadlineDayKey);
+    const remainingWorkload = Math.max(0, Math.round((Number(progress.totalWorkload || 0) - Number(progress.completedWorkload || 0)) * 10) / 10);
+    if (remainingWorkload <= 0) {
+      return {status:'complete', examDayKey, deadlineDayKey, daysToExam, daysToDeadline, remainingWorkload:0, availableStudyDays:0, requiredDailyWorkload:0, targetFloor:0, estimatedCompletionDayKey:today};
+    }
+    const availableStudyDays = projectedNewStudyDays(normalized, deadlineDayKey, now);
+    const requiredDailyWorkload = availableStudyDays > 0 ? remainingWorkload / availableStudyDays : Infinity;
+    const targetFloor = Number.isFinite(requiredDailyWorkload) ? Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Math.ceil(requiredDailyWorkload))) : MAX_TARGET_LINES;
+    const estimatedCompletionDayKey = estimateCompletionDayKey(normalized, remainingWorkload, normalized.targetLines, now);
+    let status = 'on-track';
+    if (daysToDeadline < 0 || !availableStudyDays || requiredDailyWorkload > MAX_TARGET_LINES) status = 'critical';
+    else if (requiredDailyWorkload > normalized.targetLines) status = 'boost';
+    return {
+      status, examDayKey, deadlineDayKey, daysToExam, daysToDeadline, remainingWorkload, availableStudyDays,
+      requiredDailyWorkload: Number.isFinite(requiredDailyWorkload) ? Math.round(requiredDailyWorkload * 10) / 10 : Infinity,
+      targetFloor, estimatedCompletionDayKey
+    };
+  }
+
   function sectionId(subjectKey, area, sourceGroup, sectionTitle, index) {
     return ['plan-section', subjectKey, area, sourceGroup, sectionTitle || '', index].join('|');
   }
@@ -51,6 +155,7 @@
           (sections || []).forEach((section, index) => {
             const lines = section?.lines || [];
             if (!lines.length) return;
+            const workloadScore = Math.round(lines.reduce((sum, line) => sum + lineWorkload(line, sourceGroup, String(section?.title || ''), subjectKey), 0) * 10) / 10;
             out.push({
               id:sectionId(subjectKey, area, sourceGroup, section?.title || '', index),
               subjectKey,
@@ -59,6 +164,7 @@
               sectionTitle:String(section?.title || ''),
               sectionIndex:index,
               lineCount:lines.length,
+              workloadScore,
               lineIds:lines.map(line => line?.id).filter(Boolean)
             });
           });
@@ -92,36 +198,118 @@
     return {records};
   }
 
+
+  function cloneJsonLike(value, fallback = null) {
+    try { return JSON.parse(JSON.stringify(value)); } catch { return fallback; }
+  }
+
+  function normalizeStudyProgress(progress) {
+    const input = progress && typeof progress === 'object' ? progress : {};
+    const draftFields = {};
+    if (input.draftFields && typeof input.draftFields === 'object' && !Array.isArray(input.draftFields)) {
+      Object.entries(input.draftFields).slice(0, 1200).forEach(([key, value]) => {
+        if (!key || !value || typeof value !== 'object' || Array.isArray(value)) return;
+        const safe = {};
+        Object.entries(value).forEach(([k,v]) => {
+          if (['string','number','boolean'].includes(typeof v) || v == null) safe[k] = v;
+        });
+        draftFields[String(key)] = safe;
+      });
+    }
+    const gradedRecall = {};
+    if (input.gradedRecall && typeof input.gradedRecall === 'object' && !Array.isArray(input.gradedRecall)) {
+      Object.entries(input.gradedRecall).slice(0, 100).forEach(([key, value]) => {
+        if (key && ['correct','near','wrong','unknown'].includes(String(value))) gradedRecall[String(key)] = String(value);
+      });
+    }
+    const lastFocus = input.lastFocus && typeof input.lastFocus === 'object'
+      ? {sectionIndex:Math.max(0, Number(input.lastFocus.sectionIndex || 0)), lineIndex:Math.max(0, Number(input.lastFocus.lineIndex || 0))}
+      : null;
+    return {
+      stepIndex:Math.max(0, Number(input.stepIndex || 0)),
+      stepKey:String(input.stepKey || ''),
+      stepLabel:String(input.stepLabel || ''),
+      updatedAt:Number(input.updatedAt || 0),
+      draftFields,
+      gradedRecall,
+      structureSession:cloneJsonLike(input.structureSession, null),
+      lastFocus
+    };
+  }
+
   function normalizeActiveSession(session) {
     if (!session || typeof session !== 'object') return null;
     return {
       ...session,
       sectionIds:Array.isArray(session.sectionIds) ? session.sectionIds.map(String) : [],
-      performance:normalizePerformance(session.performance)
+      performance:normalizePerformance(session.performance),
+      studyProgress:normalizeStudyProgress(session.studyProgress)
     };
+  }
+
+  function normalizeDayKeys(values, limit = 180) {
+    if (!Array.isArray(values)) return [];
+    const seen = new Set();
+    const out = [];
+    values.forEach(value => {
+      const key = String(value || '');
+      if (!parseDayKey(key) || seen.has(key)) return;
+      seen.add(key);
+      out.push(key);
+    });
+    out.sort();
+    return out.slice(-Math.max(1, Number(limit || 180)));
   }
 
   function normalizeState(source, now = Date.now()) {
     const state = source && typeof source === 'object' ? {...source} : {};
     return {
-      version:2,
-      firstDayKey:String(state.firstDayKey || localDayKey(now)),
+      version:4,
+      firstDayKey:String(state.firstDayKey || localDayKey(now)), // legacy: v7.6.4 이하 백업 호환
       targetLines:Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(state.targetLines || DEFAULT_TARGET_LINES))),
       completedSectionIds:Array.isArray(state.completedSectionIds) ? [...new Set(state.completedSectionIds.map(String))] : [],
       activeSession:normalizeActiveSession(state.activeSession),
       completedSessions:Array.isArray(state.completedSessions) ? state.completedSessions.slice(-120) : [],
       fastStreak:Math.max(0, Number(state.fastStreak || 0)),
       recoveryDayKey:String(state.recoveryDayKey || ''),
+      studyDayKeys:normalizeDayKeys(state.studyDayKeys, 180),
+      cycleStudyDayKeys:normalizeDayKeys(state.cycleStudyDayKeys, 6),
+      consolidationDayKey:String(state.consolidationDayKey || ''),
       updatedAt:Number(state.updatedAt || 0)
     };
   }
 
   function plannerDayIndex(state, now = Date.now()) {
-    return dayDistance(state?.firstDayKey || localDayKey(now), localDayKey(now));
+    // v7.6.5부터 정리 주기는 달력 경과일이 아니라 실제 학습일로 운영한다.
+    // 이 값은 호환용으로 '현재 주기의 일반 학습일 수'를 반환한다.
+    return normalizeState(state, now).cycleStudyDayKeys.length;
   }
 
   function isConsolidationDay(state, now = Date.now()) {
-    return plannerDayIndex(state, now) % 7 === 6;
+    const normalized = normalizeState(state, now);
+    const today = localDayKey(now);
+    // 정리 학습을 시작한 날에는 하루가 끝날 때까지 새 진도를 열지 않는다.
+    if (normalized.consolidationDayKey === today) return true;
+    // 여섯 번째 일반 학습일 당일에는 정리일이 아니다. 그 다음 '실제 학습일'이 정리일이다.
+    return normalized.cycleStudyDayKeys.length >= 6 && !normalized.cycleStudyDayKeys.includes(today);
+  }
+
+  function recordStudyActivity(state, now = Date.now()) {
+    const normalized = normalizeState(state, now);
+    const today = localDayKey(now);
+    if (normalized.studyDayKeys.includes(today)) return normalized;
+
+    const consolidationPending = isConsolidationDay(normalized, now);
+    normalized.studyDayKeys = normalizeDayKeys([...normalized.studyDayKeys, today], 180);
+    if (consolidationPending) {
+      // 정리일은 전체 학습일 이력에는 남기되 다음 6일 주기에는 포함하지 않는다.
+      normalized.consolidationDayKey = today;
+      normalized.cycleStudyDayKeys = [];
+    } else if (!normalized.cycleStudyDayKeys.includes(today)) {
+      normalized.cycleStudyDayKeys = normalizeDayKeys([...normalized.cycleStudyDayKeys, today], 6);
+    }
+    normalized.updatedAt = now;
+    return normalized;
   }
 
   function dailyReviewBudget(targetLines) {
@@ -129,6 +317,10 @@
     // 새 진도를 먼저 줄이고, 장기 기억을 위한 재인출 용량은 최소 20개를 유지한다.
     const target = Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(targetLines || DEFAULT_TARGET_LINES)));
     return Math.max(20, Math.min(30, Math.round(20 + (target - MIN_TARGET_LINES) * 0.5)));
+  }
+
+  function reviewUnlockAllowance(targetLines) {
+    return Math.max(1, Math.floor(dailyReviewBudget(targetLines) * 0.25));
   }
 
   function reviewLoadDecision(targetLines, dueCount = 0) {
@@ -157,21 +349,24 @@
     return dailyReviewBudget(targetLines) * 2;
   }
 
-  function paceDecision({state, dueCount = 0, now = Date.now()} = {}) {
+  function paceDecision({state, dueCount = 0, now = Date.now(), targetFloor = 0} = {}) {
     const normalized = normalizeState(state, now);
     const load = reviewLoadDecision(normalized.targetLines, dueCount);
+    // 실제 학습일 6일을 채운 뒤의 다음 학습일은, 미완료 세션이 있어도 누적 정리를 먼저 한다.
+    if (isConsolidationDay(normalized, now)) return {allowNew:false, mode:'consolidation', effectiveTargetLines:0, reviewBudget:load.budget, reason:'실제 학습일 6일을 채워 오늘은 누적 혼합 점검일입니다.'};
     if (normalized.activeSession?.sectionIds?.length) return {allowNew:true, mode:'continue', effectiveTargetLines:normalized.targetLines, reviewBudget:load.budget, reason:'진행 중인 범위를 먼저 마칩니다.'};
     if (normalized.recoveryDayKey === localDayKey(now)) return {allowNew:false, mode:'review-recovery', effectiveTargetLines:0, reviewBudget:load.budget, reason:'오늘은 복습 적체를 해소하는 회복일입니다.'};
-    if (isConsolidationDay(normalized, now)) return {allowNew:false, mode:'consolidation', effectiveTargetLines:0, reviewBudget:load.budget, reason:'오늘은 7일 주기의 누적 혼합 점검일입니다.'};
     if (load.mode === 'pause') return {allowNew:false, mode:'review-recovery', effectiveTargetLines:0, reviewBudget:load.budget, reason:`복습 ${load.backlog}개가 쌓여 새 진도를 잠시 멈춥니다.`};
     if (load.mode === 'heavy-reduce' || load.mode === 'light-reduce') return {allowNew:true, mode:'new-reduced', effectiveTargetLines:load.effectiveTargetLines, reviewBudget:load.budget, reason:load.reason};
+    const deadlineFloor = Math.max(0, Math.min(MAX_TARGET_LINES, Number(targetFloor || 0)));
+    if (deadlineFloor > normalized.targetLines) return {allowNew:true, mode:'deadline-boost', effectiveTargetLines:deadlineFloor, reviewBudget:load.budget, reason:`시험 역산상 첫 회독 권장 마감에 맞추기 위해 오늘 학습량을 ${deadlineFloor}점으로 보정합니다.`};
     return {allowNew:true, mode:'new', effectiveTargetLines:normalized.targetLines, reviewBudget:load.budget, reason:'복습 부담이 안정적이어서 새 범위를 추가합니다.'};
   }
 
-  function createNextSession(sections, state, dueCount = 0, now = Date.now()) {
+  function createNextSession(sections, state, dueCount = 0, now = Date.now(), options = {}) {
     const normalized = normalizeState(state, now);
     if (normalized.activeSession?.sectionIds?.length) return {...normalized.activeSession, continued:true};
-    const decision = paceDecision({state:normalized, dueCount, now});
+    const decision = paceDecision({state:normalized, dueCount, now, targetFloor:Number(options?.targetFloor || 0)});
     if (!decision.allowNew) return null;
     const completed = new Set(normalized.completedSectionIds);
     const firstIndex = (sections || []).findIndex(section => !completed.has(section.id));
@@ -179,18 +374,36 @@
     const first = sections[firstIndex];
     const selected = [];
     const sessionTarget = Math.max(MIN_TARGET_LINES, Number(decision.effectiveTargetLines || normalized.targetLines));
-    let lines = 0;
+    const candidates = [];
     for (let i = firstIndex; i < sections.length; i++) {
       const item = sections[i];
       if (completed.has(item.id)) continue;
       if (item.subjectKey !== first.subjectKey || item.area !== first.area) break;
-      const projected = lines + Number(item.lineCount || 0);
-      if (selected.length && lines >= sessionTarget && projected > sessionTarget + 5) break;
-      if (selected.length && lines < sessionTarget && projected > sessionTarget + 5) break;
-      selected.push(item);
-      lines = projected;
+      candidates.push(item);
+    }
+    const totalCandidateLoad = candidates.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    let workload = 0;
+    // 영역 전체가 목표보다 5점 이내로만 무거우면 작은 꼬리 세션을 만들지 않고 한 번에 끝낸다.
+    if (totalCandidateLoad <= sessionTarget + 5) {
+      selected.push(...candidates);
+      workload = totalCandidateLoad;
+    } else {
+      for (let i = 0; i < candidates.length; i++) {
+        const item = candidates[i];
+        const itemLoad = Number(item.workloadScore || item.lineCount || 0);
+        const projected = workload + itemLoad;
+        const remainingAfter = totalCandidateLoad - projected;
+        if (selected.length && projected > sessionTarget + 5) break;
+        // 현재 분량이 이미 충분할 때 다음 section을 넣으면 6점 미만의 꼬리만 남는다면,
+        // 다음 날에도 의미 있는 묶음이 남도록 여기서 끊는다.
+        if (selected.length && workload >= sessionTarget * 0.7 && remainingAfter > 0 && remainingAfter < 6) break;
+        selected.push(item);
+        workload = projected;
+        if (workload >= sessionTarget) break;
+      }
     }
     if (!selected.length) selected.push(first);
+    const selectedWorkload = Math.round(selected.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0) * 10) / 10;
     return {
       id:`plan-session|${selected.map(item => item.id).join('~')}`,
       sectionIds:selected.map(item => item.id),
@@ -198,7 +411,9 @@
       area:first.area,
       sourceGroups:[...new Set(selected.map(item => item.sourceGroup))],
       lineCount:selected.reduce((sum,item) => sum + Number(item.lineCount || 0), 0),
-      targetLinesAtStart:sessionTarget,
+      workloadScore:selectedWorkload,
+      targetWorkloadAtStart:sessionTarget,
+      targetLinesAtStart:sessionTarget, // v7.6.3 이하 백업/복원 호환용 legacy alias
       paceMode:decision.mode,
       startedDayKey:localDayKey(now),
       startedAt:now,
@@ -209,7 +424,26 @@
   function startSession(state, session, now = Date.now()) {
     const normalized = normalizeState(state, now);
     if (!session) return normalized;
-    normalized.activeSession = {...session, startedDayKey:session.startedDayKey || localDayKey(now), startedAt:Number(session.startedAt || now)};
+    normalized.activeSession = {...session, startedDayKey:session.startedDayKey || localDayKey(now), startedAt:Number(session.startedAt || now), studyProgress:normalizeStudyProgress(session.studyProgress)};
+    normalized.updatedAt = now;
+    return normalized;
+  }
+
+
+  function noteSessionStudyProgress(state, progress = {}, now = Date.now()) {
+    const normalized = normalizeState(state, now);
+    if (!normalized.activeSession?.sectionIds?.length) return normalized;
+    const current = normalizeStudyProgress(normalized.activeSession.studyProgress);
+    const merged = {
+      ...current,
+      ...progress,
+      draftFields:progress.draftFields !== undefined ? {...current.draftFields, ...progress.draftFields} : current.draftFields,
+      gradedRecall:progress.gradedRecall !== undefined ? progress.gradedRecall : current.gradedRecall,
+      structureSession:progress.structureSession !== undefined ? progress.structureSession : current.structureSession,
+      lastFocus:progress.lastFocus !== undefined ? progress.lastFocus : current.lastFocus,
+      updatedAt:Number(now || Date.now())
+    };
+    normalized.activeSession.studyProgress = normalizeStudyProgress(merged);
     normalized.updatedAt = now;
     return normalized;
   }
@@ -285,41 +519,41 @@
       if (daysSpent >= 3) delta = -2;
       else if (daysSpent === 2) delta = -1;
       reason = daysSpent === 1
-        ? '정답 데이터가 충분하지 않아 새 원문 목표량을 유지했습니다.'
-        : `완료까지 ${daysSpent}일이 걸렸고 정답 데이터가 부족해 목표량을 ${Math.abs(delta)}문장 줄였습니다.`;
+        ? '정답 데이터가 충분하지 않아 새 학습량 목표를 유지했습니다.'
+        : `완료까지 ${daysSpent}일이 걸렸고 정답 데이터가 부족해 학습량 목표를 ${Math.abs(delta)}점 줄였습니다.`;
     } else if (daysSpent === 1) {
       if (accuracy >= HIGH_ACCURACY) {
         streak += 1;
         if (streak >= 3) { delta = 1; streak = 0; }
         reason = delta > 0
-          ? `1일 완료와 높은 첫 인출 정확도(${performance.percent}%)가 반복되어 목표량을 1문장 늘렸습니다.`
-          : `1일 완료 · 첫 인출 정확도 ${performance.percent}%로 안정적입니다. 같은 수준이 반복되면 목표량을 조금 늘립니다.`;
+          ? `1일 완료와 높은 첫 인출 정확도(${performance.percent}%)가 반복되어 학습량 목표를 1점 늘렸습니다.`
+          : `1일 완료 · 첫 인출 정확도 ${performance.percent}%로 안정적입니다. 같은 수준이 반복되면 학습량 목표를 조금 늘립니다.`;
       } else if (accuracy >= STABLE_ACCURACY) {
         streak = 0;
-        reason = `1일에 끝냈지만 첫 인출 정확도 ${performance.percent}%라 목표량은 유지합니다.`;
+        reason = `1일에 끝냈지만 첫 인출 정확도 ${performance.percent}%라 학습량 목표는 유지합니다.`;
       } else {
         streak = 0;
         delta = accuracy < 0.55 ? -2 : -1;
-        reason = `1일에 끝냈지만 첫 인출 정확도 ${performance.percent}%가 낮아 목표량을 ${Math.abs(delta)}문장 줄였습니다.`;
+        reason = `1일에 끝냈지만 첫 인출 정확도 ${performance.percent}%가 낮아 학습량 목표를 ${Math.abs(delta)}점 줄였습니다.`;
       }
     } else if (daysSpent === 2) {
       streak = 0;
       if (accuracy >= HIGH_ACCURACY) {
         delta = 0;
-        reason = `이틀이 걸렸지만 첫 인출 정확도 ${performance.percent}%가 높아 목표량을 유지합니다.`;
+        reason = `이틀이 걸렸지만 첫 인출 정확도 ${performance.percent}%가 높아 학습량 목표를 유지합니다.`;
       } else if (accuracy >= STABLE_ACCURACY) {
         delta = -1;
-        reason = `이틀 소요 · 첫 인출 정확도 ${performance.percent}%로 목표량을 1문장 줄였습니다.`;
+        reason = `이틀 소요 · 첫 인출 정확도 ${performance.percent}%로 학습량 목표를 1점 줄였습니다.`;
       } else {
         delta = -2;
-        reason = `이틀 소요 · 첫 인출 정확도 ${performance.percent}%가 낮아 목표량을 2문장 줄였습니다.`;
+        reason = `이틀 소요 · 첫 인출 정확도 ${performance.percent}%가 낮아 학습량 목표를 2점 줄였습니다.`;
       }
     } else {
       streak = 0;
       if (accuracy >= HIGH_ACCURACY) delta = -1;
       else if (accuracy >= STABLE_ACCURACY) delta = -2;
       else delta = -3;
-      reason = `${daysSpent}일 소요 · 첫 인출 정확도 ${performance.percent}%를 함께 반영해 목표량을 ${Math.abs(delta)}문장 줄였습니다.`;
+      reason = `${daysSpent}일 소요 · 첫 인출 정확도 ${performance.percent}%를 함께 반영해 학습량 목표를 ${Math.abs(delta)}점 줄였습니다.`;
     }
 
     const nextTarget = Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, target + delta));
@@ -341,6 +575,7 @@
       sessionId:session.id,
       sectionIds:[...session.sectionIds],
       lineCount:Number(session.lineCount || 0),
+      workloadScore:Number(session.workloadScore || session.lineCount || 0),
       startedDayKey:session.startedDayKey || today,
       completedDayKey:today,
       daysSpent,
@@ -372,7 +607,9 @@
     const completedSections = (sections || []).filter(section => completed.has(section.id)).length;
     const totalLines = (sections || []).reduce((sum,item) => sum + Number(item.lineCount || 0), 0);
     const completedLines = (sections || []).filter(section => completed.has(section.id)).reduce((sum,item) => sum + Number(item.lineCount || 0), 0);
-    return {totalSections, completedSections, totalLines, completedLines, percent:totalLines ? Math.round(completedLines / totalLines * 100) : 0};
+    const totalWorkload = (sections || []).reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    const completedWorkload = (sections || []).filter(section => completed.has(section.id)).reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    return {totalSections, completedSections, totalLines, completedLines, totalWorkload:Math.round(totalWorkload*10)/10, completedWorkload:Math.round(completedWorkload*10)/10, percent:totalWorkload ? Math.round(completedWorkload / totalWorkload * 100) : 0};
   }
 
   return {
@@ -381,19 +618,30 @@
     MAX_TARGET_LINES,
     HIGH_ACCURACY,
     STABLE_ACCURACY,
+    DEFAULT_EXAM_DAY_KEY,
+    FIRST_PASS_BUFFER_DAYS,
+    lineWorkload,
     localDayKey,
     dayDistance,
+    signedDayDistance,
+    shiftDayKey,
     buildStudySections,
     normalizeState,
     plannerDayIndex,
     isConsolidationDay,
+    recordStudyActivity,
     dailyReviewBudget,
+    reviewUnlockAllowance,
+    deadlineGuidance,
+    projectedNewStudyDays,
+    estimateCompletionDayKey,
     reviewLoadDecision,
     reviewPauseThreshold,
     paceDecision,
     createNextSession,
     startSession,
     noteSessionAssessment,
+    noteSessionStudyProgress,
     sessionPerformanceSummary,
     adaptPace,
     completeActiveSession,
