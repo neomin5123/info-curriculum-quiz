@@ -1923,3 +1923,19 @@
   .source-modal-actions { padding:10px 12px max(12px, env(safe-area-inset-bottom)); }
   .source-modal-section-head { align-items:flex-start; flex-direction:column; gap:3px; }
 }
+
+.practice-unit-feedback + .practice-unit-feedback { margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+.practice-stem u { text-underline-offset:3px; text-decoration-thickness:1.5px; }
+
+.practice-explanation-actions { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 12px; }
+.practice-explanation-modal .source-modal-body { display:grid; gap:14px; }
+.practice-explanation-summary, .practice-explanation-scoreguide, .practice-explanation-note { border:1px solid var(--line); border-radius:12px; padding:14px 15px; background:var(--panel); }
+.practice-explanation-summary h3, .practice-explanation-scoreguide h3, .practice-explanation-note h3 { margin:0 0 10px; font-size:14px; }
+.practice-explanation-summary p, .practice-explanation-note p { margin:0; line-height:1.72; white-space:pre-wrap; }
+.practice-explanation-unit { padding:11px 0; border-top:1px solid var(--line); }
+.practice-explanation-unit:first-of-type { border-top:0; padding-top:0; }
+.practice-explanation-unit:last-child { padding-bottom:0; }
+.practice-explanation-unit-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:5px; }
+.practice-explanation-unit-head span { color:var(--accent); font-size:12px; font-weight:850; }
+.practice-explanation-answer { margin-bottom:5px; font-size:13px; }
+.practice-explanation-unit p { margin:0; color:var(--muted); line-height:1.65; font-size:13px; }

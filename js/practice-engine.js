@@ -150,12 +150,27 @@
     const results = [];
     let earned = 0, total = 0;
     for (const task of tasks) {
-      const points = Number(task.points || 0);
-      const unit = units.find(item => item.taskId === task.id) || {taskId:task.id,key:''};
-      const result = gradeAnswer(answers?.[task.id] || '', unit, points, gradingEngine);
-      results.push({task, unit, ...result});
-      earned += result.earned;
-      total += points;
+      const taskPoints = Number(task.points || 0);
+      const taskUnits = units.filter(item => item.taskId === task.id);
+      const effectiveUnits = taskUnits.length ? taskUnits : [{taskId:task.id,key:'',points:taskPoints}];
+      const explicitSum = effectiveUnits.reduce((sum, unit) => sum + Number(unit.points || 0), 0);
+      const fallbackUnitPoints = effectiveUnits.length ? taskPoints / effectiveUnits.length : taskPoints;
+      const unitResults = effectiveUnits.map(unit => {
+        const unitPoints = Number(unit.points || 0) || (explicitSum ? 0 : fallbackUnitPoints);
+        return {unit, ...gradeAnswer(answers?.[task.id] || '', unit, unitPoints, gradingEngine)};
+      });
+      const scoredPoints = unitResults.reduce((sum, item) => sum + Number(item.points || 0), 0);
+      const expectedPoints = taskPoints || scoredPoints;
+      const taskEarned = unitResults.reduce((sum, item) => sum + Number(item.earned || 0), 0);
+      const allCorrect = unitResults.length > 0 && unitResults.every(item => item.status === 'correct');
+      const allUnknown = unitResults.length > 0 && unitResults.every(item => item.status === 'unknown');
+      const anyNear = unitResults.some(item => item.status === 'near');
+      const anyCorrect = unitResults.some(item => item.status === 'correct');
+      const status = allCorrect ? 'correct' : allUnknown ? 'unknown' : (anyCorrect || anyNear) ? 'near' : 'wrong';
+      // Legacy UI compatibility: expose the first unit as `unit`, while richer UIs can read unitResults[].
+      results.push({task, unit:effectiveUnits[0], units:effectiveUnits, unitResults, status, earned:taskEarned, points:expectedPoints});
+      earned += taskEarned;
+      total += expectedPoints;
     }
     const correctCount = results.filter(r => r.status === 'correct').length;
     const unknownCount = results.filter(r => r.status === 'unknown').length;
@@ -205,25 +220,68 @@
   function buildExamSet(questions, options) {
     const opts = options || {};
     const pool = (questions || []).filter(q => q && q.questionId);
-    const target = Math.max(1, Math.min(Number(opts.size || 5), pool.length));
     const rng = typeof opts.randomFn === 'function' ? opts.randomFn : Math.random;
     if (!pool.length) return [];
+
+    const pointOf = q => Math.max(0, Number(q?.points || (q?.tasks || []).reduce((sum, task) => sum + Number(task?.points || 0), 0)));
+    const targetPoints = Math.max(0, Number(opts.targetPoints || 0));
+    let pointQuota = null;
+    let targetSize = Math.max(1, Math.min(Number(opts.size || 5), pool.length));
+
+    if (targetPoints > 0) {
+      // v7 실전 세트: 문항 수가 아니라 총점으로 구성한다. 현재 production 배점은 2점/4점이다.
+      const pointCounts = new Map();
+      pool.forEach(q => pointCounts.set(pointOf(q), Number(pointCounts.get(pointOf(q)) || 0) + 1));
+      const pointValues = [...pointCounts.keys()].filter(v => v > 0).sort((a,b) => b-a);
+      const compositions = [];
+      const walk = (at, remain, counts) => {
+        if (remain === 0) {
+          const size = [...counts.values()].reduce((sum, n) => sum + n, 0);
+          compositions.push({counts:new Map(counts), size});
+          return;
+        }
+        if (at >= pointValues.length || remain < 0) return;
+        const value = pointValues[at];
+        const max = Math.min(Number(pointCounts.get(value) || 0), Math.floor(remain / value));
+        for (let n=max; n>=0; n--) {
+          if (n) counts.set(value,n); else counts.delete(value);
+          walk(at+1, remain-value*n, counts);
+        }
+        counts.delete(value);
+      };
+      walk(0,targetPoints,new Map());
+      if (!compositions.length) return [];
+      const hasTwo = Number(pointCounts.get(2) || 0) > 0;
+      const hasFour = Number(pointCounts.get(4) || 0) > 0;
+      compositions.sort((a,b) => {
+        // 20점에서는 4점×4 + 2점×2(6문항)를 기본형으로 선호한다.
+        const mixPenalty = comp => (hasTwo && hasFour && (!(comp.counts.get(2)||0) || !(comp.counts.get(4)||0))) ? 1 : 0;
+        const aScore = mixPenalty(a)*100 + Math.abs(a.size-6)*10 + Math.abs((a.counts.get(4)||0)-4)*2 + Math.abs((a.counts.get(2)||0)-2);
+        const bScore = mixPenalty(b)*100 + Math.abs(b.size-6)*10 + Math.abs((b.counts.get(4)||0)-4)*2 + Math.abs((b.counts.get(2)||0)-2);
+        return aScore-bScore;
+      });
+      pointQuota = compositions[0].counts;
+      targetSize = compositions[0].size;
+    }
 
     const remaining = pool.map((q, index) => ({q, index, noise:rng()}));
     const selected = [];
     const usedSources = new Set();
     const usedPairs = new Set();
     const subjectCounts = new Map();
+    const selectedPointCounts = new Map();
     let comparisonCount = 0;
     let multiScopeCount = 0;
 
     const pairKey = scope => `${scope.subject}::${scope.area}`;
-    while (selected.length < target && remaining.length) {
-      let bestAt = 0;
+    while (selected.length < targetSize && remaining.length) {
+      let bestAt = -1;
       let bestScore = -Infinity;
       for (let i = 0; i < remaining.length; i++) {
         const item = remaining[i];
         const q = item.q;
+        const qPoints = pointOf(q);
+        if (pointQuota && Number(selectedPointCounts.get(qPoints) || 0) >= Number(pointQuota.get(qPoints) || 0)) continue;
         const scopes = questionScopes(q);
         const subjects = [...new Set(scopes.map(scope => scope.subject).filter(Boolean))];
         const pairs = [...new Set(scopes.map(pairKey))];
@@ -235,9 +293,6 @@
         const subjectLoad = subjects.reduce((sum, subject) => sum + Number(subjectCounts.get(subject) || 0), 0);
         const pairOverlap = pairs.length - newPairs;
 
-        // 실전 세트는 약점 우선순위보다 범위 다양성과 독립성을 우선한다.
-        // 같은 sourceId가 겹치거나 한 과목에 몰리는 후보를 강하게 감점하되,
-        // 필터가 좁아 대안이 없을 때는 완전히 배제하지 않는다.
         let score = 0;
         score += Math.min(newSubjects, 1) * 22 + Math.max(0, newSubjects - 1) * 4;
         score += Math.min(newPairs, 1) * 10 + Math.max(0, newPairs - 1) * 2;
@@ -253,9 +308,12 @@
 
         if (score > bestScore) { bestScore = score; bestAt = i; }
       }
+      if (bestAt < 0) break;
 
       const [{q}] = remaining.splice(bestAt, 1);
       selected.push(q.questionId);
+      const qPoints = pointOf(q);
+      selectedPointCounts.set(qPoints, Number(selectedPointCounts.get(qPoints) || 0) + 1);
       for (const id of q.sourceIds || []) usedSources.add(id);
       for (const scope of questionScopes(q)) {
         usedPairs.add(pairKey(scope));
@@ -263,6 +321,11 @@
       }
       if (q.comparison2015) comparisonCount += 1;
       if (questionScopes(q).length > 1) multiScopeCount += 1;
+    }
+
+    if (pointQuota) {
+      const score = selected.reduce((sum,id) => sum + pointOf(pool.find(q => q.questionId === id)),0);
+      if (score !== targetPoints) return [];
     }
     return selected;
   }

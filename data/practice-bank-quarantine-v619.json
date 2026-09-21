@@ -1,0 +1,1848 @@
+{
+  "meta": {
+    "version": "v6.19-rewrite-quarantine",
+    "source": "v6.18.0 core 41",
+    "rewrittenCount": 18,
+    "unreworkedCount": 23,
+    "policy": "Not learner-facing until re-authored under v1.3 and re-audited."
+  },
+  "rewriteMap": {
+    "PB-086": "EX-001",
+    "PB-088": "EX-002",
+    "PB-090": "EX-003",
+    "PB-091": "EX-004",
+    "PB-092": "EX-005",
+    "PB-145": "EX-006",
+    "PB-150": "EX-007",
+    "PB-189": "EX-008",
+    "PB-191": "EX-009",
+    "PB-195": "EX-010",
+    "PB-206": "EX-011",
+    "PB-213": "EX-012",
+    "PB-214": "EX-013",
+    "PB-116": "EX-014",
+    "PB-117": "EX-015",
+    "PB-129": "EX-016",
+    "PB-190": "EX-017",
+    "PB-159": "EX-018"
+  },
+  "questions": [
+    {
+      "questionId": "PB-025",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-02-AC-ST-01",
+        "IS-02-AC-ST-02",
+        "IS-02-AC-ST-03",
+        "IS-02-AC-ST-04"
+      ],
+      "sourceType": [
+        "성취기준"
+      ],
+      "stem": "학교 시설 관리 프로그램을 설계한다. ① 사용자가 최근에 취소한 작업부터 되돌리는 기능, ② 접수된 수리 요청을 들어온 순서대로 처리하는 기능, ③ 건물과 통로의 연결 관계를 저장하여 이동 경로 문제를 해결하는 기능이 필요하다. 학생은 각 기능에 적합한 자료구조를 선택하고 프로그램으로 구현하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "①과 ②에 각각 적합한 자료구조를 순서대로 쓰고, 처리 순서의 차이를 간단히 설명하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "③의 연결 관계를 구현할 때 활용할 수 있는 두 표현 방법과, 구현 이후 수행해야 할 학습 행동을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "① 스택, ② 큐이며 스택은 후입선출, 큐는 선입선출 방식으로 처리한다",
+          "acceptedVariants": [
+            "스택은 LIFO, 큐는 FIFO"
+          ],
+          "forbiddenConfusions": [
+            "① 큐, ② 스택"
+          ],
+          "requiredConcepts": [
+            "스택",
+            "큐",
+            "후입선출",
+            "선입선출"
+          ],
+          "rationale": "[12정과02-01]은 스택과 큐의 원리를 이해하고 순차적 데이터 구조로 구현하도록 하며, [12정과02-02]는 이를 활용해 문제를 해결하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "인접행렬과 인접리스트를 활용하여 그래프를 구현하고, 그래프를 활용해 문제를 효율적으로 해결하는 프로그램을 작성한다",
+          "acceptedVariants": [
+            "인접 행렬과 인접 리스트로 그래프를 구현하고 문제 해결 프로그램을 작성한다"
+          ],
+          "forbiddenConfusions": [
+            "배열만 사용한다"
+          ],
+          "requiredConcepts": [
+            "인접행렬",
+            "인접리스트",
+            "그래프",
+            "문제",
+            "프로그램"
+          ],
+          "rationale": "[12정과02-03]은 인접행렬과 인접리스트로 트리와 그래프를 구현하고, [12정과02-04]는 이를 활용해 문제 해결 프로그램을 작성하도록 한다."
+        }
+      ],
+      "explanation": "자료구조 명칭 회상이 아니라 실제 기능 요구에 맞는 자료구조 선택·표현·프로그램 활용까지 연결한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "데이터 구조"
+      ],
+      "sections": [
+        "성취기준"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "데이터 구조"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-038",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-01-AC-ST-02",
+        "DS-01-AC-ST-03",
+        "DS-01-AC-EX-01",
+        "DS-01-AC-EX-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "지역 축제 분석을 위해 A파일에는 방문자의 연령·체류시간이 표 형태로, B파일에는 자유서술 후기와 사진이 저장되어 있다. 두 파일에는 공통으로 방문자 식별용 익명 ID가 있다. 학생은 파일 형태가 다르므로 함께 분석할 수 없다고 주장한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "A와 B의 데이터 형태를 구분하고, 분석 대상으로서 가치를 판단할 때 살펴볼 것을 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "두 데이터셋을 통합하는 방법과 대규모 공유·관리를 위해 필요한 개념을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "A는 정형 데이터, B는 비정형 데이터이며 각 데이터의 속성 의미와 속성 간 관계를 살펴 분석 대상으로서의 가치를 판단한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "정형 데이터",
+            "비정형 데이터",
+            "속성",
+            "관계",
+            "가치"
+          ],
+          "rationale": "[12데과01-02]와 해설은 데이터 형태를 구분하고 속성별 의미와 관계를 바탕으로 잠재적 가치를 판단하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "공통된 익명 ID 속성을 기준으로 두 데이터셋을 통합할 수 있고, 여러 사람이 체계적으로 공유·관리하려면 데이터베이스가 필요하다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "공통",
+            "속성",
+            "통합",
+            "데이터베이스"
+          ],
+          "rationale": "[12데과01-03] 해설은 공통 속성을 기준으로 데이터셋을 통합하고 데이터베이스의 필요성을 설명하도록 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 공식 교육과정의 성취기준·해설·적용 지침과 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 과학의 이해"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 과학의 이해"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-059",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "AI-01-AC-ST-04",
+        "AI-01-AC-EX-02",
+        "AI-01-AC-CO-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "stem": "목표 지점까지 가는 경로 문제를 고른 학생이 남은 거리 정보를 이용하는 탐색 방법을 적용해 프로그램을 만들었다. 교사는 단순히 프로그램이 실행되는지만 보지 않고 탐색 방법의 선택과 문제 해결 효과까지 평가하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "선정한 문제의 성격과 적용한 탐색 방식",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "평가에서 확인해야 할 두 핵심",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "지능적 탐색이 필요한 문제에 정보 이용 탐색 알고리즘을 적용한다",
+          "acceptedVariants": [
+            "지능적 탐색이 필요한 문제에 정보 이용 탐색을 적용한다"
+          ],
+          "forbiddenConfusions": [
+            "맹목적 탐색만 적용"
+          ],
+          "rationale": "성취기준은 지능적 탐색 문제를 찾고 정보 이용 탐색을 적용하도록 한다.",
+          "requiredConcepts": [
+            "지능적 탐색",
+            "정보 이용 탐색"
+          ]
+        },
+        {
+          "taskId": "b",
+          "key": "문제에 적합한 탐색 알고리즘을 선택·적용했는지와 프로그램이 문제 해결에 효과적이었는지",
+          "acceptedVariants": [
+            "문제에 적합한 탐색 알고리즘의 선택·적용 여부와 프로그램의 문제 해결 효과를 확인한다"
+          ],
+          "forbiddenConfusions": [
+            "실행 여부만 확인"
+          ],
+          "rationale": "평가는 알고리즘 선택의 적합성과 개발 프로그램의 문제 해결 효과에 중점을 둔다.",
+          "requiredConcepts": [
+            "적합",
+            "효과"
+          ]
+        }
+      ],
+      "explanation": "탐색 알고리즘 적용뿐 아니라 선택의 적합성과 개발 결과의 문제 해결 효과를 평가한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "ai-basic"
+      ],
+      "areas": [
+        "인공지능의 이해"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "ai-basic",
+          "area": "인공지능의 이해"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-061",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-02-AC-ST-02",
+        "DS-02-CS-KI-01",
+        "DS-02-CS-PF-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "핵심 아이디어",
+        "과정·기능"
+      ],
+      "stem": "센서 데이터에서 비정상적으로 큰 값과 비어 있는 값을 찾고, 값의 척도를 맞춘 뒤 분포를 그래프로 확인하였다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "전처리 과정에서 탐색한 두 문제",
+          "points": 1.5
+        },
+        {
+          "id": "b",
+          "prompt": "척도를 맞추는 처리",
+          "points": 1
+        },
+        {
+          "id": "c",
+          "prompt": "전처리 뒤 분석을 위해 수행한 행동",
+          "points": 1.5
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "이상치와 결측치",
+          "acceptedVariants": [
+            "이상치·결측치"
+          ],
+          "forbiddenConfusions": [
+            "중복 레이블"
+          ],
+          "rationale": "성취기준은 이상치와 결측치를 탐색한다."
+        },
+        {
+          "taskId": "b",
+          "key": "정규화",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [
+            "암호화"
+          ],
+          "rationale": "값의 척도를 맞추는 처리는 정규화에 해당한다."
+        },
+        {
+          "taskId": "c",
+          "key": "시각화한다",
+          "acceptedVariants": [
+            "데이터를 시각화"
+          ],
+          "forbiddenConfusions": [
+            "모델을 배포"
+          ],
+          "rationale": "전처리 후 데이터 분석을 위해 시각화한다."
+        }
+      ],
+      "explanation": "이상치·결측치 탐색 → 정규화 등 전처리 → 시각화라는 수행 흐름을 한 사례에서 판별한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 준비와 분석"
+      ],
+      "sections": [
+        "성취기준",
+        "핵심 아이디어",
+        "과정·기능"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 준비와 분석"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-081",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-TE-EVM-03",
+        "IS-03-AC-ST-06"
+      ],
+      "sourceType": [
+        "평가 방법",
+        "성취기준"
+      ],
+      "stem": "정보과학 수업에서 입력 크기 n에 대해 알고리즘 A의 기본 연산 횟수는 대략 n²에 비례하고, 알고리즘 B는 n log n에 비례한다. 학생은 두 알고리즘을 프로그램으로 구현해 실제 입력 데이터에서도 동작을 비교하려 한다. 학교에서는 프로그램 자동 평가시스템을 사용할 수 없는 상황이다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "A와 B의 시간 복잡도를 빅오 표기법으로 각각 쓰고, 입력이 커질수록 어느 알고리즘이 상대적으로 유리한지 판단하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "자동 평가시스템을 사용할 수 없을 때 교육과정에 맞게 프로그램의 구현 결과를 공정하게 평가하는 대안을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "A는 O(n²), B는 O(n log n)이며 입력이 커질수록 B가 상대적으로 유리하다",
+          "acceptedVariants": [
+            "O(n^2), O(n log n), B가 더 효율적"
+          ],
+          "forbiddenConfusions": [
+            "A가 더 효율적"
+          ],
+          "requiredConcepts": [
+            "O(n²)",
+            "O(n log n)",
+            "B"
+          ],
+          "rationale": "[12정과03-06]은 알고리즘 복잡도를 빅오 표기법으로 표현하고 다른 알고리즘과 비교하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "대표성을 지니는 데이터를 선정하여 평가 문항과 루브릭을 구성하고 지필평가나 수행평가로 공정하게 평가한다",
+          "acceptedVariants": [
+            "대표성 있는 테스트 데이터를 선정하고 루브릭을 만들어 지필 또는 수행평가한다"
+          ],
+          "forbiddenConfusions": [
+            "임의의 한 입력만 사용"
+          ],
+          "requiredConcepts": [
+            "대표성",
+            "데이터",
+            "루브릭",
+            "평가"
+          ],
+          "rationale": "정보과학 평가 방법은 자동 평가시스템을 활용하기 어려우면 대표성 있는 데이터를 선정해 평가 문항과 루브릭을 구성하고 지필·수행평가로 진행하도록 한다."
+        }
+      ],
+      "explanation": "알고리즘 복잡도라는 실제 전공지식 판단과 정보과학의 프로그램 평가 방법을 결합했다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "알고리즘"
+      ],
+      "sections": [
+        "평가 방법",
+        "성취기준"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "알고리즘"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-087",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-03-AC-ST-02",
+        "HI-TE-EVD-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "평가의 방향"
+      ],
+      "stem": "알고리즘 A는 매 단계 남은 원소 중 최솟값을 찾아 현재 위치와 교환하고, B는 인접한 두 값을 반복 비교·교환한다. 학생은 두 알고리즘을 같은 데이터에 적용해 수행 과정을 기록하고, 수업에서 보지 않은 새 데이터에도 적용한 뒤 비교 보고서를 작성했다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "A와 B의 알고리즘 명칭",
+          "points": 1
+        },
+        {
+          "id": "b",
+          "prompt": "두 알고리즘에 대해 비교·분석해야 할 두 관점",
+          "points": 2
+        },
+        {
+          "id": "c",
+          "prompt": "새 데이터에 다시 적용하게 한 평가의 목적",
+          "points": 1
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "선택 정렬, 버블 정렬",
+          "acceptedVariants": [
+            "선택 정렬과 버블 정렬"
+          ],
+          "forbiddenConfusions": [
+            "삽입 정렬, 병합 정렬"
+          ],
+          "rationale": "A는 선택 정렬, B는 버블 정렬의 전형적 절차다.",
+          "requiredConcepts": [
+            "선택 정렬",
+            "버블 정렬"
+          ]
+        },
+        {
+          "taskId": "b",
+          "key": "알고리즘의 특징과 효율",
+          "acceptedVariants": [
+            "특징·효율"
+          ],
+          "forbiddenConfusions": [
+            "이름만 암기"
+          ],
+          "rationale": "성취기준은 다양한 정렬 알고리즘의 특징과 효율을 비교·분석하도록 한다.",
+          "requiredConcepts": [
+            "특징",
+            "효율"
+          ]
+        },
+        {
+          "taskId": "c",
+          "key": "학습한 내용을 새로운 상황에 전이하여 적용할 수 있는지 확인하기 위해",
+          "acceptedVariants": [
+            "새로운 상황에 적용하는 전이 확인"
+          ],
+          "forbiddenConfusions": [
+            "같은 예제 암기 확인"
+          ],
+          "rationale": "평가 방향은 학습 내용의 전이를 통해 이해와 사고를 통합적으로 평가하는 것이다.",
+          "requiredConcepts": [
+            "전이",
+            "적용"
+          ]
+        }
+      ],
+      "explanation": "알고리즘 식별→특징·효율 비교→새로운 데이터에 대한 전이 평가를 결합한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "examEvidence": {
+        "file": "2026_중등1차_정보ㆍ컴퓨터_전공A.pdf",
+        "lines": "282-379",
+        "note": "선택 정렬·버블 정렬과 평가 방법을 결합한 실제 기출 구조"
+      },
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "알고리즘과 프로그래밍"
+      ],
+      "sections": [
+        "성취기준",
+        "평가의 방향"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "알고리즘과 프로그래밍"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-089",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-03-AC-ST-02",
+        "DS-03-AC-ST-03"
+      ],
+      "sourceType": [
+        "성취기준"
+      ],
+      "stem": "두 데이터 분석 과제를 수행한다. ① 같은 광고비·매출 데이터를 통계적 회귀모델과 기계학습 회귀모델로 각각 분석했다. ② 레이블이 없는 고객 데이터를 구매 특성의 유사성에 따라 여러 집단으로 묶었다. 교육과정이 각 과제에서 분석 이후까지 요구하는 사고를 구별하시오.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "①의 분석 관점과, 두 모델의 분석 뒤 비교해야 할 것을 함께 쓰시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "②의 분석 관점과, 군집을 형성한 뒤 해야 할 것을 함께 쓰시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "회귀 분석이며 통계적 회귀모델과 기계학습 회귀모델의 결과 해석 내용을 비교한다",
+          "acceptedVariants": [
+            "회귀 분석을 하고 두 회귀모델의 결과 해석을 비교한다"
+          ],
+          "forbiddenConfusions": [
+            "군집 분석"
+          ],
+          "rationale": "[12데과03-02]는 동일한 데이터를 두 종류의 회귀모델로 분석하고 결과 해석 내용을 비교하도록 한다.",
+          "requiredConcepts": [
+            "회귀 분석",
+            "결과 해석",
+            "비교"
+          ]
+        },
+        {
+          "taskId": "b",
+          "key": "군집 분석이며 데이터 속성의 유사성으로 군집을 형성한 뒤 군집 분석 결과의 의미를 해석한다",
+          "acceptedVariants": [
+            "군집 분석을 하고 군집 형성 후 결과의 의미를 해석한다"
+          ],
+          "forbiddenConfusions": [
+            "회귀 분석"
+          ],
+          "rationale": "[12데과03-03]은 속성 유사성을 분석하여 군집을 형성하고 결과의 의미를 해석하도록 한다.",
+          "requiredConcepts": [
+            "군집 분석",
+            "군집",
+            "의미",
+            "해석"
+          ]
+        }
+      ],
+      "explanation": "회귀와 군집의 명칭만 구별하는 데서 끝나지 않는다. 회귀에서는 두 모델의 결과 해석을 비교하고, 군집에서는 유사성에 따라 군집을 형성한 뒤 그 결과의 의미를 해석해야 한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 모델링과 평가"
+      ],
+      "sections": [
+        "성취기준"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 모델링과 평가"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-097",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-02-AC-ST-01",
+        "HI-02-AC-EX-01",
+        "HI-TE-EVD-02",
+        "HI-TE-EVD-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설",
+        "평가의 방향"
+      ],
+      "stem": "고등학교 정보 수업에서 학생들이 같은 이미지에 두 압축 방법을 적용해 품질과 용량을 비교하는 수행평가를 한다. 교사는 자신이 만든 채점표를 시험이 끝난 뒤 공개하고 점수만 알려 주려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "2022 개정 평가 방향에 맞게 평가 기준을 구성하는 방식을 수정하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "학생의 압축 학습이 다른 자료에도 전이되었는지 확인할 수 있는 추가 과제를 제안하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "평가 전에 학생과 함께 구체적인 루브릭을 구성하여 학생이 자신의 수준을 파악하고 학습을 성찰할 수 있게 해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "학생과 함께",
+            "루브릭",
+            "학습 수준",
+            "성찰"
+          ],
+          "rationale": "고등학교 평가 방향은 구체적 평가 루브릭을 학생과 함께 구성하여 자기 수준 파악과 성찰 기회를 제공하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "수업에서 다루지 않은 다른 종류의 데이터나 새로운 압축 상황에 압축 방법을 적용하고 품질·용량·효율을 비교·분석하게 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "새로운",
+            "데이터",
+            "압축",
+            "품질",
+            "용량",
+            "효율",
+            "비교"
+          ],
+          "rationale": "평가 방향은 학습한 내용의 전이를 확인하는 과제를 제시하도록 하며, 데이터 성취기준은 압축의 효율성을 분석·평가하도록 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 공식 교육과정의 성취기준·해설·적용 지침과 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "데이터"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설",
+        "평가의 방향"
+      ],
+      "points": 4,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "데이터"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-119",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-03-AC-ST-03",
+        "HI-03-AC-EX-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "정렬된 16개의 번호 [1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31]에서 31을 찾는다. 순차탐색은 앞에서부터 하나씩 비교하고, 이진탐색은 매 단계 탐색 범위를 절반으로 줄이며 중앙값과 비교한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "31을 찾을 때 두 방법의 비교 횟수를 각각 쓰시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "이 결과만으로 이진탐색이 모든 탐색 문제에서 항상 우수하다고 일반화할 수 없는 이유를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "순차탐색 16회, 이진탐색 5회",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "순차탐색",
+            "16",
+            "이진탐색",
+            "5"
+          ],
+          "rationale": "순차탐색은 16번째까지 비교하고, 이진탐색은 15→23→27→29→31의 5회 비교로 찾는다."
+        },
+        {
+          "taskId": "b",
+          "key": "알고리즘의 효율은 데이터의 정렬 여부·규모와 문제 상황에 따라 달라질 수 있으므로 여러 알고리즘의 수행 과정을 실제 데이터에 적용해 비교·분석해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "정렬",
+            "규모",
+            "문제",
+            "효율",
+            "비교",
+            "분석"
+          ],
+          "rationale": "성취기준 해설은 여러 정렬·탐색 알고리즘을 실제 데이터에 적용하고 문제에 따라 효율성이 다를 수 있음을 설명하도록 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 공식 교육과정의 성취기준·해설·적용 지침과 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "알고리즘과 프로그래밍"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "알고리즘과 프로그래밍"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-128",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "AI-01-AC-ST-04",
+        "AI-01-AC-EX-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "A* 탐색에서 평가값을 f=g+h로 계산한다. 현재 확장 후보가 X(g=4,h=6), Y(g=7,h=2), Z(g=3,h=9)이고 f가 가장 작은 노드를 다음에 선택한다고 하자.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "X, Y, Z의 f값과 다음에 선택할 노드를 쓰시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "h를 사용하는 의미와 이 학습을 실제 문제 해결로 확장하는 방법을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "X=10, Y=9, Z=12이므로 Y를 선택한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "X=10",
+            "Y=9",
+            "Z=12",
+            "Y"
+          ],
+          "rationale": "f=g+h로 계산하면 Y의 평가값이 가장 작다."
+        },
+        {
+          "taskId": "b",
+          "key": "h는 목표까지의 추정 정보를 탐색에 활용하게 하며, 길찾기나 퍼즐처럼 지능적 탐색이 필요한 실제 문제에 A* 등 정보 이용 탐색을 적용한 프로그램을 개발한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "추정",
+            "정보",
+            "길찾기",
+            "A*",
+            "정보 이용 탐색",
+            "프로그램"
+          ],
+          "rationale": "성취기준 해설은 길찾기·퍼즐 등에 최상우선·A* 같은 정보 이용 탐색을 적용한 프로그램 개발을 요구한다."
+        }
+      ],
+      "explanation": "제시된 상황을 공식 교육과정의 성취기준·해설·적용 지침과 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "ai-basic"
+      ],
+      "areas": [
+        "인공지능의 이해"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4,
+      "curriculumScopes": [
+        {
+          "subject": "ai-basic",
+          "area": "인공지능의 이해"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-136",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "AI-03-AC-ST-04",
+        "AI-03-AC-EX-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "대출 심사 인공지능이 특정 지역 거주자에게 불리한 결과를 반복적으로 내렸다. 개발자는 데이터의 과거 기록을 그대로 사용했으므로 시스템은 중립적이라고 주장했다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "윤리 분석에서 확인해야 할 편향의 두 원천을 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "윤리적 판단에서 어떤 이해관계자 관점을 검토해야 하는지 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "인간 또는 사회의 기존 편향과 데이터·알고리즘에서 발생하는 편향을 함께 확인해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "인간의 편향",
+            "데이터",
+            "알고리즘",
+            "편향"
+          ],
+          "rationale": "[12인기03-04] 인공지능의 활용사례와 윤리적 딜레마 상황을 인공지능 윤리 관점에서 분석한다. / [12인기03-04] 인간의 편향성에 대한 이해를 바탕으로 알고리즘과 데이터의 편향성으로 인해 인공지능이 사회에 끼치는 영향을 이해하고, 인공지능으로 인한 딜레마 상황에서 윤리적인 판단과 선택을 할 수 있어야 한다. 현재까지 정의되어진 인공지능 윤리(지침)과 관련하여 인공지능 개발자, 사용자, 운영⋅관리자 관점을 살펴보고, 인공지능 기술 활용으로 발생 가능한 윤리적 쟁점에 대하여 사회적 책임과 공정성의 가치를 판단할 수 있어야 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "개발자, 사용자, 운영·관리자 등 여러 관점에서 쟁점과 책임을 검토해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "개발자",
+            "사용자",
+            "운영",
+            "관리자",
+            "관점"
+          ],
+          "rationale": "[12인기03-04] 인공지능의 활용사례와 윤리적 딜레마 상황을 인공지능 윤리 관점에서 분석한다. / [12인기03-04] 인간의 편향성에 대한 이해를 바탕으로 알고리즘과 데이터의 편향성으로 인해 인공지능이 사회에 끼치는 영향을 이해하고, 인공지능으로 인한 딜레마 상황에서 윤리적인 판단과 선택을 할 수 있어야 한다. 현재까지 정의되어진 인공지능 윤리(지침)과 관련하여 인공지능 개발자, 사용자, 운영⋅관리자 관점을 살펴보고, 인공지능 기술 활용으로 발생 가능한 윤리적 쟁점에 대하여 사회적 책임과 공정성의 가치를 판단할 수 있어야 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "ai-basic"
+      ],
+      "areas": [
+        "인공지능의 사회적 영향"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "ai-basic",
+          "area": "인공지능의 사회적 영향"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-148",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-03-AC-ST-02",
+        "DS-03-AC-ST-06"
+      ],
+      "sourceType": [
+        "성취기준"
+      ],
+      "stem": "같은 주택 가격 데이터를 통계적 회귀모델과 기계학습 회귀모델로 분석했다. 교사가 오차가 더 작은 모델만 고르고 결과 해석의 차이는 다루지 않았다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "교육과정에 비추어 추가해야 할 활동을 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "모델 선택 시 단순 오차 외에 확인해야 할 기준을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "두 회귀모델의 분석 결과와 해석 내용을 비교해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "통계적 회귀",
+            "기계학습 회귀",
+            "결과",
+            "해석",
+            "비교"
+          ],
+          "rationale": "[12데과03-02] 동일한 데이터를 통계적 회귀모델과 기계학습을 통한 회귀모델로 분석하여 결과 해석 내용을 비교한다."
+        },
+        {
+          "taskId": "b",
+          "key": "분석 목적과 데이터 특성에 비추어 결과의 의미와 적합성을 평가해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "분석 목적",
+            "데이터 특성",
+            "의미",
+            "적합성"
+          ],
+          "rationale": "[12데과03-02] 동일한 데이터를 통계적 회귀모델과 기계학습을 통한 회귀모델로 분석하여 결과 해석 내용을 비교한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 모델링과 평가"
+      ],
+      "sections": [
+        "성취기준"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 모델링과 평가"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-151",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-03-AC-ST-05",
+        "DS-03-AC-ST-06",
+        "DS-03-AC-EX-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "질병 분류 모델 A는 정확도 92%, 모델 B는 89%이다. 하지만 B는 놓치면 위험한 환자를 더 잘 찾아낸다. 학생이 정확도만 보고 A를 선택했다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "모델 평가에서 학생의 판단이 부족한 이유를 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "최종 모델 선택에서 해야 할 활동을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "데이터 특성과 분석 목적에 적합한 평가 방법을 선정해야 하며 정확도 하나만으로 판단하면 안 된다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "데이터 특성",
+            "분석 목적",
+            "평가 방법",
+            "정확도"
+          ],
+          "rationale": "[12데과03-05] 데이터 분석 방법에 따른 데이터 모델의 분석 결과를 비교하고 평가한다. / [12데과03-06] 다양한 분석 방법을 비교하고 평가하여 분석 목적에 가장 적합한 분석 방법을 적용한다."
+        },
+        {
+          "taskId": "b",
+          "key": "여러 분석 방법의 결과를 비교·평가하여 분석 목적에 가장 적합한 방법을 적용해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "비교",
+            "평가",
+            "분석 목적",
+            "적합한 방법"
+          ],
+          "rationale": "[12데과03-06] 다양한 분석 방법을 비교하고 평가하여 분석 목적에 가장 적합한 분석 방법을 적용한다. / [12데과03-05] 데이터 특성과 분석 목적에 적합한 평가 방법(예측률, 정확도 등)을 선정하고 이를 바탕으로 데이터 분석 결과를 해석하고 그 의미를 판단할 수 있어야 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 모델링과 평가"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 모델링과 평가"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-160",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-02-AC-ST-03",
+        "IS-02-AC-CO-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "stem": "희소한 도로망을 그래프로 표현하는데 학생은 모든 정점 쌍을 저장하는 인접행렬만 사용하려 한다. 교사는 인접리스트를 구조체와 포인터로 직접 구현해야만 인정한다고 말했다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "희소 그래프에서 고려할 수 있는 다른 표현과 이유를 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "교육과정상 구현 방식에 대한 교사의 설명을 수정하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "연결된 정점 중심으로 저장하는 인접리스트를 사용하면 불필요한 공간을 줄일 수 있다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "인접리스트",
+            "연결",
+            "공간"
+          ],
+          "rationale": "[12정과02-03] 인접행렬과 인접리스트를 활용하여 트리와 그래프를 구현한다. / 인접리스트는 트리와 그래프를 만드는 도구로서의 활용이 목적이므로 구조체와 포인터 등으로 직접 구현하는 방법보다는 프로그래밍 언어별로 제공하는 벡터(vector)와 같은 라이브러리를 이용하여 구현하는 방법도 활용하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "직접 포인터 구조를 구현하는 것보다 언어가 제공하는 벡터 등 라이브러리를 이용해 인접리스트를 구현할 수도 있다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "라이브러리",
+            "벡터",
+            "인접리스트"
+          ],
+          "rationale": "[12정과02-03] 인접행렬과 인접리스트를 활용하여 트리와 그래프를 구현한다. / 인접리스트는 트리와 그래프를 만드는 도구로서의 활용이 목적이므로 구조체와 포인터 등으로 직접 구현하는 방법보다는 프로그래밍 언어별로 제공하는 벡터(vector)와 같은 라이브러리를 이용하여 구현하는 방법도 활용하도록 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "데이터 구조"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "데이터 구조"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-162",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-03-AC-ST-01",
+        "IS-03-AC-ST-02"
+      ],
+      "sourceType": [
+        "성취기준"
+      ],
+      "stem": "같은 조합 문제를 A알고리즘은 가능한 상태를 모두 탐색하고, B알고리즘은 현재 조건상 답이 될 수 없는 상태를 미리 제외한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "두 알고리즘의 탐색 방식 차이를 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "B를 평가할 때 정확성과 함께 무엇을 비교해야 하는지 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "A는 상태 공간 전체를 탐색하고 B는 답이 될 수 없는 상태 공간 일부를 배제한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "상태 공간",
+            "전체 탐색",
+            "배제"
+          ],
+          "rationale": "[12정과03-01] 문제를 분석하여 상태 공간으로 구조화하고, 상태 공간을 모두 탐색하여 문제를 해결하는 알고리즘을 설계한다. / [12정과03-02] 문제의 상태 공간 일부를 배제하는 알고리즘을 설계하고, 기존의 탐색기반 알고리즘과 비교·분석한다."
+        },
+        {
+          "taskId": "b",
+          "key": "기존 전체 탐색 알고리즘과 문제 해결 효과성과 효율성을 비교·분석해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "전체 탐색",
+            "효과성",
+            "효율성",
+            "비교"
+          ],
+          "rationale": "[12정과03-01] 문제를 분석하여 상태 공간으로 구조화하고, 상태 공간을 모두 탐색하여 문제를 해결하는 알고리즘을 설계한다. / [12정과03-02] 문제의 상태 공간 일부를 배제하는 알고리즘을 설계하고, 기존의 탐색기반 알고리즘과 비교·분석한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "알고리즘"
+      ],
+      "sections": [
+        "성취기준"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "알고리즘"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-163",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-03-AC-EX-01"
+      ],
+      "sourceType": [
+        "성취기준 해설"
+      ],
+      "stem": "배낭 문제에서 학생 A는 가능한 모든 조합을 확인하고, 학생 B는 현재 선택으로 얻을 수 있는 최선의 값이 이미 기존 해보다 나쁘면 해당 분기를 더 탐색하지 않는다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "B의 설계가 이용하는 핵심 원리를 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "이와 같은 설계 방법의 예를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "정확한 답을 유지하면서 해가 될 가능성이 없는 상태 공간 일부를 배제하는 원리를 이용한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "정확한 답",
+            "상태 공간",
+            "배제"
+          ],
+          "rationale": "[12정과03-02] 상태 공간 일부를 배제하고도 정확한 답을 구할 수 있는 분기한정법과 탐욕법 등의 알고리즘 설계 방법이 상태 공간을 배제하는 원리를 설명하고, 이를 활용하여 문제를 해결할 수 있는 알고리즘을 설계할 수 있어야 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "분기한정법과 같은 탐색기반 알고리즘 설계 방법을 사용할 수 있다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "분기한정법",
+            "탐색기반"
+          ],
+          "rationale": "[12정과03-02] 상태 공간 일부를 배제하고도 정확한 답을 구할 수 있는 분기한정법과 탐욕법 등의 알고리즘 설계 방법이 상태 공간을 배제하는 원리를 설명하고, 이를 활용하여 문제를 해결할 수 있는 알고리즘을 설계할 수 있어야 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "알고리즘"
+      ],
+      "sections": [
+        "성취기준 해설"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "알고리즘"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-164",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-03-AC-ST-03",
+        "IS-03-AC-EX-02",
+        "IS-03-AC-EX-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "stem": "큰 배열 정렬 문제를 두 부분으로 나눈 뒤 각각 정렬해 합치는 방법과, 중복되는 작은 문제의 답을 표에 저장해 다시 계산하지 않는 방법을 비교한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "두 방법에 해당하는 알고리즘 설계 기법을 순서대로 쓰고 핵심 차이를 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "두 기법을 적용하기 전에 공통으로 해야 할 문제 분석을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "첫째는 분할정복법, 둘째는 동적계획법이며 동적계획법은 중복 부분 문제의 결과를 저장해 재사용한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "분할정복법",
+            "동적계획법",
+            "중복 부분 문제",
+            "저장"
+          ],
+          "rationale": "[12정과03-03] 전체 문제를 부분 문제로 분해하고, 전체 문제와 부분 문제의 관계를 발견한다. / [12정과03-04] 퀵 정렬, 합병 정렬 등을 활용하여 분할정복법이 문제를 해결하는 원리를 이해하고, 분할정복법을 활용하여 해결할 수 있는 문제를 탐색하여 해결 알고리즘을 설계할 수 있어야 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "전체 문제를 부분 문제로 분해하고 전체 문제와 부분 문제의 관계를 파악해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "전체 문제",
+            "부분 문제",
+            "분해",
+            "관계"
+          ],
+          "rationale": "[12정과03-04] 퀵 정렬, 합병 정렬 등을 활용하여 분할정복법이 문제를 해결하는 원리를 이해하고, 분할정복법을 활용하여 해결할 수 있는 문제를 탐색하여 해결 알고리즘을 설계할 수 있어야 한다. / [12정과03-05] 배열 등을 활용하여 중복으로 계산되는 부분 문제들의 답을 저장하여 효율을 높이는 동적계획법의 원리를 설명하고, 이를 활용하여 문제를 해결하는 알고리즘을 설계할 수 있어야 한다. 동적계획법과 분할정복법을 기반으로 한 알고리즘 간의 차이를 여러 측면에서 설명할 수 있어야 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 2022 개정 정보과 교육과정의 성취기준과 적용 지침에 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "알고리즘"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "알고리즘"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-165",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "IS-03-AC-ST-06",
+        "IS-03-AC-CO-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "stem": "입력 크기 n에 대해 알고리즘 A의 핵심 연산은 약 n번, B는 약 n²번 수행된다. n=1,000일 때 두 알고리즘의 핵심 연산 횟수를 비교한다. 작은 입력에서는 구현 상수 때문에 B가 더 빠른 측정값도 있었다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "n=1,000일 때 예상 연산 횟수와 빅오 복잡도를 각각 쓰시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "한 번의 실행시간만으로 효율을 일반화하지 않고 학습의 전이를 평가하는 방법을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "A는 약 1,000회로 O(n), B는 약 1,000,000회로 O(n²)이다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "1,000",
+            "O(n)",
+            "1,000,000",
+            "O(n²)"
+          ],
+          "rationale": "n=1,000이면 n=1,000, n²=1,000,000이며 증가율은 각각 선형과 제곱이다."
+        },
+        {
+          "taskId": "b",
+          "key": "다양한 입력 규모·데이터와 프로그램 환경에서 알고리즘의 효과성과 효율성을 비교하여 동일하게 작동하는지 평가한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "다양한",
+            "입력",
+            "데이터",
+            "환경",
+            "효과성",
+            "효율성",
+            "평가"
+          ],
+          "rationale": "정보과학 평가 지침은 다양한 프로그램 환경이나 데이터에서 알고리즘의 효과성과 효율성을 종합 평가해 확장·전이를 확인하도록 한다."
+        }
+      ],
+      "explanation": "제시된 상황을 공식 교육과정의 성취기준·해설·적용 지침과 연결하여 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "info-science"
+      ],
+      "areas": [
+        "알고리즘"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "points": 4,
+      "curriculumScopes": [
+        {
+          "subject": "info-science",
+          "area": "알고리즘"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-186",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-03-AC-ST-06",
+        "HI-03-AC-CO-03",
+        "HI-03-AC-CO-04",
+        "HI-TE-MET-02",
+        "HI-03-CS-KN-05"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항",
+        "교수·학습 방법",
+        "지식·이해"
+      ],
+      "stem": "고등학교 정보 수업에서 학급별 12개월 전력 사용량을 분석한다. 교사는 30개 학급×12개월 값을 한 줄짜리 목록으로만 제시하고, 프로그래밍이 느린 학생에게도 처음부터 전체 코드를 작성하게 하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "자료의 구조와 실제 사례 제시 측면에서 수업 자료를 어떻게 수정해야 하는지 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "최소 성취수준을 보장하면서 동일한 학습 목표에 도달하도록 제공할 수 있는 지원 두 가지를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "학급과 월이라는 두 기준을 함께 표현할 수 있도록 2차원 배열이나 리스트 등 다차원 데이터 구조로 제시하고 실제 사용되는 데이터 사례를 활용한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [
+            "한 줄짜리 목록만 사용한다"
+          ],
+          "requiredConcepts": [
+            "두 기준",
+            "다차원 데이터 구조",
+            "실제",
+            "데이터"
+          ],
+          "rationale": "[12정03-06]은 다차원 데이터 구조 활용을 요구하고, 적용 시 고려 사항은 다차원 데이터가 실제로 사용되는 예시를 충분히 제공하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "미리 제작된 코드나 라이브러리를 제공하고 LMS를 활용한 수준별 온라인 학습자료를 추가로 제공한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "미리 제작된 코드",
+            "라이브러리",
+            "LMS",
+            "온라인 학습자료"
+          ],
+          "rationale": "적용 시 고려 사항은 미리 제작된 코드·라이브러리 활용을, 교수·학습 방법은 LMS 기반 온라인 자료로 학습격차를 줄이는 방안을 제시한다."
+        }
+      ],
+      "explanation": "다차원 자료구조의 실제 적용과 최소 성취수준 보장 지원을 결합한 수업 설계 문항이다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "알고리즘과 프로그래밍"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항",
+        "교수·학습 방법",
+        "지식·이해"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "알고리즘과 프로그래밍"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-187",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-03-AC-ST-04",
+        "HI-03-AC-ST-05",
+        "HI-TE-DIR-01",
+        "HI-03-CS-PF-03"
+      ],
+      "sourceType": [
+        "성취기준",
+        "교수·학습의 방향",
+        "과정·기능"
+      ],
+      "stem": "학교 미세먼지 측정 자료에는 측정소 이름, PM2.5 농도, 기준 초과 여부가 매일 CSV 파일로 저장된다. 학생은 모든 값을 문자열로 저장한 뒤 매일 자료를 키보드로 다시 입력하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "농도 계산과 기준 초과 판정이 가능하도록 자료형 선택 원칙을 적용하여 저장 방식을 수정하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "매일 반복되는 입력 방식을 수정하고, 이 과제가 교수·학습 방향에 적합한 이유를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "측정소 이름은 문자 자료로, 농도는 계산 가능한 수치 자료로, 기준 초과 여부는 논리적 판정에 적합한 자료형으로 저장한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "이름",
+            "문자",
+            "농도",
+            "수치",
+            "초과 여부",
+            "논리"
+          ],
+          "rationale": "[12정03-04]는 자료형의 종류와 특성을 알고 문제에 적합한 자료형을 선택하여 프로그램을 작성하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "CSV 파일을 파일입력으로 읽도록 하고 실제 생활의 미세먼지 문제를 컴퓨팅으로 해결하는 과제로 구성한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [
+            "키보드로 다시 입력한다"
+          ],
+          "requiredConcepts": [
+            "파일입력",
+            "실제",
+            "생활",
+            "문제",
+            "컴퓨팅"
+          ],
+          "rationale": "[12정03-05]는 파일입출력 활용을 요구하며, 교수·학습의 방향은 실제 삶의 맥락에서 컴퓨팅으로 문제를 해결하는 과제를 제시하도록 한다."
+        }
+      ],
+      "explanation": "자료형·파일입출력을 실제 데이터 문제 해결 맥락에 결합한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "알고리즘과 프로그래밍"
+      ],
+      "sections": [
+        "성취기준",
+        "교수·학습의 방향",
+        "과정·기능"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "알고리즘과 프로그래밍"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-188",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "HI-03-AC-ST-06",
+        "HI-03-AC-ST-07",
+        "HI-TE-EVM-02",
+        "HI-03-CS-PF-04"
+      ],
+      "sourceType": [
+        "성취기준",
+        "평가 방법",
+        "과정·기능"
+      ],
+      "stem": "교사는 5일×6교시 시간표에서 과목별 수업 횟수를 세는 프로그램을 수행평가로 제시하였다. 학생은 2차원 시간표를 순회하면서 조건에 맞는 과목만 세어야 한다. 교사는 학생들이 한 번도 사용해 본 적 없는 online judge로만 채점하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "이 과제가 평가하는 프로그래밍 요소 두 가지를 자료 구조와 제어 구조 관점에서 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "online judge를 사용하되 평가의 불이익을 막기 위해 평가 전에 해야 할 조치를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "2차원 데이터 구조를 활용하고 반복 구조와 선택 구조 등 여러 제어 구조를 복합적으로 활용하는 능력을 평가한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "2차원",
+            "데이터 구조",
+            "반복",
+            "선택",
+            "제어 구조",
+            "복합"
+          ],
+          "rationale": "[12정03-06]은 다차원 데이터 구조, [12정03-07]은 다양한 제어 구조의 복합적 활용을 요구한다."
+        },
+        {
+          "taskId": "b",
+          "key": "평가 이전에 학생이 online judge를 충분히 다룰 수 있도록 사용 방법과 연습 기회를 제공해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "평가 이전",
+            "online judge",
+            "사용 방법",
+            "연습 기회"
+          ],
+          "rationale": "평가 방법은 디지털 평가 도구를 사용할 경우 평가 전에 학생이 도구를 다룰 수 있도록 교육하여 불이익이 없도록 계획하도록 한다."
+        }
+      ],
+      "explanation": "코딩 과제의 실제 평가 요소와 디지털 평가 도구의 공정성을 함께 판단한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "high-info"
+      ],
+      "areas": [
+        "알고리즘과 프로그래밍"
+      ],
+      "sections": [
+        "성취기준",
+        "평가 방법",
+        "과정·기능"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "high-info",
+          "area": "알고리즘과 프로그래밍"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-194",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "DS-04-AC-ST-03",
+        "DS-04-AC-EX-01",
+        "DS-04-AC-CO-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 해설",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "stem": "같은 자전거 대여 데이터를 분석하면서 A모둠은 결측치를 중앙값으로 처리한 뒤 선형 회귀를, B모둠은 결측 행을 제거한 뒤 기계학습 모델을 적용했다. 교사는 정확도가 조금 높은 결과 하나만 남기라고 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "교육과정에 맞게 두 분석 결과를 어떻게 다루어야 하는지 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "여러 분석 방법 중 기계학습을 포함시키는 교수·학습상의 목적을 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "서로 다른 전처리와 분석 방법의 결과를 비교하고 데이터와 분석 목적에 더 적절한 모델링 방법을 판단해야 한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "전처리",
+            "분석 방법",
+            "결과",
+            "비교",
+            "적절",
+            "모델링"
+          ],
+          "rationale": "[12데과04-03]과 해설은 동일 데이터에 서로 다른 전처리·분석 방법을 적용한 결과를 비교하여 가장 적절한 모델링 방법을 설계하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "기계학습을 포함한 여러 분석 방법의 결과를 비교하는 경험을 통해 디지털·인공지능 소양을 기르기 위해서이다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "기계학습",
+            "여러 분석 방법",
+            "비교",
+            "디지털",
+            "인공지능 소양"
+          ],
+          "rationale": "성취기준 적용 시 고려 사항은 여러 데이터 분석 방법 중 기계학습을 포함하여 결과를 비교함으로써 디지털·인공지능 소양을 기르도록 한다."
+        }
+      ],
+      "explanation": "한 가지 결과를 선택하는 데 그치지 않고 전처리·분석 방법 자체를 비교하도록 한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "data-science"
+      ],
+      "areas": [
+        "데이터 과학 프로젝트"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 해설",
+        "성취기준 적용 시 고려 사항"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "data-science",
+          "area": "데이터 과학 프로젝트"
+        }
+      ]
+    },
+    {
+      "questionId": "PB-209",
+      "curriculumVersion": "2022",
+      "sourceIds": [
+        "SL-04-AC-ST-03",
+        "SL-04-AC-ST-04",
+        "SL-04-AC-CO-02",
+        "SL-TE-EVD-02"
+      ],
+      "sourceType": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항",
+        "평가의 방향"
+      ],
+      "stem": "학생이 신호등 교통 흐름을 모의 실험하는 프로그램을 만들었다. 화면은 화려하지만 차량 발생 규칙이 잘못되어 목표한 현상을 제대로 표현하지 못한다. 교사는 낯선 시뮬레이션 분석 도구를 즉석에서 사용하게 하여 평가하려 한다.",
+      "tasks": [
+        {
+          "id": "a",
+          "prompt": "프로그램의 완성도를 평가할 때 우선 확인해야 할 두 기준을 서술하시오.",
+          "points": 2
+        },
+        {
+          "id": "b",
+          "prompt": "디지털 도구를 평가에 사용하면서 공정성을 확보하기 위해 해야 할 조치를 서술하시오.",
+          "points": 2
+        }
+      ],
+      "answerUnits": [
+        {
+          "taskId": "a",
+          "key": "시뮬레이션 모델이 목적에 맞게 설계되어 현상이나 원리를 적절히 표현하는지와 프로그램 기능이 목표에 부합하게 오류 없이 수행되는지를 확인한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "목적",
+            "시뮬레이션 모델",
+            "현상",
+            "기능",
+            "목표",
+            "오류 없이"
+          ],
+          "rationale": "[12소생04-03], [12소생04-04] 및 적용 시 고려 사항은 목적에 맞는 모델 설계와 목표에 부합하는 기능의 정확한 수행을 평가하도록 한다."
+        },
+        {
+          "taskId": "b",
+          "key": "학생이 도구 사용 미숙으로 불이익을 받지 않도록 평가 전에 사용 부담을 최소화하고 충분히 익힐 수 있는 기회를 제공한다",
+          "acceptedVariants": [],
+          "forbiddenConfusions": [],
+          "requiredConcepts": [
+            "도구 사용",
+            "불이익",
+            "평가 전에",
+            "충분히",
+            "기회"
+          ],
+          "rationale": "평가의 방향은 디지털 도구를 활용할 수 있으나 도구 활용 미숙으로 불이익을 받지 않도록 사용 부담을 줄이거나 충분한 익힘 기회를 제공하도록 한다."
+        }
+      ],
+      "explanation": "시뮬레이션 모델·기능 평가와 디지털 도구 평가의 공정성을 결합한다.",
+      "comparison2015": false,
+      "legacyEvidence": null,
+      "validationStatus": "v1.5-examlike-core-strict",
+      "subjects": [
+        "software-life"
+      ],
+      "areas": [
+        "모의 실험하는 소프트웨어"
+      ],
+      "sections": [
+        "성취기준",
+        "성취기준 적용 시 고려 사항",
+        "평가의 방향"
+      ],
+      "points": 4.0,
+      "curriculumScopes": [
+        {
+          "subject": "software-life",
+          "area": "모의 실험하는 소프트웨어"
+        }
+      ]
+    }
+  ]
+}

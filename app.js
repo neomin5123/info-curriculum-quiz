@@ -326,8 +326,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "6.18.0";
-  const MANUAL_GAP_REVIEW = "2026-09-20 / v6.18.0 기출형 코어 41문항 + 실전 세트 + 적응형 취약도";
+  const APP_VERSION = "7.3.0";
+  const MANUAL_GAP_REVIEW = "2026-09-20 / v7.3.0 기출형 30문항 + 과목별 과정·기능 식별 공백 보강 + 실제 데이터 처리 + 20점 실전세트 + 채점연동 해설";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 

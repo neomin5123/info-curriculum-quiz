@@ -49,12 +49,12 @@ for (const subjectData of Object.values(data)) {
 }
 if (!achievementAreas) throw new Error('achievement split QA found no areas');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.18.0','/js/practical-engine.js?v=6.18.0','/js/grading-engine.js?v=6.18.0','/js/review-engine.js?v=6.18.0','/js/history-engine.js?v=6.18.0','/js/storage-engine.js?v=6.18.0','/data/practice-bank.js?v=6.18.0','/js/practice-engine.js?v=6.18.0','/js/practice-ui.js?v=6.18.0','/app.js?v=6.18.0']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=7.3.0','/js/practical-engine.js?v=7.3.0','/js/grading-engine.js?v=7.3.0','/js/review-engine.js?v=7.3.0','/js/history-engine.js?v=7.3.0','/js/storage-engine.js?v=7.3.0','/data/practice-bank.js?v=7.3.0','/js/practice-engine.js?v=7.3.0','/js/practice-ui.js?v=7.3.0','/app.js?v=7.3.0']) if(!html.includes(asset)) throw new Error(`missing script ${asset}`);
 
 if(!html.includes('class="brand-home-link"')) throw new Error('brand home link missing');
 for (const marker of ['value="content-system"','value="achievement"','value="core-achievement"','value="achievement-guidance"','id="historySort"','value="recent"','value="oldest"']) if(!html.includes(marker)) throw new Error(`missing UI marker ${marker}`);
 const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
 for (const marker of ['curriloop-daily-review-plan-v1','remainingDailyReviewItems','ensureDailyReviewPlan','curriloop-grading-overrides-v1','curriloop-practical-exam-progress-v1','practicalSetSummary','nextReviewInfo','core-achievement','achievement-guidance','historySort','CORE_FLOW_MAP','핵심 흐름','SOURCE_GROUPS','CurriLoopPracticeBridge','PRACTICE_SOURCE_LINK_KEY','openSourceModalByIds','openCurrentUnitSourceModal']) if(!app.includes(marker)) throw new Error(`missing review plan marker ${marker}`);
 const sw=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
-for (const asset of ['/js/learning-engine.js?v=6.18.0','/js/practical-engine.js?v=6.18.0','/js/grading-engine.js?v=6.18.0','/js/review-engine.js?v=6.18.0','/js/history-engine.js?v=6.18.0','/js/storage-engine.js?v=6.18.0','/data/practice-bank.js?v=6.18.0','/js/practice-engine.js?v=6.18.0','/js/practice-ui.js?v=6.18.0']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
+for (const asset of ['/js/learning-engine.js?v=7.3.0','/js/practical-engine.js?v=7.3.0','/js/grading-engine.js?v=7.3.0','/js/review-engine.js?v=7.3.0','/js/history-engine.js?v=7.3.0','/js/storage-engine.js?v=7.3.0','/data/practice-bank.js?v=7.3.0','/js/practice-engine.js?v=7.3.0','/js/practice-ui.js?v=7.3.0']) if(!sw.includes(asset)) throw new Error(`SW missing ${asset}`);
 console.log(JSON.stringify({subjects,areas,lines,gaps,invalid,dupIds},null,2));

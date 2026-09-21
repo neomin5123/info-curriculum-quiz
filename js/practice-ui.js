@@ -8,7 +8,7 @@
 
   const UI_KEY = 'curriloop-practice-ui-v1';
   const STATS_KEY = 'curriloop-practice-stats-v1';
-  const EXAM_SET_SIZE = 5;
+  const EXAM_SET_POINTS = 20;
   const subjectLabels = {
     'all':'전체',
     'middle-info':'중학교 정보','high-info':'고등학교 정보','ai-basic':'인공지능 기초',
@@ -48,6 +48,11 @@
   function saveJson(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch {} }
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  }
+  // 문제 본문은 기본적으로 전부 escape하고, 출제용 제한 마크업만 후처리한다.
+  // {{u:...}} = 밑줄. 임의 HTML은 허용하지 않는다.
+  function renderExamText(value) {
+    return escapeHtml(value).replace(/\{\{u:([\s\S]*?)\}\}/g, '<u>$1</u>');
   }
   function bridge() { return root.CurriLoopPracticeBridge || null; }
   function answerSignatureFor(q, answers) {
@@ -100,7 +105,7 @@
     };
   }
   function persistUi(extra = {}) {
-    const state = {version:4,filters:currentFilters(),order,index,weakLinkEnabled,drafts,setMode,setIds,setAnswers,setSubmitted,...extra,savedAt:new Date().toISOString()};
+    const state = {version:5,filters:currentFilters(),order,index,weakLinkEnabled,drafts,setMode,setIds,setAnswers,setSubmitted,...extra,savedAt:new Date().toISOString()};
     saveJson(UI_KEY, state);
   }
   function restoreUi() {
@@ -125,17 +130,20 @@
     if (setMode) {
       setIds = setIds.filter(id => allIds.has(id));
       if (setIds.length) {
-        order = [...setIds];
-        index = Math.min(Math.max(0, Number(saved.index || 0)), Math.max(0, order.length - 1));
-        if (setSubmitted) {
-          for (const id of setIds) {
-            const q = questionById(id);
-            if (q) setGrades[id] = Engine.gradeQuestion(q, setAnswers[id] || {}, GradingEngine);
+        const restoredPoints = setIds.reduce((sum, id) => sum + Number(questionById(id)?.points || 0), 0);
+        if (restoredPoints === EXAM_SET_POINTS) {
+          order = [...setIds];
+          index = Math.min(Math.max(0, Number(saved.index || 0)), Math.max(0, order.length - 1));
+          if (setSubmitted) {
+            for (const id of setIds) {
+              const q = questionById(id);
+              if (q) setGrades[id] = Engine.gradeQuestion(q, setAnswers[id] || {}, GradingEngine);
+            }
           }
+          return true;
         }
-        return true;
       }
-      setMode = false; setSubmitted = false; setAnswers = {}; setGrades = {};
+      setMode = false; setIds = []; setSubmitted = false; setAnswers = {}; setGrades = {};
     }
     const base = Engine.filterQuestions(bank.questions, currentFilters());
     const validIds = new Set(base.map(q => q.questionId));
@@ -211,6 +219,10 @@
     return grades.reduce((acc, grade) => ({earned:acc.earned + Number(grade?.earned || 0), total:acc.total + Number(grade?.total || 0)}), {earned:0,total:0});
   }
 
+  function setPointTotal(ids = setIds) {
+    return (ids || []).reduce((sum, id) => sum + Number(questionById(id)?.points || 0), 0);
+  }
+
   function syncSetControls() {
     const setButton = document.getElementById('practiceSetButton');
     const submitButton = document.getElementById('practiceSetSubmitButton');
@@ -220,7 +232,7 @@
     const area = document.getElementById('practiceArea');
     const version = document.getElementById('practiceVersion');
     if (setButton) {
-      setButton.textContent = setMode ? '세트 종료' : `실전 세트 ${EXAM_SET_SIZE}문항`;
+      setButton.textContent = setMode ? '세트 종료' : `실전 세트 ${EXAM_SET_POINTS}점`;
       setButton.classList.toggle('active', setMode);
       setButton.setAttribute('aria-pressed', setMode ? 'true' : 'false');
     }
@@ -233,7 +245,7 @@
     [subject,area,version].forEach(el => { if (el) el.disabled = setMode; });
     if (status) {
       if (!setMode) status.textContent = setNotice;
-      else if (!setSubmitted) status.textContent = `답안 작성 ${setAnsweredQuestionCount()}/${setIds.length}문항 · 마지막에 일괄 채점`;
+      else if (!setSubmitted) status.textContent = `답안 작성 ${setAnsweredQuestionCount()}/${setIds.length}문항 · 총 ${setPointTotal()}점 · 마지막에 일괄 채점`;
       else { const score = setScore(); status.textContent = `세트 점수 ${score.earned}/${score.total}점`; }
     }
   }
@@ -287,7 +299,7 @@
   function render() {
     renderStats();
     const count = document.getElementById('practiceFilteredCount');
-    if (count) count.textContent = setMode ? `실전 세트 · ${order.length}문항` : `${order.length}문항`;
+    if (count) count.textContent = setMode ? `실전 세트 · ${setPointTotal()}점 · ${order.length}문항` : `${order.length}문항`;
     syncSetControls();
     if (!order.length) { renderEmpty(); return; }
     const q = currentQuestion();
@@ -335,7 +347,7 @@
     area.innerHTML = `<article class="practice-card" data-question-id="${escapeHtml(q.questionId)}">
       <div class="practice-meta-row"><div class="practice-badges">${badges.map(b => `<span>${escapeHtml(b)}</span>`).join('')}</div>${validation}</div>
       <div class="practice-id-row"><span>${escapeHtml(q.questionId)}</span>${prior}${linkedHint}</div>
-      <h2 class="practice-stem">${escapeHtml(q.stem)}</h2>
+      <div class="practice-stem">${renderExamText(q.stem)}</div>
       <div class="practice-tasks">${taskHtml}</div>
       <div class="practice-actions">${actionHtml}</div>
       <section id="practiceExplanation" class="practice-explanation hidden" aria-live="polite"></section>
@@ -367,15 +379,22 @@
   function collectAnswers(q) { return collectVisibleAnswers(q); }
 
   function feedbackHtml(result) {
-    const unit = result.unit || {};
     const cls = result.status === 'correct' ? 'good' : result.status === 'near' ? 'near' : result.status === 'unknown' ? 'unknown' : 'bad';
-    let extra = '';
-    if (result.reason === 'concepts' && result.detail?.missing?.length) extra = `<div class="practice-missing">빠진 핵심: ${result.detail.missing.map(escapeHtml).join(', ')}</div>`;
-    if (result.reason === 'anyOf' && result.detail) extra = `<div class="practice-missing">확인된 항목 ${result.detail.foundCount}/${result.detail.need}</div>`;
-    if (result.forbidden) extra = `<div class="practice-missing">혼동 주의: ${escapeHtml(result.forbidden)}</div>`;
-    return `<div class="practice-feedback ${cls}"><strong>${statusLabel(result.status)} · ${result.earned}/${result.points}점</strong>
-      <div><b>정답:</b> ${escapeHtml(unit.key || '')}</div>${extra}
-      <div class="practice-rationale">${escapeHtml(unit.rationale || '')}</div></div>`;
+    const unitResults = Array.isArray(result.unitResults) && result.unitResults.length
+      ? result.unitResults
+      : [{unit:result.unit || {}, status:result.status, earned:result.earned, points:result.points, reason:result.reason, detail:result.detail, forbidden:result.forbidden}];
+    const detailHtml = unitResults.map((item, index) => {
+      const unit = item.unit || {};
+      let extra = '';
+      if (item.reason === 'concepts' && item.detail?.missing?.length) extra = `<div class="practice-missing">빠진 핵심: ${item.detail.missing.map(escapeHtml).join(', ')}</div>`;
+      if (item.reason === 'anyOf' && item.detail) extra = `<div class="practice-missing">확인된 항목 ${item.detail.foundCount}/${item.detail.need}</div>`;
+      if (item.forbidden) extra = `<div class="practice-missing">혼동 주의: ${escapeHtml(item.forbidden)}</div>`;
+      const label = unit.label ? escapeHtml(unit.label) : `채점 요소 ${index + 1}`;
+      return `<div class="practice-unit-feedback"><div><b>${label} (${Number(item.points || 0)}점):</b> ${statusLabel(item.status)}</div>
+        <div><b>정답:</b> ${escapeHtml(unit.key || '')}</div>${extra}
+        <div class="practice-rationale">${escapeHtml(unit.rationale || '')}</div></div>`;
+    }).join('');
+    return `<div class="practice-feedback ${cls}"><strong>${statusLabel(result.status)} · ${result.earned}/${result.points}점</strong>${detailHtml}</div>`;
   }
 
   function renderStoredSetGrade(q, result) {
@@ -395,6 +414,7 @@
       exp.classList.remove('hidden');
       exp.innerHTML = `<div class="practice-score-line"><strong>${result.earned} / ${result.total}점</strong><span>${result.perfect ? '전부 정확합니다.' : '정답·근거를 확인하고 다시 인출해 보세요.'}</span></div>
         <p>${escapeHtml(q.explanation || '')}</p>
+        <div class="practice-explanation-actions"><button class="btn soft" type="button" onclick="openPracticeExplanation()">통합 해설 보기</button></div>
         <div class="practice-source-line"><b>근거:</b> ${source} · ${q.sourceType.map(escapeHtml).join(', ')}</div>`;
     }
   }
@@ -438,6 +458,7 @@
       exp.classList.remove('hidden');
       exp.innerHTML = `<div class="practice-score-line"><strong>${result.earned} / ${result.total}점</strong><span>${result.perfect ? '전부 정확합니다.' : '정답·근거를 확인하고 다시 인출해 보세요.'}</span></div>
         <p>${escapeHtml(q.explanation || '')}</p>
+        <div class="practice-explanation-actions"><button class="btn soft" type="button" onclick="openPracticeExplanation()">통합 해설 보기</button></div>
         <div class="practice-source-line"><b>근거:</b> ${source} · ${q.sourceType.map(escapeHtml).join(', ')}</div>`;
     }
     let linkResult = null;
@@ -501,14 +522,16 @@
     if (setMode) return;
     captureCurrentDraft();
     const pool = Engine.filterQuestions(bank.questions, currentFilters());
-    if (pool.length < EXAM_SET_SIZE) {
-      setNotice = `현재 필터에는 ${pool.length}문항만 있어 ${EXAM_SET_SIZE}문항 실전 세트를 만들 수 없습니다.`;
+    const availablePoints = pool.reduce((sum, q) => sum + Number(q?.points || 0), 0);
+    setIds = Engine.buildExamSet ? Engine.buildExamSet(pool, {targetPoints:EXAM_SET_POINTS}) : [];
+    if (!setIds.length || setPointTotal(setIds) !== EXAM_SET_POINTS) {
+      setIds = [];
+      setNotice = `현재 필터의 총 배점은 ${availablePoints}점이며, ${EXAM_SET_POINTS}점 실전 세트를 정확히 구성할 수 없습니다. 필터를 넓혀 주세요.`;
       syncSetControls();
       persistUi();
       return;
     }
     setNotice = '';
-    setIds = Engine.buildExamSet ? Engine.buildExamSet(pool, {size:EXAM_SET_SIZE}) : Engine.shuffleIds(pool.map(q => q.questionId)).slice(0,EXAM_SET_SIZE);
     setAnswers = {};
     setGrades = {};
     setSubmitted = false;
@@ -605,6 +628,53 @@
     }
   }
 
+
+  function openExplanation() {
+    if (setMode && !setSubmitted) return;
+    const q = currentQuestion();
+    if (!q || !graded && !setSubmitted) return;
+    const backdrop = document.getElementById('practiceExplanationModalBackdrop');
+    const title = document.getElementById('practiceExplanationModalTitle');
+    const meta = document.getElementById('practiceExplanationModalMeta');
+    const body = document.getElementById('practiceExplanationModalBody');
+    if (!backdrop || !title || !meta || !body) return;
+    const result = setMode ? setGrades?.[q.questionId] : lastGrade;
+    const earned = Number(result?.earned || 0);
+    const total = Number(result?.total || q.points || 0);
+    const detail = q.explanationDetail || {};
+    const scored = new Map();
+    (result?.results || []).forEach(taskResult => (taskResult?.unitResults || []).forEach(unitResult => {
+      if (unitResult?.unit?.unitId) scored.set(unitResult.unit.unitId, unitResult);
+    }));
+    const unitHtml = (q.answerUnits || []).map((unit, idx) => {
+      const unitResult = scored.get(unit.unitId);
+      const status = unitResult?.status || 'unknown';
+      const earnedUnit = Number(unitResult?.earned || 0);
+      return `<section class="practice-explanation-unit">
+        <div class="practice-explanation-unit-head"><strong>${idx+1}. ${escapeHtml(unit.label || `채점 요소 ${idx+1}`)}</strong><span>${earnedUnit}/1점 · ${escapeHtml(statusLabel(status))}</span></div>
+        <div class="practice-explanation-answer"><b>정답</b> ${escapeHtml(unit.key || '')}</div>
+        <p>${escapeHtml(unit.rationale || '')}</p>
+      </section>`;
+    }).join('');
+    const sourceTypes = [...new Set(q.sourceType || [])].map(escapeHtml).join(' · ');
+    const sourceIds = (q.sourceIds || []).map(id => `<code>${escapeHtml(id)}</code>`).join(' ');
+    title.textContent = `${q.questionId} 통합 해설`;
+    meta.textContent = `${earned}/${total}점 · ${(q.curriculumScopes || []).map(scope => `${subjectLabels[scope.subject] || scope.subject} · ${scope.area}`).join(' / ')}`;
+    body.innerHTML = `<section class="practice-explanation-summary"><h3>해결 흐름</h3><p>${escapeHtml(q.explanation || '')}</p></section>
+      <section class="practice-explanation-scoreguide"><h3>1점 단위 채점 기준</h3>${unitHtml}</section>
+      <section class="practice-explanation-note"><h3>교육과정 근거</h3><p>${sourceTypes || '공식 원문'}</p><div class="practice-source-line">${sourceIds}</div><div class="practice-explanation-actions"><button class="btn" type="button" onclick="closePracticeExplanation(); openPracticeSource();">근거 원문 열기</button></div></section>
+      ${detail.examPoint ? `<section class="practice-explanation-note"><h3>임용형 포인트</h3><p>${escapeHtml(detail.examPoint)}</p></section>` : ''}
+      ${detail.watchOut ? `<section class="practice-explanation-note"><h3>혼동 주의</h3><p>${escapeHtml(detail.watchOut)}</p></section>` : ''}`;
+    backdrop.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeExplanation(event) {
+    if (event && event.target && event.target.id !== 'practiceExplanationModalBackdrop') return;
+    document.getElementById('practiceExplanationModalBackdrop')?.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
+
   function onFilterChange(sourceChanged=false) {
     if (setMode) return;
     setNotice = '';
@@ -629,7 +699,7 @@
 
   function onShow() { init(); render(); }
 
-  root.CurriLoopPracticeUI = {init,onShow,render,rebuild,grade,markUnknown,move,shuffle,restart,openSource,onFilterChange,toggleWeakLink,startSet,endSet,toggleSet,submitSet};
+  root.CurriLoopPracticeUI = {init,onShow,render,rebuild,grade,markUnknown,move,shuffle,restart,openSource,openExplanation,closeExplanation,onFilterChange,toggleWeakLink,startSet,endSet,toggleSet,submitSet};
   root.onPracticeFilterChange = onFilterChange;
   root.gradePracticeQuestion = grade;
   root.markPracticeUnknown = markUnknown;
@@ -638,6 +708,8 @@
   root.shufflePracticeQuestions = shuffle;
   root.restartPracticeQuestions = restart;
   root.openPracticeSource = openSource;
+  root.openPracticeExplanation = openExplanation;
+  root.closePracticeExplanation = closeExplanation;
   root.togglePracticeWeakLink = toggleWeakLink;
   root.togglePracticeExamSet = toggleSet;
   root.submitPracticeExamSet = submitSet;

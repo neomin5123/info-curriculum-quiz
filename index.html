@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 
-    <link rel="stylesheet" href="/styles.css?v=6.18.0">
+    <link rel="stylesheet" href="/styles.css?v=7.3.0">
 
 
 </head>
@@ -185,10 +185,10 @@
       <div class="practice-head">
         <div>
           <h2>연습 문제</h2>
-          <p>실제 임용 기출의 구조와 교육과정 근거를 함께 통과한 기출형 코어 문제만 제공합니다. 단순 원문 회상은 총론·각론의 빈칸 학습에서 다룹니다. 실전 세트는 현재 필터 범위에서 5문항(20점)을 구성하고 제출 전 정답·근거를 숨깁니다.</p>
+          <p>실제 임용 기출처럼 (가)·(나)·(다), 대화·지도안·코드·표·활동지와 <작성 방법>을 결합한 문항만 제공합니다. 2점형과 4점형 모두 모든 채점 요소를 1점 단위로 분리합니다. 실전 세트는 현재 필터 범위에서 정확히 20점이 되도록 2점·4점 문항을 조합하며, 문항 수는 배점 구성에 따라 달라집니다.</p>
         </div>
         <div class="practice-head-status">
-          <strong id="practiceFilteredCount">41문항</strong>
+          <strong id="practiceFilteredCount">30문항</strong>
           <span id="practiceStats">풀이 기록 없음</span>
         </div>
       </div>
@@ -202,14 +202,14 @@
         </select></div>
       </div>
       <div class="toolbar practice-toolbar">
-        <button class="btn soft" id="practiceSetButton" type="button" onclick="togglePracticeExamSet()" aria-pressed="false">실전 세트 5문항</button>
+        <button class="btn soft" id="practiceSetButton" type="button" onclick="togglePracticeExamSet()" aria-pressed="false">실전 세트 20점</button>
         <button class="btn primary hidden" id="practiceSetSubmitButton" type="button" onclick="submitPracticeExamSet()">세트 제출</button>
         <button class="btn soft" id="practiceShuffleButton" type="button" onclick="shufflePracticeQuestions()">문제 섞기</button>
         <button class="btn soft" type="button" onclick="restartPracticeQuestions()">처음부터</button>
         <button class="btn soft" id="practiceWeakLinkButton" type="button" onclick="togglePracticeWeakLink()" aria-pressed="true">취약 연동 켬</button>
         <span id="practiceSetStatus" class="practice-set-status"></span>
         <span class="practice-key-hint">개별 연습: Enter 또는 Ctrl/⌘+Enter로 채점 · 실전 세트: Ctrl/⌘+Enter로 일괄 제출</span>
-        <strong id="practiceProgress" class="practice-progress">1 / 41</strong>
+        <strong id="practiceProgress" class="practice-progress">1 / 28</strong>
       </div>
     </div>
     <div id="practiceQuestionArea" class="practice-question-area"></div>
@@ -309,7 +309,7 @@
     <p>쉼표·띄어쓰기·구두점은 채점에서 무시합니다. 조사 차이, 명백한 오타, 일부 유사어·활용형, 핵심 표현을 상당 부분 기억한 부분정답은 <strong>유사 답안 유예</strong>로 처리합니다. 유예 답안은 오답 기록을 쌓지 않지만 숙련도도 올리지 않으며, 필요하면 결과 옆의 <strong>오답으로 처리</strong>로 같은 표현쌍을 더 엄격하게 학습할 수 있습니다. 설계↔구현, 선택↔수집, 탐색↔발견, 분석↔구조화처럼 임용에서 구별 가치가 큰 행동어는 바로 오답 처리합니다. 빈칸을 비운 채 확인하면 <strong>모름</strong>으로 따로 기록하여 복습 일정은 당기되 오답 표현 이력에는 남기지 않습니다.</p>
     <p>채워진 입력칸을 클릭하면 첫 클릭은 전체 선택, 두 번째 클릭부터는 계속 누른 위치에 커서를 둡니다. ‘원문 보기’는 현재 학습 위치를 유지한 채 팝업으로 공식 원문을 확인하며 입력 기록을 지우지 않습니다. 답안을 지우려면 ‘현재 단원 초기화’를 사용하세요.</p>
     <h3>연습 문제</h3>
-    <p><strong>연습 문제</strong>는 단순 빈칸·용어 회상을 반복하지 않고, 실제 임용 기출처럼 교육과정 원문을 수업·평가·전공 내용과 연결해 판단하도록 구성합니다. 과목과 영역은 한 문제에 여러 개가 걸리면 모두 표시되며, ‘과목 공통’은 별도 영역으로 취급하지 않습니다. 문제 유형·임의 난이도 등급은 표시하지 않고 실제 배점만 사용합니다. 근거 원문 보기를 누르면 현재 문제를 유지한 채 공식 원문이 팝업으로 열립니다.</p>
+    <p><strong>연습 문제</strong>는 단순 빈칸·용어 회상을 반복하지 않고, 실제 임용 기출처럼 교육과정 원문을 수업·평가·전공 내용과 연결해 판단하도록 구성합니다. 과목과 영역은 한 문제에 여러 개가 걸리면 모두 표시되며, ‘과목 공통’은 별도 영역으로 취급하지 않습니다. 문제 유형·임의 난이도 등급은 표시하지 않고 실제 배점만 사용합니다. 채점 뒤에는 <strong>통합 해설</strong>에서 1점 단위 정답·이유·기출형 포인트·혼동 주의를 확인할 수 있습니다. 근거 원문 보기를 누르면 현재 문제를 유지한 채 공식 원문이 팝업으로 열립니다.</p>
     <h3>복습</h3>
     <p><strong>복습</strong>은 복습 탭 안에서 바로 진행합니다. 앱을 연 시점의 학습 기록으로 그날의 기본 ‘오늘 복습’ 목록을 만들며, 먼저 각론 실전을 풀더라도 이미 잡힌 복습 항목은 사라지지 않습니다. 단, <strong>연습 문제에서 오답·모름이 발생하면 예외적으로 관련 공식 원문이 오늘 복습에 추가</strong>될 수 있습니다. ‘오늘 복습’에서 원문을 실제로 정확히 인출한 항목만 오늘 완료로 처리하며, 정확한 인출이 이어지면 복습 간격을 1→3→7→14→30→60일로 늘립니다. <strong>추가 보강</strong>은 반복 실패한 취약 항목 중 오늘 이미 정확히 맞힌 것은 제외합니다. 같은 원문에서 여러 빈칸이 동시에 복습 시점에 와도 한 세션에서는 대표 항목을 우선해 문장 반복을 줄입니다. 오늘 복습이 끝나면 <strong>다음 복습 예정일과 개수</strong>도 표시합니다.</p>
     <h3>각론 범위</h3>
@@ -340,6 +340,23 @@
   </section>
 </div>
 
+<div id="practiceExplanationModalBackdrop" class="modal-backdrop hidden" role="presentation" onclick="closePracticeExplanation(event)">
+  <section class="source-modal practice-explanation-modal" role="dialog" aria-modal="true" aria-labelledby="practiceExplanationModalTitle" onclick="event.stopPropagation()">
+    <div class="source-modal-head">
+      <div>
+        <span class="source-modal-kicker">문항 해설</span>
+        <h2 id="practiceExplanationModalTitle">통합 해설</h2>
+        <div id="practiceExplanationModalMeta" class="source-modal-meta"></div>
+      </div>
+      <button class="btn soft source-modal-close" type="button" onclick="closePracticeExplanation()" aria-label="해설 팝업 닫기">닫기</button>
+    </div>
+    <div id="practiceExplanationModalBody" class="source-modal-body"></div>
+    <div class="source-modal-actions">
+      <button class="btn primary" type="button" onclick="closePracticeExplanation()">확인</button>
+    </div>
+  </section>
+</div>
+
 <div id="updateToast" class="update-toast hidden" role="status" aria-live="polite">
   <span>새 버전이 준비되었습니다.</span>
   <button class="btn primary" type="button" onclick="applyAppUpdate()">새로고침</button>
@@ -353,23 +370,23 @@
     <p>학습 기록은 이 브라우저에만 저장되고 서버로 전송되지 않습니다. 브라우저 데이터 삭제·기기 변경에 대비해 복습 탭의 백업 기능을 이용하세요.</p>
     <p>2022 개정 교육과정 공공저작물은 <strong>공공누리 제2유형(출처표시 + 상업적 이용금지)</strong> 조건에 따라 비상업적 학습 목적으로 활용합니다.</p>
     <p>출처: <a href="https://www.kogl.or.kr/recommend/recommendDivView.do?division=doc&oc=&recommendIdx=60522" target="_blank" rel="noopener noreferrer">공공누리 2022 개정 교육과정 자료</a> · <a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp=" target="_blank" rel="noopener noreferrer">교육부 고시 제2022-33호</a></p>
-    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v6.18.0</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
+    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v7.3.0</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
   </div>
 </footer>
 
 
-  <script src="/data/curriculum-data.js?v=6.18.0"></script>
-  <script src="/data/supplemental-data.js?v=6.18.0"></script>
-  <script src="/js/learning-engine.js?v=6.18.0"></script>
-  <script src="/js/practical-engine.js?v=6.18.0"></script>
-  <script src="/js/grading-engine.js?v=6.18.0"></script>
-  <script src="/js/review-engine.js?v=6.18.0"></script>
-  <script src="/js/history-engine.js?v=6.18.0"></script>
-  <script src="/js/storage-engine.js?v=6.18.0"></script>
-  <script src="/data/practice-bank.js?v=6.18.0"></script>
-  <script src="/js/practice-engine.js?v=6.18.0"></script>
-  <script src="/js/practice-ui.js?v=6.18.0"></script>
-  <script src="/app.js?v=6.18.0"></script>
+  <script src="/data/curriculum-data.js?v=7.3.0"></script>
+  <script src="/data/supplemental-data.js?v=7.3.0"></script>
+  <script src="/js/learning-engine.js?v=7.3.0"></script>
+  <script src="/js/practical-engine.js?v=7.3.0"></script>
+  <script src="/js/grading-engine.js?v=7.3.0"></script>
+  <script src="/js/review-engine.js?v=7.3.0"></script>
+  <script src="/js/history-engine.js?v=7.3.0"></script>
+  <script src="/js/storage-engine.js?v=7.3.0"></script>
+  <script src="/data/practice-bank.js?v=7.3.0"></script>
+  <script src="/js/practice-engine.js?v=7.3.0"></script>
+  <script src="/js/practice-ui.js?v=7.3.0"></script>
+  <script src="/app.js?v=7.3.0"></script>
 
 
 
