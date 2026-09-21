@@ -4,6 +4,7 @@ const E=require('../../js/practice/practice-engine.js');
 const G=require('../../js/engines/grading-engine.js');
 const R=require('../../js/engines/recall-engine.js');
 const S=require('../../js/engines/structure-engine.js');
+const P=require('../../js/engines/planner-engine.js');
 const root=path.resolve(__dirname,'../..');
 const vm=require('vm');
 const bankCtx={window:{}}; vm.createContext(bankCtx); vm.runInContext(fs.readFileSync(path.join(root,'data/questions/production.js'),'utf8'),bankCtx);
@@ -23,6 +24,24 @@ assert(html.includes('id="studyProgressBox"'),'separate study progress bar');
 assert(html.includes('class="study-mode-section"'),'separate study mode section');
 assert(html.includes('class="study-action-bar"'),'separate study action bar');
 const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8');
+
+assert(html.includes('id="homePage"'),'today home UI');
+assert(html.includes('id="todayStartButton"'),'today start button');
+assert(html.includes('id="todayRecentAccuracy"'),'recent recall accuracy UI');
+assert(typeof P.noteSessionAssessment==='function' && typeof P.sessionPerformanceSummary==='function' && typeof P.adaptPace==='function','speed x accuracy planner API');
+assert(html.includes('/js/engines/planner-engine.js?v=7.6.1'),'planner engine script');
+assert(app.includes('isLongTermReviewEligible'),'long-term review consolidation');
+assert(app.includes('startPlannedNewStudy') && app.includes('completePlannedStudy'),'daily planner orchestration');
+assert(app.includes('recordPlannerAssessmentOutcome'),'planner records first-attempt outcomes');
+assert(app.includes('plannerStepAttemptGate') && app.includes('실제 인출·채점 기록'),'completion requires real retrieval attempt');
+assert(app.includes('flushPlannerRetryIfNeeded'),'same-day delayed retry must be cleared before planner progression');
+assert(app.includes('deferRetryMasteryToNextDay') && app.includes('retryFailures >= 2'),'slow learner retry cap must defer unresolved recall to next day');
+assert(app.includes('buildCumulativeReviewCandidates') && html.includes('id="todayCumulativeCount"'),'real cumulative mixed review');
+assert(typeof P.completesArea==='function' && app.includes('이 영역의 마지막 세션'),'split area final session structure practice');
+assert(typeof P.reviewLoadDecision==='function','backlog-aware scope reduction API');
+assert(P.dailyReviewBudget(8)>=20,'slow learner review budget floor');
+assert(app.includes('completedLinesToday.has(entry.lineKey'),'same-day successful recall removed from remaining daily review');
+
 assert(app.includes('빈칸 방식'),'middle-info fill variant label');
 assert(app.includes('setMiddleInfoFillVariant'),'middle-info segmented fill variant behavior');
 assert(app.includes('field.classList.add("hidden")'),'middle-info legacy difficulty dropdown hidden');
@@ -32,7 +51,11 @@ assert(R.recallMasteryStage({correctStreak:1}).label==='학습됨','recall learn
 assert(R.recallMasteryStage({correctStreak:2}).label==='안정화 중','recall stabilizing stage');
 assert(R.recallMasteryStage({correctStreak:4}).label==='숙달','recall mastered stage');
 assert(app.includes('updateRecallSectionMastery') && app.includes('LearningEngine.DAY_MS'),'whole-section failure must move to a later date');
-assert(app.includes('record.recallSectionTitle ? 2 + Math.floor(Math.random() * 2)'),'same-day targeted repair distance');
+assert(app.includes('record.recallSectionTitle') && app.includes('retryMode === "core"') && app.includes('2 + Math.floor(Math.random() * 3)'),'same-day targeted repair distances');
+assert(app.includes('coreGradeSerial'),'core blank retry serial separated from practical serial');
+assert(app.includes('retryMode:"core"'),'core blank failures enter delayed retry queue');
+assert(app.includes('currentDelayedRetryMode'),'core/practical retry mode routing');
+assert(app.includes('recovered.correctStreak = 1') && app.includes('LearningEngine.DAY_MS'),'core same-day recovery becomes initial learning, not long-term mastery');
 assert(R.memoryTier('지식·이해').key==='exact','middle-info exact tier');
 assert(R.memoryTier('성취기준 해설').key==='coreplus','middle-info guidance tier');
 const recallProbe=R.matchRecallList(['B','A','C'],['A','B','C'],(u,e)=>G.classifyDetailed(u,e,[]));
@@ -41,22 +64,26 @@ const curriculumCtx={window:{}}; vm.createContext(curriculumCtx); vm.runInContex
 const curriculumData=curriculumCtx.window.CURRILOOP_CURRICULUM_DATA;
 for (const area of ['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화']) {
   const pool=S.buildQuestionPool(curriculumData,area);
-  assert(pool.some(q=>q.kind==='discriminate'),`${area} discrimination structure pool`);
-  assert(pool.some(q=>q.kind==='connect'),`${area} connection structure pool`);
-  const session=S.buildSession(curriculumData,area,{limit:8,nonce:7});
-  assert(session.length<=8 && session.length>0,`${area} structure session size`);
+  assert(!pool.some(q=>q.kind==='discriminate'),`${area} trivial category questions removed`);
+  assert(!pool.some(q=>q.kind==='element-connect'),`${area} shallow element-cue questions removed`);
+  assert(pool.some(q=>q.kind==='standard-elements'),`${area} standard-content connection pool`);
+  assert(pool.some(q=>q.kind==='commentary-connect'),`${area} commentary connection pool`);
+  const session=S.buildSession(curriculumData,area,{limit:6,nonce:7});
+  assert(session.length>=4 && session.length<=6,`${area} compact structure session size`);
   assert(new Set(session.map(q=>q.id)).size===session.length,`${area} structure duplicate`);
-  assert(session.some(q=>q.kind==='connect'),`${area} structure session connection`);
+  assert(session.some(q=>q.kind==='standard-elements'),`${area} structure standard-content connection`);
+  assert(session.some(q=>q.kind==='commentary-connect'),`${area} structure commentary connection`);
   assert(session.every(q=>!/^\s*\[9정/.test(q.prompt)),`${area} structure code leak`);
 }
 assert(!app.includes('structureSectionAnswer'),'legacy structure dropdown removed');
-assert(app.includes('내용체계 범주 구별') && app.includes('성취기준 ↔ 해설 연결'),'new structure labels');
+assert(app.includes('성취기준 ↔ 내용 요소') && app.includes('성취기준 ↔ 해설'),'connection-only structure labels');
+assert(!app.includes('내용체계 범주 구별'),'trivial structure category label removed');
 assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.5.3'),'version label');
-assert(html.includes('/js/engines/structure-engine.js?v=7.5.3'),'structure engine script');
+assert(html.includes('v7.6.1'),'version label');
+assert(html.includes('/js/engines/structure-engine.js?v=7.6.1'),'structure engine script');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -170,4 +197,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.5.3 Middle Info Recall + Structure QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.6.1 Retrieval Gate + Cumulative Review QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);

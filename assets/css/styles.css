@@ -2019,6 +2019,10 @@
 .structure-choice.selected { border-color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,var(--panel)); box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 14%,transparent); }
 .structure-choice-chip { min-height:40px; padding:9px 14px; border-radius:999px; font-weight:800; }
 .structure-choice-card { width:100%; text-align:left; padding:12px 14px; border-radius:12px; font-weight:700; line-height:1.55; }
+.structure-choice[role="checkbox"]::before { content:"□"; display:inline-block; width:1.25em; margin-right:8px; font-weight:900; }
+.structure-choice[role="checkbox"].selected::before { content:"✓"; }
+.structure-choice[role="radio"]::before { content:"○"; display:inline-block; width:1.25em; margin-right:8px; font-weight:900; }
+.structure-choice[role="radio"].selected::before { content:"●"; }
 .structure-choice.answer { border-color:var(--good); background:color-mix(in srgb,var(--good) 9%,var(--panel)); }
 .structure-choice.wrong-selected { border-color:var(--bad); background:color-mix(in srgb,var(--bad) 8%,var(--panel)); }
 .structure-choice:disabled { cursor:default; opacity:1; }
@@ -2044,7 +2048,7 @@
 }
 
 /* =========================================================
-   v7.5.3 학습 패널 가독성 개선
+   v7.5.4 학습 패널 가독성 개선
    설정 → 학습 방식 → 진행/행동의 시각적 위계를 분리한다.
    ========================================================= */
 #subjectControlPanel.middle-info-pilot .controls {
@@ -2242,3 +2246,18 @@
     border-top: 1px dashed var(--line);
   }
 }
+
+/* v7.6.1 today planner */
+.today-panel{display:grid;gap:18px}
+.today-hero{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;padding-bottom:4px}
+.today-kicker,.planner-study-kicker{font-size:.82rem;font-weight:900;letter-spacing:.04em;color:var(--accent,#587064)}
+.today-hero h2{margin:5px 0 6px;font-size:clamp(1.35rem,2.3vw,1.85rem)}
+.today-reason{margin:0;color:var(--muted,#68716b);line-height:1.55}
+.today-progress{min-width:118px;padding:12px 14px;border:1px solid var(--border,#d7ddd7);border-radius:14px;text-align:center;background:var(--surface-soft,#f7f8f4)}
+.today-progress span{display:block;font-size:.78rem;color:var(--muted,#68716b);font-weight:700}.today-progress strong{display:block;margin-top:4px;font-size:1.45rem}
+.today-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.today-card{border:1px solid var(--border,#d7ddd7);border-radius:16px;padding:16px;background:var(--surface,#fff);display:flex;flex-direction:column;min-height:182px}
+.today-card-head{display:flex;align-items:center;gap:8px;color:var(--muted,#68716b);font-size:.9rem}.today-card-head span{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:999px;background:var(--surface-soft,#f1f3ee);font-weight:900}.today-card-value{font-size:1.25rem;font-weight:900;margin:14px 0 7px;line-height:1.35}.today-card p{margin:0 0 16px;color:var(--muted,#68716b);line-height:1.48;font-size:.9rem;flex:1}.today-card .btn{align-self:flex-start}.today-mini-stat{display:flex;justify-content:space-between;gap:12px;padding-top:10px;border-top:1px solid var(--border,#d7ddd7);font-size:.86rem}.today-flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:var(--surface-soft,#f4f6f1);font-size:.9rem}.today-flow span{font-weight:800}.today-flow b{color:var(--muted,#68716b)}.today-actions{display:flex;gap:10px;flex-wrap:wrap}
+.planner-study-banner{margin:0 0 14px;padding:15px 17px;border:1px solid var(--border,#d7ddd7);border-radius:16px;background:var(--surface-soft,#f7f8f4);display:flex;justify-content:space-between;gap:20px;align-items:center}.planner-study-banner strong{display:block;margin:4px 0 3px;font-size:1.04rem}.planner-study-banner p{margin:0;color:var(--muted,#68716b);font-size:.9rem;line-height:1.45}.planner-study-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:1080px){.today-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:800px){.today-hero{flex-direction:column}.today-progress{width:100%;text-align:left}.today-progress span,.today-progress strong{display:inline;margin:0 8px 0 0}.today-grid{grid-template-columns:1fr}.today-card{min-height:auto}.planner-study-banner{align-items:flex-start;flex-direction:column}.planner-study-actions{width:100%;justify-content:flex-start}}

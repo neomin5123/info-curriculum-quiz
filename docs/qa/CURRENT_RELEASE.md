@@ -1,4 +1,4 @@
-# CurriLoop v7.5.3 — Middle Info Recall + Structure Refinement QA
+# CurriLoop v7.6.1 — Retrieval-gated Planner + Cumulative Review QA
 
 ## Release state
 
@@ -16,9 +16,9 @@
 - exact-recall official lines: 59
 - middle-school Informatics achievement standards: 25
 
-## v7.5.3 pilot boundary
+## v7.6.1 release boundary
 
-새 학습 체계는 **중학교 정보 과목에만** 적용한다. 다른 과목은 v7.4의 기존 학습 동작을 유지한다.
+`오늘` 플래너의 범위 확장과 복습 예산은 **6개 과목 전체**에 적용한다. 다만 자유 통회상·암기 강도·연결형 구조 연습이라는 새 암기 방식은 **중학교 정보 과목에만** 적용하고, 다른 과목의 각론 내부 학습 동작은 기존 방식을 유지한다.
 
 중학교 정보 학습 방식:
 
@@ -37,15 +37,54 @@
 - 성취기준: 성취기준 코드만 보고 문장 전체 회상
 
 
+
+## Daily planner checks
+
+- 앱 기본 진입 탭은 `오늘`이며 URL `?tab=`이 명시된 경우만 다른 탭으로 바로 연다.
+- 전 과목 section index는 curriculum 원문에서 파생하며 공식 텍스트를 변경하지 않는다.
+- 기본 새 원문 목표 18문장, 자동 범위 8~22문장. 미완료 active session은 다음 날짜에도 유지한다.
+- 목표량은 완료까지 걸린 날짜와 첫 인출 정확도를 함께 반영한다. 1일 완료라도 70% 미만이면 감속하고, 85% 이상 정확한 1일 완료가 3회 누적되어야 +1한다. 2~3일 이상 걸리더라도 85% 이상이면 감속 폭을 완화한다.
+- 정확도는 첫 시도만 기록한다. 같은 항목의 재시도 성공으로 최초 실패를 덮어쓰지 않는다. 중등 정보 종합 정확도는 통회상 55%, 핵심 빈칸 35%, 구조 연결 10%이며 존재하는 유형끼리 가중치를 재정규화한다.
+- 평가 근거가 3개 미만인 세션은 증량 근거로 사용하지 않는다.
+- 7일 주기 7번째 날은 active session이 없을 때 새 진도를 열지 않으며, 이미 학습한 범위에서 약 6개의 실제 누적 혼합 점검을 추가한다.
+- 오늘 복습 예산은 느린 학습자도 최소 20개를 유지한다. backlog가 예산을 넘으면 새 원문을 먼저 75%→50%로 줄이고, 2배를 넘으면 회복일로 전환한다.
+- 중학교 정보 정확 암기 section은 장기 개별 gap 복습 대신 recall-section을 사용한다.
+- 동일 원문의 복수 gap은 장기 일정에서 line 단위로 집계한다. 오늘 정확 인출로 미래 일정까지 전진한 문장은 아침에 생성된 복습 계획에 남아 있더라도 같은 날 장기 복습에서 다시 제시하지 않는다.
+- planner state는 backup schema 10에서 export/import/undo 대상이다.
+
+## Completion / long-term retrieval checks
+
+- planner의 핵심/실전 단계는 화면에 제시된 인출 대상을 실제로 채점하기 전에는 다음 단계로 넘어갈 수 없다.
+- 틀린 핵심·실전 항목의 당일 지연 재인출이 남아 있으면 이를 먼저 처리해야 한다. 단, 같은 항목을 두 번 다시 실패하면 무한 반복하지 않고 다음 날 장기 복습으로 이월한다.
+- planner session에는 최소 1개 이상의 실제 인출 평가 근거가 있어야 완료할 수 있다.
+- 중학교 정보 영역의 마지막 분할 session에서는 구조 연결 세트를 끝내야 완료할 수 있다.
+- 완료된 항목의 mastery/recall-section 기록은 유지되며 다음 due 날짜에 다시 장기 인출한다.
+- 정확 통회상은 최초 성공 후 1일→3일→7일 재성공을 거쳐서만 숙달로 올라간다.
+
+## Cumulative-review checks
+
+- 정리일 누적 혼합은 당일 이미 성공한 항목과 오늘 예정 복습에 포함된 항목을 중복 선택하지 않는다.
+- 최소 하루 이상 지난 학습 기록만 후보로 사용한다.
+- 오래 안 본 정도와 wrong/unknown/near 이력을 우선하되 동일 영역 독점을 피하도록 다양성 패널티를 적용한다.
+- 누적 혼합은 예정 복습과 같은 복습 UI에서 수행하지만 홈에서는 별도 개수로 표시한다.
+
 ## Structure-practice checks
 
-- 구조 연습은 `내용체계 범주 구별`과 `성취기준 해설 ↔ 성취기준 연결` 두 유형만 사용한다.
-- 자명한 `원문 → 영역/출처 위치` 문제와 `위치 → 원문` 중복 훈련은 제거한다.
-- 범주 구별 선택지는 `지식·이해 / 과정·기능 / 가치·태도`로 고정한다.
-- 연결 문제의 성취기준 코드는 문제 본문에서 숨기고 채점 후에만 공개한다.
-- 영역별 세트는 최대 8문항이며 세트 내 문항 ID 중복을 허용하지 않는다.
-- 연결 가능한 성취기준 해설이 존재하는 5개 중등 정보 각론 영역은 매 세트에 연결 문항을 최소 1개 포함한다.
+- 문장 형태만 보고 맞힐 수 있는 `내용체계 범주 구별` 문제는 사용하지 않는다.
+- 구조 연습은 `성취기준 ↔ 내용 요소`와 `성취기준 해설 ↔ 성취기준` 두 연결 유형만 사용한다.
+- 성취기준↔내용 요소 연결은 직접 연결이 명확한 경우만 curated metadata로 지정하고, 한 성취기준에 연결되는 지식·이해/과정·기능/가치·태도 요소를 복수 선택으로 채점한다.
+- 성취기준 코드는 문제 본문에서 숨기고 채점 후에만 공개한다.
+- 영역별 세트는 4~6문항이며 세트 내 문항 ID 중복을 허용하지 않는다.
+- 5개 중등 정보 각론 영역의 매 세트에 내용 요소 연결과 해설 연결을 모두 포함한다.
 - 구조 연습은 숙달 판정용 통회상과 별도이며 production 기출형 문제은행을 증가시키지 않는다.
+
+## Core-blank delayed retrieval checks
+
+- 중학교 정보 `핵심` 빈칸의 틀림/모름/유사 답안은 같은 날 지연 재인출 큐에 들어간다.
+- 재출제는 즉시 반복하지 않고 2~4개 다른 핵심 빈칸 뒤에 이루어진다.
+- 최초 오답 뒤에는 정답을 보여준 뒤 다음 항목으로 이동한다.
+- 핵심 빈칸 진행 serial은 실전 지연 재인출 serial과 분리한다.
+- 당일 보수 성공은 해당 항목을 회복시키되 장기 복습 일정은 계속 유지한다.
 
 ## UI hierarchy checks
 
@@ -99,6 +138,7 @@ Release 전 다음을 모두 실행한다.
 
 ```bash
 node tests/engines/learning-engine.test.js
+node tests/engines/planner-engine.test.js
 node tests/engines/grading-engine.test.js
 node tests/engines/recall-engine.test.js
 node tests/engines/structure-engine.test.js
@@ -107,6 +147,7 @@ node tests/practice/practice-engine.test.js
 node tests/data/static-qa.js
 node tests/data/middle-info-recall-qa.js
 node tests/release/current-release-qa.js
+node tests/simulation/planner-pace-simulation.js
 ```
 
 추가 검증:
