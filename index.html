@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png">
 
-    <link rel="stylesheet" href="/assets/css/styles.css?v=7.5.1">
+    <link rel="stylesheet" href="/assets/css/styles.css?v=7.5.2">
 
 
 </head>
@@ -123,21 +123,39 @@
           <small class="field-help hidden" id="difficultyHelp">중등 정보에서는 빈칸 채우기에서만 핵심/실전을 고릅니다.</small>
         </div>
       </div>
-      <div class="toolbar study-mode-toolbar" aria-label="학습 방식">
-        <div class="mode-button-group" role="group" aria-label="학습 방식 선택">
-          <button class="btn mode-button active" id="originalButton" type="button" onclick="setStudyMode('original')" aria-pressed="true">원문 보기</button>
-          <button class="btn mode-button" id="maskButton" type="button" onclick="setStudyMode('mask')" aria-pressed="false">마스킹</button>
-          <button class="btn mode-button" id="traceButton" type="button" onclick="setStudyMode('trace')" aria-pressed="false">따라치기</button>
-          <button class="btn mode-button" id="fillButton" type="button" onclick="setStudyMode('fill')" aria-pressed="false">빈칸 채우기</button>
-          <button class="btn mode-button" id="structureButton" type="button" onclick="setStudyMode('structure')" aria-pressed="false">구조 연습</button>
+
+      <div class="study-mode-section">
+        <div class="control-section-header">
+          <span class="control-section-title">학습 방식</span>
+          <div class="fill-variant-switch hidden" id="middleInfoFillVariant" role="group" aria-label="중등 정보 빈칸 방식 선택">
+            <span class="fill-variant-label">빈칸 방식</span>
+            <button class="segment-button" id="coreFillVariantButton" type="button" onclick="setMiddleInfoFillVariant('easy')" aria-pressed="true">핵심</button>
+            <button class="segment-button" id="practicalFillVariantButton" type="button" onclick="setMiddleInfoFillVariant('practical')" aria-pressed="false">실전</button>
+          </div>
         </div>
-        <span class="toolbar-divider" aria-hidden="true"></span>
-        <div class="mode-utility-group">
-          <button class="btn soft" id="sourceModalButton" type="button" onclick="openCurrentUnitSourceModal()">원문 출처</button>
-          <button class="btn" id="gradeAllButton" onclick="gradeAllVisible()">전체 채점</button>
-          <button class="btn soft" id="resetUnitButton" onclick="resetVisible()">현재 단원 초기화</button>
-          <button class="btn primary hidden" id="nextPracticalSetButton" onclick="nextPracticalSet()">다음 실전 세트 →</button>
+        <div class="toolbar study-mode-toolbar" aria-label="학습 방식">
+          <div class="mode-button-group" role="group" aria-label="학습 방식 선택">
+            <button class="btn mode-button active" id="originalButton" type="button" onclick="setStudyMode('original')" aria-pressed="true">원문 보기</button>
+            <button class="btn mode-button" id="maskButton" type="button" onclick="setStudyMode('mask')" aria-pressed="false">마스킹</button>
+            <button class="btn mode-button" id="traceButton" type="button" onclick="setStudyMode('trace')" aria-pressed="false">따라치기</button>
+            <button class="btn mode-button" id="fillButton" type="button" onclick="setStudyMode('fill')" aria-pressed="false">빈칸 채우기</button>
+            <button class="btn mode-button" id="structureButton" type="button" onclick="setStudyMode('structure')" aria-pressed="false">구조 연습</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="study-action-bar">
+        <div class="study-progress-box" id="studyProgressBox" aria-live="polite">
+          <span class="study-progress-label">진행</span>
           <div class="score" id="scoreText">현재 0✓ 0✕</div>
+        </div>
+        <div class="study-actions-primary">
+          <button class="btn primary" id="gradeAllButton" onclick="gradeAllVisible()">전체 채점</button>
+          <button class="btn primary hidden" id="nextPracticalSetButton" onclick="nextPracticalSet()">다음 실전 세트 →</button>
+        </div>
+        <div class="study-actions-secondary">
+          <button class="btn soft" id="sourceModalButton" type="button" onclick="openCurrentUnitSourceModal()">원문 출처</button>
+          <button class="btn soft" id="resetUnitButton" onclick="resetVisible()">현재 단원 초기화</button>
         </div>
         <div id="gradingAnnouncer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
       </div>
@@ -304,7 +322,7 @@
 <div id="helpModalBackdrop" class="modal-backdrop hidden" role="presentation" onclick="closeHelpModal(event)">
   <section class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" onclick="event.stopPropagation()">
     <h2 id="helpModalTitle">CurriLoop 사용법</h2>
-    <p><strong>중등 정보</strong>는 v7.5.1 파일럿에서 학습 방식을 재설계했습니다. 난이도 등급 대신 <strong>원문 보기 · 마스킹 · 따라치기 · 빈칸 채우기 · 구조 연습</strong>을 사용합니다. 다른 과목은 안정성을 위해 기존 방식을 유지하며 차차 전환합니다.</p>
+    <p><strong>중등 정보</strong>는 v7.5.2 파일럿에서는 학습 패널의 위계까지 정리했습니다. 난이도 등급 대신 <strong>원문 보기 · 마스킹 · 따라치기 · 빈칸 채우기 · 구조 연습</strong>을 사용합니다. 다른 과목은 안정성을 위해 기존 방식을 유지하며 차차 전환합니다.</p>
     <p><strong>빈칸 채우기</strong>는 중등 정보에서 <strong>핵심</strong>과 <strong>실전</strong>만 사용합니다. 핵심은 중요한 용어를 짧게 인출하고, 실전은 지식·이해와 과정·기능을 <strong>목록 전체</strong>로, 성취기준을 <strong>문장 전체</strong>로 회상합니다. 실전에서 단서를 더 많이 지우는 방식은 사용하지 않습니다.</p>
     <p>실전 통회상에서 지식·이해와 과정·기능은 <strong>항목 수와 슬롯을 미리 보여주지 않는 자유회상</strong>으로 진행합니다. 한 항목당 한 줄로 모두 적은 뒤에만 채점이 개별 공식 항목으로 분해되어 누락·불일치·순서 이동을 보여줍니다.</p>
     <p>틀린 항목은 정답 확인 후 같은 날 몇 항목 뒤에 짧게 다시 꺼냅니다. 장기 상태는 <strong>학습됨 → 안정화 중 → 숙달</strong>로 나눕니다. 최초 정확 통회상은 ‘학습됨’, 날짜를 건넌 재인출은 ‘안정화 중’, <strong>1일→3일→7일 간격을 거친 뒤 다시 정확히 통회상</strong>해야 ‘숙달’로 봅니다. 이후 간격은 14→30→60일로 늘어납니다.</p>
@@ -373,27 +391,27 @@
     <p>학습 기록은 이 브라우저에만 저장되고 서버로 전송되지 않습니다. 브라우저 데이터 삭제·기기 변경에 대비해 복습 탭의 백업 기능을 이용하세요.</p>
     <p>2022 개정 교육과정 공공저작물은 <strong>공공누리 제2유형(출처표시 + 상업적 이용금지)</strong> 조건에 따라 비상업적 학습 목적으로 활용합니다.</p>
     <p>출처: <a href="https://www.kogl.or.kr/recommend/recommendDivView.do?division=doc&oc=&recommendIdx=60522" target="_blank" rel="noopener noreferrer">공공누리 2022 개정 교육과정 자료</a> · <a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp=" target="_blank" rel="noopener noreferrer">교육부 고시 제2022-33호</a></p>
-    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v7.5.1</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
+    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v7.5.2</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
   </div>
 </footer>
 
 
-  <script src="/data/curriculum/2022/curriculum.js?v=7.5.1"></script>
-  <script src="/data/curriculum/2015/transition-reference.js?v=7.5.1"></script>
-  <script src="/data/curriculum/mappings/2015-2022.js?v=7.5.1"></script>
-  <script src="/data/learning-aids/general-bank.js?v=7.5.1"></script>
-  <script src="/data/learning-aids/core-flow.js?v=7.5.1"></script>
-  <script src="/js/engines/learning-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/practical-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/grading-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/recall-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/review-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/history-engine.js?v=7.5.1"></script>
-  <script src="/js/engines/storage-engine.js?v=7.5.1"></script>
-  <script src="/data/questions/production.js?v=7.5.1"></script>
-  <script src="/js/practice/practice-engine.js?v=7.5.1"></script>
-  <script src="/js/practice/practice-ui.js?v=7.5.1"></script>
-  <script src="/js/app.js?v=7.5.1"></script>
+  <script src="/data/curriculum/2022/curriculum.js?v=7.5.2"></script>
+  <script src="/data/curriculum/2015/transition-reference.js?v=7.5.2"></script>
+  <script src="/data/curriculum/mappings/2015-2022.js?v=7.5.2"></script>
+  <script src="/data/learning-aids/general-bank.js?v=7.5.2"></script>
+  <script src="/data/learning-aids/core-flow.js?v=7.5.2"></script>
+  <script src="/js/engines/learning-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/practical-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/grading-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/recall-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/review-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/history-engine.js?v=7.5.2"></script>
+  <script src="/js/engines/storage-engine.js?v=7.5.2"></script>
+  <script src="/data/questions/production.js?v=7.5.2"></script>
+  <script src="/js/practice/practice-engine.js?v=7.5.2"></script>
+  <script src="/js/practice/practice-ui.js?v=7.5.2"></script>
+  <script src="/js/app.js?v=7.5.2"></script>
 
 
 

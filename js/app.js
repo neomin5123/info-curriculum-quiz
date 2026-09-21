@@ -88,8 +88,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.5.1";
-  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.5.1 중등 정보 자유 통회상·숙달 상태 개선 + v7.4 Curriculum Transition 유지";
+  const APP_VERSION = "7.5.2";
+  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.5.2 중등 정보 학습 패널 가독성 개선 + v7.5.1 자유 통회상·숙달 상태 유지";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -236,23 +236,53 @@
   function syncMiddleInfoPilotControls(unit = null) {
     const target = unit || getCurrentUnit();
     const pilot = isMiddleInfoPilot(target);
+    const panel = document.getElementById("subjectControlPanel");
     const field = document.getElementById("difficultyField");
     const label = document.getElementById("difficultyLabel");
     const help = document.getElementById("difficultyHelp");
     const structure = document.getElementById("structureButton");
+    const variant = document.getElementById("middleInfoFillVariant");
+    const coreVariant = document.getElementById("coreFillVariantButton");
+    const practicalVariant = document.getElementById("practicalFillVariantButton");
+    if (panel) panel.classList.toggle("middle-info-pilot", pilot);
     if (structure) structure.classList.toggle("hidden", !pilot);
     if (pilot) {
       setDifficultyOptions([["easy","핵심"],["practical","실전"]], "easy");
       if (label) label.textContent = "빈칸 방식";
-      if (field) field.classList.toggle("hidden", studyMode !== "fill");
-      if (help) help.classList.toggle("hidden", studyMode !== "fill");
+      if (field) field.classList.add("hidden");
+      if (help) help.classList.add("hidden");
+      if (variant) variant.classList.toggle("hidden", studyMode !== "fill");
+      const activeDifficulty = getCurrentDifficulty();
+      if (coreVariant) {
+        const active = activeDifficulty === "easy";
+        coreVariant.classList.toggle("active", active);
+        coreVariant.setAttribute("aria-pressed", active ? "true" : "false");
+      }
+      if (practicalVariant) {
+        const active = activeDifficulty === "practical";
+        practicalVariant.classList.toggle("active", active);
+        practicalVariant.setAttribute("aria-pressed", active ? "true" : "false");
+      }
     } else {
       setDifficultyOptions([["easy","핵심"],["normal","정밀"],["yaho","야~호!"],["practical","실전"]], "normal");
       if (label) label.textContent = "난이도";
       if (field) field.classList.remove("hidden");
       if (help) help.classList.add("hidden");
+      if (variant) variant.classList.add("hidden");
       if (studyMode === "structure") studyMode = "original";
     }
+  }
+
+  function setMiddleInfoFillVariant(value) {
+    if (!isMiddleInfoPilot() || !["easy", "practical"].includes(value)) return;
+    const select = document.getElementById("difficultySelect");
+    if (!select || select.value === value) {
+      syncMiddleInfoPilotControls();
+      return;
+    }
+    select.value = value;
+    syncMiddleInfoPilotControls();
+    onDifficultyChange();
   }
 
   function areasForSubject(subject, group = getCurrentGroup()) {
@@ -506,10 +536,12 @@
     const resetButton = document.getElementById("resetUnitButton");
     const nextPracticalButton = document.getElementById("nextPracticalSetButton");
     const score = document.getElementById("scoreText");
+    const progressBox = document.getElementById("studyProgressBox");
     syncMiddleInfoPilotControls();
     const pilot = isMiddleInfoPilot();
     if (gradeButton) gradeButton.classList.toggle("hidden", studyMode !== "fill");
     if (resetButton) resetButton.classList.toggle("hidden", !isInputStudyMode());
+    if (progressBox) progressBox.classList.toggle("hidden", studyMode !== "fill");
     if (nextPracticalButton) {
       const legacyPractical = !pilot && studyMode === "fill" && getCurrentDifficulty() === "practical";
       nextPracticalButton.classList.toggle("hidden", !legacyPractical);

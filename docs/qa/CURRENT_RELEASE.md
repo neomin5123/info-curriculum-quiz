@@ -1,4 +1,4 @@
-# CurriLoop v7.5.1 — Middle Info Free Recall Pilot QA
+# CurriLoop v7.5.2 — Middle Info Recall + UI Hierarchy QA
 
 ## Release state
 
@@ -16,7 +16,7 @@
 - exact-recall official lines: 59
 - middle-school Informatics achievement standards: 25
 
-## v7.5.1 pilot boundary
+## v7.5.2 pilot boundary
 
 새 학습 체계는 **중학교 정보 과목에만** 적용한다. 다른 과목은 v7.4의 기존 학습 동작을 유지한다.
 
@@ -35,6 +35,14 @@
 - 지식·이해: 항목 개수와 슬롯을 숨긴 단일 입력창에서 목록 전체 자유회상
 - 과정·기능: 항목 개수와 슬롯을 숨긴 단일 입력창에서 목록 전체 자유회상
 - 성취기준: 성취기준 코드만 보고 문장 전체 회상
+
+
+## UI hierarchy checks
+
+- 중등 정보에서는 `difficultyField` 드롭다운을 숨기고 `핵심 / 실전` 세그먼트 토글을 사용한다.
+- 세그먼트 토글은 `빈칸 채우기` 모드에서만 표시한다.
+- 상단 선택 설정, 학습 방식, 진행/채점/도구는 서로 다른 시각 구획으로 분리한다.
+- 다른 과목은 기존 난이도 드롭다운을 유지한다.
 
 ## Recall grading checks
 

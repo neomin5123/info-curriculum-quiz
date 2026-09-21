@@ -17,8 +17,14 @@ const map15=fs.readFileSync(path.join(root,'data/curriculum/mappings/2015-2022.j
 function assert(cond,msg){if(!cond) throw new Error(msg)}
 
 assert(html.includes('id="structureButton"'),'structure practice UI');
+assert(html.includes('id="middleInfoFillVariant"'),'middle-info segmented fill variant UI');
+assert(html.includes('id="studyProgressBox"'),'separate study progress bar');
+assert(html.includes('class="study-mode-section"'),'separate study mode section');
+assert(html.includes('class="study-action-bar"'),'separate study action bar');
 const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8');
 assert(app.includes('빈칸 방식'),'middle-info fill variant label');
+assert(app.includes('setMiddleInfoFillVariant'),'middle-info segmented fill variant behavior');
+assert(app.includes('field.classList.add("hidden")'),'middle-info legacy difficulty dropdown hidden');
 assert(app.includes('항목 수는 보여주지 않으며') && app.includes('recall-free-input'),'free recall must hide item count and slots');
 assert(app.includes('RecallEngine.isRecallMastered(item)'),'recall mastery must use strict spaced criterion');
 assert(R.recallMasteryStage({correctStreak:1}).label==='학습됨','recall learned stage');
@@ -34,7 +40,7 @@ assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.5.1'),'version label');
+assert(html.includes('v7.5.2'),'version label');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -148,4 +154,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.5.1 Middle Info Free Recall QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.5.2 Middle Info Recall + UI QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
