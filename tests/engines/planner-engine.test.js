@@ -1,9 +1,10 @@
 'use strict';
+process.env.TZ = 'Asia/Seoul';
 const fs=require('fs'); const vm=require('vm'); const path=require('path');
 const P=require('../../js/engines/planner-engine.js');
 const ctx={window:{}}; vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../../data/curriculum/2022/curriculum.js'),'utf8'),ctx);
 const data=ctx.window.CURRILOOP_CURRICULUM_DATA;
-const order=['middle-info','high-info','ai-basic','data-science','software-life','info-science'];
+const order=['middle-info','high-info','ai-basic','data-science','info-science','software-life'];
 const sections=P.buildStudySections(data,order,'과목 공통');
 if(sections.length<60) throw new Error(`study sections too few ${sections.length}`);
 const shortLine={text:'운영 체제의 기능',easy:['운영 체제','기능'],normal:['운영 체제','기능']};
@@ -126,16 +127,20 @@ if(activity.studyDayKeys.length!==7) throw new Error('consolidation day must cou
 if(P.reviewUnlockAllowance(18)!==6) throw new Error(`review unlock allowance ${P.reviewUnlockAllowance(18)}`);
 if(P.reviewUnlockAllowance(8)!==5) throw new Error(`slow review unlock allowance ${P.reviewUnlockAllowance(8)}`);
 
-// v7.7.0: 2027학년도 중등 1차 11/28, 첫 회독 권장 마감 D-35를 역산한다.
+// v7.8.1: 6과목 전체를 세션 수·영역 경계·누적 정리일까지 고려해 D-21 권장 마감으로 역산한다.
 const guided=sections.filter(x=>x.subjectKey==='middle-info');
-const deadlineBase=P.normalizeState({targetLines:8,completedSectionIds:[]},new Date(2026,9,20,12).getTime());
-const deadline=P.deadlineGuidance(guided,deadlineBase,{now:new Date(2026,9,20,12).getTime()});
-if(deadline.examDayKey!=='2026-11-28' || deadline.deadlineDayKey!=='2026-10-24') throw new Error(`deadline keys ${deadline.examDayKey}/${deadline.deadlineDayKey}`);
+const deadlineNow=new Date(2026,8,24,12).getTime();
+const deadlineBase=P.normalizeState({targetLines:8,completedSectionIds:[]},deadlineNow);
+const deadline=P.deadlineGuidance(sections,deadlineBase,{now:deadlineNow});
+if(deadline.examDayKey!=='2026-11-28' || deadline.deadlineDayKey!=='2026-11-07') throw new Error(`deadline keys ${deadline.examDayKey}/${deadline.deadlineDayKey}`);
 if(deadline.status!=='boost' && deadline.status!=='critical') throw new Error(`deadline status ${deadline.status}`);
 if(deadline.targetFloor<=8) throw new Error(`deadline floor ${deadline.targetFloor}`);
-const deadlineDecision=P.paceDecision({state:deadlineBase,dueCount:0,now:new Date(2026,9,20,12).getTime(),targetFloor:deadline.targetFloor});
+if(deadline.estimatedCompletionDayKey!==P.estimateCompletionForSections(sections,deadlineBase,deadline.targetFloor,deadlineNow).dayKey) throw new Error(`deadline guided forecast ${deadline.estimatedCompletionDayKey}`);
+if(deadline.baseCompletionDayKey===deadline.estimatedCompletionDayKey && deadline.targetFloor>deadlineBase.targetLines) throw new Error('deadline forecast must reflect boosted target rather than base target');
+if(deadline.minimumSessions<33) throw new Error(`six-course session lower bound ${deadline.minimumSessions}`);
+const deadlineDecision=P.paceDecision({state:deadlineBase,dueCount:0,now:deadlineNow,targetFloor:deadline.targetFloor});
 if(deadlineDecision.mode!=='deadline-boost' || deadlineDecision.effectiveTargetLines!==deadline.targetFloor) throw new Error('deadline pace boost');
-const blockedByReview=P.paceDecision({state:deadlineBase,dueCount:50,now:new Date(2026,9,20,12).getTime(),targetFloor:22});
+const blockedByReview=P.paceDecision({state:deadlineBase,dueCount:50,now:deadlineNow,targetFloor:22});
 if(blockedByReview.mode==='deadline-boost') throw new Error('review burden must outrank deadline boost');
 
 

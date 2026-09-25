@@ -1,8 +1,9 @@
 (function(root, factory) {
-  const api = factory();
+  const dayEngine = (typeof module === 'object' && module.exports) ? require('./day-engine.js') : root?.CurriLoopDayEngine;
+  const api = factory(dayEngine);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CurriLoopHistoryEngine = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine) {
   'use strict';
 
   function wrongCount(item) {
@@ -19,9 +20,9 @@
     if (item?.lastWrongAt) timestamps.push(item.lastWrongAt);
     const days = new Set();
     timestamps.forEach(value => {
-      const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return;
-      days.add(`${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`);
+      const timestamp = Number(value);
+      if (!Number.isFinite(timestamp) || timestamp <= 0) return;
+      days.add(DayEngine.studyDayKey(timestamp));
     });
     return days.size;
   }

@@ -1,17 +1,13 @@
 (function(root, factory) {
-  const api = factory();
+  const dayEngine = (typeof module === 'object' && module.exports) ? require('./day-engine.js') : root?.CurriLoopDayEngine;
+  const api = factory(dayEngine);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CurriLoopReviewEngine = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine) {
   'use strict';
 
-  function localDayKey(timestamp = Date.now()) {
-    const d = new Date(Number(timestamp) || Date.now());
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-  }
+  const localDayKey = DayEngine?.studyDayKey || DayEngine?.localDayKey;
+  if (typeof localDayKey !== 'function') throw new Error('CurriLoopDayEngine is required');
 
   function nextDueBucket(entries = [], now = Date.now()) {
     const usable = (entries || [])
@@ -40,14 +36,15 @@
 
   function relativeDayLabel(dayKey, now = Date.now()) {
     const today = localDayKey(now);
-    const tomorrow = localDayKey(new Date(new Date(now).getFullYear(), new Date(now).getMonth(), new Date(now).getDate() + 1).getTime());
+    const tomorrow = DayEngine.shiftDayKey(today, 1);
     if (dayKey === today) return '오늘';
     if (dayKey === tomorrow) return '내일';
     const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dayKey || ''));
     return match ? `${Number(match[2])}/${Number(match[3])}` : String(dayKey || '');
   }
 
-  function selectLineReviewRecords(records = [], now = Date.now()) {
+  function selectLineReviewRecords(records = [], now = Date.now(), dueThrough = now) {
+    const cutoff = Math.max(Number(now || 0), Number(dueThrough || now));
     const grouped = new Map();
     (records || []).forEach(record => {
       if (!record?.lineKey) return;
@@ -58,7 +55,7 @@
     grouped.forEach(group => {
       const failureDue = group.filter(record => {
         const dueAt = Number(record.nextReviewAt || 0);
-        return dueAt > 0 && dueAt <= now && ["wrong","unknown","near"].includes(record.lastResult);
+        return dueAt > 0 && dueAt <= cutoff && ["wrong","unknown","near"].includes(record.lastResult);
       });
       let candidates = failureDue;
       if (!candidates.length) {
@@ -67,7 +64,7 @@
         const lineDueAt = Math.max(...scheduled.map(record => Number(record.nextReviewAt || 0)));
         // 같은 문장의 어떤 빈칸이 오늘 정확 인출되어 미래 일정으로 전진했다면
         // 그 문장은 오늘 다시 장기 복습하지 않는다. 다음 실제 due 날짜에 다시 꺼낸다.
-        if (lineDueAt > now) return;
+        if (lineDueAt > cutoff) return;
         candidates = scheduled;
       }
       const severity = state => state === "wrong" ? 3 : state === "unknown" ? 2 : state === "near" ? 1 : 0;

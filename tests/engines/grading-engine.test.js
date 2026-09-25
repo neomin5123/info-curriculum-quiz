@@ -1,4 +1,5 @@
 'use strict';
+process.env.TZ = 'Asia/Seoul';
 const assert = require('assert');
 const G = require('../../js/engines/grading-engine.js');
 

@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CurriLoop</title>
-  <meta name="description" content="2022 개정 정보과 교육과정 원문 기반 회상 학습 도구 CurriLoop — 중등 정보 통회상 파일럿, 마스킹·따라치기·빈칸 채우기·구조 연습, 간격 복습 지원">
+  <meta name="description" content="2022 개정 정보과 교육과정 원문 기반 회상 학습 도구 CurriLoop — 6과목 통회상, 마스킹·따라치기·핵심 빈칸·구조 연습, 간격 복습 지원">
   <meta property="og:title" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <meta property="og:description" content="중등 정보부터 정보과학까지 공식 교육과정 원문을 학습합니다. 중등 정보는 핵심 빈칸·실전 통회상·구조 연습을 우선 적용합니다.">
+  <meta property="og:description" content="중등 정보부터 소프트웨어와 생활까지 2022 정보과 6과목 공식 원문을 핵심 빈칸·실전 통회상·구조 연습으로 학습합니다.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://curriloop.vercel.app/">
   <meta property="og:image" content="https://curriloop.vercel.app/assets/icons/og-card.png">
@@ -22,7 +22,7 @@
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png">
 
-    <link rel="stylesheet" href="/assets/css/styles.css?v=7.7.1">
+    <link rel="stylesheet" href="/assets/css/styles.css?v=7.8.1">
 
 
 </head>
@@ -35,6 +35,11 @@
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="화면 테마 전환">어두운 화면</button>
       </div>
       <div class="header-actions">
+        <div class="ui-scale-control" role="group" aria-label="화면 배율 조절">
+          <button class="ui-scale-button" id="uiScaleDown" type="button" onclick="changeUiScale(-10)" aria-label="화면 배율 10% 줄이기">−</button>
+          <button class="ui-scale-value" id="uiScaleValue" type="button" onclick="resetUiScale()" aria-label="화면 배율을 100%로 초기화" title="누르면 100%로 초기화">100%</button>
+          <button class="ui-scale-button" id="uiScaleUp" type="button" onclick="changeUiScale(10)" aria-label="화면 배율 10% 늘리기">+</button>
+        </div>
         <button class="btn help-button" type="button" onclick="openHelpModal()" aria-label="CurriLoop 사용법과 자료 안내">?</button>
       </div>
     </div>
@@ -58,7 +63,7 @@
           <p id="todayReason" class="today-reason">학습 기록을 바탕으로 오늘 할 일을 정리합니다.</p>
         </div>
         <div class="today-progress">
-          <span>중등 정보 자동 첫 회독</span>
+          <span>정보과 6과목 자동 첫 회독</span>
           <strong id="todayCoverage">0%</strong>
         </div>
       </div>
@@ -89,7 +94,7 @@
           <div class="today-mini-stat"><span>새 학습량 목표</span><strong id="todayTargetLines">18점</strong></div>
           <div class="today-mini-stat"><span>최근 첫 인출 정확도</span><strong id="todayRecentAccuracy">아직 없음</strong></div>
           <div class="today-mini-stat"><span>1차 시험</span><strong id="todayExamDday">D-68</strong></div>
-          <div class="today-mini-stat"><span>중등 정보 첫 회독 예상</span><strong id="todayFirstPassForecast">계산 중</strong></div>
+          <div class="today-mini-stat"><span>6과목 첫 회독 예상</span><strong id="todayFirstPassForecast">계산 중</strong></div>
         </article>
       </div>
 
@@ -177,17 +182,17 @@
             <option value="yaho">야~호!</option>
             <option value="practical">실전</option>
           </select>
-          <small class="field-help hidden" id="difficultyHelp">중등 정보에서는 빈칸 채우기에서만 핵심/실전을 고릅니다.</small>
+          <small class="field-help hidden" id="difficultyHelp">2022 정보과 6과목에서는 빈칸 채우기에서 핵심/실전을 고릅니다.</small>
         </div>
       </div>
 
       <div class="study-mode-section">
         <div class="control-section-header">
           <span class="control-section-title">학습 방식</span>
-          <div class="fill-variant-switch hidden" id="middleInfoFillVariant" role="group" aria-label="중등 정보 빈칸 방식 선택">
+          <div class="fill-variant-switch hidden" id="recallFillVariant" role="group" aria-label="정보과 교육과정 빈칸 방식 선택">
             <span class="fill-variant-label">빈칸 방식</span>
-            <button class="segment-button" id="coreFillVariantButton" type="button" onclick="setMiddleInfoFillVariant('easy')" aria-pressed="true">핵심</button>
-            <button class="segment-button" id="practicalFillVariantButton" type="button" onclick="setMiddleInfoFillVariant('practical')" aria-pressed="false">실전</button>
+            <button class="segment-button" id="coreFillVariantButton" type="button" onclick="setRecallFillVariant('easy')" aria-pressed="true">핵심</button>
+            <button class="segment-button" id="practicalFillVariantButton" type="button" onclick="setRecallFillVariant('practical')" aria-pressed="false">실전</button>
           </div>
         </div>
         <div class="toolbar study-mode-toolbar" aria-label="학습 방식">
@@ -392,20 +397,20 @@
 <div id="helpModalBackdrop" class="modal-backdrop hidden" role="presentation" onclick="closeHelpModal(event)">
   <section class="help-modal" role="dialog" aria-modal="true" aria-labelledby="helpModalTitle" onclick="event.stopPropagation()">
     <h2 id="helpModalTitle">CurriLoop 사용법</h2>
-    <p><strong>가장 먼저 ‘오늘’ 탭을 사용하세요.</strong> 현재 자동 범위 확장은 새 암기 체계가 검증된 <strong>중등 정보</strong>에만 적용합니다. 앱이 오늘 예정 복습을 먼저 제시하고, 복습 뒤 중등 정보의 새 범위를 자동으로 이어 줍니다. 새 범위를 하루에 끝내지 못하면 다음 날 같은 범위를 계속하며, 실제 완료 속도와 첫 인출 정확도에 따라 하루 새 학습량 목표를 8~22점 사이에서 자동 조절합니다. 학습량 점수는 원문 길이·자료 유형·핵심 빈칸 수를 함께 반영합니다. 중등 정보가 끝난 뒤에는 자동 진도를 멈추고 장기 복습만 계속하며, 나머지 과목은 개편 전까지 <strong>각론에서 수동 학습</strong>합니다.</p>
-    <p><strong>중등 정보</strong>는 v7.7.1 학습 동결판에서 자유 통회상·숙달 단계·학습 패널 위계와 함께 <strong>핵심 빈칸 당일 지연 재인출과 연결 중심 구조 연습</strong>을 적용했습니다. 난이도 등급 대신 <strong>원문 보기 · 마스킹 · 따라치기 · 빈칸 채우기 · 구조 연습</strong>을 사용합니다. 다른 과목은 안정성을 위해 기존 방식을 유지하며 차차 전환합니다.</p>
-    <p><strong>빈칸 채우기</strong>는 중등 정보에서 <strong>핵심</strong>과 <strong>실전</strong>만 사용합니다. 핵심은 중요한 용어를 짧게 인출하고, 실전은 지식·이해와 과정·기능을 <strong>목록 전체</strong>로, 성취기준을 <strong>문장 전체</strong>로 회상합니다. 실전에서 단서를 더 많이 지우는 방식은 사용하지 않습니다.</p>
+    <p><strong>가장 먼저 ‘오늘’ 탭을 사용하세요.</strong> 자동 범위 확장은 2022 정보과 <strong>6과목 전체</strong>에 적용합니다. 순서는 중학교 정보 → 고등학교 정보 → 인공지능 기초 → 데이터 과학 → 정보과학 → 소프트웨어와 생활입니다. 예정 복습을 먼저 처리한 뒤 새 범위를 열고, 실제 완료 속도와 첫 인출 정확도에 따라 하루 새 학습량 목표를 8~22점 사이에서 자동 조절합니다. 하루에 새로 시작하는 자동 진도 세션은 최대 1개입니다.</p>
+    <p><strong>학습일은 오전 4시 기준</strong>입니다. 00:00~03:59의 학습은 전날 학습일로 처리하므로 자정을 넘겨 공부해도 한 학습일로 이어집니다. 04:00부터 새 학습일·새 복습 계획·하루 새 세션 제한이 갱신됩니다.</p>
+    <p>6과목 모두 <strong>원문 보기 · 마스킹 · 따라치기 · 빈칸 채우기 · 구조 연습</strong>을 사용합니다. <strong>빈칸 채우기</strong>는 핵심과 실전으로 나뉘며, 실전에서는 지식·이해와 과정·기능을 <strong>목록 전체</strong>로, 성취기준을 <strong>문장 전체</strong>로 회상합니다. 해설·고려사항 등은 핵심어와 관계를 중심으로 확인합니다.</p>
     <p>실전 통회상에서 지식·이해와 과정·기능은 <strong>항목 수와 슬롯을 미리 보여주지 않는 자유회상</strong>으로 진행합니다. 한 항목당 한 줄로 모두 적은 뒤에만 채점이 개별 공식 항목으로 분해되어 누락·불일치·순서 이동을 보여줍니다.</p>
     <p>틀린 항목은 정답 확인 후 같은 날 몇 항목 뒤에 짧게 다시 꺼냅니다. 장기 상태는 <strong>학습됨 → 안정화 중 → 숙달</strong>로 나눕니다. 최초 정확 통회상은 ‘학습됨’, 날짜를 건넌 재인출은 ‘안정화 중’, <strong>1일→3일→7일 간격을 거친 뒤 다시 정확히 통회상</strong>해야 ‘숙달’로 봅니다. 이후 간격은 14→30→60일로 늘어납니다.</p>
-    <p><strong>구조 연습</strong>은 문장 형태만 보고 맞힐 수 있는 범주 판별을 제거했습니다. 중등 정보에서는 <strong>성취기준 ↔ 내용 요소</strong>와 <strong>성취기준 ↔ 해설</strong>의 직접 연결만 연습합니다. 성취기준에 연결되는 지식·이해/과정·기능/가치·태도 요소는 복수 선택하며, 한 세트는 영역에 따라 4~6문항만 제시합니다. <strong>핵심 빈칸</strong>에서 틀린 항목은 정답 확인 뒤 2~4개 다른 핵심 빈칸 후 다시 꺼내며, 장기 복습 일정은 별도로 유지합니다.</p>
-    <p>중등 정보의 암기 강도는 <strong>정확 암기</strong>(지식·이해, 과정·기능, 성취기준), <strong>키워드 +@</strong>(목표, 핵심 아이디어, 가치·태도, 해설·고려사항), <strong>키워드</strong>(성격, 교수학습·평가의 공통 원칙)으로 표시합니다. 정확 암기는 조사·구두점보다 공식 개념과 행동동사를 우선합니다.</p>
+    <p><strong>구조 연습</strong>은 자명한 범주 맞히기를 사용하지 않습니다. 중등 정보는 사람이 검토한 <strong>성취기준 ↔ 내용 요소</strong>와 공식 코드 기반 <strong>성취기준 ↔ 해설</strong> 연결을 사용합니다. 나머지 과목은 공식 코드 기반 성취기준↔해설과, 다른 정보과 과목의 공식 원문을 오답으로 섞은 <strong>과정·기능 과목 변별</strong>을 사용합니다.</p>
+    <p>6과목의 암기 강도는 <strong>정확 암기</strong>(지식·이해, 과정·기능, 성취기준), <strong>키워드 +@</strong>(목표, 핵심 아이디어, 가치·태도, 해설·고려사항), <strong>키워드</strong>(성격, 교수학습·평가의 공통 원칙)으로 표시합니다. 정확 암기는 조사·구두점보다 공식 개념과 행동동사를 우선합니다.</p>
     <p>쉼표·띄어쓰기·구두점은 채점에서 무시합니다. 설계↔구현, 선택↔수집, 탐색↔발견, 분석↔구조화처럼 구별 가치가 큰 행동어는 엄격하게 봅니다. 원문은 언제든 <strong>원문 출처</strong> 버튼에서 확인할 수 있습니다.</p>
     <h3>연습 문제</h3>
     <p><strong>연습 문제</strong>는 단순 빈칸·용어 회상을 반복하지 않고, 실제 임용 기출처럼 교육과정 원문을 수업·평가·전공 내용과 연결해 판단하도록 구성합니다. 과목과 영역은 한 문제에 여러 개가 걸리면 모두 표시되며, ‘과목 공통’은 별도 영역으로 취급하지 않습니다. 문제 유형·임의 난이도 등급은 표시하지 않고 실제 배점만 사용합니다. 채점 뒤에는 <strong>통합 해설</strong>에서 1점 단위 정답·이유·기출형 포인트·혼동 주의를 확인할 수 있습니다. 근거 원문 보기를 누르면 현재 문제를 유지한 채 공식 원문이 팝업으로 열립니다.</p>
     <h3>복습</h3>
     <p><strong>복습</strong>은 복습 탭 안에서 바로 진행합니다. 앱을 연 시점의 학습 기록으로 그날의 기본 ‘오늘 복습’ 목록을 만들며, 먼저 각론 실전을 풀더라도 이미 잡힌 복습 항목은 사라지지 않습니다. 단, <strong>연습 문제에서 오답·모름이 발생하면 예외적으로 관련 공식 원문이 오늘 복습에 추가</strong>될 수 있습니다. ‘오늘 복습’에서 원문을 실제로 정확히 인출한 항목만 오늘 완료로 처리하며, 정확한 인출이 이어지면 복습 간격을 1→3→7→14→30→60일로 늘립니다. <strong>추가 보강</strong>은 반복 실패한 취약 항목 중 오늘 이미 정확히 맞힌 것은 제외합니다. 같은 원문에서 여러 빈칸이 동시에 복습 시점에 와도 한 세션에서는 대표 항목을 우선해 문장 반복을 줄입니다. 오늘 복습이 끝나면 <strong>다음 복습 예정일과 개수</strong>도 표시합니다.</p>
     <h3>각론 범위</h3>
-    <p>기존 내용 체계·성취기준에 더해 <strong>성격·목표</strong>와 <strong>교수학습·평가</strong>의 기출 식별력이 높은 공식 원문을 보강했습니다. 출제 항목은 <strong>내용체계</strong>, <strong>성취기준</strong>, <strong>내용체계 + 성취기준</strong>을 각각 선택할 수 있고, <strong>해설 + 적용 시 고려사항</strong>은 별도 묶음으로 학습할 수 있습니다. <strong>원문 학습</strong> 화면에서는 6과목 27개 각론 영역에 암기용 <strong>핵심 흐름</strong>이 표시됩니다. 별도의 <strong>원문 보기</strong> 버튼은 현재 위치를 바꾸지 않고 공식 원문을 팝업으로 엽니다. 영역 특성에 따라 단계형·분기형·대응형·순환형 등 가장 적합한 구조로 제시합니다. <strong>성취기준</strong>은 정확 인출을 우선하고, <strong>성취기준 해설</strong>은 핵심 개념·열거·비교를, <strong>적용 시 고려 사항</strong>은 교수학습·평가 방법·연계·조건을 중심으로 실전 빈칸 강도를 낮춰 배분합니다.</p>
+    <p>기존 내용 체계·성취기준에 더해 <strong>성격·목표</strong>와 <strong>교수학습·평가</strong>의 기출 식별력이 높은 공식 원문을 보강했습니다. 출제 항목은 <strong>내용체계</strong>, <strong>성취기준</strong>, <strong>내용체계 + 성취기준</strong>을 각각 선택할 수 있고, <strong>해설 + 적용 시 고려사항</strong>은 별도 묶음으로 학습할 수 있습니다. <strong>원문 학습</strong> 화면에서는 6과목 27개 각론 영역에 암기용 <strong>핵심 흐름</strong>이 표시됩니다. 별도의 <strong>원문 보기</strong> 버튼은 현재 위치를 바꾸지 않고 공식 원문을 팝업으로 엽니다. 영역 특성에 따라 단계형·분기형·대응형·순환형 등 가장 적합한 구조로 제시합니다. <strong>성취기준</strong>은 정확 인출을 우선합니다. <strong>성취기준 해설·적용 시 고려 사항·가치·태도</strong>는 답안 가치가 높은 핵심어만 빈칸으로 확인하고, <strong>실전 단계에서는 빈칸을 더 늘리지 않고 자유회상</strong>으로 핵심 개념·열거·비교·조건을 인출합니다.</p>
     <h3>저장과 개인정보</h3>
     <p class="privacy-note">계정·광고·분석 SDK가 없습니다. 복습·숙련 기록과 마지막 학습 위치는 현재 브라우저에 저장되며 CurriLoop 서버로 전송되지 않습니다. 같은 탭의 새로고침·앱 업데이트에서는 작성 중 답도 복원합니다. 브라우저 데이터를 삭제하거나 기기를 바꾸면 기록을 잃을 수 있으므로 정기적으로 ‘백업 내보내기’를 권장합니다.</p>
     <h3>자료 기준</h3>
@@ -458,33 +463,36 @@
   <div class="footer-inner">
     <strong>자료·저장·저작권 안내</strong>
     <p>CurriLoop은 개인·비상업적 학습을 위한 비공식 도구이며 국가교육위원회·교육부·한국교육과정평가원·시도교육청의 공식 서비스가 아닙니다.</p>
-    <p>각론 원문 기준: <strong>교육부 고시 제2022-33호 [별책10] 실과(기술·가정)/정보과 교육과정</strong> 및 <strong>[별책20] 과학 계열 선택 과목 교육과정(정보과학)</strong>. 2026-1호 일부개정은 별책10·20을 개정하지 않았습니다. 중등 정보의 핵심·실전 통회상 설계와 다른 과목의 핵심·정밀·야~호!·실전 빈칸 선정은 CurriLoop의 학습용 편집입니다.</p>
+    <p>각론 원문 기준: <strong>교육부 고시 제2022-33호 [별책10] 실과(기술·가정)/정보과 교육과정</strong> 및 <strong>[별책20] 과학 계열 선택 과목 교육과정(정보과학)</strong>. 2026-1호 일부개정은 별책10·20을 개정하지 않았습니다. 6과목의 핵심·실전 통회상 설계와 구조 연습은 CurriLoop의 학습용 편집입니다.</p>
     <p>학습 기록은 이 브라우저에만 저장되고 서버로 전송되지 않습니다. 브라우저 데이터 삭제·기기 변경에 대비해 복습 탭의 백업 기능을 이용하세요.</p>
     <p>2022 개정 교육과정 공공저작물은 <strong>공공누리 제2유형(출처표시 + 상업적 이용금지)</strong> 조건에 따라 비상업적 학습 목적으로 활용합니다.</p>
     <p>출처: <a href="https://www.kogl.or.kr/recommend/recommendDivView.do?division=doc&oc=&recommendIdx=60522" target="_blank" rel="noopener noreferrer">공공누리 2022 개정 교육과정 자료</a> · <a href="https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=93458&lev=0&searchTyp=" target="_blank" rel="noopener noreferrer">교육부 고시 제2022-33호</a></p>
-    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v7.7.1</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
+    <p class="footer-small">© 2026 CurriLoop · <span id="appVersionLabel">v7.8.1</span> · 공개용 정식 검수판. 상업적 이용을 시작하기 전에는 원자료의 이용조건을 다시 확인해야 합니다.</p>
   </div>
 </footer>
 
 
-  <script src="/data/curriculum/2022/curriculum.js?v=7.7.1"></script>
-  <script src="/data/curriculum/2015/transition-reference.js?v=7.7.1"></script>
-  <script src="/data/curriculum/mappings/2015-2022.js?v=7.7.1"></script>
-  <script src="/data/learning-aids/general-bank.js?v=7.7.1"></script>
-  <script src="/data/learning-aids/core-flow.js?v=7.7.1"></script>
-  <script src="/js/engines/learning-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/practical-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/grading-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/recall-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/structure-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/review-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/history-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/storage-engine.js?v=7.7.1"></script>
-  <script src="/js/engines/planner-engine.js?v=7.7.1"></script>
-  <script src="/data/questions/production.js?v=7.7.1"></script>
-  <script src="/js/practice/practice-engine.js?v=7.7.1"></script>
-  <script src="/js/practice/practice-ui.js?v=7.7.1"></script>
-  <script src="/js/app.js?v=7.7.1"></script>
+  <script src="/data/curriculum/2022/curriculum.js?v=7.8.1"></script>
+  <script src="/data/curriculum/2015/transition-reference.js?v=7.8.1"></script>
+  <script src="/data/curriculum/mappings/2015-2022.js?v=7.8.1"></script>
+  <script src="/data/learning-aids/general-bank.js?v=7.8.1"></script>
+  <script src="/data/learning-aids/core-flow.js?v=7.8.1"></script>
+  <script src="/data/learning-aids/gap-intensity.js?v=7.8.1"></script>
+  <script src="/js/engines/day-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/learning-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/practical-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/grading-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/recall-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/intensity-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/structure-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/review-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/history-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/storage-engine.js?v=7.8.1"></script>
+  <script src="/js/engines/planner-engine.js?v=7.8.1"></script>
+  <script src="/data/questions/production.js?v=7.8.1"></script>
+  <script src="/js/practice/practice-engine.js?v=7.8.1"></script>
+  <script src="/js/practice/practice-ui.js?v=7.8.1"></script>
+  <script src="/js/app.js?v=7.8.1"></script>
 
 
 

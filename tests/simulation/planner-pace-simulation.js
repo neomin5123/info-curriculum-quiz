@@ -1,4 +1,5 @@
 'use strict';
+process.env.TZ = 'Asia/Seoul';
 const fs=require('fs'); const vm=require('vm'); const path=require('path');
 const P=require('../../js/engines/planner-engine.js');
 const ctx={window:{}}; vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.resolve(__dirname,'../../data/curriculum/2022/curriculum.js'),'utf8'),ctx);

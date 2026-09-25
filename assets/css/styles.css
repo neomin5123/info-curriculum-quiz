@@ -2051,7 +2051,7 @@
    v7.5.4 학습 패널 가독성 개선
    설정 → 학습 방식 → 진행/행동의 시각적 위계를 분리한다.
    ========================================================= */
-#subjectControlPanel.middle-info-pilot .controls {
+#subjectControlPanel.recall-course .controls {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -2190,10 +2190,10 @@
 }
 
 @media (max-width: 720px) {
-  #subjectControlPanel.middle-info-pilot .controls {
+  #subjectControlPanel.recall-course .controls {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
-  #subjectControlPanel.middle-info-pilot .controls > .field:nth-child(3) {
+  #subjectControlPanel.recall-course .controls > .field:nth-child(3) {
     grid-column: 1 / -1;
   }
 
@@ -2261,3 +2261,41 @@
 .planner-study-banner{margin:0 0 14px;padding:15px 17px;border:1px solid var(--border,#d7ddd7);border-radius:16px;background:var(--surface-soft,#f7f8f4);display:flex;justify-content:space-between;gap:20px;align-items:center}.planner-study-banner strong{display:block;margin:4px 0 3px;font-size:1.04rem}.planner-study-banner p{margin:0;color:var(--muted,#68716b);font-size:.9rem;line-height:1.45}.planner-study-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
 @media (max-width:1080px){.today-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:800px){.today-hero{flex-direction:column}.today-progress{width:100%;text-align:left}.today-progress span,.today-progress strong{display:inline;margin:0 8px 0 0}.today-grid{grid-template-columns:1fr}.today-card{min-height:auto}.planner-study-banner{align-items:flex-start;flex-direction:column}.planner-study-actions{width:100%;justify-content:flex-start}}
+
+/* =========================================================
+   v7.8.1 화면 배율
+   학습 기록과 독립적으로 80~140% 범위에서 저장한다.
+   ========================================================= */
+.ui-scale-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+}
+.ui-scale-button,
+.ui-scale-value {
+  min-height: 30px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+.ui-scale-button { min-width: 30px; padding: 3px 7px; font-size: 16px; line-height: 1; }
+.ui-scale-value { min-width: 50px; padding: 3px 6px; font-size: 11.5px; }
+.ui-scale-button:hover,
+.ui-scale-value:hover { background: var(--soft); }
+.ui-scale-button:disabled { opacity: .38; cursor: default; }
+.ui-scale-button:focus-visible,
+.ui-scale-value:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+@media (max-width:720px) {
+  .ui-scale-control { border-radius: 8px; }
+  .ui-scale-button { min-width: 28px; min-height: 28px; padding-inline: 5px; }
+  .ui-scale-value { min-width: 44px; min-height: 28px; padding-inline: 4px; font-size: 10.5px; }
+}

@@ -1,8 +1,9 @@
 (function(root, factory) {
-  const api = factory();
+  const dayEngine = (typeof module === 'object' && module.exports) ? require('./day-engine.js') : root?.CurriLoopDayEngine;
+  const api = factory(dayEngine);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CurriLoopPlannerEngine = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine) {
   'use strict';
 
   const MIN_TARGET_LINES = 8;
@@ -12,7 +13,7 @@
   const STABLE_ACCURACY = 0.70;
   const KIND_WEIGHTS = Object.freeze({core:0.35, recall:0.55, structure:0.10});
   const DEFAULT_EXAM_DAY_KEY = '2026-11-28';
-  const FIRST_PASS_BUFFER_DAYS = 35;
+  const FIRST_PASS_BUFFER_DAYS = 21;
 
   // v7.6.4: 하루 분량은 단순 문장 수가 아니라 실제 학습 부담 점수로 계산한다.
   // 기존 targetLines 저장값(8~22)은 그대로 승계하되 의미만 '학습량 점수'로 전환한다.
@@ -30,51 +31,77 @@
     const coreGaps = Array.isArray(line?.easy) ? line.easy.length : 0;
     score += Math.min(0.60, Math.max(0, coreGaps - 3) * 0.10);
 
-    // 중등 정보 외 과목은 아직 핵심+정확화 두 번의 빈칸 학습을 사용하므로
-    // normal 빈칸이 유난히 많은 문장은 하루 분량 계산에서 조금 더 무겁게 본다.
-    if (subjectKey && subjectKey !== 'middle-info') {
-      const normalGaps = Array.isArray(line?.normal) ? line.normal.length : 0;
-      score += Math.min(0.50, Math.max(0, normalGaps - coreGaps) * 0.04);
-    }
     let weighted = score * 0.7;
-    // 중등 정보에서 통으로 외우기로 합의한 정확 암기 영역은 짧다는 이유만으로
-    // 지나치게 싸게 계산하지 않는다. 실제 자유회상/문장 전체 회상 부담을 반영한다.
-    if (subjectKey === 'middle-info' && (sectionTitle === '지식·이해' || sectionTitle === '과정·기능')) weighted = Math.max(weighted, 0.9);
-    if (subjectKey === 'middle-info' && sectionTitle === '성취기준') weighted = Math.max(weighted, 1.2);
+    // v7.8: 6과목 모두 지식·이해 / 과정·기능 / 성취기준을 통회상으로 운영한다.
+    // 짧은 내용 요소도 목록 전체를 자유회상해야 하므로 지나치게 가볍게 계산하지 않는다.
+    if (sectionTitle === '지식·이해' || sectionTitle === '과정·기능') weighted = Math.max(weighted, 0.9);
+    if (sectionTitle === '성취기준') weighted = Math.max(weighted, 1.2);
     return Math.max(0.4, Math.round(weighted * 10) / 10);
   }
 
-  function localDayKey(timestamp = Date.now()) {
-    const d = new Date(Number(timestamp) || Date.now());
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+  const localDayKey = DayEngine?.studyDayKey || DayEngine?.localDayKey;
+  const parseDayKey = DayEngine?.parseDayKey;
+  const dayDistance = DayEngine?.dayDistance;
+  const signedDayDistance = DayEngine?.signedDayDistance;
+  const shiftDayKey = DayEngine?.shiftDayKey;
+  if (![localDayKey, parseDayKey, dayDistance, signedDayDistance, shiftDayKey].every(fn => typeof fn === 'function')) {
+    throw new Error('CurriLoopDayEngine is required');
   }
 
-  function parseDayKey(key) {
-    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(key || ''));
-    if (!match) return null;
-    return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12, 0, 0, 0);
+
+  function selectNextSectionBatch(sections, completedIds, targetWorkload) {
+    const completed = completedIds instanceof Set ? completedIds : new Set(completedIds || []);
+    const firstIndex = (sections || []).findIndex(section => !completed.has(section.id));
+    if (firstIndex < 0) return [];
+    const first = sections[firstIndex];
+    const candidates = [];
+    for (let i = firstIndex; i < sections.length; i++) {
+      const item = sections[i];
+      if (completed.has(item.id)) continue;
+      if (item.subjectKey !== first.subjectKey || item.area !== first.area) break;
+      candidates.push(item);
+    }
+    if (!candidates.length) return [];
+    const sessionTarget = Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(targetWorkload || DEFAULT_TARGET_LINES)));
+    const totalCandidateLoad = candidates.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    const selected = [];
+    let workload = 0;
+    // 영역 경계를 넘지 않는다. 목표보다 5점 이내로만 무거운 영역은 작은 꼬리 세션을 만들지 않고 한 번에 끝낸다.
+    if (totalCandidateLoad <= sessionTarget + 5) return candidates.slice();
+    for (let i = 0; i < candidates.length; i++) {
+      const item = candidates[i];
+      const itemLoad = Number(item.workloadScore || item.lineCount || 0);
+      const projected = workload + itemLoad;
+      const remainingAfter = totalCandidateLoad - projected;
+      if (selected.length && projected > sessionTarget + 5) break;
+      if (selected.length && workload >= sessionTarget * 0.7 && remainingAfter > 0 && remainingAfter < 6) break;
+      selected.push(item);
+      workload = projected;
+      if (workload >= sessionTarget) break;
+    }
+    return selected.length ? selected : [first];
   }
 
-  function dayDistance(fromKey, toKey) {
-    const a = parseDayKey(fromKey), b = parseDayKey(toKey);
-    if (!a || !b) return 0;
-    return Math.max(0, Math.round((b.getTime() - a.getTime()) / (24 * 60 * 60 * 1000)));
-  }
-
-  function signedDayDistance(fromKey, toKey) {
-    const a = parseDayKey(fromKey), b = parseDayKey(toKey);
-    if (!a || !b) return 0;
-    return Math.round((b.getTime() - a.getTime()) / (24 * 60 * 60 * 1000));
-  }
-
-  function shiftDayKey(dayKey, deltaDays) {
-    const d = parseDayKey(dayKey);
-    if (!d) return '';
-    d.setDate(d.getDate() + Number(deltaDays || 0));
-    return localDayKey(d.getTime());
+  function remainingSessionEstimate(sections, state, targetWorkload) {
+    const normalized = normalizeState(state);
+    const completed = new Set(normalized.completedSectionIds || []);
+    let sessions = 0;
+    const bySubject = {};
+    if (normalized.activeSession?.sectionIds?.length) {
+      sessions += 1;
+      normalized.activeSession.sectionIds.forEach(id => completed.add(String(id)));
+      const key = String(normalized.activeSession.subjectKey || '');
+      if (key) bySubject[key] = (bySubject[key] || 0) + 1;
+    }
+    for (let guard = 0; guard < 1000 && completed.size < (sections || []).length; guard++) {
+      const batch = selectNextSectionBatch(sections, completed, targetWorkload);
+      if (!batch.length) break;
+      sessions += 1;
+      const key = String(batch[0]?.subjectKey || '');
+      if (key) bySubject[key] = (bySubject[key] || 0) + 1;
+      batch.forEach(item => completed.add(item.id));
+    }
+    return {sessions, completedCount:completed.size, bySubject};
   }
 
   function projectedNewStudyDays(state, deadlineDayKey, now = Date.now()) {
@@ -85,6 +112,10 @@
     let cycle = Math.max(0, Math.min(6, Number(normalized.cycleStudyDayKeys?.length || 0)));
     let available = 0;
     for (let offset = 0; offset <= days; offset++) {
+      const dayKey = shiftDayKey(today, offset);
+      // 이미 오늘 새 세션을 시작했고 진행 중 세션도 없다면 오늘 추가 새 진도 슬롯은 없다.
+      if (offset === 0 && !normalized.activeSession?.sectionIds?.length && normalized.lastNewSessionStartDayKey === today) continue;
+      if (offset === 0 && normalized.consolidationDayKey === today) continue;
       if (cycle >= 6) { cycle = 0; continue; }
       available += 1;
       cycle += 1;
@@ -92,23 +123,44 @@
     return available;
   }
 
-  function estimateCompletionDayKey(state, remainingWorkload, targetWorkload, now = Date.now()) {
+  function completionDayFromSessionCount(state, sessionsNeeded, now = Date.now()) {
     const normalized = normalizeState(state, now);
-    let sessionsNeeded = Math.max(0, Math.ceil(Number(remainingWorkload || 0) / Math.max(1, Number(targetWorkload || normalized.targetLines || DEFAULT_TARGET_LINES))));
-    if (!sessionsNeeded) return localDayKey(now);
+    let remaining = Math.max(0, Number(sessionsNeeded || 0));
+    if (!remaining) return localDayKey(now);
     let cycle = Math.max(0, Math.min(6, Number(normalized.cycleStudyDayKeys?.length || 0)));
     let cursor = localDayKey(now);
-    for (let guard = 0; guard < 365 && sessionsNeeded > 0; guard++) {
+    for (let guard = 0; guard < 365 && remaining > 0; guard++) {
+      const offset = guard;
+      if (offset === 0 && !normalized.activeSession?.sectionIds?.length && normalized.lastNewSessionStartDayKey === cursor) {
+        cursor = shiftDayKey(cursor, 1);
+        continue;
+      }
+      if (offset === 0 && normalized.consolidationDayKey === cursor) {
+        cursor = shiftDayKey(cursor, 1);
+        continue;
+      }
       if (cycle >= 6) {
         cycle = 0;
       } else {
-        sessionsNeeded -= 1;
+        remaining -= 1;
         cycle += 1;
-        if (sessionsNeeded <= 0) return cursor;
+        if (remaining <= 0) return cursor;
       }
       cursor = shiftDayKey(cursor, 1);
     }
     return cursor;
+  }
+
+  // legacy signature compatibility: workload-only callers still get a conservative estimate.
+  function estimateCompletionDayKey(state, remainingWorkload, targetWorkload, now = Date.now()) {
+    const normalized = normalizeState(state, now);
+    const sessionsNeeded = Math.max(0, Math.ceil(Number(remainingWorkload || 0) / Math.max(1, Number(targetWorkload || normalized.targetLines || DEFAULT_TARGET_LINES))));
+    return completionDayFromSessionCount(normalized, sessionsNeeded, now);
+  }
+
+  function estimateCompletionForSections(sections, state, targetWorkload, now = Date.now()) {
+    const estimate = remainingSessionEstimate(sections, state, targetWorkload);
+    return {...estimate, dayKey:completionDayFromSessionCount(state, estimate.sessions, now)};
   }
 
   function deadlineGuidance(sections, state, {examDayKey = DEFAULT_EXAM_DAY_KEY, bufferDays = FIRST_PASS_BUFFER_DAYS, now = Date.now()} = {}) {
@@ -120,19 +172,38 @@
     const daysToDeadline = signedDayDistance(today, deadlineDayKey);
     const remainingWorkload = Math.max(0, Math.round((Number(progress.totalWorkload || 0) - Number(progress.completedWorkload || 0)) * 10) / 10);
     if (remainingWorkload <= 0) {
-      return {status:'complete', examDayKey, deadlineDayKey, daysToExam, daysToDeadline, remainingWorkload:0, availableStudyDays:0, requiredDailyWorkload:0, targetFloor:0, estimatedCompletionDayKey:today};
+      return {status:'complete', examDayKey, deadlineDayKey, daysToExam, daysToDeadline, remainingWorkload:0, availableStudyDays:0, requiredDailyWorkload:0, targetFloor:0, estimatedCompletionDayKey:today, remainingSessions:0, minimumSessions:0};
     }
+
     const availableStudyDays = projectedNewStudyDays(normalized, deadlineDayKey, now);
+    const currentEstimate = estimateCompletionForSections(sections, normalized, normalized.targetLines, now);
+    const maxEstimate = estimateCompletionForSections(sections, normalized, MAX_TARGET_LINES, now);
+    let targetFloor = normalized.targetLines;
+    let feasibleTarget = null;
+    for (let target = Math.max(MIN_TARGET_LINES, normalized.targetLines); target <= MAX_TARGET_LINES; target += 1) {
+      const estimate = estimateCompletionForSections(sections, normalized, target, now);
+      if (signedDayDistance(estimate.dayKey, deadlineDayKey) >= 0) { feasibleTarget = target; break; }
+    }
+    if (feasibleTarget != null) targetFloor = feasibleTarget;
+    else targetFloor = MAX_TARGET_LINES;
+
+    const guidedEstimate = estimateCompletionForSections(sections, normalized, targetFloor, now);
     const requiredDailyWorkload = availableStudyDays > 0 ? remainingWorkload / availableStudyDays : Infinity;
-    const targetFloor = Number.isFinite(requiredDailyWorkload) ? Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Math.ceil(requiredDailyWorkload))) : MAX_TARGET_LINES;
-    const estimatedCompletionDayKey = estimateCompletionDayKey(normalized, remainingWorkload, normalized.targetLines, now);
     let status = 'on-track';
-    if (daysToDeadline < 0 || !availableStudyDays || requiredDailyWorkload > MAX_TARGET_LINES) status = 'critical';
-    else if (requiredDailyWorkload > normalized.targetLines) status = 'boost';
+    if (daysToDeadline < 0 || !availableStudyDays || signedDayDistance(maxEstimate.dayKey, deadlineDayKey) < 0) status = 'critical';
+    else if (targetFloor > normalized.targetLines) status = 'boost';
+
     return {
       status, examDayKey, deadlineDayKey, daysToExam, daysToDeadline, remainingWorkload, availableStudyDays,
-      requiredDailyWorkload: Number.isFinite(requiredDailyWorkload) ? Math.round(requiredDailyWorkload * 10) / 10 : Infinity,
-      targetFloor, estimatedCompletionDayKey
+      requiredDailyWorkload:Number.isFinite(requiredDailyWorkload) ? Math.round(requiredDailyWorkload * 10) / 10 : Infinity,
+      targetFloor,
+      // 홈의 예상 완료일은 '현재 기본 목표'가 아니라 실제 플래너가 적용할 D-day 보정 목표를 반영한다.
+      estimatedCompletionDayKey:guidedEstimate.dayKey,
+      remainingSessions:guidedEstimate.sessions,
+      baseCompletionDayKey:currentEstimate.dayKey,
+      baseRemainingSessions:currentEstimate.sessions,
+      minimumSessions:maxEstimate.sessions,
+      minimumCompletionDayKey:maxEstimate.dayKey
     };
   }
 
@@ -375,40 +446,10 @@
     const decision = paceDecision({state:normalized, dueCount, now, targetFloor:Number(options?.targetFloor || 0)});
     if (!decision.allowNew) return null;
     const completed = new Set(normalized.completedSectionIds);
-    const firstIndex = (sections || []).findIndex(section => !completed.has(section.id));
-    if (firstIndex < 0) return null;
-    const first = sections[firstIndex];
-    const selected = [];
-    const sessionTarget = Math.max(MIN_TARGET_LINES, Number(decision.effectiveTargetLines || normalized.targetLines));
-    const candidates = [];
-    for (let i = firstIndex; i < sections.length; i++) {
-      const item = sections[i];
-      if (completed.has(item.id)) continue;
-      if (item.subjectKey !== first.subjectKey || item.area !== first.area) break;
-      candidates.push(item);
-    }
-    const totalCandidateLoad = candidates.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
-    let workload = 0;
-    // 영역 전체가 목표보다 5점 이내로만 무거우면 작은 꼬리 세션을 만들지 않고 한 번에 끝낸다.
-    if (totalCandidateLoad <= sessionTarget + 5) {
-      selected.push(...candidates);
-      workload = totalCandidateLoad;
-    } else {
-      for (let i = 0; i < candidates.length; i++) {
-        const item = candidates[i];
-        const itemLoad = Number(item.workloadScore || item.lineCount || 0);
-        const projected = workload + itemLoad;
-        const remainingAfter = totalCandidateLoad - projected;
-        if (selected.length && projected > sessionTarget + 5) break;
-        // 현재 분량이 이미 충분할 때 다음 section을 넣으면 6점 미만의 꼬리만 남는다면,
-        // 다음 날에도 의미 있는 묶음이 남도록 여기서 끊는다.
-        if (selected.length && workload >= sessionTarget * 0.7 && remainingAfter > 0 && remainingAfter < 6) break;
-        selected.push(item);
-        workload = projected;
-        if (workload >= sessionTarget) break;
-      }
-    }
-    if (!selected.length) selected.push(first);
+    const sessionTarget = Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(decision.effectiveTargetLines || normalized.targetLines)));
+    const selected = selectNextSectionBatch(sections, completed, sessionTarget);
+    if (!selected.length) return null;
+    const first = selected[0];
     const selectedWorkload = Math.round(selected.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0) * 10) / 10;
     return {
       id:`plan-session|${selected.map(item => item.id).join('~')}`,
@@ -645,6 +686,9 @@
     deadlineGuidance,
     projectedNewStudyDays,
     estimateCompletionDayKey,
+    estimateCompletionForSections,
+    remainingSessionEstimate,
+    selectNextSectionBatch,
     reviewLoadDecision,
     reviewPauseThreshold,
     paceDecision,

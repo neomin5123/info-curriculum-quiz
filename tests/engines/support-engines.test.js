@@ -1,8 +1,11 @@
 "use strict";
+process.env.TZ = 'Asia/Seoul';
 const assert = require('assert');
 const R = require('../../js/engines/review-engine.js');
 const H = require('../../js/engines/history-engine.js');
 const S = require('../../js/engines/storage-engine.js');
+
+const D = require('../../js/engines/day-engine.js');
 
 const now = new Date('2026-09-16T09:00:00+09:00').getTime();
 const bucket = R.nextDueBucket([
@@ -29,6 +32,21 @@ const failurePicked = R.selectLineReviewRecords([
   {lineKey:'L',conceptKey:'future',nextReviewAt:lineNow+3*24*60*60*1000,lastResult:'correct',wrongCount:0}
 ], lineNow);
 assert.equal(failurePicked[0].conceptKey, 'wrong', 'explicit due failure must override line-level future schedule');
+
+// v7.8: 하루 복습은 04:00~다음날 03:59 학습일 전체를 날짜 단위로 묶는다.
+// 오전에 계획을 열어도 같은 학습일 밤에 due가 되는 항목을 놓쳐 다음 날로 밀지 않는다.
+const morning = new Date('2026-09-24T09:00:00+09:00').getTime();
+const sameStudyDayLate = new Date('2026-09-24T23:00:00+09:00').getTime();
+const cutoff = D.nextStudyDayStart(morning) - 1;
+const sameDayPlanned = R.selectLineReviewRecords([
+  {lineKey:'DAY-CUTOFF',conceptKey:'late-today',nextReviewAt:sameStudyDayLate,lastResult:'correct',wrongCount:0}
+], morning, cutoff);
+assert.equal(sameDayPlanned.length,1,'same 04:00 study-day due item must enter morning plan');
+const nextStudyDay = new Date('2026-09-25T05:00:00+09:00').getTime();
+const futureNotPulled = R.selectLineReviewRecords([
+  {lineKey:'NEXT-DAY',conceptKey:'future',nextReviewAt:nextStudyDay,lastResult:'correct',wrongCount:0}
+], morning, cutoff);
+assert.equal(futureNotPulled.length,0,'next study-day item must not be pulled early');
 
 
 const cumulativeNow = new Date('2026-09-21T12:00:00+09:00').getTime();

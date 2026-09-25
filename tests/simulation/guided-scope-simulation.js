@@ -1,3 +1,4 @@
+process.env.TZ = 'Asia/Seoul';
 const fs=require('fs');
 const vm=require('vm');
 const path=require('path');

@@ -63,27 +63,46 @@
     ]
   };
 
+  const SUBJECT_LABELS = Object.freeze({
+    'middle-info':'중학교 정보',
+    'high-info':'고등학교 정보',
+    'ai-basic':'인공지능 기초',
+    'data-science':'데이터 과학',
+    'info-science':'정보과학',
+    'software-life':'소프트웨어와 생활'
+  });
+  const SUBJECT_ORDER = Object.freeze(['middle-info','high-info','ai-basic','data-science','info-science','software-life']);
+
   const GENERIC_TOKENS = new Set([
-    "이해하고","이해한다","활용하여","활용한다","문제를","문제","해결","해결한다","통해","위해","대한","있는","있도록",
-    "한다","하고","한다.","수","있어야","사례를","중심으로","다양한","적합한","과정에서","과정을","바탕으로","구성하고"
+    '이해하고','이해한다','활용하여','활용한다','문제를','문제','해결','해결한다','통해','위해','대한','있는','있도록',
+    '한다','하고','한다.','수','있어야','사례를','중심으로','다양한','적합한','과정에서','과정을','바탕으로','구성하고'
   ]);
 
+  function extractStandardCodes(text){
+    const prefix = String(text || '').match(/^\s*((?:\[[^\]]+\]\s*[,·]?\s*)+)/);
+    if (!prefix) return [];
+    return [...prefix[1].matchAll(/\[([^\]]+)\]/g)].map(match => match[1].trim()).filter(Boolean);
+  }
+
   function extractStandardCode(text){
-    const match = String(text || "").match(/^\s*\[([^\]]+)\]/);
-    return match ? match[1].trim() : "";
+    return extractStandardCodes(text)[0] || '';
   }
 
   function stripStandardCode(text){
-    return String(text || "").replace(/^\s*\[[^\]]+\]\s*/, "").trim();
+    return String(text || '').replace(/^\s*(?:\[[^\]]+\]\s*[,·]?\s*)+/, '').trim();
+  }
+
+  function normalizeExactText(text){
+    return String(text || '').normalize('NFKC').replace(/[\s·ㆍ・∙‧⋅,.;:!?()\[\]{}'"“”‘’\-_/]+/g,'').toLowerCase();
   }
 
   function tokenize(text){
     return stripStandardCode(text)
-      .replace(/[·,./()'"“”‘’!?;:]/g, " ")
-      .replace(/\s+/g, " ")
+      .replace(/[·,./()'"“”‘’!?;:]/g, ' ')
+      .replace(/\s+/g, ' ')
       .trim()
-      .split(" ")
-      .map(token => token.replace(/(을|를|이|가|은|는|의|에|에서|으로|와|과|하고|하여|한다|한다\.)$/g, ""))
+      .split(' ')
+      .map(token => token.replace(/(을|를|이|가|은|는|의|에|에서|으로|와|과|하고|하여|한다|한다\.)$/g, ''))
       .filter(token => token.length >= 2 && !GENERIC_TOKENS.has(token));
   }
 
@@ -100,7 +119,7 @@
   function stableShuffle(items, seedText){
     const out = items.slice();
     let seed = 2166136261;
-    for (const ch of String(seedText || "")) {
+    for (const ch of String(seedText || '')) {
       seed ^= ch.charCodeAt(0);
       seed = Math.imul(seed, 16777619) >>> 0;
     }
@@ -128,11 +147,10 @@
 
   function buildStandardIndex(groups){
     const achievementSections = groups?.achievement || [];
-    const standards = achievementSections.find(section => section.title === "성취기준")?.lines || [];
+    const standards = achievementSections.find(section => section.title === '성취기준')?.lines || [];
     const byCode = new Map();
     standards.forEach(line => {
-      const code = extractStandardCode(line.text);
-      if (code) byCode.set(code, line);
+      extractStandardCodes(line.text).forEach(code => { if (code) byCode.set(code, line); });
     });
     return {standards, byCode};
   }
@@ -166,7 +184,8 @@
       const choices = stableShuffle([...correctChoices, ...distractors], `${area}:${code}:elements`);
       questions.push({
         id:`standard-elements:${area}:${code}`,
-        kind:"standard-elements",
+        kind:'standard-elements',
+        subjectKey:'middle-info',
         area,
         prompt:stripStandardCode(standard.text),
         answerCode:code,
@@ -180,79 +199,185 @@
     return questions;
   }
 
-  function compactStandardChoices(standards, correct, prompt, seedText){
+  function compactStandardChoices(standards, correctLines, prompt, seedText){
+    const correctSet = new Set(correctLines || []);
     const distractors = standards
-      .filter(line => line !== correct)
+      .filter(line => !correctSet.has(line))
       .map(line => ({line, score:similarity(prompt, line.text)}))
       .sort((a,b) => b.score - a.score || String(a.line.id || a.line.text).localeCompare(String(b.line.id || b.line.text)))
-      .slice(0, 3)
+      .slice(0, Math.max(0, 4 - correctSet.size))
       .map(item => item.line);
-    return stableShuffle([correct, ...distractors], seedText).map(line => ({
+    return stableShuffle([...(correctLines || []), ...distractors], seedText).map(line => ({
       value:line.id || line.text,
       code:extractStandardCode(line.text),
       text:stripStandardCode(line.text)
     }));
   }
 
-  function buildCommentaryConnectionQuestions(area, groups){
+  function buildCommentaryConnectionQuestions(subjectKey, area, groups){
     const achievementSections = groups?.achievement || [];
-    const standards = achievementSections.find(section => section.title === "성취기준")?.lines || [];
-    const commentaries = achievementSections.find(section => section.title === "성취기준 해설")?.lines || [];
+    const standards = achievementSections.find(section => section.title === '성취기준')?.lines || [];
+    const commentaries = achievementSections.find(section => section.title === '성취기준 해설')?.lines || [];
     const standardsByCode = new Map();
-    standards.forEach(line => {
-      const code = extractStandardCode(line.text);
-      if (code) standardsByCode.set(code, line);
-    });
+    standards.forEach(line => extractStandardCodes(line.text).forEach(code => standardsByCode.set(code, line)));
     const questions = [];
     commentaries.forEach(commentary => {
-      const code = extractStandardCode(commentary.text);
-      const correct = standardsByCode.get(code);
-      if (!correct) return;
+      const codes = extractStandardCodes(commentary.text);
+      const correctLines = [...new Set(codes.map(code => standardsByCode.get(code)).filter(Boolean))];
+      if (!correctLines.length) return;
+      const answers = correctLines.map(line => line.id || line.text);
       questions.push({
-        id:`commentary-link:${commentary.id || `${area}:${code}`}`,
-        kind:"commentary-connect",
+        id:`commentary-link:${subjectKey}:${commentary.id || `${area}:${codes.join('+')}`}`,
+        kind:'commentary-connect',
+        subjectKey,
         area,
         prompt:stripStandardCode(commentary.text),
-        answer:correct.id || correct.text,
-        answerCode:code,
-        answerText:stripStandardCode(correct.text),
-        choices:compactStandardChoices(standards, correct, commentary.text, `${commentary.id || commentary.text}:choices`),
-        multiSelect:false,
+        answer:answers[0],
+        answers,
+        answerCodes:codes,
+        answerCode:codes.join(', '),
+        answerTexts:correctLines.map(line => stripStandardCode(line.text)),
+        answerText:correctLines.map(line => stripStandardCode(line.text)).join(' / '),
+        choices:compactStandardChoices(standards, correctLines, commentary.text, `${subjectKey}:${commentary.id || commentary.text}:choices`),
+        multiSelect:answers.length > 1,
         sourceLineId:commentary.id || null
       });
     });
     return questions;
   }
 
-  function buildQuestionPool(curriculumData, area){
-    const groups = curriculumData?.["middle-info"]?.[area];
-    if (!groups) return [];
-    return [
-      ...buildStandardElementQuestions(area, groups),
-      ...buildCommentaryConnectionQuestions(area, groups)
-    ];
+  function allProcessFunctionLines(curriculumData){
+    const out = [];
+    SUBJECT_ORDER.forEach(subjectKey => {
+      const subject = curriculumData?.[subjectKey];
+      if (!subject) return;
+      Object.entries(subject).forEach(([area, groups]) => {
+        const section = (groups?.['content-system'] || []).find(item => item.title === '과정·기능');
+        (section?.lines || []).forEach(line => out.push({subjectKey, area, line}));
+      });
+    });
+    return out;
   }
 
-  function buildSession(curriculumData, area, {limit = 6, nonce = 0} = {}){
-    const pool = buildQuestionPool(curriculumData, area);
-    const standardLinks = stableShuffle(pool.filter(q => q.kind === "standard-elements"), `${area}:standard-elements:${nonce}`);
-    const commentaryLinks = stableShuffle(pool.filter(q => q.kind === "commentary-connect"), `${area}:commentary:${nonce}`);
+  function buildProcessSubjectQuestions(curriculumData, subjectKey, area){
+    if (!subjectKey || subjectKey === 'middle-info') return [];
+    const currentSection = (curriculumData?.[subjectKey]?.[area]?.['content-system'] || []).find(item => item.title === '과정·기능');
+    const currentLines = currentSection?.lines || [];
+    if (!currentLines.length) return [];
+    const all = allProcessFunctionLines(curriculumData);
+    const subjectsByExact = new Map();
+    all.forEach(item => {
+      const key = normalizeExactText(item.line?.text);
+      if (!key) return;
+      if (!subjectsByExact.has(key)) subjectsByExact.set(key, new Set());
+      subjectsByExact.get(key).add(item.subjectKey);
+    });
+    return currentLines.flatMap(line => {
+      const exactKey = normalizeExactText(line.text);
+      // 같은 공식 문구가 여러 과목에 실제로 존재하면 과목을 하나만 답하게 만들 수 없으므로 제외한다.
+      if ((subjectsByExact.get(exactKey)?.size || 0) !== 1) return [];
+      const distractors = SUBJECT_ORDER
+        .filter(key => key !== subjectKey)
+        .map(key => {
+          const pool = all.filter(item => item.subjectKey === key);
+          const score = pool.reduce((best,item) => Math.max(best, similarity(line.text, item.line?.text)), 0);
+          return {key, score};
+        })
+        .sort((a,b) => b.score - a.score || a.key.localeCompare(b.key))
+        .slice(0, 3)
+        .map(item => item.key);
+      const keys = stableShuffle([subjectKey, ...distractors], `${subjectKey}:${area}:${line.id || line.text}:subject`);
+      return [{
+        id:`process-subject:${line.id || `${subjectKey}:${area}:${exactKey}`}`,
+        kind:'process-subject',
+        subjectKey,
+        area,
+        prompt:String(line.text || '').trim(),
+        answer:subjectKey,
+        answerText:SUBJECT_LABELS[subjectKey] || subjectKey,
+        choices:keys.map(key => ({value:key, text:SUBJECT_LABELS[key] || key})),
+        multiSelect:false,
+        sourceLineId:line.id || null
+      }];
+    });
+  }
+
+  function buildQuestionPool(curriculumData, subjectKey, area){
+    const groups = curriculumData?.[subjectKey]?.[area];
+    if (!groups) return [];
+    const commentary = buildCommentaryConnectionQuestions(subjectKey, area, groups);
+    if (subjectKey === 'middle-info') {
+      return [...buildStandardElementQuestions(area, groups), ...commentary];
+    }
+    return [...commentary, ...buildProcessSubjectQuestions(curriculumData, subjectKey, area)];
+  }
+
+  function buildMixedProcessSubjectPool(curriculumData){
+    const out = [];
+    SUBJECT_ORDER.filter(key => key !== 'middle-info').forEach(key => {
+      const subject = curriculumData?.[key];
+      if (!subject) return;
+      Object.keys(subject).forEach(areaName => {
+        if (areaName === '과목 공통') return;
+        out.push(...buildProcessSubjectQuestions(curriculumData, key, areaName));
+      });
+    });
+    const unique = new Map();
+    out.forEach(question => { if (question?.id && !unique.has(question.id)) unique.set(question.id, question); });
+    return [...unique.values()];
+  }
+
+  function buildSession(curriculumData, subjectKey, area, {limit = 6, nonce = 0} = {}){
+    const pool = buildQuestionPool(curriculumData, subjectKey, area);
+    const elementLinks = stableShuffle(pool.filter(q => q.kind === 'standard-elements'), `${subjectKey}:${area}:standard-elements:${nonce}`);
+    const commentaryLinks = stableShuffle(pool.filter(q => q.kind === 'commentary-connect'), `${subjectKey}:${area}:commentary:${nonce}`);
     const picked = [];
-    const commentaryTarget = Math.min(commentaryLinks.length, 2, Math.max(commentaryLinks.length ? 1 : 0, Math.floor(limit / 3)));
-    for (let i = 0; i < commentaryTarget && picked.length < limit; i += 1) picked.push(commentaryLinks[i]);
-    let s = 0;
-    while (picked.length < limit && s < standardLinks.length) picked.push(standardLinks[s++]);
-    let c = commentaryTarget;
-    while (picked.length < limit && c < commentaryLinks.length) picked.push(commentaryLinks[c++]);
-    return stableShuffle(picked, `${area}:session:${nonce}`).slice(0, limit);
+
+    if (subjectKey === 'middle-info') {
+      const commentaryTarget = Math.min(commentaryLinks.length, 2, Math.max(commentaryLinks.length ? 1 : 0, Math.floor(limit / 3)));
+      for (let i = 0; i < commentaryTarget && picked.length < limit; i += 1) picked.push(commentaryLinks[i]);
+      let s = 0;
+      while (picked.length < limit && s < elementLinks.length) picked.push(elementLinks[s++]);
+      let c = commentaryTarget;
+      while (picked.length < limit && c < commentaryLinks.length) picked.push(commentaryLinks[c++]);
+    } else {
+      // 현재 과목 화면에 있어도 정답이 노출되지 않도록 과정·기능 문항은
+      // 고등 5과목 전체에서 섞는다. 최소 한 문항은 가능하면 현재 과목 밖에서 가져온다.
+      const mixedProcessLinks = stableShuffle(buildMixedProcessSubjectPool(curriculumData), `${subjectKey}:${area}:mixed-process:${nonce}`);
+      const commentaryTarget = Math.min(commentaryLinks.length, Math.max(commentaryLinks.length ? 1 : 0, Math.min(2, Math.floor(limit / 3))));
+      for (let i = 0; i < commentaryTarget && picked.length < limit; i += 1) picked.push(commentaryLinks[i]);
+
+      const external = mixedProcessLinks.find(q => q.answer !== subjectKey);
+      if (external && picked.length < limit) picked.push(external);
+      for (const q of mixedProcessLinks) {
+        if (picked.length >= limit) break;
+        if (picked.some(item => item.id === q.id)) continue;
+        picked.push(q);
+      }
+      let c = commentaryTarget;
+      while (picked.length < limit && c < commentaryLinks.length) picked.push(commentaryLinks[c++]);
+    }
+    return stableShuffle(picked, `${subjectKey}:${area}:session:${nonce}`).slice(0, limit);
+  }
+
+  function hasQuestions(curriculumData, subjectKey, area){
+    return buildQuestionPool(curriculumData, subjectKey, area).length > 0;
   }
 
   return {
     CURATED_ELEMENT_LINKS,
+    SUBJECT_LABELS,
+    SUBJECT_ORDER,
     extractStandardCode,
+    extractStandardCodes,
     stripStandardCode,
     similarity,
+    normalizeExactText,
+    buildCommentaryConnectionQuestions,
+    buildProcessSubjectQuestions,
+    buildMixedProcessSubjectPool,
     buildQuestionPool,
-    buildSession
+    buildSession,
+    hasQuestions
   };
 });

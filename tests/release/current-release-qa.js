@@ -1,8 +1,10 @@
+process.env.TZ = 'Asia/Seoul';
 const fs=require('fs');
 const path=require('path');
 const E=require('../../js/practice/practice-engine.js');
 const G=require('../../js/engines/grading-engine.js');
 const R=require('../../js/engines/recall-engine.js');
+const I=require('../../js/engines/intensity-engine.js');
 const S=require('../../js/engines/structure-engine.js');
 const P=require('../../js/engines/planner-engine.js');
 const root=path.resolve(__dirname,'../..');
@@ -19,7 +21,7 @@ const map15=fs.readFileSync(path.join(root,'data/curriculum/mappings/2015-2022.j
 function assert(cond,msg){if(!cond) throw new Error(msg)}
 
 assert(html.includes('id="structureButton"'),'structure practice UI');
-assert(html.includes('id="middleInfoFillVariant"'),'middle-info segmented fill variant UI');
+assert(html.includes('id="recallFillVariant"'),'middle-info segmented fill variant UI');
 assert(html.includes('id="studyProgressBox"'),'separate study progress bar');
 assert(html.includes('class="study-mode-section"'),'separate study mode section');
 assert(html.includes('class="study-action-bar"'),'separate study action bar');
@@ -30,10 +32,11 @@ assert(html.includes('id="todayStartButton"'),'today start button');
 assert(html.includes('id="todayRecentAccuracy"'),'recent recall accuracy UI');
 assert(typeof P.noteSessionAssessment==='function' && typeof P.sessionPerformanceSummary==='function' && typeof P.adaptPace==='function','speed x accuracy planner API');
 assert(typeof P.noteSessionStudyProgress==='function','planner session progress persistence API');
-assert(html.includes('/js/engines/planner-engine.js?v=7.7.1'),'planner engine script');
+assert(html.includes('/js/engines/planner-engine.js?v=7.8.1'),'planner engine script');
+assert(html.includes('/data/learning-aids/gap-intensity.js?v=7.8.1') && html.includes('/js/engines/intensity-engine.js?v=7.8.1'),'gap intensity metadata/engine scripts');
 assert(app.includes('isLongTermReviewEligible'),'long-term review consolidation');
 assert(app.includes('startPlannedNewStudy') && app.includes('completePlannedStudy'),'daily planner orchestration');
-assert(app.includes('AUTO_PLANNER_SUBJECT_ORDER = ["middle-info"]'),'today auto planner limited to middle-info');
+assert(app.includes('AUTO_PLANNER_SUBJECT_ORDER = ["middle-info", "high-info", "ai-basic", "data-science", "info-science", "software-life"]'),'today auto planner covers six courses');
 assert(typeof P.reviewUnlockAllowance==='function' && P.reviewUnlockAllowance(18)===6,'75 percent review gate');
 assert(typeof P.deadlineGuidance==='function','deadline guidance API');
 assert(app.includes('blockingReviewCount') && app.includes('reviewUnlockAllowance'),'small residual review unlock');
@@ -41,9 +44,12 @@ assert(app.includes('몇 문제 뒤 전체 묶음을 한 번 더 통회상합니
 assert(app.includes('deadline.targetFloor') && app.includes('권장 첫 회독 마감'),'D-day reverse planning UI');
 assert(!html.includes('id="todayHomeReviewButton"') && !html.includes('id="todayNewRangeButton"') && !html.includes('id="todayCumulativeButton"'),'home per-card action buttons removed');
 assert(html.includes('id="todayExamDday"') && html.includes('id="todayFirstPassForecast"'),'home D-day stats');
+assert(P.FIRST_PASS_BUFFER_DAYS===21,'six-course first-pass recommendation must be D-21');
+assert(app.includes('UI_SCALE_KEY = "curriloop-ui-scale-v1"') && html.includes('id="uiScaleDown"') && html.includes('id="uiScaleValue"') && html.includes('id="uiScaleUp"'),'UI scale controls/persistence');
+assert(app.includes('estimatedCompletionDayKey') || P.deadlineGuidance,'deadline forecast API available');
 
 assert(!app.includes('const PLANNER_SUBJECT_ORDER = ["middle-info", "high-info"'),'legacy six-subject auto planner removed');
-assert(html.includes('중등 정보 자동 첫 회독'),'home labels guided scope honestly');
+assert(html.includes('정보과 6과목 자동 첫 회독'),'home labels six-course scope honestly');
 assert(app.includes('PAUSED_LEGACY_AUTO_SESSION_KEY') && app.includes('!AUTO_PLANNER_SUBJECT_SET.has'),'unsupported legacy auto session safety pause');
 assert(app.includes('plannerResumeStepIndex') && app.includes('collectPlannerDraftFields') && app.includes('restorePlannerDraftFields'),'unfinished session stage/draft resume');
 assert(app.includes('gradedRecall') && app.includes('structureSession:step?.mode === "structure"'),'recall/structure progress resume');
@@ -67,7 +73,7 @@ assert(app.includes('markDailyReviewCompleted(conceptKey, now)'),'unresolved dai
 assert(app.includes('else if (status === "near" && item._nearRetried)'),'second near review also leaves today queue');
 
 assert(app.includes('빈칸 방식'),'middle-info fill variant label');
-assert(app.includes('setMiddleInfoFillVariant'),'middle-info segmented fill variant behavior');
+assert(app.includes('setRecallFillVariant'),'middle-info segmented fill variant behavior');
 assert(app.includes('field.classList.add("hidden")'),'middle-info legacy difficulty dropdown hidden');
 assert(app.includes('항목 수는 보여주지 않으며') && app.includes('recall-free-input'),'free recall must hide item count and slots');
 assert(app.includes('RecallEngine.isRecallMastered(item)'),'recall mastery must use strict spaced criterion');
@@ -81,18 +87,20 @@ assert(app.includes('retryMode:"core"'),'core blank failures enter delayed retry
 assert(app.includes('currentDelayedRetryMode'),'core/practical retry mode routing');
 assert(app.includes('recovered.correctStreak = 1') && app.includes('LearningEngine.DAY_MS'),'core same-day recovery becomes initial learning, not long-term mastery');
 assert(R.memoryTier('지식·이해').key==='exact','middle-info exact tier');
-assert(R.memoryTier('성취기준 해설').key==='coreplus','middle-info guidance tier');
+assert(R.memoryTier('성취기준 해설').key==='coreplus','guidance tier');
+assert(I.profileFor('가치·태도','content-system','coreplus').maxCore===2,'value-attitude core intensity cap');
+assert(app.includes('practicalRecallKind') && app.includes('conceptRecallTargets') && app.includes('실전 단계는 별도 통회상'),'non-exact practical is free recall, not harder blanks');
 const recallProbe=R.matchRecallList(['B','A','C'],['A','B','C'],(u,e)=>G.classifyDetailed(u,e,[]));
 assert(recallProbe.contentExact===true && recallProbe.orderCorrect===false,'holistic recall content/order split');
 const curriculumCtx={window:{}}; vm.createContext(curriculumCtx); vm.runInContext(cur,curriculumCtx);
 const curriculumData=curriculumCtx.window.CURRILOOP_CURRICULUM_DATA;
 for (const area of ['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화']) {
-  const pool=S.buildQuestionPool(curriculumData,area);
+  const pool=S.buildQuestionPool(curriculumData,'middle-info',area);
   assert(!pool.some(q=>q.kind==='discriminate'),`${area} trivial category questions removed`);
   assert(!pool.some(q=>q.kind==='element-connect'),`${area} shallow element-cue questions removed`);
   assert(pool.some(q=>q.kind==='standard-elements'),`${area} standard-content connection pool`);
   assert(pool.some(q=>q.kind==='commentary-connect'),`${area} commentary connection pool`);
-  const session=S.buildSession(curriculumData,area,{limit:6,nonce:7});
+  const session=S.buildSession(curriculumData,'middle-info',area,{limit:6,nonce:7});
   assert(session.length>=4 && session.length<=6,`${area} compact structure session size`);
   assert(new Set(session.map(q=>q.id)).size===session.length,`${area} structure duplicate`);
   assert(session.some(q=>q.kind==='standard-elements'),`${area} structure standard-content connection`);
@@ -106,8 +114,8 @@ assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.7.1'),'version label');
-assert(html.includes('/js/engines/structure-engine.js?v=7.7.1'),'structure engine script');
+assert(html.includes('v7.8.1'),'version label');
+assert(html.includes('/js/engines/structure-engine.js?v=7.8.1'),'structure engine script');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -221,4 +229,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.7.1 Red Team Freeze QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.8.1 Six-Course QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);

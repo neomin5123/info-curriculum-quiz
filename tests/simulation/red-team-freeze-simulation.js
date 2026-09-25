@@ -1,4 +1,5 @@
 'use strict';
+process.env.TZ = 'Asia/Seoul';
 const assert = require('assert');
 const P = require('../../js/engines/planner-engine.js');
 const R = require('../../js/engines/review-engine.js');

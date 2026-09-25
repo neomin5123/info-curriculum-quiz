@@ -135,7 +135,7 @@
       .filter(Boolean);
   }
 
-  // 중등 정보 통회상 전용 장기 상태.
+  // 6과목 통회상 공통 장기 상태.
   // streak 1: 최초 정확 인출, 2~3: 서로 다른 날짜의 재인출이 누적되는 안정화 구간,
   // streak 4: 1일→3일→7일 간격을 거친 뒤 다시 정확히 인출한 상태.
   function recallMasteryStage(source) {

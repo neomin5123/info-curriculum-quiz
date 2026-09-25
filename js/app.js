@@ -20,7 +20,7 @@
   // -------------------------
   // 2) 교육과정 데이터
   // line(text, 핵심 키워드, 정밀 키워드)
-  // v7.5: 중등 정보는 핵심 빈칸 + 실전 통회상 + 구조 연습 파일럿. 다른 과목은 기존 체계를 유지한다.
+  // v7.8.1: 2022 정보과 6과목 모두 핵심 빈칸 + 실전 통회상 + 구조 연습 체계를 사용한다.
   // -------------------------
 
   const subjectSourceMeta = {
@@ -88,22 +88,24 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.7.1";
-  const MANUAL_GAP_REVIEW = "2026-09-21 / v7.7.1 최종 Red Team 수정 · 하루 새 세션 1개 + 건너뛰기 이월";
+  const APP_VERSION = "7.8.1";
+  const MANUAL_GAP_REVIEW = "2026-09-24 / v7.8.1 빈칸 강도 재분류 · 실전 자유회상 · 04:00 학습일 · 화면 배율 · 전 과목 Red Team";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
+  const DayEngine = window.CurriLoopDayEngine;
   const LearningEngine = window.CurriLoopLearningEngine;
   const PracticalEngine = window.CurriLoopPracticalEngine;
   const GradingEngine = window.CurriLoopGradingEngine;
   const RecallEngine = window.CurriLoopRecallEngine;
+  const IntensityEngine = window.CurriLoopIntensityEngine;
   const StructureEngine = window.StructureEngine;
   const ReviewEngine = window.CurriLoopReviewEngine;
   const HistoryEngine = window.CurriLoopHistoryEngine;
   const StorageEngine = window.CurriLoopStorageEngine;
   const PlannerEngine = window.CurriLoopPlannerEngine;
   const PracticeEngine = window.CurriLoopPracticeEngine;
-  if (!LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !StructureEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PlannerEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
+  if (!DayEngine || !LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !IntensityEngine || !StructureEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PlannerEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
@@ -111,11 +113,15 @@
   const DAILY_STUDY_PLANNER_KEY = "curriloop-daily-study-planner-v1";
   const GRADING_OVERRIDE_KEY = "curriloop-grading-overrides-v1";
   const PRACTICAL_EXAM_PROGRESS_KEY = "curriloop-practical-exam-progress-v1";
+  const UI_SCALE_KEY = "curriloop-ui-scale-v1";
+  const UI_SCALE_MIN = 80;
+  const UI_SCALE_MAX = 140;
+  const UI_SCALE_STEP = 10;
   const practicalComboCache = new Map();
   const practicalPresentationTokens = new Map();
   let practicalPresentationSerial = 0;
   let practicalGradeSerial = 0; // 실전 지연 재인출용 완료 문장 serial
-  let coreGradeSerial = 0; // 중등 정보 핵심 빈칸 당일 지연 재인출용 채점 serial
+  let coreGradeSerial = 0; // 6과목 핵심 빈칸 당일 지연 재인출용 채점 serial
   let practicalRetryQueue = [];
   let activePracticalRetry = null;
   const practicalCompletedLineTokens = new Set();
@@ -127,9 +133,9 @@
   let activeStructureQuestion = null;
   let structureSession = null;
   let structureSessionNonce = 0;
-  // v7.6.6: 오늘 플래너의 자동 진도는 새 암기 체계가 검증된 중등 정보만 연다.
-  // 다른 5과목은 각론에서 수동 학습할 수 있지만, 기존 핵심+정확화 빈칸 체계를 자동으로 밀어붙이지 않는다.
-  const AUTO_PLANNER_SUBJECT_ORDER = ["middle-info"];
+  // v7.8: 중등 정보에서 검증한 회상 체계를 2022 정보과 6과목 전체에 적용한다.
+  // 과목 간 학습 전이를 고려해 중학교 정보 → 고등학교 정보 → AI → 데이터 → 정보과학 → SW와 생활 순으로 첫 회독한다.
+  const AUTO_PLANNER_SUBJECT_ORDER = ["middle-info", "high-info", "ai-basic", "data-science", "info-science", "software-life"];
   const AUTO_PLANNER_SUBJECT_SET = new Set(AUTO_PLANNER_SUBJECT_ORDER);
   const PAUSED_LEGACY_AUTO_SESSION_KEY = "curriloop-paused-legacy-auto-session-v1";
   const plannerStudySections = PlannerEngine.buildStudySections(curriculumData, AUTO_PLANNER_SUBJECT_ORDER, COMMON_AREA);
@@ -140,8 +146,7 @@
     let normalized;
     try { normalized = PlannerEngine.normalizeState(JSON.parse(localStorage.getItem(DAILY_STUDY_PLANNER_KEY) || "{}")); }
     catch { normalized = PlannerEngine.normalizeState({}); }
-    // 이전 버전에서 중등 정보 밖의 자동 세션이 이미 열려 있었다면 그대로 이어가지 않는다.
-    // 작성 중 진행 상태는 별도 로컬 백업으로 보존하고, 오늘 플래너에서는 안전하게 중단한다.
+    // 알 수 없는 과목의 구형 자동 세션은 안전하게 격리한다. 2022 정보과 6과목 세션은 모두 이어간다.
     if (normalized.activeSession?.subjectKey && !AUTO_PLANNER_SUBJECT_SET.has(normalized.activeSession.subjectKey)) {
       safeSetLocalStorage(PAUSED_LEGACY_AUTO_SESSION_KEY, JSON.stringify({pausedAt:Date.now(), session:normalized.activeSession}));
       normalized.activeSession = null;
@@ -377,9 +382,9 @@
   function getStudyMode() { return studyMode; }
   function isInputStudyMode(mode = studyMode) { return mode === "fill" || mode === "trace"; }
   function isScoredStudyMode(mode = studyMode) { return mode === "fill"; }
-  function isMiddleInfoPilot(unit = null) {
+  function isRecallCourse(unit = null) {
     const target = unit || getCurrentUnit();
-    return target?.subject === "middle-info";
+    return Boolean(target?.subject && AUTO_PLANNER_SUBJECT_SET.has(target.subject));
   }
   function setDifficultyOptions(options, preferred = "") {
     const select = document.getElementById("difficultySelect");
@@ -396,18 +401,18 @@
     const values = options.map(([value]) => value);
     select.value = values.includes(current) ? current : (values.includes(preferred) ? preferred : values[0]);
   }
-  function syncMiddleInfoPilotControls(unit = null) {
+  function syncRecallCourseControls(unit = null) {
     const target = unit || getCurrentUnit();
-    const pilot = isMiddleInfoPilot(target);
+    const pilot = isRecallCourse(target);
     const panel = document.getElementById("subjectControlPanel");
     const field = document.getElementById("difficultyField");
     const label = document.getElementById("difficultyLabel");
     const help = document.getElementById("difficultyHelp");
     const structure = document.getElementById("structureButton");
-    const variant = document.getElementById("middleInfoFillVariant");
+    const variant = document.getElementById("recallFillVariant");
     const coreVariant = document.getElementById("coreFillVariantButton");
     const practicalVariant = document.getElementById("practicalFillVariantButton");
-    if (panel) panel.classList.toggle("middle-info-pilot", pilot);
+    if (panel) panel.classList.toggle("recall-course", pilot);
     if (structure) structure.classList.toggle("hidden", !pilot);
     if (pilot) {
       setDifficultyOptions([["easy","핵심"],["practical","실전"]], "easy");
@@ -436,15 +441,15 @@
     }
   }
 
-  function setMiddleInfoFillVariant(value) {
-    if (!isMiddleInfoPilot() || !["easy", "practical"].includes(value)) return;
+  function setRecallFillVariant(value) {
+    if (!isRecallCourse() || !["easy", "practical"].includes(value)) return;
     const select = document.getElementById("difficultySelect");
     if (!select || select.value === value) {
-      syncMiddleInfoPilotControls();
+      syncRecallCourseControls();
       return;
     }
     select.value = value;
-    syncMiddleInfoPilotControls();
+    syncRecallCourseControls();
     onDifficultyChange();
   }
 
@@ -658,7 +663,7 @@
 
   function setStudyMode(mode) {
     if (!["original", "mask", "trace", "fill", "structure"].includes(mode)) return;
-    if (mode === "structure" && !isMiddleInfoPilot()) return;
+    if (mode === "structure" && !isRecallCourse()) return;
 
     if (document.getElementById("areaSelect").value === "random" && !currentRandomUnit) {
       chooseRandomUnit();
@@ -703,8 +708,8 @@
     const nextPracticalButton = document.getElementById("nextPracticalSetButton");
     const score = document.getElementById("scoreText");
     const progressBox = document.getElementById("studyProgressBox");
-    syncMiddleInfoPilotControls();
-    const pilot = isMiddleInfoPilot();
+    syncRecallCourseControls();
+    const pilot = isRecallCourse();
     if (gradeButton) gradeButton.classList.toggle("hidden", studyMode !== "fill");
     if (resetButton) resetButton.classList.toggle("hidden", !isInputStudyMode());
     if (progressBox) progressBox.classList.toggle("hidden", studyMode !== "fill");
@@ -821,8 +826,8 @@
     return `${practicalLineKey(line)}|${gapId}`;
   }
 
-  // 실전 빈칸은 시험 가치 0~3으로 분류한다. 데이터에 practicalPriority가 있으면 그것을 우선하고,
-  // 없으면 핵심 여부·공식 용어·행위어·문장 역할을 보수적으로 추정한다.
+  // 레거시 개별 gap 복습용 우선순위. 6과목의 실전 단계는 별도 통회상으로 처리하며,
+  // 이 우선순위는 기존 기록 호환·당일 보수에만 사용한다.
   function practicalEntryPriority(entry, line = null, coreLike = false) {
     const explicit = line?.practicalPriority?.[entry?.gapId] ?? line?.practicalPriority?.[entry?.answer];
     return PracticalEngine.inferPriority(entry?.answer, {
@@ -855,6 +860,38 @@
       entries.push({answer, gapId: ids[index] || `legacy-${stableHash(`${difficulty}|${line?.id || ""}|${index}`)}`});
     });
     return entries;
+  }
+
+  function coreConfiguredEntries(line, sectionTitle = "", sourceGroup = "") {
+    const title = sectionTitle || line?._sectionTitle || "";
+    const group = sourceGroup || line?._sourceGroup || getCurrentGroup();
+    const tier = RecallEngine.memoryTier(title, group).key;
+    const raw = rawConfiguredEntries(line, "easy");
+    return IntensityEngine.selectCoreEntries(line, raw, title, group, tier);
+  }
+
+  function practicalRecallKind(section, subjectKey = "") {
+    const exact = RecallEngine.holisticKind(section?.title || "");
+    if (exact) return exact;
+    if (subjectKey ? !AUTO_PLANNER_SUBJECT_SET.has(subjectKey) : !isRecallCourse()) return "";
+    const tier = RecallEngine.memoryTier(section?.title || "", section?._sourceGroup || getCurrentGroup()).key;
+    return tier === "keyword" ? "keyword" : "concept";
+  }
+
+  function conceptRecallTargets(section) {
+    const sourceGroup = section?._sourceGroup || getCurrentGroup();
+    const tier = RecallEngine.memoryTier(section?.title || "", sourceGroup).key;
+    const seen = new Set();
+    const targets = [];
+    (section?.lines || []).forEach((line, lineIndex) => {
+      coreConfiguredEntries(line, section?.title || "", sourceGroup).forEach(entry => {
+        const key = normalize(entry.answer);
+        if (!key || seen.has(key)) return;
+        seen.add(key);
+        targets.push({...entry, line, lineIndex, aliases:getSafeAliases(entry.answer, line.aliases), tier});
+      });
+    });
+    return targets;
   }
 
   function practicalRenderedOccurrences(line, entries) {
@@ -981,7 +1018,7 @@
     if (!record?.conceptKey || !record?.correctAnswer) return;
     const retryMode = record.retryMode || "practical";
     const existing = practicalRetryQueue.find(item => item.conceptKey === record.conceptKey && (item.retryMode || "practical") === retryMode);
-    // 통회상 보수는 2~3개 뒤, 핵심 빈칸은 2~4개 뒤, 일반 실전 빈칸은 4~6개 뒤 다시 만난다.
+    // 통회상 보수는 2~3개 뒤, 핵심 빈칸은 2~4개 뒤 다시 만난다. 레거시 개별 실전 gap은 호환용이다.
     const retryDistance = record.recallSectionTitle
       ? 2 + Math.floor(Math.random() * 2)
       : retryMode === "core"
@@ -1034,7 +1071,7 @@
   function currentDelayedRetryMode() {
     if (currentTab !== "subject" || studyMode !== "fill") return "";
     if (getCurrentDifficulty() === "practical") return "practical";
-    if (getCurrentDifficulty() === "easy" && isMiddleInfoPilot()) return "core";
+    if (getCurrentDifficulty() === "easy" && isRecallCourse()) return "core";
     return "";
   }
 
@@ -1255,11 +1292,8 @@
   }
 
   function configuredGapEntries(line, difficulty) {
-    if (difficulty === "practical" && isMiddleInfoPilot()) {
-      const tier = RecallEngine.memoryTier(line?._sectionTitle || "", line?._sourceGroup || getCurrentGroup()).key;
-      if (tier === "exact") return []; // 정확 암기 구간은 별도의 통회상 UI에서 처리한다.
-      return rawConfiguredEntries(line, tier === "keyword" ? "easy" : "normal");
-    }
+    if (difficulty === "practical" && isRecallCourse()) return []; // 6과목 실전은 빈칸이 아니라 통회상 UI에서 처리한다.
+    if (difficulty === "easy" && isRecallCourse()) return coreConfiguredEntries(line);
     if (difficulty === "practical") return selectPracticalEntries(line);
     if (difficulty === "yaho") {
       const answers = hasCustomYaho(line) ? line.yaho : splitSentenceUnits(line.text).sentences;
@@ -1444,7 +1478,7 @@
     const gradeAndAdvance = () => {
       const correct = gradeOne(input); // 빈 입력은 오답 표현이 아니라 ‘모름’으로 분리한다.
       if (!correct) {
-        if (isMiddleInfoPilot() && getCurrentDifficulty() === "easy" && studyMode === "fill") {
+        if (isRecallCourse() && getCurrentDifficulty() === "easy" && studyMode === "fill") {
           if (activePracticalRetry) { focusPracticalRetryInput(); return; }
           requestAnimationFrame(() => advanceAfterGrade(input));
           return;
@@ -1594,7 +1628,7 @@
   }
 
 
-  function middleInfoMemoryTier(section) {
+  function recallMemoryTier(section) {
     return RecallEngine.memoryTier(section?.title || "", section?._sourceGroup || getCurrentGroup());
   }
 
@@ -1621,8 +1655,8 @@
   }
 
   function addMemoryTierBadge(th, section) {
-    if (!th || !isMiddleInfoPilot()) return;
-    const tier = middleInfoMemoryTier(section);
+    if (!th || !isRecallCourse()) return;
+    const tier = recallMemoryTier(section);
     const badge = document.createElement("span");
     badge.className = `memory-tier-badge ${tier.key}`;
     badge.textContent = tier.label;
@@ -1631,7 +1665,7 @@
     th.appendChild(badge);
   }
 
-  function renderMiddleInfoMaskLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
+  function renderRecallMaskLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
     const tier = RecallEngine.memoryTier(sectionTitle, sourceGroup);
     const p = document.createElement("div");
     p.className = "line-item mask-line" + (tier.key === "exact" ? " whole-mask-line" : "");
@@ -1643,7 +1677,7 @@
       } else p.appendChild(createMaskToken({answer:line.text}, true));
       return p;
     }
-    const entries = rawConfiguredEntries(line, tier.key === "keyword" ? "easy" : "normal");
+    const entries = coreConfiguredEntries(line, sectionTitle, sourceGroup);
     const specs = entries.map(entry => ({...entry, aliases:getSafeAliases(entry.answer, line.aliases), sentence:false, compound:entry.answer.includes(" ")}));
     const occurrences = findOccurrences(line.text, specs);
     if (!occurrences.length) { p.textContent = line.text; return p; }
@@ -1656,7 +1690,7 @@
     return p;
   }
 
-  function renderMiddleInfoTraceLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
+  function renderRecallTraceLine(line, sectionIndex, lineIndex, sectionTitle = "", sourceGroup = "") {
     const wrap = document.createElement("div");
     wrap.className = "line-item trace-full-line";
     const guide = document.createElement("div");
@@ -1698,7 +1732,7 @@
   }
 
   function createHolisticRecallBlock(unit, section, {scope = "study", persistDraft = true, showGradeButton = true} = {}) {
-    const kind = RecallEngine.holisticKind(section?.title || "");
+    const kind = practicalRecallKind(section, unit?.subject || "");
     if (!kind) return null;
     const block = document.createElement("section");
     block.className = "holistic-recall";
@@ -1714,9 +1748,16 @@
     head.className = "holistic-recall-head";
     const instruction = document.createElement("div");
     instruction.className = "holistic-recall-instruction";
-    instruction.innerHTML = kind === "list"
-      ? `<strong>${section.title}</strong>의 공식 항목을 기억나는 대로 모두 적으세요. 항목 수는 보여주지 않으며, 한 항목당 한 줄로 입력합니다. 채점 후 내용과 공식 순서를 따로 진단합니다.`
-      : `<strong>성취기준</strong>은 코드만 보고 문장 전체로 적으세요. 핵심 행동동사를 엄격하게 봅니다.`;
+    if (kind === "list") {
+      instruction.innerHTML = `<strong>${section.title}</strong>의 공식 항목을 기억나는 대로 모두 적으세요. 항목 수는 보여주지 않으며, 한 항목당 한 줄로 입력합니다. 채점 후 내용과 공식 순서를 따로 진단합니다.`;
+    } else if (kind === "achievement") {
+      instruction.innerHTML = `<strong>성취기준</strong>은 코드만 보고 문장 전체로 적으세요. 핵심 행동동사를 엄격하게 봅니다.`;
+    } else if (section.title.includes("성취기준 해설")) {
+      instruction.innerHTML = `<strong>${section.title}</strong>은 성취기준 코드만 보고 핵심 개념·열거·구별점을 자유롭게 적으세요. <strong>원문 문장 복원은 요구하지 않습니다.</strong>`;
+    } else {
+      const focus = kind === "keyword" ? "과목 고유 원칙과 핵심 키워드" : "핵심 개념·관계·방향";
+      instruction.innerHTML = `<strong>${section.title}</strong>에서 기억나는 ${focus}를 자유롭게 적으세요. <strong>조사·수식어까지 문장 전체를 복원할 필요는 없습니다.</strong>`;
+    }
     head.appendChild(instruction);
     const stageRow = document.createElement("div");
     stageRow.className = "recall-mastery-row";
@@ -1757,7 +1798,7 @@
       }
       row.appendChild(input);
       list.appendChild(row);
-    } else {
+    } else if (kind === "achievement") {
       section.lines.forEach((line, index) => {
         const row = document.createElement("div");
         row.className = "holistic-recall-row";
@@ -1790,12 +1831,72 @@
         row.appendChild(cue); row.appendChild(input); row.appendChild(result);
         list.appendChild(row);
       });
+    } else if (section.title.includes("성취기준 해설")) {
+      // 해설은 성취기준 코드와의 연결 자체가 답안 가치가 있으므로 코드별 자유회상으로 묻는다.
+      block.dataset.conceptLayout = "line";
+      section.lines.forEach((line, index) => {
+        const row = document.createElement("div");
+        row.className = "holistic-recall-row concept-recall-row";
+        row.dataset.expectedIndex = String(index);
+        row.dataset.lineId = line.id || makeLineStableId(section.title, line.text, "");
+        const cue = document.createElement("span");
+        cue.className = "holistic-recall-cue";
+        cue.textContent = RecallEngine.splitAchievement(line.text).code || `${index + 1}`;
+        const input = document.createElement("textarea");
+        input.className = "recall-input concept-recall-input";
+        input.rows = "3";
+        input.autocomplete = "off";
+        input.spellcheck = false;
+        input.dataset.conceptRecall = "true";
+        input.dataset.lineIndex = String(index);
+        input.placeholder = "핵심 개념·열거·관계만 자유롭게 입력";
+        if (persistDraft) {
+          const stateKey = holisticStateKey(unit, section, line, index, scope);
+          input.dataset.stateKey = stateKey;
+          input.value = fieldState[stateKey]?.value || "";
+          input.addEventListener("input", () => {
+            fieldState[stateKey] = {...(fieldState[stateKey] || {}), value:input.value, status:""};
+            block.removeAttribute("data-graded-status");
+            scheduleStateSave();
+          });
+        }
+        const result = document.createElement("div");
+        result.className = "recall-item-result";
+        row.appendChild(cue); row.appendChild(input); row.appendChild(result);
+        list.appendChild(row);
+      });
+    } else {
+      block.dataset.conceptLayout = "section";
+      const row = document.createElement("div");
+      row.className = "holistic-recall-free-row concept-recall-free-row";
+      const input = document.createElement("textarea");
+      input.className = "recall-input recall-free-input concept-recall-input";
+      input.rows = String(Math.min(10, Math.max(5, (section.lines?.length || 1) + 3)));
+      input.autocomplete = "off";
+      input.spellcheck = false;
+      input.dataset.conceptRecall = "true";
+      input.placeholder = "핵심 개념과 방향을 자유롭게 적으세요. 문장 전체를 복원할 필요는 없습니다.";
+      if (persistDraft) {
+        const synthetic = {id:"__concept_recall__"};
+        const stateKey = holisticStateKey(unit, section, synthetic, 0, scope);
+        input.dataset.stateKey = stateKey;
+        input.value = fieldState[stateKey]?.value || "";
+        input.addEventListener("input", () => {
+          fieldState[stateKey] = {...(fieldState[stateKey] || {}), value:input.value, status:""};
+          block.removeAttribute("data-graded-status");
+          scheduleStateSave();
+        });
+      }
+      row.appendChild(input);
+      list.appendChild(row);
     }
     block.appendChild(list);
 
     const feedback = document.createElement("div");
     feedback.className = "holistic-recall-feedback";
-    feedback.textContent = "채점 전에는 정답과 항목 수가 노출되지 않습니다.";
+    feedback.textContent = kind === "concept" || kind === "keyword"
+      ? "채점 전에는 핵심 키워드 수를 노출하지 않습니다."
+      : "채점 전에는 정답과 항목 수가 노출되지 않습니다.";
     block.appendChild(feedback);
     if (showGradeButton) {
       const actions = document.createElement("div");
@@ -1853,6 +1954,35 @@
     });
   }
 
+  function scheduleConceptRetryTarget(unit, section, target, reason = "wrong") {
+    if (!target?.line || !target?.answer) return;
+    const line = target.line;
+    const conceptKey = ["recall-core", unit.subject, unit.area, section?._sourceGroup || getCurrentGroup(), section.title, line.id || target.lineIndex, target.gapId || stableHash(target.answer)].join("|");
+    schedulePracticalRetry({
+      type:"subject",
+      key:conceptKey,
+      conceptKey,
+      subjectKey:unit.subject,
+      subjectLabel:subjectLabels[unit.subject] || unit.subject,
+      area:unit.area,
+      sourceGroup:section._sourceGroup || getCurrentGroup(),
+      groupKey:section._sourceGroup || getCurrentGroup(),
+      groupLabel:groupLabels[section._sourceGroup || getCurrentGroup()] || section._sourceGroup || getCurrentGroup(),
+      difficultyKey:"practical",
+      difficultyLabel:"실전 통회상",
+      lineId:line.id || makeLineStableId(section.title, line.text, ""),
+      gapId:target.gapId || "recall-core",
+      answerOccurrence:0,
+      answerText:target.answer,
+      correctAnswer:target.answer,
+      aliases:target.aliases || [],
+      context:line.text,
+      userAnswer:"",
+      retryReason:reason,
+      recallSectionTitle:section.title
+    });
+  }
+
   function appendFreeRecallDiagnostics(feedback, result, expected) {
     if (!feedback || !result) return;
     const box = document.createElement("div");
@@ -1889,6 +2019,24 @@
     feedback.appendChild(box);
   }
 
+  function conceptTargetMatches(rawText, target) {
+    const user = normalize(rawText);
+    if (!user) return false;
+    const candidates = [target?.answer, ...(target?.aliases || [])].map(normalize).filter(Boolean);
+    return candidates.some(candidate => user.includes(candidate));
+  }
+
+  function distributedSubset(items, limit) {
+    const source = items || [];
+    const n = Math.min(source.length, Math.max(0, Number(limit || 0)));
+    if (n >= source.length) return source.slice();
+    if (!n) return [];
+    if (n === 1) return [source[Math.floor(source.length / 2)]];
+    const out=[];
+    for (let i=0;i<n;i++) out.push(source[Math.round(i*(source.length-1)/(n-1))]);
+    return [...new Map(out.map(item => [`${item.line?.id || item.lineIndex || ""}|${item.gapId || ""}|${item.answer || ""}`, item])).values()];
+  }
+
   function gradeHolisticRecallBlock(block, {review = false, structureOnly = false} = {}) {
     if (!block) return {status:"unknown"};
     const unit = {subject:block.dataset.subject, area:block.dataset.area};
@@ -1902,6 +2050,7 @@
     const feedback = block.querySelector(".holistic-recall-feedback");
     let status = "unknown";
     let repairIndices = new Set();
+    let repairTargets = [];
     let summary = "";
     let values = [];
     let listResult = null;
@@ -1927,7 +2076,7 @@
       const orderText = result.contentComplete ? (result.orderCorrect ? " · 순서 정확" : " · 내용은 갖췄으나 순서 확인") : "";
       summary = `내용 ${exactCount}/${expected.length}${nearCount ? ` · 표기 확인 ${nearCount}` : ""}${missingText}${extraText}${orderText}`;
       setRecallInputResult(freeInput, status === "correct" ? "correct" : status === "near" ? "near" : status === "unknown" ? "unknown" : "wrong");
-    } else {
+    } else if (kind === "achievement") {
       values = inputs.map(input => input.value);
       const details = inputs.map((input, index) => {
         const expected = recallExpectedForLine(section.lines[index], kind);
@@ -1944,6 +2093,35 @@
       plannerAccuracy = details.length ? (correct + near * 0.65) / details.length : 0;
       status = wrong ? "wrong" : unknown ? "unknown" : near ? "near" : "correct";
       summary = `성취기준 ${correct}/${details.length} 정확${near ? ` · 표기 확인 ${near}` : ""}${wrong ? ` · 오답 ${wrong}` : ""}${unknown ? ` · 미입력 ${unknown}` : ""}`;
+    } else {
+      const allTargets = conceptRecallTargets(section);
+      const lineLayout = block.dataset.conceptLayout === "line";
+      let matchedCount = 0;
+      let nonblank = 0;
+      values = inputs.map(input => input.value);
+      inputs.forEach((input, inputIndex) => {
+        const lineIndex = lineLayout ? Number(input.dataset.lineIndex || inputIndex) : null;
+        const targets = lineLayout ? allTargets.filter(target => target.lineIndex === lineIndex) : allTargets;
+        if (normalize(input.value)) nonblank += 1;
+        const matched = targets.filter(target => conceptTargetMatches(input.value, target));
+        matchedCount += matched.length;
+        const missing = targets.filter(target => !conceptTargetMatches(input.value, target));
+        repairTargets.push(...missing);
+        const ratio = targets.length ? matched.length / targets.length : (normalize(input.value) ? 1 : 0);
+        const inputStatus = !normalize(input.value) ? "unknown" : ratio >= 1 ? "correct" : ratio >= 0.7 ? "near" : "wrong";
+        setRecallInputResult(input, inputStatus, targets.length ? `핵심 ${matched.length}/${targets.length}` : "확인 완료");
+      });
+      // section-layout에서는 같은 전체 target을 한 번만 계산해야 한다.
+      if (!lineLayout) {
+        const mergedText = values.join("\n");
+        matchedCount = allTargets.filter(target => conceptTargetMatches(mergedText, target)).length;
+        repairTargets = allTargets.filter(target => !conceptTargetMatches(mergedText, target));
+      }
+      const total = allTargets.length;
+      plannerAccuracy = total ? matchedCount / total : (nonblank ? 1 : 0);
+      status = !nonblank ? "unknown" : plannerAccuracy >= 0.999 ? "correct" : plannerAccuracy >= 0.7 ? "near" : "wrong";
+      summary = `${kind === "keyword" ? "핵심 키워드" : "핵심 개념"} ${matchedCount}/${total || 0}${repairTargets.length ? ` · 놓친 핵심 ${repairTargets.length}` : ""}`;
+      repairTargets = [...new Map(repairTargets.map(target => [`${target.line?.id || target.lineIndex}|${target.gapId}|${target.answer}`, target])).values()];
     }
 
     block.dataset.gradedStatus = status;
@@ -1951,10 +2129,25 @@
       feedback.innerHTML = "";
       feedback.className = `holistic-recall-feedback ${status}`;
       const summaryLine = document.createElement("div");
-      summaryLine.textContent = summary + (status === "correct" ? " · 정확 통회상 성공" : " · 아래에서 항목별로 확인하세요.");
+      summaryLine.textContent = summary + (status === "correct" ? " · 통회상 성공" : " · 필요한 부분만 확인하세요.");
       feedback.appendChild(summaryLine);
       if (kind === "list" && listResult) appendFreeRecallDiagnostics(feedback, listResult, section.lines.map(line => line.text));
-      if (status !== "correct") {
+      if ((kind === "concept" || kind === "keyword") && repairTargets.length) {
+        const missing = document.createElement("div");
+        missing.className = "recall-diagnostic-list";
+        const title = document.createElement("strong");
+        title.textContent = "놓친 핵심";
+        missing.appendChild(title);
+        repairTargets.forEach(target => {
+          const row = document.createElement("div");
+          row.className = "recall-diagnostic-item wrong";
+          const code = RecallEngine.splitAchievement(target.line?.text || "").code;
+          row.textContent = `✗ ${code ? `${code} · ` : ""}${target.answer}`;
+          missing.appendChild(row);
+        });
+        feedback.appendChild(missing);
+      }
+      if (status !== "correct" && kind !== "concept" && kind !== "keyword") {
         const answerBox = document.createElement("div");
         answerBox.className = "holistic-answer-key";
         section.lines.forEach((line,index) => {
@@ -1977,7 +2170,11 @@
         masteryItem = updateRecallSectionMastery(sectionKey, status, token);
         if (!review && getCurrentDifficulty() === "practical") {
           practicalGradeSerial += 1;
-          repairIndices.forEach(index => scheduleHolisticRetryTarget(unit, section, section.lines[index], index, status === "near" ? "near" : status));
+          if (kind === "concept" || kind === "keyword") {
+            distributedSubset(repairTargets, 4).forEach(target => scheduleConceptRetryTarget(unit, section, target, status === "near" ? "near" : status));
+          } else {
+            repairIndices.forEach(index => scheduleHolisticRetryTarget(unit, section, section.lines[index], index, status === "near" ? "near" : status));
+          }
           persistPracticalRetryState();
           maybeShowPracticalRetry();
         }
@@ -1995,7 +2192,7 @@
     }
     updateScore();
     scheduleStateSave();
-    return {status, section, repairIndices:[...repairIndices], masteryItem};
+    return {status, section, repairIndices:[...repairIndices], repairTargets, masteryItem};
   }
 
   function resetStructureSession() {
@@ -2003,12 +2200,12 @@
     structureSession = null;
   }
 
-  function ensureStructureSession(area) {
+  function ensureStructureSession(subjectKey, area) {
     if (!window.StructureEngine) return null;
-    if (!structureSession || structureSession.area !== area || !Array.isArray(structureSession.questions) || !structureSession.questions.length) {
+    if (!structureSession || structureSession.subjectKey !== subjectKey || structureSession.area !== area || !Array.isArray(structureSession.questions) || !structureSession.questions.length) {
       const nonce = ++structureSessionNonce;
-      const questions = StructureEngine.buildSession(curriculumData, area, {limit:6, nonce});
-      structureSession = { area, nonce, questions, index:0, answered:0, correct:0, complete:false };
+      const questions = StructureEngine.buildSession(curriculumData, subjectKey, area, {limit:6, nonce});
+      structureSession = { subjectKey, area, nonce, questions, index:0, answered:0, correct:0, complete:false };
     }
     activeStructureQuestion = structureSession.questions[structureSession.index] || null;
     return structureSession;
@@ -2025,7 +2222,7 @@
     title.textContent = `${session.correct} / ${session.questions.length} 정답`;
     const note = document.createElement("p");
     note.className = "structure-complete-note";
-    note.textContent = "구조 연습은 많이 푸는 것보다 내용 요소–성취기준–해설의 직접 연결을 정확히 회상하는 데 목적이 있습니다.";
+    note.textContent = "구조 연습은 많이 푸는 것보다 성취기준–해설의 직접 연결과 과목 간 과정·기능의 차이를 정확히 구별하는 데 목적이 있습니다.";
     const actions = document.createElement("div");
     actions.className = "structure-actions";
     const restart = document.createElement("button");
@@ -2092,7 +2289,7 @@
 
   function renderStructurePractice(unit, studyArea) {
     studyArea.innerHTML = "";
-    const session = ensureStructureSession(unit.area);
+    const session = ensureStructureSession(unit.subject, unit.area);
     if (!session || !session.questions.length) {
       studyArea.innerHTML = '<div class="empty">이 영역에는 직접 연결을 검증할 구조 연습 항목이 없습니다.</div>';
       return;
@@ -2110,7 +2307,9 @@
     top.className = "structure-card-top";
     const kicker = document.createElement("div");
     kicker.className = "structure-kicker";
-    kicker.textContent = q.kind === "standard-elements" ? "구조 연습 · 성취기준 ↔ 내용 요소" : "구조 연습 · 성취기준 ↔ 해설";
+    kicker.textContent = q.kind === "standard-elements"
+      ? "구조 연습 · 성취기준 ↔ 내용 요소"
+      : (q.kind === "process-subject" ? "구조 연습 · 과정·기능 ↔ 과목" : "구조 연습 · 성취기준 ↔ 해설");
     const progress = document.createElement("div");
     progress.className = "structure-progress";
     progress.textContent = `${session.index + 1} / ${session.questions.length}`;
@@ -2121,7 +2320,9 @@
     instruction.className = "structure-instruction";
     instruction.textContent = q.kind === "standard-elements"
       ? "다음 성취기준과 직접 연결되는 내용체계 요소를 모두 고르세요. 지식·이해, 과정·기능, 가치·태도가 함께 포함될 수 있습니다."
-      : "다음 성취기준 해설과 직접 연결되는 성취기준을 고르세요.";
+      : (q.kind === "process-subject"
+          ? "다음 공식 과정·기능 문구가 속한 정보과 과목을 고르세요. 같은 문구가 여러 과목에 존재하는 항목은 출제하지 않습니다."
+          : (q.multiSelect ? "다음 성취기준 해설과 직접 연결되는 성취기준을 모두 고르세요." : "다음 성취기준 해설과 직접 연결되는 성취기준을 고르세요."));
 
     const prompt = document.createElement("div");
     prompt.className = "structure-prompt";
@@ -2185,10 +2386,13 @@
     if (q.kind === "standard-elements") {
       const answerText = `[${q.answerCode}] → ${q.answerElements.join(" / ")}`;
       feedback.textContent = q.correct ? `✓ 연결 정확 · ${answerText}` : `정답: ${answerText}`;
+    } else if (q.kind === "process-subject") {
+      feedback.textContent = q.correct ? `✓ 과목 변별 정확 · ${q.answerText}` : `정답: ${q.answerText}`;
     } else {
+      const codes = Array.isArray(q.answerCodes) && q.answerCodes.length ? q.answerCodes.map(code => `[${code}]`).join(", ") : `[${q.answerCode}]`;
       feedback.textContent = q.correct
-        ? `✓ 연결 정확 · [${q.answerCode}] ${q.answerText}`
-        : `정답: [${q.answerCode}] ${q.answerText}`;
+        ? `✓ 연결 정확 · ${codes} ${q.answerText}`
+        : `정답: ${codes} ${q.answerText}`;
     }
   }
 
@@ -2300,7 +2504,7 @@
     }
     const studyArea = document.getElementById("studyArea");
     const sequence = getUnitSequence();
-    syncMiddleInfoPilotControls(unit);
+    syncRecallCourseControls(unit);
     renderPlannerStudyBanner(unit);
 
     const subjectLabel = subjectLabels[subject] || "과목";
@@ -2315,10 +2519,10 @@
       structure: "헷갈리는 내용체계 범주를 구별하고 성취기준과 해설을 연결"
     };
     const baseStatus = statusByMode[studyMode] || "";
-    const pilotPractical = isMiddleInfoPilot(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical";
+    const pilotPractical = isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical";
     document.getElementById("studyStatus").textContent = pilotPractical
       ? "실전 통회상 · 지식·이해/과정·기능은 목록 전체, 성취기준은 문장 전체"
-      : (isMiddleInfoPilot(unit) && studyMode === "fill" ? `핵심 빈칸 · ${baseStatus}` : baseStatus);
+      : (isRecallCourse(unit) && studyMode === "fill" ? `핵심 빈칸 · ${baseStatus}` : baseStatus);
 
     const nav = document.getElementById("unitNav");
     const randomMode = document.getElementById("areaSelect").value === "random";
@@ -2361,7 +2565,7 @@
       return;
     }
 
-    if (studyMode === "structure" && isMiddleInfoPilot(unit)) {
+    if (studyMode === "structure" && isRecallCourse(unit)) {
       renderStructurePractice(unit, studyArea);
       updateStudyControls();
       scheduleStateSave();
@@ -2381,21 +2585,21 @@
       const th = document.createElement("th");
       th.textContent = section.title;
       th.scope = "row";
-      if (isMiddleInfoPilot(unit)) addMemoryTierBadge(th, section);
+      if (isRecallCourse(unit)) addMemoryTierBadge(th, section);
 
       const td = document.createElement("td");
-      const holistic = isMiddleInfoPilot(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical" && RecallEngine.holisticKind(section.title);
+      const holistic = isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical" && practicalRecallKind(section, unit.subject);
       if (holistic) {
         const block = createHolisticRecallBlock(unit, section, {scope:"study", persistDraft:true, showGradeButton:true});
         if (block) td.appendChild(block);
       } else {
         section.lines.forEach((line, lineIndex) => {
           if (studyMode === "mask") {
-            td.appendChild(isMiddleInfoPilot(unit)
-              ? renderMiddleInfoMaskLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group)
+            td.appendChild(isRecallCourse(unit)
+              ? renderRecallMaskLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group)
               : renderMaskLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group));
-          } else if (studyMode === "trace" && isMiddleInfoPilot(unit)) {
-            td.appendChild(renderMiddleInfoTraceLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group));
+          } else if (studyMode === "trace" && isRecallCourse(unit)) {
+            td.appendChild(renderRecallTraceLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group));
           } else if (isInputStudyMode()) {
             td.appendChild(renderLine(line, sectionIndex, lineIndex, section.title, section._sourceGroup || group, studyMode));
           } else {
@@ -2933,7 +3137,7 @@
   function updateRecallSectionMastery(conceptKey, result, eventToken) {
     const item = updateMastery(conceptKey, result, eventToken);
     if (result === "correct") return item;
-    // 통회상 실패의 같은 날 보수는 개별 항목 재인출 큐가 담당한다.
+    // 통회상 실패의 같은 날 보수는 개별 항목/핵심어 재인출 큐가 담당한다.
     // 전체 묶음은 날짜를 건너 다시 꺼내도록 최소 다음 날로 예약한다.
     const all = loadMastery();
     const current = all[conceptKey];
@@ -3393,7 +3597,8 @@
     let answer = "";
     let aliases = [];
     for (const level of ["easy", "normal", "yaho"]) {
-      const entry = configuredGapEntries(meta.line, level).find(candidate => candidate.gapId === gapId);
+      const pool = level === "yaho" ? configuredGapEntries(meta.line, level) : rawConfiguredEntries(meta.line, level);
+      const entry = pool.find(candidate => candidate.gapId === gapId);
       if (entry) {
         difficultyKey = level;
         answer = entry.answer;
@@ -3537,13 +3742,14 @@
 
     // 장기 복습은 문장(또는 통회상 묶음) 단위로 운영한다. 같은 문장의 여러 빈칸이
     // 하루씩 번갈아 밀려 나오지 않도록, 정확 성공 기록은 문장 단위의 가장 먼 일정으로 합친다.
+    const reviewCutoff = Math.max(now, Number(DayEngine.nextStudyDayStart(now) || now) - 1);
     const records = ReviewEngine.selectLineReviewRecords(raw.map(record => ({
       ...record,
       lineKey:LearningEngine.reviewLineKey(record.item),
       nextReviewAt:Number(record.state?.nextReviewAt || 0),
       lastResult:record.state?.lastResult || "",
       wrongCount:Number(record.state?.wrongCount || 0)
-    })), now);
+    })), now, reviewCutoff);
 
     const deduped = records.sort((a,b) => {
       const aDue = Number(a.state?.nextReviewAt || 0);
@@ -4575,6 +4781,9 @@
     reviewPosition = -1;
     activeReviewConceptKey = null;
     reviewGraded = false;
+    Object.keys(fieldState).forEach(key => delete fieldState[key]);
+    sessionStorage.removeItem(DRAFT_STATE_KEY);
+    resetStructureSession();
     learningStateMemory.history = [];
     learningStateMemory.mastery = {};
     practicalRetryQueue = [];
@@ -4902,7 +5111,7 @@
     const eventToken = isNewGradingEvent ? makeGradingEventToken("subject", meta.conceptKey, gradingSignature) : "";
 
     let masteryItem = null;
-    const coreDelayedRetry = isNewGradingEvent && isMiddleInfoPilot(meta.unit) && getCurrentDifficulty() === "easy" && studyMode === "fill";
+    const coreDelayedRetry = isNewGradingEvent && isRecallCourse(meta.unit) && getCurrentDifficulty() === "easy" && studyMode === "fill";
     if (isNewGradingEvent) {
       recordPlannerAssessmentOutcome(`blank|${meta.conceptKey}`, answerStatus, "core");
       masteryItem = updateMastery(meta.conceptKey, answerStatus, eventToken);
@@ -5281,7 +5490,7 @@
 
   function maybeOfferPracticalExamChallenge() {
     const panel = document.getElementById("practicalExamChallenge");
-    if (isMiddleInfoPilot()) { if (panel) panel.classList.add("hidden"); return; }
+    if (isRecallCourse()) { if (panel) panel.classList.add("hidden"); return; }
     if (!panel || currentTab !== "subject" || getCurrentDifficulty() !== "practical" || studyMode !== "fill") return;
     const setKey = currentPracticalSetKey();
     if (!setKey || practicalExamOfferedSetKey === setKey || activePracticalExamChallenge) return;
@@ -5335,7 +5544,7 @@
       practicalSetRecoveryCount = 0;
     }
 
-    if (isMiddleInfoPilot(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical") {
+    if (isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical") {
       const blocks = [...document.querySelectorAll("#studyArea .holistic-recall")];
       if (blocks.length) {
       const statuses = blocks.map(block => block.dataset.gradedStatus || "");
@@ -5385,7 +5594,7 @@
     const nextPracticalButton = document.getElementById("nextPracticalSetButton");
     const summaryPanel = document.getElementById("practicalSetSummary");
     if (nextPracticalButton) {
-      const complete = !isMiddleInfoPilot(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical" && lineGroups.size > 0 && completedLines === lineGroups.size;
+      const complete = !isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical" && lineGroups.size > 0 && completedLines === lineGroups.size;
       nextPracticalButton.classList.toggle("hidden", !complete);
       if (complete) {
         const setKey = currentPracticalSetKey();
@@ -5679,7 +5888,42 @@
     applyTheme(next);
   }
 
+  function normalizedUiScale(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return 100;
+    const stepped = Math.round(number / UI_SCALE_STEP) * UI_SCALE_STEP;
+    return Math.max(UI_SCALE_MIN, Math.min(UI_SCALE_MAX, stepped));
+  }
+
+  function savedUiScale() {
+    return normalizedUiScale(localStorage.getItem(UI_SCALE_KEY) || 100);
+  }
+
+  function applyUiScale(value, {persist = false} = {}) {
+    const percent = normalizedUiScale(value);
+    // CSS zoom은 글자뿐 아니라 입력창·버튼·여백까지 함께 조절한다. 학습 데이터에는 영향을 주지 않는다.
+    document.body.style.zoom = String(percent / 100);
+    if (persist) safeSetLocalStorage(UI_SCALE_KEY, String(percent));
+    const label = document.getElementById("uiScaleValue");
+    if (label) label.textContent = `${percent}%`;
+    const down = document.getElementById("uiScaleDown");
+    const up = document.getElementById("uiScaleUp");
+    if (down) down.disabled = percent <= UI_SCALE_MIN;
+    if (up) up.disabled = percent >= UI_SCALE_MAX;
+    requestAnimationFrame(updateStickyMetrics);
+    return percent;
+  }
+
+  function changeUiScale(delta) {
+    applyUiScale(savedUiScale() + Number(delta || 0), {persist:true});
+  }
+
+  function resetUiScale() {
+    applyUiScale(100, {persist:true});
+  }
+
   applyTheme(preferredTheme());
+  applyUiScale(savedUiScale());
   const versionLabel = document.getElementById("appVersionLabel");
   if (versionLabel) versionLabel.textContent = `v${APP_VERSION}`;
   updateStickyMetrics();
@@ -6018,12 +6262,12 @@
 
   function isLongTermReviewEligible(item) {
     if (!item) return false;
-    if (item.type !== "subject" || item.subjectKey !== "middle-info") return true;
+    if (item.type !== "subject" || !AUTO_PLANNER_SUBJECT_SET.has(item.subjectKey)) return true;
     const meta = findLineIdentity(item.subjectKey, item.area, item.lineId, item.context || "");
     if (!meta) return true;
-    const tier = RecallEngine.memoryTier(meta.sectionTitle || "", item.sourceGroup || item.groupKey || "");
-    // 정확 암기 영역은 장기적으로 개별 핵심 빈칸을 반복하지 않고 통회상 묶음으로 유지한다.
-    return tier.key !== "exact";
+    // 6과목은 모든 암기 강도에서 장기 복습을 section 단위 통회상으로 유지한다.
+    // 개별 gap은 당일 핵심 빈칸/보수용이며 장기 큐에서 중복시키지 않는다.
+    return false;
   }
 
   function getTodayPlannerSnapshot(now = Date.now()) {
@@ -6116,14 +6360,14 @@
     const active = Boolean(session?.sectionIds?.length);
     const hasActiveSession = Boolean(state.activeSession?.sectionIds?.length);
     const guidedComplete = progress.percent >= 100 && !active;
-    if (newRange) newRange.textContent = active ? plannerSessionLabel(session) : (guidedComplete ? "중등 정보 자동 진도 완료" : (decision.allowNew ? "다음 범위 준비" : "오늘 새 진도 없음"));
+    if (newRange) newRange.textContent = active ? plannerSessionLabel(session) : (guidedComplete ? "6과목 자동 진도 완료" : (decision.allowNew ? "다음 범위 준비" : "오늘 새 진도 없음"));
     if (newNote) {
       if (active) {
         const continued = session.startedDayKey && session.startedDayKey !== PlannerEngine.localDayKey(Date.now());
         const resume = hasActiveSession ? plannerResumeNote(session) : "";
         newNote.textContent = `${Number(session.workloadScore || session.lineCount || 0).toFixed(1).replace(/\.0$/, "")}점 · ${session.lineCount || 0}문장 · ${hasActiveSession ? (resume || (continued ? "어제 범위를 이어서 학습합니다." : "진행 중인 범위를 이어서 학습합니다.")) : "오늘 처음 보는 범위입니다."}`;
       } else if (guidedComplete) {
-        newNote.textContent = "오늘 플래너의 자동 진도는 중등 정보까지만 적용합니다. 다른 과목은 개편 전까지 각론에서 수동으로 학습하세요.";
+        newNote.textContent = "정보과 6과목의 자동 첫 회독을 완료했습니다. 이후에는 장기 복습·누적 혼합·기출형 연습을 계속합니다.";
       } else newNote.textContent = decision.reason;
     }
     if (newButton) {
@@ -6144,8 +6388,8 @@
     if (firstPassForecast) firstPassForecast.textContent = progress.percent >= 100 ? "완료" : plannerDayKeyLabel(deadline.estimatedCompletionDayKey);
     if (paceNote) {
       const deadlineText = progress.percent >= 100
-        ? `중등 정보 첫 회독 완료 · 1차 시험 ${plannerDayKeyLabel(deadline.examDayKey)}`
-        : `권장 첫 회독 마감 ${plannerDayKeyLabel(deadline.deadlineDayKey)}(D-35) · 예상 ${plannerDayKeyLabel(deadline.estimatedCompletionDayKey)}`;
+        ? `정보과 6과목 첫 회독 완료 · 1차 시험 ${plannerDayKeyLabel(deadline.examDayKey)}`
+        : `권장 첫 회독 마감 ${plannerDayKeyLabel(deadline.deadlineDayKey)}(D-${PlannerEngine.FIRST_PASS_BUFFER_DAYS}) · 예상 ${plannerDayKeyLabel(deadline.estimatedCompletionDayKey)}`;
       paceNote.textContent = state.activeSession
         ? `끝내지 못하면 다음 날 같은 범위를 그대로 이어갑니다. · ${deadlineText}`
         : `${decision.reason} · ${deadlineText}`;
@@ -6164,10 +6408,10 @@
     } else {
       const dailyNewDone = decision.mode === "daily-new-complete";
       title.textContent = progress.percent >= 100
-        ? "중등 정보 자동 첫 회독을 완료했습니다."
+        ? "정보과 6과목 자동 첫 회독을 완료했습니다."
         : (dailyNewDone ? "오늘의 새 학습량을 완료했습니다." : "오늘은 새 진도보다 누적 정리에 집중합니다.");
       reason.textContent = progress.percent >= 100
-        ? "중등 정보의 자동 범위 확장은 여기서 멈춥니다. 완료된 내용은 장기 복습에서 계속 다시 꺼내며, 다른 과목은 각론에서 수동 학습할 수 있습니다."
+        ? "새 범위 확장은 여기서 끝입니다. 완료된 6과목은 장기 복습과 누적 혼합에서 계속 다시 꺼냅니다."
         : decision.reason;
       if (start) start.textContent = dueCount > 0 ? "남은 복습 마무리" : "오늘 학습 완료";
       if (start && dailyNewDone && dueCount === 0) start.disabled = true;
@@ -6260,23 +6504,22 @@
 
   function plannerStepsForCurrentSession() {
     const state = loadPlannerState();
-    const middle = state.activeSession?.subjectKey === "middle-info";
-    if (middle) {
-      const base = [
-        {mode:"original", difficulty:"easy", label:"원문 읽기", guide:"전체 흐름을 한 번 읽습니다. 외우려고 오래 붙잡지 마세요."},
-        {mode:"fill", difficulty:"easy", label:"핵심 빈칸", guide:"핵심 명사·행동동사를 정확히 꺼냅니다. 틀린 것은 몇 문항 뒤 다시 나옵니다."},
-        {mode:"fill", difficulty:"practical", label:"실전 통회상", guide:"가능한 항목은 최소 단서로 통째로 꺼냅니다. 해설·고려사항은 핵심 빈칸으로 정확화합니다."}
-      ];
-      if (PlannerEngine.completesArea(plannerStudySections, state, state.activeSession)) {
-        base.push({mode:"structure", difficulty:"easy", label:"연결 확인", guide:"이 영역의 마지막 세션입니다. 성취기준↔내용 요소·해설 연결을 짧게 확인한 뒤 범위를 완료합니다."});
-      }
-      return base;
+    const session = state.activeSession;
+    if (!session || !AUTO_PLANNER_SUBJECT_SET.has(session.subjectKey)) return [];
+    const base = [
+      {mode:"original", difficulty:"easy", label:"원문 읽기", guide:"전체 흐름을 한 번 읽습니다. 외우려고 오래 붙잡지 마세요."},
+      {mode:"fill", difficulty:"easy", label:"핵심 빈칸", guide:"핵심 명사·행동동사를 정확히 꺼냅니다. 틀린 것은 몇 문항 뒤 다시 나옵니다."},
+      {mode:"fill", difficulty:"practical", label:"실전 통회상", guide:"지식·이해/과정·기능은 목록 전체, 성취기준은 문장 전체를 꺼냅니다. 나머지는 핵심어와 관계를 확인합니다."}
+    ];
+    const areaComplete = PlannerEngine.completesArea(plannerStudySections, state, session);
+    const hasStructure = areaComplete && StructureEngine.hasQuestions(curriculumData, session.subjectKey, session.area);
+    if (hasStructure) {
+      const guide = session.subjectKey === "middle-info"
+        ? "이 영역의 마지막 세션입니다. 성취기준↔내용 요소·해설 연결을 짧게 확인한 뒤 범위를 완료합니다."
+        : "이 영역의 마지막 세션입니다. 성취기준↔해설 연결과 과정·기능의 과목 변별을 확인한 뒤 범위를 완료합니다.";
+      base.push({mode:"structure", difficulty:"easy", label:"연결 확인", guide});
     }
-    return [
-          {mode:"original", difficulty:"easy", label:"원문 읽기", guide:"전체 흐름을 한 번 읽습니다."},
-          {mode:"fill", difficulty:"easy", label:"핵심 빈칸", guide:"핵심어를 직접 꺼냅니다."},
-          {mode:"fill", difficulty:"normal", label:"정확화", guide:"조금 더 넓은 단서로 원문 표현을 정확하게 확인합니다."}
-        ];
+    return base;
   }
 
   function applyPlannerStep() {

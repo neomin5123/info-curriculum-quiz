@@ -1,20 +1,16 @@
 (function(root, factory) {
-  const api = factory();
+  const dayEngine = (typeof module === 'object' && module.exports) ? require('./day-engine.js') : root?.CurriLoopDayEngine;
+  const api = factory(dayEngine);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CurriLoopLearningEngine = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine) {
   'use strict';
 
   const DAY_MS = 24 * 60 * 60 * 1000;
   const REVIEW_INTERVALS = [1, 3, 7, 14, 30, 60];
 
-  function localDayKey(timestamp = Date.now()) {
-    const d = new Date(Number(timestamp) || Date.now());
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-  }
+  const localDayKey = DayEngine?.studyDayKey || DayEngine?.localDayKey;
+  if (typeof localDayKey !== 'function') throw new Error('CurriLoopDayEngine is required');
 
   function reviewIntervalDays(streak) {
     const index = Math.max(0, Math.min(REVIEW_INTERVALS.length - 1, Number(streak || 1) - 1));
