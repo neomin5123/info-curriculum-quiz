@@ -53,7 +53,7 @@ assert(P.createNextSession(sections,state,0,ts('2026-09-25T04:00:00+09:00'),{tar
 let traverse=P.normalizeState({targetLines:22},noon('2026-09-24'));
 let day='2026-09-24', sessions=0, areaEnds=0, commonEnds=0;
 const entered=[];
-for(let guard=0;guard<400 && P.progressSummary(sections,traverse).percent<100;guard++){
+for(let guard=0;guard<400 && P.progressSummary(sections,traverse).completedSections<P.progressSummary(sections,traverse).totalSections;guard++){
   const now=noon(day);
   if(P.isConsolidationDay(traverse,now)){traverse=P.recordStudyActivity(traverse,now);day=P.shiftDayKey(day,1);continue;}
   const sess=P.createNextSession(sections,traverse,0,now,{targetFloor:22});
@@ -81,7 +81,7 @@ for(let guard=0;guard<400 && P.progressSummary(sections,traverse).percent<100;gu
 }
 assert.equal(P.progressSummary(sections,traverse).percent,100,'full traversal reaches 100%');
 assert.deepStrictEqual(entered,order,'subjects entered in configured order');
-assert.equal(areaEnds,33,'six common + 27 regular areas end exactly once');
+assert.equal(areaEnds,33,'active policy areas end exactly once');
 assert.equal(commonEnds,6,'six common areas');
 assert.equal(P.createNextSession(sections,traverse,0,noon(P.shiftDayKey(day,1)),{targetFloor:22}),null,'100% scope must stop');
 

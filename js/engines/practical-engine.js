@@ -88,6 +88,45 @@
     return days >= 3 ? 0.42 : 0.30;
   }
 
+
+  function examCoreCoverage(items = []) {
+    const core = (items || []).filter(item => item && item.examCore);
+    if (!core.length) return false;
+    return core.every(item => Number(item.stat?.correct || 0) > 0);
+  }
+
+  // 기출 기반 숙련 조합:
+  // 1) 핵심 원자를 아직 한 번씩 회수하지 못했으면 항상 1세트
+  // 2) 핵심 원자 1회 회수 + 서로 다른 성공일 2일 이상이면 2세트
+  // 3) 성공일 4일 이상이면 기출 관찰 최대 + 1 안전마진(trainingMaxUnits)까지
+  function desiredExamSetCount(candidateCount, itemStats = [], profile = {}) {
+    const count = Math.max(0, Number(candidateCount || 0));
+    if (!count) return 0;
+    const observed = Math.max(1, Number(profile.observedMaxUnits || 1));
+    const trainingMax = Math.max(1, Math.min(count, Number(profile.trainingMaxUnits || observed + 1)));
+    const stats = (itemStats || []).map(item => item?.stat || item || {});
+    const spacedDays = uniqueSuccessDays(stats);
+    const covered = examCoreCoverage(itemStats);
+    if (!covered || spacedDays < 2) return 1;
+    if (spacedDays < 4) return Math.min(trainingMax, Math.max(2, Math.min(observed, 2)));
+    return trainingMax;
+  }
+
+  // blank 수는 기출 profile이 결정한다. coverage는 난이도 기준이 아니라 문맥 소실 방지용 마지막 안전장치다.
+  // 실제 답안 생산(production) 근거가 있는 문장만 더 넓게 허용하고,
+  // recognition/cue/pattern은 제시문을 과도하게 지우지 않도록 더 보수적으로 제한한다.
+  function examCoverageLimit(profile = {}) {
+    return profile?.productionEvidence || profile?.demandKind === 'production' ? 0.55 : 0.35;
+  }
+
+  // 짧은 exact line처럼 실제 시험이 원문 대부분을 생산하도록 요구한 경우에는
+  // 관찰된 production 단위까지만 coverage rail을 넘을 수 있다. +α 원자는 이 예외를 받지 않는다.
+  function isObservedProductionSet(entries = [], profile = {}) {
+    if (!(profile?.productionEvidence || profile?.demandKind === 'production')) return false;
+    const observed = Math.max(1, Number(profile.observedMaxUnits || 1));
+    return entries.length > 0 && entries.length <= observed && entries.every(entry => Boolean(entry?.pinned));
+  }
+
   function noteResult(stat = {}, status, dayKey, now = Date.now(), countShown = true) {
     const next = {...stat};
     if (countShown) next.shown = Number(next.shown || 0) + 1;
@@ -115,6 +154,10 @@
     uniqueSuccessDays,
     desiredBlankCount,
     coverageLimit,
+    examCoreCoverage,
+    desiredExamSetCount,
+    examCoverageLimit,
+    isObservedProductionSet,
     noteResult
   };
 });

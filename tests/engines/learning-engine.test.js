@@ -35,6 +35,22 @@ assert.equal(stat.successDays.length, 2);
 assert.equal(P.desiredBlankCount(40, 5, [stat]), 3);
 assert.equal(P.desiredBlankCount(40, 5, [stat], {sourceGroup:'achievement', sectionTitle:'성취기준 해설'}), 1);
 assert.equal(P.desiredBlankCount(40, 5, [stat], {sourceGroup:'achievement', sectionTitle:'성취기준 적용 시 고려 사항'}), 1);
+const examProfile={observedMaxUnits:2,trainingMaxUnits:3};
+assert.equal(P.desiredExamSetCount(4,[{examCore:true,stat:{correct:0,successDays:[]}}],examProfile),1,'new exam-combo line starts with one set');
+const coveredOneDay=[{examCore:true,stat:{correct:1,successDays:['2026-09-15']}},{examCore:true,stat:{correct:1,successDays:['2026-09-15']}}];
+assert.equal(P.desiredExamSetCount(4,coveredOneDay,examProfile),1,'same-day familiarity does not expand combo');
+const coveredTwoDays=coveredOneDay.map(x=>({examCore:true,stat:{correct:2,successDays:['2026-09-15','2026-09-16']}}));
+assert.equal(P.desiredExamSetCount(4,coveredTwoDays,examProfile),2,'spaced familiarity expands to observed combo');
+const coveredFourDays=coveredOneDay.map(x=>({examCore:true,stat:{correct:4,successDays:['2026-09-15','2026-09-16','2026-09-18','2026-09-22']}}));
+assert.equal(P.desiredExamSetCount(4,coveredFourDays,examProfile),3,'mature line reaches exam max + one safety unit');
+assert.equal(P.examCoverageLimit({demandKind:'production'}),0.55,'production evidence may expose a wider but bounded recall window');
+assert.equal(P.examCoverageLimit({demandKind:'recognition'}),0.35,'recognition/cue must preserve more context');
+
+assert.equal(P.isObservedProductionSet([{pinned:true}],{demandKind:'production',observedMaxUnits:1}),true);
+assert.equal(P.isObservedProductionSet([{pinned:true},{pinned:true},{pinned:true}],{demandKind:'production',observedMaxUnits:3}),true);
+assert.equal(P.isObservedProductionSet([{pinned:true},{pinned:true}],{demandKind:'production',observedMaxUnits:1}),false,'safety-margin atoms must not bypass coverage');
+assert.equal(P.isObservedProductionSet([{pinned:true},{pinned:false}],{demandKind:'production',observedMaxUnits:2}),false,'non-pinned +alpha atom must obey coverage');
+assert.equal(P.isObservedProductionSet([{pinned:true}],{demandKind:'recognition',observedMaxUnits:1}),false,'recognition evidence never bypasses coverage');
 let unknownStat = P.noteResult({}, 'unknown', '2026-09-15', t0);
 assert.equal(unknownStat.unknown, 1); assert.equal(unknownStat.shown, 1);
 

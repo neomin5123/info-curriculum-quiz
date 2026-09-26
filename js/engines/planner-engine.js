@@ -1,9 +1,10 @@
 (function(root, factory) {
   const dayEngine = (typeof module === 'object' && module.exports) ? require('./day-engine.js') : root?.CurriLoopDayEngine;
-  const api = factory(dayEngine);
+  const pilotEngine = (typeof module === 'object' && module.exports) ? require('./pilot-policy-engine.js') : root?.CurriLoopPilotPolicyEngine;
+  const api = factory(dayEngine, pilotEngine);
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.CurriLoopPlannerEngine = api;
-})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine) {
+})(typeof globalThis !== 'undefined' ? globalThis : this, function(DayEngine, PilotPolicyEngine) {
   'use strict';
 
   const MIN_TARGET_LINES = 8;
@@ -18,6 +19,7 @@
   // v7.6.4: 하루 분량은 단순 문장 수가 아니라 실제 학습 부담 점수로 계산한다.
   // 기존 targetLines 저장값(8~22)은 그대로 승계하되 의미만 '학습량 점수'로 전환한다.
   function lineWorkload(line, sourceGroup = '', sectionTitle = '', subjectKey = '') {
+    if (PilotPolicyEngine?.isPilotSubject?.(subjectKey) && line?.id && Object.prototype.hasOwnProperty.call(PilotPolicyEngine.config?.lineWorkload || {}, line.id)) return Math.round(PilotPolicyEngine.lineWorkload(line.id) * 10) / 10;
     const text = String(line?.text || '').replace(/\s+/g, ' ').trim();
     const length = text.length;
     let score = length <= 30 ? 0.8 : length <= 60 ? 1.0 : length <= 100 ? 1.25 : length <= 160 ? 1.6 : length <= 240 ? 2.0 : 2.4;
@@ -49,6 +51,8 @@
   }
 
 
+  function effectiveWorkload(item) { const v = Number(item?.workloadScore); return Number.isFinite(v) ? v : Number(item?.lineCount || 0); }
+
   function selectNextSectionBatch(sections, completedIds, targetWorkload) {
     const completed = completedIds instanceof Set ? completedIds : new Set(completedIds || []);
     const firstIndex = (sections || []).findIndex(section => !completed.has(section.id));
@@ -63,14 +67,14 @@
     }
     if (!candidates.length) return [];
     const sessionTarget = Math.max(MIN_TARGET_LINES, Math.min(MAX_TARGET_LINES, Number(targetWorkload || DEFAULT_TARGET_LINES)));
-    const totalCandidateLoad = candidates.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    const totalCandidateLoad = candidates.reduce((sum,item) => sum + effectiveWorkload(item), 0);
     const selected = [];
     let workload = 0;
     // 영역 경계를 넘지 않는다. 목표보다 5점 이내로만 무거운 영역은 작은 꼬리 세션을 만들지 않고 한 번에 끝낸다.
     if (totalCandidateLoad <= sessionTarget + 5) return candidates.slice();
     for (let i = 0; i < candidates.length; i++) {
       const item = candidates[i];
-      const itemLoad = Number(item.workloadScore || item.lineCount || 0);
+      const itemLoad = effectiveWorkload(item);
       const projected = workload + itemLoad;
       const remainingAfter = totalCandidateLoad - projected;
       if (selected.length && projected > sessionTarget + 5) break;
@@ -227,6 +231,7 @@
             const lines = section?.lines || [];
             if (!lines.length) return;
             const workloadScore = Math.round(lines.reduce((sum, line) => sum + lineWorkload(line, sourceGroup, String(section?.title || ''), subjectKey), 0) * 10) / 10;
+            if (PilotPolicyEngine?.isPilotSubject?.(subjectKey) && workloadScore <= 0) return;
             out.push({
               id:sectionId(subjectKey, area, sourceGroup, section?.title || '', index),
               subjectKey,
@@ -450,7 +455,7 @@
     const selected = selectNextSectionBatch(sections, completed, sessionTarget);
     if (!selected.length) return null;
     const first = selected[0];
-    const selectedWorkload = Math.round(selected.reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0) * 10) / 10;
+    const selectedWorkload = Math.round(selected.reduce((sum,item) => sum + effectiveWorkload(item), 0) * 10) / 10;
     return {
       id:`plan-session|${selected.map(item => item.id).join('~')}`,
       sectionIds:selected.map(item => item.id),
@@ -626,7 +631,7 @@
       sessionId:session.id,
       sectionIds:[...session.sectionIds],
       lineCount:Number(session.lineCount || 0),
-      workloadScore:Number(session.workloadScore || session.lineCount || 0),
+      workloadScore:effectiveWorkload(session),
       startedDayKey:session.startedDayKey || today,
       completedDayKey:today,
       daysSpent,
@@ -658,8 +663,8 @@
     const completedSections = (sections || []).filter(section => completed.has(section.id)).length;
     const totalLines = (sections || []).reduce((sum,item) => sum + Number(item.lineCount || 0), 0);
     const completedLines = (sections || []).filter(section => completed.has(section.id)).reduce((sum,item) => sum + Number(item.lineCount || 0), 0);
-    const totalWorkload = (sections || []).reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
-    const completedWorkload = (sections || []).filter(section => completed.has(section.id)).reduce((sum,item) => sum + Number(item.workloadScore || item.lineCount || 0), 0);
+    const totalWorkload = (sections || []).reduce((sum,item) => sum + effectiveWorkload(item), 0);
+    const completedWorkload = (sections || []).filter(section => completed.has(section.id)).reduce((sum,item) => sum + effectiveWorkload(item), 0);
     return {totalSections, completedSections, totalLines, completedLines, totalWorkload:Math.round(totalWorkload*10)/10, completedWorkload:Math.round(completedWorkload*10)/10, percent:totalWorkload ? Math.round(completedWorkload / totalWorkload * 100) : 0};
   }
 

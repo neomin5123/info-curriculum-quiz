@@ -1,0 +1,8 @@
+<!doctype html><meta charset="utf-8"><title>Stage7R Runtime</title>
+<script src="../../data/learning-aids/pilot-policy.js"></script>
+<script src="../../data/learning-aids/policy-repair.js"></script>
+<script src="../../js/engines/pilot-policy-engine.js"></script>
+<div id="result"></div>
+<script>
+(()=>{const P=window.CurriLoopPilotPolicyEngine;const a=P.config.tasks.find(t=>t.grade==='A'&&(P.gradingRequirement(t.canonicalAtomId)?.requiredComponents||[]).length>=2);const ar=P.gradingRequirement(a.canonicalAtomId),aa=ar.requiredComponents.map(x=>x.aliases[0]);const b=P.config.tasks.find(t=>t.grade==='B'&&P.gradingRequirement(t.canonicalAtomId)?.minRequired>=2),br=P.gradingRequirement(b.canonicalAtomId),ba=br.meaningUnits.map(x=>x.aliases[0]);const x=P.config.tasks.find(t=>t.grade==='X');const c=P.config.tasks.find(t=>t.grade==='C'&&P.legacyGapCount(t.canonicalAtomId)>0);const cm=P.repair.legacyGapMap.filter(m=>m.canonicalAtomId===c.canonicalAtomId);const seed=P.legacyMigrationSeed(c.canonicalAtomId,cm.map(m=>({gapId:m.gapId,item:{mastered:true,lastSeenAt:1,lastSuccessAt:1,nextReviewAt:2}})),10);window.STAGE7R_RUNTIME={loaded:!!P,aPartial:P.gradeTask(a,aa[0]).ok,aParaphrase:P.gradeTask(a,aa.slice().reverse().join(' ')).ok,bPartial:P.gradeTask(b,ba[0]).ok,bParaphrase:P.gradeTask(b,ba.slice(0,br.minRequired).reverse().join(' ')).ok,xSeed:P.legacyMigrationSeed(x.canonicalAtomId,[],10),cSeedMastered:seed.mastered,legacyMapCount:P.repair.legacyGapMap.length};document.querySelector('#result').textContent=JSON.stringify(window.STAGE7R_RUNTIME);})();
+</script>

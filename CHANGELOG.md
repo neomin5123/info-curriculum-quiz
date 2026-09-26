@@ -1,3 +1,26 @@
+# CurriLoop v7.8.9 — Middle/High Exam-Demand Re-audit (WORKING)
+
+- 중·고 정보 270문장의 공식 corpus는 그대로 두고, v7.8.8의 기출 line profile을 원문 기출지 기준으로 다시 감사했다.
+- 기출 증거를 `production / constructed / recognition / cue`로 분리하여, 시험지에 보인 원문을 "여러 단위 직접 인출"로 잘못 계산하던 과잉 가림 원인을 제거했다.
+- 직접 근거 없는 line과 recognition/cue line은 `1 → 2` 조합으로 제한했다. 실제 2단위 생산 기출만 `1 → 2 → 3(+1)`까지 허용한다.
+- 2025 B 평가 루브릭 mapping을 `HI-TE-EVD-02`에서 실제 중학교 `MI-TE-EVD-03`으로 수정했다.
+- 2026 A `디지털 윤리`, `저작권`, `피지컬 컴퓨팅`, 사물인터넷 내용 요소, `보고서/포트폴리오`를 실제 생산 답안으로 재고정했다.
+- 실제 시험이 짧은 exact 내용 요소 전체를 생산하도록 요구한 경우에는 관찰된 pinned production 세트까지만 coverage rail 예외를 허용하고, +α 원자는 예외를 받지 않는다.
+- `middle-high-exam-demand-integrity-qa.js`를 추가하여 270문장 범위, profile 대상 line 존재, pinned/priority 원문의 실제 substring, +1 초과 금지, non-production 과잉 조합 금지를 자동 검증한다.
+- 공식 corpus/ID/gap inventory/planner/D-day 정책은 변경하지 않았다.
+
+---
+
+# CurriLoop v7.8.8 — Exam-Driven Atomic Gap Pilot (WORKING)
+
+- 중·고 정보의 `실전`을 기존 통회상과 분리했다. `실전`은 기출 기반 원자 gap 조합, `통회상`은 별도 선택지로 유지한다.
+- `data/learning-aids/exam-recall-profiles.js` 추가: 2014~2026 출제 family와 2024~2026 2022 개정 직접 출제 line profile을 분리 저장한다.
+- 숙련 조합 규칙: 신규/미회수 핵심은 1세트 → 핵심 원자 1회 회수 + 2개 학습일 성공 시 2세트 → 4개 학습일 성공 시 `관찰 최대 + 1`까지.
+- 중·고 정보의 공식 원문 270문장, 전체 674문장/6,327 gap inventory는 변경하지 않았다.
+- 이번 체크포인트는 중·고 정보 파일럿만 검증하며 나머지 4과목 migration 전이므로 FINAL이 아니다.
+
+---
+
 # CurriLoop v7.8.7 — Official Source Completeness Repair (WORKING)
 
 - 2014~2026 전공 기출 crosswalk 중 발견한 중·고 정보 공통 교수⋅학습·평가 누락 12항목을 공개된 2022 개정 정보과 교육과정 최종안과 재검증하여 corpus에 복구했다: 중학교 5개, 고등학교 7개.
@@ -602,3 +625,17 @@
 - 하루에 새로 시작하는 자동 진도 세션을 최대 1개로 제한한다. 전날 미완료 세션을 오늘 마친 경우에는 오늘 새 세션 1개를 추가로 시작할 수 있다.
 - 복습 `건너뛰기`는 첫 회 1회만 뒤로 보내고, 일일 복습에서 두 번째 건너뛰기는 성공으로 위장하지 않은 채 다음 날로 이월한다.
 - D-day 보정, 복습 적체 0, 높은 정확도 등으로 하루 새 세션 제한을 우회할 수 없도록 planner state에 `lastNewSessionStartDayKey`를 저장한다.
+
+## v8.0.0-rc — Stage 6
+- Extended the Stage 3R policy engine to AI Basics, Data Science, Information Science, and Software & Life.
+- Globally deduplicated canonical tasks and canonical mastery keys across subjects.
+- Retired legacy gap mastery/review paths for all six policy subjects; X atoms have no active path.
+- Preserved the 674-line official curriculum corpus and existing source provenance.
+- Fixed a Stage 5 packaging omission: pilot-policy.js and pilot-policy-engine.js are now loaded by index.html (they had only been precached by the service worker).
+- Fixed planner zero-workload fallback so X-only policy sections do not re-enter workload through line-count fallback.
+- Added Stage 6 full-policy QA and reran the complete test suite.
+
+## Stage 7B planner finish
+- 오늘 화면의 Planner를 삭제하지 않고 보조 인터페이스로 유지.
+- "오늘의 권장 학습 / 권장 페이스"로 역할을 명확히 하고, 계획량이 강제 목표가 아니며 미완료 범위는 다음 학습일에 이어진다는 안내를 추가.
+- Planner/SRS/정책/등급/학습량 계산 로직은 변경하지 않음.

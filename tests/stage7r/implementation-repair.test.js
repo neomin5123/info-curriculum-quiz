@@ -1,0 +1,29 @@
+'use strict';
+const assert=require('assert'),fs=require('fs'),path=require('path');
+const P=require('../../js/engines/pilot-policy-engine.js');
+const tasks=P.config.tasks;
+assert.equal(tasks.length,1765);assert.deepStrictEqual(Object.fromEntries(['S','A','B','C','X'].map(g=>[g,tasks.filter(t=>t.grade===g).length])),{S:36,A:197,B:631,C:433,X:468});
+assert.equal(Object.keys(P.repair.gradingRequirements||{}).length,828,'every A/B atom needs deterministic grading metadata');
+// S: exact only
+const s=tasks.find(t=>t.grade==='S');assert(s);assert(P.gradeTask(s,s.label).ok);assert(!P.gradeTask(s,s.label.slice(0,Math.max(1,Math.floor(s.label.length/2)))).ok);
+// A: partial component must fail; all components in arbitrary order pass (not sentence exact).
+const a=tasks.find(t=>t.grade==='A'&&(P.gradingRequirement(t.canonicalAtomId)?.requiredComponents||[]).length>=2);assert(a);const ar=P.gradingRequirement(a.canonicalAtomId);const aa=ar.requiredComponents.map(x=>x.aliases[0]);assert(!P.gradeTask(a,aa[0]).ok,'A partial component false pass');assert(P.gradeTask(a,aa.slice().reverse().join(' ')).ok,'A paraphrased/reordered component answer should pass');assert(P.gradeTask(a,a.label).ok,'A exact full source must pass');
+// B: 4+ char fragment/partial unit must fail when multiple meaning units required; sufficient reordered units pass.
+const b=tasks.find(t=>t.grade==='B'&&Number(P.gradingRequirement(t.canonicalAtomId)?.minRequired||0)>=2);assert(b);const br=P.gradingRequirement(b.canonicalAtomId),ba=br.meaningUnits.map(x=>x.aliases[0]);assert(!P.gradeTask(b,ba[0]).ok,'B one semantic fragment false pass');assert(P.gradeTask(b,ba.slice(0,br.minRequired).reverse().join(' ')).ok,'B sufficient semantic units should pass');assert(P.gradeTask(b,b.label).ok,'B exact source must pass');
+// all A/B full canonical answers pass, and one-unit partial attacks fail when min>1.
+for(const t of tasks.filter(t=>t.grade==='A'||t.grade==='B')){const r=P.gradingRequirement(t.canonicalAtomId);assert(r,`missing requirement ${t.canonicalAtomId}`);assert(P.gradeTask(t,t.label).ok,`canonical answer false fail ${t.canonicalAtomId}`);const units=t.grade==='A'?r.requiredComponents:r.meaningUnits;if(r.minRequired>1&&units.length){const attack=units.filter(u=>P.normalize(u.aliases[0])!==P.normalize(t.label)).sort((a,b)=>P.normalize(a.aliases[0]).length-P.normalize(b.aliases[0]).length)[0];if(attack)assert(!P.gradeTask(t,attack.aliases[0]).ok,`partial false pass ${t.canonicalAtomId}`);}}
+// C and X contracts.
+for(const t of tasks.filter(t=>t.grade==='C')){assert(P.gradeTask(t,t.label).ok);assert(!P.gradeTask(t,'__wrong__').ok);}
+for(const t of tasks.filter(t=>t.grade==='X'))assert(!P.tasksForLine(t.ownerLineId).some(x=>x.canonicalAtomId===t.canonicalAtomId));
+// Legacy mapping: deterministic, unique, X remains inactive; counts consistent.
+const lm=P.repair.legacyGapMap;assert.equal(lm.length,2637);assert.equal(lm.filter(x=>x.confidence==='ambiguous').length,0);const keys=lm.map(x=>[x.subject,x.lineId,x.gapId].join('|'));assert.equal(keys.length,new Set(keys).size);for(const x of lm){assert.equal(P.legacyGapMapping(x.subject,x.lineId,x.gapId).canonicalAtomId,x.canonicalAtomId);if(x.grade==='X')assert.equal(P.gradeOf(x.canonicalAtomId),'X');}
+// Browser path must call grade-aware engine and old substring fallback must be gone.
+const app=fs.readFileSync(path.resolve(__dirname,'../../js/app.js'),'utf8'),html=fs.readFileSync(path.resolve(__dirname,'../../index.html'),'utf8'),sw=fs.readFileSync(path.resolve(__dirname,'../../service-worker.js'),'utf8');
+assert(app.includes('CurriLoopPilotPolicyEngine?.gradeTask?.(task,val)'));assert(app.includes('CurriLoopPilotPolicyEngine?.gradeTask?.(item.task||item.canonicalAtomId,input.value)'));assert(!app.includes('canon.includes(n)'));assert(!app.includes('n.length>=4&&canon.includes(n)'));
+assert(html.indexOf('policy-repair.js')>html.indexOf('pilot-policy.js')&&html.indexOf('policy-repair.js')<html.indexOf('pilot-policy-engine.js'));assert(sw.includes('policy-repair.js'));
+assert(app.includes('POLICY_MIGRATION_BACKUP_KEY'));assert(app.includes('legacyGapMapping'));assert(app.includes('legacyMigrationSeed'));assert(P.legacyMigrationSeed(P.config.tasks.find(t=>t.grade==='X').canonicalAtomId,[])===null);const c=P.config.tasks.find(t=>t.grade==='C'&&P.legacyGapCount(t.canonicalAtomId)>0);if(c){const maps=lm.filter(x=>x.canonicalAtomId===c.canonicalAtomId);const rec=maps.map(x=>({gapId:x.gapId,item:{mastered:true,lastSeenAt:1,lastSuccessAt:1,nextReviewAt:2}}));assert(P.legacyMigrationSeed(c.canonicalAtomId,rec,10).mastered);}
+console.log('Stage7R implementation repair QA: OK',{A:a.canonicalAtomId,B:b.canonicalAtomId,legacyMappings:lm.length});
+// Migration conservative merge / idempotency model.
+const aMap=lm.find(x=>x.grade==='A');const aSeed=P.legacyMigrationSeed(aMap.canonicalAtomId,[{gapId:aMap.gapId,item:{mastered:true,lastSeenAt:100,lastSuccessAt:100,nextReviewAt:200}}],1000);assert(aSeed&&!aSeed.mastered&&aSeed.correctStreak===0,'legacy A gap must not inflate structured mastery');
+const xMap=lm.find(x=>x.grade==='X');assert(xMap&&P.legacyMigrationSeed(xMap.canonicalAtomId,[{gapId:xMap.gapId,item:{mastered:true}}],1000)===null,'legacy X must remain archive-only');
+const cTask=tasks.find(t=>t.grade==='C'&&P.legacyGapCount(t.canonicalAtomId)>0);if(cTask){const cm=lm.filter(x=>x.canonicalAtomId===cTask.canonicalAtomId);const records=cm.map((x,i)=>({gapId:x.gapId,item:{mastered:true,lastSeenAt:100+i,lastSuccessAt:100+i,nextReviewAt:200+i}}));const s1=P.legacyMigrationSeed(cTask.canonicalAtomId,records,1000),s2=P.legacyMigrationSeed(cTask.canonicalAtomId,records,1000);assert.deepStrictEqual(s1,s2,'migration seed must be idempotent');assert(s1.mastered,'fully mastered legacy production may preserve C recognition mastery');}

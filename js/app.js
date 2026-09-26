@@ -89,8 +89,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.8.7";
-  const MANUAL_GAP_REVIEW = "2026-09-26 / 중·고 정보 공식 공통부 누락 12항목 복구 · 기출 crosswalk 우선순위 반영 · 중 139문장/고 131문장 source completeness QA · 전체 674문장/6,327 gap 재산정";
+  const APP_VERSION = "7.8.9";
+  const MANUAL_GAP_REVIEW = "2026-09-26 / 중·고 정보 실전 파일럿: 기출 관찰 단위 기반 원자 gap 조합 · 최초 1세트→숙련 시 조합 증가 · 실전/통회상 분리 · 공식 674문장/6,327 gap 불변";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -100,13 +100,14 @@
   const GradingEngine = window.CurriLoopGradingEngine;
   const RecallEngine = window.CurriLoopRecallEngine;
   const IntensityEngine = window.CurriLoopIntensityEngine;
+  const ExamRecallProfiles = window.CURRILOOP_EXAM_RECALL_PROFILES;
   const StructureEngine = window.StructureEngine;
   const ReviewEngine = window.CurriLoopReviewEngine;
   const HistoryEngine = window.CurriLoopHistoryEngine;
   const StorageEngine = window.CurriLoopStorageEngine;
   const PlannerEngine = window.CurriLoopPlannerEngine;
   const PracticeEngine = window.CurriLoopPracticeEngine;
-  if (!DayEngine || !LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !IntensityEngine || !StructureEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PlannerEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
+  if (!DayEngine || !LearningEngine || !PracticalEngine || !GradingEngine || !RecallEngine || !IntensityEngine || !ExamRecallProfiles || !StructureEngine || !ReviewEngine || !HistoryEngine || !StorageEngine || !PlannerEngine || !PracticeEngine) throw new Error("CurriLoop 학습 엔진 모듈을 불러오지 못했습니다.");
 
   const PRACTICAL_STATS_KEY = "curriloop-practical-stats-v1";
   const PRACTICAL_RETRY_KEY = "curriloop-practical-retry-v2";
@@ -402,6 +403,28 @@
     const values = options.map(([value]) => value);
     select.value = values.includes(current) ? current : (values.includes(preferred) ? preferred : values[0]);
   }
+  function isExamComboPracticalCourse(unit = null) {
+    const target = unit || getCurrentUnit();
+    return Boolean(target?.subject && ExamRecallProfiles?.pilotSubjects?.includes(target.subject));
+  }
+
+  function examRecallProfileForLine(line, sectionTitle = "", sourceGroup = "") {
+    const unit = getCurrentUnit();
+    return ExamRecallProfiles?.getProfile?.({
+      subjectKey:unit.subject,
+      lineId:line?.id || "",
+      sectionTitle:sectionTitle || line?._sectionTitle || "",
+      sourceGroup:sourceGroup || line?._sourceGroup || getCurrentGroup()
+    }) || null;
+  }
+
+  function isHolisticRecallFill(unit = null) {
+    const target = unit || getCurrentUnit();
+    if (!isRecallCourse(target) || studyMode !== "fill") return false;
+    const difficulty = getCurrentDifficulty();
+    return difficulty === "recall" || (difficulty === "practical" && !isExamComboPracticalCourse(target));
+  }
+
   function syncRecallCourseControls(unit = null) {
     const target = unit || getCurrentUnit();
     const pilot = isRecallCourse(target);
@@ -413,10 +436,12 @@
     const variant = document.getElementById("recallFillVariant");
     const coreVariant = document.getElementById("coreFillVariantButton");
     const practicalVariant = document.getElementById("practicalFillVariantButton");
+    const recallVariant = document.getElementById("recallFillVariantButton");
     if (panel) panel.classList.toggle("recall-course", pilot);
     if (structure) structure.classList.toggle("hidden", !pilot);
     if (pilot) {
-      setDifficultyOptions([["easy","핵심"],["practical","실전"]], "easy");
+      const examCombo = isExamComboPracticalCourse(target);
+      setDifficultyOptions(examCombo ? [["easy","핵심"],["practical","실전"],["recall","통회상"]] : [["easy","핵심"],["practical","실전"]], "easy");
       if (label) label.textContent = "빈칸 방식";
       if (field) field.classList.add("hidden");
       if (help) help.classList.add("hidden");
@@ -432,18 +457,27 @@
         practicalVariant.classList.toggle("active", active);
         practicalVariant.setAttribute("aria-pressed", active ? "true" : "false");
       }
+      if (recallVariant) {
+        const active = activeDifficulty === "recall";
+        recallVariant.classList.toggle("hidden", !examCombo);
+        recallVariant.classList.toggle("active", active);
+        recallVariant.setAttribute("aria-pressed", active ? "true" : "false");
+      }
     } else {
       setDifficultyOptions([["easy","핵심"],["normal","정밀"],["yaho","야~호!"],["practical","실전"]], "normal");
       if (label) label.textContent = "난이도";
       if (field) field.classList.remove("hidden");
       if (help) help.classList.add("hidden");
       if (variant) variant.classList.add("hidden");
+      if (recallVariant) recallVariant.classList.add("hidden");
       if (studyMode === "structure") studyMode = "original";
     }
   }
 
   function setRecallFillVariant(value) {
-    if (!isRecallCourse() || !["easy", "practical"].includes(value)) return;
+    if (!isRecallCourse()) return;
+    const allowed = isExamComboPracticalCourse() ? ["easy", "practical", "recall"] : ["easy", "practical"];
+    if (!allowed.includes(value)) return;
     const select = document.getElementById("difficultySelect");
     if (!select || select.value === value) {
       syncRecallCourseControls();
@@ -715,8 +749,8 @@
     if (resetButton) resetButton.classList.toggle("hidden", !isInputStudyMode());
     if (progressBox) progressBox.classList.toggle("hidden", studyMode !== "fill");
     if (nextPracticalButton) {
-      const legacyPractical = !pilot && studyMode === "fill" && getCurrentDifficulty() === "practical";
-      nextPracticalButton.classList.toggle("hidden", !legacyPractical);
+      const comboPractical = studyMode === "fill" && getCurrentDifficulty() === "practical" && (!pilot || isExamComboPracticalCourse());
+      nextPracticalButton.classList.toggle("hidden", !comboPractical);
     }
     if (score) score.classList.toggle("hidden-mode-score", studyMode !== "fill");
   }
@@ -827,8 +861,8 @@
     return `${practicalLineKey(line)}|${gapId}`;
   }
 
-  // 레거시 개별 gap 복습용 우선순위. 6과목의 실전 단계는 별도 통회상으로 처리하며,
-  // 이 우선순위는 기존 기록 호환·당일 보수에만 사용한다.
+  // gap 우선순위. 중·고 정보 실전은 기출 profile 기반 원자 조합에 사용하고,
+  // migration 전 과목에서는 기존 기록 호환·당일 보수에만 사용한다.
   function practicalEntryPriority(entry, line = null, coreLike = false) {
     const explicit = line?.practicalPriority?.[entry?.gapId] ?? line?.practicalPriority?.[entry?.answer];
     return PracticalEngine.inferPriority(entry?.answer, {
@@ -927,6 +961,134 @@
     }, 0);
   }
 
+  function examAtomicBank(line) {
+    const profile = examRecallProfileForLine(line, line?._sectionTitle || "", line?._sourceGroup || getCurrentGroup());
+    if (!profile) return {profile:null, entries:[]};
+    const core = coreConfiguredEntries(line, line?._sectionTitle || "", line?._sourceGroup || getCurrentGroup());
+    const normal = rawConfiguredEntries(line, "normal");
+    const all = [...core, ...normal];
+    const byAnswer = new Map();
+    all.forEach(entry => {
+      const key = normalize(entry.answer);
+      if (key && !byAnswer.has(key)) byAnswer.set(key, entry);
+    });
+    const pinned = (profile.pinnedAnswers || []).map(answer => {
+      const key = normalize(answer);
+      const existing = byAnswer.get(key);
+      if (existing) return {...existing, pinned:true, examPriority:true, coreLike:true, examCore:true};
+      if (line?.text?.includes(answer)) return {answer, gapId:`exam-${stableHash(`${line?.id || ""}|${answer}`)}`, pinned:true, examPriority:true, coreLike:true, examCore:true};
+      return null;
+    }).filter(Boolean);
+    const priorityAtoms = (profile.priorityAnswers || []).map(answer => {
+      const key = normalize(answer);
+      const existing = byAnswer.get(key);
+      if (existing) return {...existing, pinned:false, examPriority:true, coreLike:true, examCore:false};
+      if (line?.text?.includes(answer)) return {answer, gapId:`exam-priority-${stableHash(`${line?.id || ""}|${answer}`)}`, pinned:false, examPriority:true, coreLike:true, examCore:false};
+      return null;
+    }).filter(Boolean);
+    const coreKeys = new Set(core.map(entry => normalize(entry.answer)).filter(Boolean));
+    const ordered = [
+      ...pinned,
+      ...priorityAtoms,
+      ...core.map(entry => ({...entry, pinned:false, examPriority:false, coreLike:true, examCore:true})),
+      ...normal.map(entry => ({...entry, pinned:false, examPriority:false, coreLike:false, examCore:false}))
+    ];
+    const accepted = [];
+    const exactSeen = new Set();
+    ordered.forEach(entry => {
+      const key = normalize(entry.answer);
+      if (!key || exactSeen.has(key) || !line?.text?.includes(entry.answer)) return;
+      const priority = entry.pinned ? 3 : practicalEntryPriority(entry, line, Boolean(entry.coreLike));
+      if (priority <= 0) return;
+      const overlaps = accepted.some(existing => {
+        const a = normalize(existing.answer), b = key;
+        return a && b && (a.includes(b) || b.includes(a));
+      });
+      // direct-exam pinned answer wins. Otherwise keep the earlier core atom and reject overlapping reserve forms.
+      if (overlaps && !entry.pinned) return;
+      if (overlaps && entry.pinned) {
+        for (let i = accepted.length - 1; i >= 0; i--) {
+          const a = normalize(accepted[i].answer);
+          if (a && (a.includes(key) || key.includes(a)) && !accepted[i].pinned) {
+            exactSeen.delete(a);
+            accepted.splice(i, 1);
+          }
+        }
+      }
+      exactSeen.add(key);
+      accepted.push({...entry, priority, examCore:Boolean(entry.pinned || coreKeys.has(key) || entry.examCore)});
+    });
+    return {profile, entries:accepted};
+  }
+
+  function selectExamDrivenPracticalEntries(line) {
+    const cacheKey = practicalLineKey(line);
+    const cached = practicalComboCache.get(cacheKey);
+    const {profile, entries:base} = examAtomicBank(line);
+    if (!profile || !base.length) return [];
+
+    if (cached?.length) {
+      const byId = new Map(base.map(entry => [entry.gapId, entry]));
+      const restored = cached.map(id => byId.get(id)).filter(Boolean);
+      if (restored.length) {
+        if (!practicalPresentationTokens.has(cacheKey)) practicalPresentationTokens.set(cacheKey, `p${++practicalPresentationSerial}`);
+        return restored;
+      }
+    }
+
+    practicalStats.targets = practicalStats.targets || {};
+    practicalStats.lines = practicalStats.lines || {};
+    const lineStats = practicalStats.lines[cacheKey] || {lastCombo:[], presentations:0};
+    const withStats = base.map(entry => {
+      const stat = practicalStats.targets[practicalTargetKey(line, entry.gapId)] || {shown:0, correct:0, near:0, unknown:0, wrong:0, lastResult:"", successDays:[]};
+      return {...entry, stat};
+    });
+    const desired = PracticalEngine.desiredExamSetCount(base.length, withStats, profile);
+    const scored = withStats.map(entry => {
+      let score = PracticalEngine.scoreTarget(entry.stat, entry.priority, {
+        wasLastCombo:(lineStats.lastCombo || []).includes(entry.gapId),
+        jitter:Math.random() * 0.35
+      });
+      if (entry.pinned) score += 4;
+      else if (entry.examPriority) score += 2.5;
+      else if (entry.examCore) score += 1.5;
+      else score -= 3;
+      return {...entry, score};
+    }).sort((a,b) => b.score - a.score);
+
+    const visibleChars = normalize(line.text).length || line.text.length || 1;
+    const maxChars = Math.max(2, Math.floor(visibleChars * PracticalEngine.examCoverageLimit(profile)));
+    const selected = [];
+    for (const entry of scored) {
+      const tentative = [...selected, entry];
+      if (!practicalSelectionRendersEveryTarget(line, tentative)) continue;
+      if (practicalRenderedCharCount(line, tentative) > maxChars && !PracticalEngine.isObservedProductionSet(tentative, profile)) continue;
+      selected.push(entry);
+      if (selected.length >= desired) break;
+    }
+    if (!selected.length) {
+      const fallback = scored.find(entry => practicalRenderedCharCount(line, [entry]) <= maxChars) ||
+        scored.slice().sort((a,b) => practicalRenderedCharCount(line, [a]) - practicalRenderedCharCount(line, [b]))[0];
+      if (fallback) selected.push(fallback);
+    }
+
+    const combo = selected.map(entry => entry.gapId);
+    practicalComboCache.set(cacheKey, combo);
+    practicalPresentationTokens.set(cacheKey, `p${++practicalPresentationSerial}`);
+    lineStats.lastCombo = combo;
+    lineStats.presentations = Number(lineStats.presentations || 0) + 1;
+    lineStats.lastExamProfile = {
+      family:profile.family,
+      observedMaxUnits:profile.observedMaxUnits,
+      trainingMaxUnits:profile.trainingMaxUnits,
+      directExam:profile.directExam,
+      demandKind:profile.demandKind
+    };
+    practicalStats.lines[cacheKey] = lineStats;
+    savePracticalStats();
+    return selected;
+  }
+
   function selectPracticalEntries(line) {
     const cacheKey = practicalLineKey(line);
     const cached = practicalComboCache.get(cacheKey);
@@ -978,7 +1140,7 @@
     for (const entry of scored) {
       const tentative = [...selected, entry];
       if (!practicalSelectionRendersEveryTarget(line, tentative)) continue;
-      if (practicalRenderedCharCount(line, tentative) > maxChars) continue;
+      if (practicalRenderedCharCount(line, tentative) > maxChars && !PracticalEngine.isObservedProductionSet(tentative, profile)) continue;
       selected.push(entry);
       if (selected.length >= desired) break;
     }
@@ -1306,8 +1468,10 @@
   }
 
   function configuredGapEntries(line, difficulty) {
-    if (difficulty === "practical" && isRecallCourse()) return []; // 6과목 실전은 빈칸이 아니라 통회상 UI에서 처리한다.
+    if (difficulty === "recall" && isRecallCourse()) return []; // 통회상은 별도 UI에서 처리한다.
     if (difficulty === "easy" && isRecallCourse()) return coreConfiguredEntries(line);
+    if (difficulty === "practical" && isRecallCourse() && isExamComboPracticalCourse()) return selectExamDrivenPracticalEntries(line);
+    if (difficulty === "practical" && isRecallCourse()) return []; // 아직 migration 전인 4과목은 기존 통회상 실전을 유지한다.
     if (difficulty === "practical") return selectPracticalEntries(line);
     if (difficulty === "yaho") {
       const answers = hasCustomYaho(line) ? line.yaho : splitSentenceUnits(line.text).sentences;
@@ -1641,6 +1805,34 @@
     return p;
   }
 
+
+
+  function isStage5PilotSubject(subjectKey){ return !!window.CurriLoopPilotPolicyEngine?.isPilotSubject?.(subjectKey); }
+  function normalizePilotAnswer(v){ return String(v||'').normalize('NFKC').replace(/[\s,.;:!?·ㆍ・∙‧⋅\-_/()\[\]{}'"“”‘’]+/g,'').toLowerCase(); }
+  function createPilotPolicyTaskBlock(unit, section){
+    const wrap=document.createElement('div'); wrap.className='pilot-policy-task-block';
+    const seen=new Set(); let count=0;
+    (section.lines||[]).forEach(line=>{
+      const tasks=window.CurriLoopPilotPolicyEngine.tasksForLine(line.id);
+      tasks.forEach(task=>{ if(seen.has(task.canonicalAtomId)) return; seen.add(task.canonicalAtomId); count++;
+        const card=document.createElement('div'); card.className=`pilot-task grade-${task.grade.toLowerCase()}`; card.dataset.canonicalAtomId=task.canonicalAtomId; card.dataset.grade=task.grade;
+        const meta=document.createElement('div'); meta.className='pilot-task-meta'; meta.textContent=`${task.grade} · ${window.CurriLoopPilotPolicyEngine.taskKind(task.grade)} · 출처 ${task.sourceLineIds.join(', ')}`; card.appendChild(meta);
+        const prompt=document.createElement('div'); prompt.className='pilot-task-prompt';
+        prompt.textContent=task.grade==='S'?'제시 없이 정확한 핵심 답을 쓰세요.':task.grade==='A'?'핵심 구조·구성요소·관계를 백지에서 복원하세요.':task.grade==='B'?'임용 서술에 쓸 핵심 의미·이유·조건을 짧게 쓰세요.':'다음 중 이 교육과정 지식에 해당하는 항목을 고르세요.'; card.appendChild(prompt);
+        if(task.grade==='C'){
+          const choices=(task.choices||[task.label]).slice().sort((a,b)=>normalizePilotAnswer(a).localeCompare(normalizePilotAnswer(b)));
+          choices.forEach((choice,i)=>{const lab=document.createElement('label');lab.className='pilot-choice';const radio=document.createElement('input');radio.type='radio';radio.name=`pilot-${task.canonicalAtomId}`;radio.value=choice;lab.appendChild(radio);lab.appendChild(document.createTextNode(' '+choice));card.appendChild(lab);});
+        }else{
+          const input=document.createElement(task.grade==='S'?'input':'textarea'); input.className='pilot-production-input'; if(input.tagName==='TEXTAREA')input.rows=2; input.placeholder=task.grade==='S'?'정확 답 입력':'핵심 근거 입력'; card.appendChild(input);
+        }
+        const btn=document.createElement('button');btn.type='button';btn.className='btn small';btn.textContent='채점';const fb=document.createElement('div');fb.className='pilot-task-feedback';
+        btn.addEventListener('click',()=>{let ok=false;if(task.grade==='C'){const sel=card.querySelector('input[type=radio]:checked');ok=!!sel&&normalizePilotAnswer(sel.value)===normalizePilotAnswer(task.label);}else{const val=card.querySelector('.pilot-production-input')?.value||'';const n=normalizePilotAnswer(val);const targets=(task.surfaceLabels||[]).map(normalizePilotAnswer).filter(Boolean);const canon=normalizePilotAnswer(task.label);ok=!!window.CurriLoopPilotPolicyEngine?.gradeTask?.(task,val)?.ok;}fb.textContent=ok?'통과':'재학습 필요';fb.className=`pilot-task-feedback ${ok?'correct':'wrong'}`; const ck=`pilot|canonical|${task.canonicalAtomId}`; updateMastery(ck, ok?'correct':'wrong', makeGradingEventToken('pilot',ck,`${ok?'correct':'wrong'}|${Date.now()}`)); recordPlannerStudyActivity(Date.now());});
+        card.appendChild(btn);card.appendChild(fb);wrap.appendChild(card);
+      });
+    });
+    if(!count){const note=document.createElement('div');note.className='pilot-no-active';note.textContent='이 구획에는 active S/A/B/C task가 없습니다. 공식 원문은 읽기 자료로 유지됩니다.';wrap.appendChild(note);}
+    return wrap;
+  }
 
   function recallMemoryTier(section) {
     return RecallEngine.memoryTier(section?.title || "", section?._sourceGroup || getCurrentGroup());
@@ -2182,7 +2374,7 @@
         const token = makeGradingEventToken(review ? "review-recall" : "subject-recall", sectionKey, signature);
         if (!review) recordPlannerAssessmentOutcome(`recall|${sectionKey}`, status, "recall", plannerAccuracy);
         masteryItem = updateRecallSectionMastery(sectionKey, status, token);
-        if (!review && getCurrentDifficulty() === "practical") {
+        if (!review && isHolisticRecallFill(unit)) {
           practicalGradeSerial += 1;
           if (kind === "concept" || kind === "keyword") {
             distributedSubset(repairTargets, 4).forEach(target => scheduleConceptRetryTarget(unit, section, target, status === "near" ? "near" : status));
@@ -2533,10 +2725,14 @@
       structure: "헷갈리는 내용체계 범주를 구별하고 성취기준과 해설을 연결"
     };
     const baseStatus = statusByMode[studyMode] || "";
-    const pilotPractical = isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical";
-    document.getElementById("studyStatus").textContent = pilotPractical
-      ? "실전 통회상 · 지식·이해/과정·기능은 목록 전체, 성취기준은 문장 전체"
-      : (isRecallCourse(unit) && studyMode === "fill" ? `핵심 빈칸 · ${baseStatus}` : baseStatus);
+    const recallFill = isRecallCourse(unit) && studyMode === "fill";
+    const difficulty = getCurrentDifficulty();
+    const statusText = !recallFill ? baseStatus
+      : difficulty === "recall" ? "통회상 · 단서만 보고 전체 항목/문장 또는 핵심 관계를 자유회상"
+      : difficulty === "practical" && isExamComboPracticalCourse(unit) ? "실전 조합 · 기출 요구량 기준 1세트부터 시작해 숙련 시 조합 수 증가"
+      : difficulty === "practical" ? "실전 통회상 · 아직 조합형 migration 전 과목"
+      : `핵심 빈칸 · ${baseStatus}`;
+    document.getElementById("studyStatus").textContent = statusText;
 
     const nav = document.getElementById("unitNav");
     const randomMode = document.getElementById("areaSelect").value === "random";
@@ -2602,8 +2798,11 @@
       if (isRecallCourse(unit)) addMemoryTierBadge(th, section);
 
       const td = document.createElement("td");
-      const holistic = isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical" && practicalRecallKind(section, unit.subject);
-      if (holistic) {
+      const pilotPolicy = isStage5PilotSubject(unit.subject) && studyMode === "fill";
+      const holistic = !pilotPolicy && isHolisticRecallFill(unit) && practicalRecallKind(section, unit.subject);
+      if (pilotPolicy) {
+        td.appendChild(createPilotPolicyTaskBlock(unit, section));
+      } else if (holistic) {
         const block = createHolisticRecallBlock(unit, section, {scope:"study", persistDraft:true, showGradeButton:true});
         if (block) td.appendChild(block);
       } else {
@@ -2642,7 +2841,7 @@
   }
 
   function difficultyLabel(value) {
-    return ({ easy: "핵심", normal: "정밀", yaho: "야~호!", practical: "실전" })[value] || (value === "hard" ? "정밀" : value);
+    return ({ easy: "핵심", normal: "정밀", yaho: "야~호!", practical: "실전", recall: "통회상" })[value] || (value === "hard" ? "정밀" : value);
   }
 
 
@@ -2713,7 +2912,7 @@
     document.getElementById("subjectSelect").value = subject || "all";
     const restoredGroup = normalizeSelectedGroup(saved.group || "all");
     if (["all", ...SUBJECT_GROUPS].includes(restoredGroup)) document.getElementById("groupSelect").value = restoredGroup;
-    if (["easy","normal","yaho","practical"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
+    if (["easy","normal","yaho","practical","recall"].includes(saved.difficulty)) document.getElementById("difficultySelect").value = saved.difficulty;
     if (["all","competency","history","hours","subjects"].includes(saved.generalCategory)) document.getElementById("generalCategory").value = saved.generalCategory;
 
     fillAreaSelect();
@@ -2761,6 +2960,7 @@
   // IndexedDB를 쓸 수 없는 환경의 원자적 fallback. history/mastery를 한 JSON 객체로 저장한다.
   const FALLBACK_STATE_KEY = "curriloop-learning-fallback-state-v1";
   const QUARANTINE_FALLBACK_KEY = "curriloop-migration-quarantine-v1";
+  const POLICY_MIGRATION_BACKUP_KEY = "curriloop-policy-migration-backup-v1";
   // v6.2: 기존 핵심의 큰 빈칸을 작은 stable gap으로 분할한 1회성 마이그레이션 버전.
   const CORE_SPLIT_MIGRATION_VERSION = 1;
 
@@ -2901,6 +3101,11 @@
       const migrated = {};
       let changed = false;
       const seedCoreSplits = Number(learningStateMemory.coreSplitMigrationVersion || 0) < CORE_SPLIT_MIGRATION_VERSION;
+      const policyLegacyGroups = new Map();
+      const policyLegacyKeys = Object.keys(raw).filter(key => key.startsWith("subject|") && (() => { const p=key.split("|"); return window.CurriLoopPilotPolicyEngine?.isPilotSubject?.(p[1]); })());
+      if (policyLegacyKeys.length && !localStorage.getItem(POLICY_MIGRATION_BACKUP_KEY)) {
+        safeSetLocalStorage(POLICY_MIGRATION_BACKUP_KEY, JSON.stringify({savedAt:new Date().toISOString(), mastery:raw}));
+      }
 
       const merge = (key, item) => {
         const prev = migrated[key];
@@ -2928,8 +3133,21 @@
           if (q) nextKey = conceptKeyForGeneral(q.id);
         } else if (key.startsWith("subject|")) {
           nextKey = migrateSubjectConceptKey(key);
+        } else if (key.startsWith("pilot|")) {
+          const pilotParts = key.split("|");
+          if (pilotParts.length >= 3 && pilotParts[1] !== "canonical") nextKey = `pilot|canonical|${pilotParts.slice(2).join("|")}`;
         }
         if (nextKey !== key) changed = true;
+        if (nextKey.startsWith("subject|")) {
+          const p=nextKey.split("|"); const gapId=String(p[5]||"").replace(/^gap:/,"");
+          const mapped=window.CurriLoopPilotPolicyEngine?.legacyGapMapping?.(p[1],p[4],gapId);
+          if (mapped && mapped.confidence !== "ambiguous") {
+            const list=policyLegacyGroups.get(mapped.canonicalAtomId)||[];
+            list.push({key:nextKey,gapId,item:{...(item||{})},mapping:mapped}); policyLegacyGroups.set(mapped.canonicalAtomId,list);
+            changed=true;
+            return;
+          }
+        }
         const retiredSplitTargets = nextKey.startsWith("subject|")
           ? [...normalSplitTargetConceptKeys(nextKey), ...yahoSplitTargetConceptKeys(nextKey)]
           : [];
@@ -2959,6 +3177,15 @@
         learningStateMemory.coreSplitMigrationVersion = CORE_SPLIT_MIGRATION_VERSION;
         changed = true;
       }
+
+      // v8.0 Stage 7R: deterministic legacy gap -> canonical migration.
+      // Raw legacy mastery is backed up above. S/A/B never inherit full mastery from fragmented gap success.
+      // C may inherit mastery only when every deterministically mapped legacy gap for that canonical is present and mastered.
+      policyLegacyGroups.forEach((records, canonicalAtomId) => {
+        const seed=window.CurriLoopPilotPolicyEngine?.legacyMigrationSeed?.(canonicalAtomId,records,Date.now());
+        if (!seed) return; // X is archive-only and never receives an active canonical mastery record.
+        merge(`pilot|canonical|${canonicalAtomId}`,seed);
+      });
 
       // v7.5.1: 과거 v7.5.0에서 2회 성공만으로 mastered=true가 된 통회상 기록을
       // 새 기준(7일 간격 재인출까지 성공, correctStreak>=4)에 맞춰 재해석한다.
@@ -3120,6 +3347,7 @@
     const parts = String(key || "").split("|");
     if (parts[0] !== "subject" || parts.length < 7) return true;
     const [, subjectKey, areaName, , lineId, gapToken] = parts;
+    if (window.CurriLoopPilotPolicyEngine?.isPilotSubject?.(subjectKey)) return false;
     if (!String(gapToken || "").startsWith("gap:")) return false;
     const meta = findLineIdentity(subjectKey, areaName, lineId, "");
     if (!meta) return false;
@@ -3183,7 +3411,7 @@
   const HISTORY_EVENT_LIMIT = 100;
 
   function normalizeStoredDifficulty(copy) {
-    const legacyLabelMap = {"쉬움":"easy", "보통":"normal", "어려움":"normal", "핵심":"easy", "정밀":"normal", "야~호!":"yaho", "실전":"practical"};
+    const legacyLabelMap = {"쉬움":"easy", "보통":"normal", "어려움":"normal", "핵심":"easy", "정밀":"normal", "야~호!":"yaho", "실전":"practical", "통회상":"recall"};
     let key = copy.difficultyKey || legacyLabelMap[copy.difficultyLabel] || "";
     if (key === "hard") key = "normal";
     if (key && ["easy","normal","yaho","practical"].includes(key)) {
@@ -3600,6 +3828,15 @@
         lineIds:section.lines.map(line => line.id).filter(Boolean), attempts:0, resolved:false
       };
     }
+    if (parts[0] === "pilot" && parts.length >= 3) {
+      const canonicalKey = parts[1] === "canonical";
+      const subjectKey = canonicalKey ? "" : parts[1];
+      const canonicalAtomId = canonicalKey ? parts.slice(2).join("|") : parts.slice(2).join("|");
+      const task = window.CURRILOOP_PILOT_POLICY?.tasks?.find(t => t.canonicalAtomId === canonicalAtomId && t.grade !== "X" && (canonicalKey || t.subject === subjectKey || (t.subjects||[]).includes(subjectKey)));
+      if (!task) return null;
+      const displaySubject = subjectKey || task.subject;
+      return {type:"pilot", key:conceptKey, conceptKey, subjectKey:displaySubject, subjectLabel:subjectLabels[displaySubject] || displaySubject, area:(task.areas||[])[0] || "", sourceGroup:"policy", groupKey:"policy", groupLabel:"Stage 3R", lineId:task.ownerLineId, canonicalAtomId, grade:task.grade, task, context:task.label, answerText:task.label, correctAnswer:task.label, aliases:task.surfaceLabels || [], attempts:0, resolved:false};
+    }
     if (parts[0] !== "subject" || parts.length < 7) return null;
     const [, subjectKey, area, sourceGroup, lineId, gapToken, occurrenceRaw] = parts;
     if (!String(gapToken || "").startsWith("gap:")) return null;
@@ -3686,15 +3923,15 @@
         const block = createHolisticRecallBlock({subject:item.subjectKey, area:item.area}, item.section, {scope:"review", persistDraft:false, showGradeButton:false});
         if (block) recallArea.appendChild(block);
       }
+    } else if (item.type === "pilot" && item.grade === "C") {
+      prompt.textContent = "다음 중 해당 교육과정 지식을 고르세요.";
+      input.classList.add("hidden"); input.value = "";
+      if (recallArea) { recallArea.innerHTML = ""; recallArea.classList.remove("hidden"); const box=document.createElement("div"); box.className="pilot-review-recognition"; (item.task.choices||[item.correctAnswer]).slice().sort((a,b)=>normalizePilotAnswer(a).localeCompare(normalizePilotAnswer(b))).forEach(choice=>{const lab=document.createElement("label");lab.className="pilot-choice";const r=document.createElement("input");r.type="radio";r.name="pilot-review-choice";r.value=choice;lab.appendChild(r);lab.appendChild(document.createTextNode(" "+choice));box.appendChild(lab);}); recallArea.appendChild(box); }
     } else {
       if (recallArea) { recallArea.classList.add("hidden"); recallArea.innerHTML = ""; }
-      prompt.textContent = item.type === "general"
-        ? (item.question || item.context || "")
-        : blankNth(item.context || "", item.correctAnswer || item.answerText || "", Number(item.answerOccurrence || 0));
-      input.classList.remove("hidden", "correct", "wrong", "unknown");
-      input.readOnly = false;
-      input.value = "";
-      input.placeholder = item.type === "general" ? "필요한 답을 모두 입력" : "정답을 떠올려 입력";
+      prompt.textContent = item.type === "general" ? (item.question || item.context || "") : item.type === "pilot" ? (item.grade === "S" ? "정확한 핵심 답을 쓰세요." : item.grade === "A" ? "핵심 구조를 복원하세요." : "핵심 의미·근거를 짧게 쓰세요.") : blankNth(item.context || "", item.correctAnswer || item.answerText || "", Number(item.answerOccurrence || 0));
+      input.classList.remove("hidden", "correct", "wrong", "unknown"); input.readOnly = false; input.value = "";
+      input.placeholder = item.type === "general" ? "필요한 답을 모두 입력" : item.type === "pilot" ? "정답 입력" : "정답을 떠올려 입력";
     }
     primary.textContent = "채점";
     primary.onclick = reviewPrimaryAction;
@@ -4155,7 +4392,10 @@
     }
 
     let grading = {status:"unknown", reason:"empty"};
-    if (item.type === "general") {
+    if (item.type === "pilot") {
+      if (item.grade === "C") { const selected=document.querySelector("#reviewRecallArea input[name='pilot-review-choice']:checked"); grading={status:selected && normalizePilotAnswer(selected.value)===normalizePilotAnswer(item.correctAnswer)?"correct":"wrong", reason:"recognition"}; }
+      else { const n=normalizePilotAnswer(input.value); const targets=(item.task?.surfaceLabels||[]).map(normalizePilotAnswer).filter(Boolean); const canon=normalizePilotAnswer(item.correctAnswer); const ok=!!window.CurriLoopPilotPolicyEngine?.gradeTask?.(item.task||item.canonicalAtomId,input.value)?.ok; grading={status:ok?"correct":"wrong",reason:item.grade}; }
+    } else if (item.type === "general") {
       const q = generalBank.find(q => q.id === item.generalId);
       if (normalize(input.value)) grading = {status:q && isGeneralAnswerCorrect(q, input.value) ? "correct" : "wrong", reason:"exact"};
     } else {
@@ -5558,7 +5798,7 @@
       practicalSetRecoveryCount = 0;
     }
 
-    if (isRecallCourse(unit) && studyMode === "fill" && getCurrentDifficulty() === "practical") {
+    if (isHolisticRecallFill(unit)) {
       const blocks = [...document.querySelectorAll("#studyArea .holistic-recall")];
       if (blocks.length) {
       const statuses = blocks.map(block => block.dataset.gradedStatus || "");
@@ -6523,7 +6763,7 @@
     const base = [
       {mode:"original", difficulty:"easy", label:"원문 읽기", guide:"전체 흐름을 한 번 읽습니다. 외우려고 오래 붙잡지 마세요."},
       {mode:"fill", difficulty:"easy", label:"핵심 빈칸", guide:"핵심 명사·행동동사를 정확히 꺼냅니다. 틀린 것은 몇 문항 뒤 다시 나옵니다."},
-      {mode:"fill", difficulty:"practical", label:"실전 통회상", guide:"지식·이해/과정·기능은 목록 전체, 성취기준은 문장 전체를 꺼냅니다. 나머지는 핵심어와 관계를 확인합니다."}
+      {mode:"fill", difficulty:"practical", label:"실전 조합", guide:"기출에서 요구된 답안 단위를 기준으로 처음에는 한 세트씩, 숙련되면 여러 세트를 조합해 인출합니다. 통회상은 별도 방식으로 분리됩니다."}
     ];
     const areaComplete = PlannerEngine.completesArea(plannerStudySections, state, session);
     const hasStructure = areaComplete && StructureEngine.hasQuestions(curriculumData, session.subjectKey, session.area);
