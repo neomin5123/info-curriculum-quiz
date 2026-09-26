@@ -20,7 +20,8 @@
   // -------------------------
   // 2) 교육과정 데이터
   // line(text, 핵심 키워드, 정밀 키워드)
-  // v7.8.1: 2022 정보과 6과목 모두 핵심 빈칸 + 실전 통회상 + 구조 연습 체계를 사용한다.
+  // Working area-audit checkpoint: 중학교 정보 5영역은 공식 [별책10] 원문 source-lock 완료, 고등학교 정보는 컴퓨팅 시스템·데이터 2영역까지 source-lock 완료했다.
+  // 기존 6과목 통회상 + 구조 연습 체계와 과목별 semantic gap override는 유지한다.
   // -------------------------
 
   const subjectSourceMeta = {
@@ -88,8 +89,8 @@
   let reviewLastStatus = "";
   let pendingServiceWorker = null;
   let storageWarningShown = false;
-  const APP_VERSION = "7.8.1";
-  const MANUAL_GAP_REVIEW = "2026-09-24 / v7.8.1 빈칸 강도 재분류 · 실전 자유회상 · 04:00 학습일 · 화면 배율 · 전 과목 Red Team";
+  const APP_VERSION = "7.8.7";
+  const MANUAL_GAP_REVIEW = "2026-09-26 / 중·고 정보 공식 공통부 누락 12항목 복구 · 기출 crosswalk 우선순위 반영 · 중 139문장/고 131문장 source completeness QA · 전체 674문장/6,327 gap 재산정";
   let gradingEventSerial = 0;
   let statePersistenceReady = false;
 
@@ -866,8 +867,21 @@
     const title = sectionTitle || line?._sectionTitle || "";
     const group = sourceGroup || line?._sourceGroup || getCurrentGroup();
     const tier = RecallEngine.memoryTier(title, group).key;
-    const raw = rawConfiguredEntries(line, "easy");
-    return IntensityEngine.selectCoreEntries(line, raw, title, group, tier);
+    const easy = rawConfiguredEntries(line, "easy");
+    if (tier === "exact") return easy;
+    const override = IntensityEngine.lineOverrides?.[String(line?.id || "")];
+    if (!Array.isArray(override) || !override.length) {
+      return IntensityEngine.selectCoreEntries(line, easy, title, group, tier);
+    }
+    const seen = new Set(easy.map(entry => normalize(entry.answer)));
+    const candidates = easy.slice();
+    rawConfiguredEntries(line, "normal").forEach(entry => {
+      const key = normalize(entry.answer);
+      if (!key || seen.has(key)) return;
+      seen.add(key);
+      candidates.push(entry);
+    });
+    return IntensityEngine.selectCoreEntries(line, candidates, title, group, tier);
   }
 
   function practicalRecallKind(section, subjectKey = "") {

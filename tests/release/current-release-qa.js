@@ -32,8 +32,8 @@ assert(html.includes('id="todayStartButton"'),'today start button');
 assert(html.includes('id="todayRecentAccuracy"'),'recent recall accuracy UI');
 assert(typeof P.noteSessionAssessment==='function' && typeof P.sessionPerformanceSummary==='function' && typeof P.adaptPace==='function','speed x accuracy planner API');
 assert(typeof P.noteSessionStudyProgress==='function','planner session progress persistence API');
-assert(html.includes('/js/engines/planner-engine.js?v=7.8.1'),'planner engine script');
-assert(html.includes('/data/learning-aids/gap-intensity.js?v=7.8.1') && html.includes('/js/engines/intensity-engine.js?v=7.8.1'),'gap intensity metadata/engine scripts');
+assert(html.includes('/js/engines/planner-engine.js?v=7.8.7'),'planner engine script');
+assert(html.includes('/data/learning-aids/gap-intensity.js?v=7.8.7') && html.includes('/js/engines/intensity-engine.js?v=7.8.7'),'gap intensity metadata/engine scripts');
 assert(app.includes('isLongTermReviewEligible'),'long-term review consolidation');
 assert(app.includes('startPlannedNewStudy') && app.includes('completePlannedStudy'),'daily planner orchestration');
 assert(app.includes('AUTO_PLANNER_SUBJECT_ORDER = ["middle-info", "high-info", "ai-basic", "data-science", "info-science", "software-life"]'),'today auto planner covers six courses');
@@ -114,8 +114,8 @@ assert(bank.questions.length===31,`question count ${bank.questions.length}`);
 assert(bank.questions.filter(q=>q.points===4).length===24,'4pt count');
 assert(bank.questions.filter(q=>q.points===2).length===7,'2pt count');
 assert(bank.meta.rulesVersion==='1.6','rules version');
-assert(html.includes('v7.8.1'),'version label');
-assert(html.includes('/js/engines/structure-engine.js?v=7.8.1'),'structure engine script');
+assert(html.includes('v7.8.7'),'version label');
+assert(html.includes('/js/engines/structure-engine.js?v=7.8.7'),'structure engine script');
 assert(html.includes('31문항'),'UI count');
 assert(html.includes('정확히 20점'),'20-point set description');
 assert(ui.includes('renderExamText'),'exam text renderer');
@@ -229,4 +229,4 @@ for(let seed=1;seed<=100;seed++){
   const total=ids.reduce((sum,id)=>sum+bank.questions.find(q=>q.questionId===id).points,0);
   assert(total===20,`high-info total ${total}`);
 }
-console.log(`v7.8.1 Six-Course QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);
+console.log(`v7.8.7 Six-Course QA: OK (questions=${bank.questions.length}, 4pt=24, 2pt=7, units=${totalUnits}, mappings=${maps.length}, multiUnitTasks=${multiUnitTasks})`);

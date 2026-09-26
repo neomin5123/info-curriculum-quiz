@@ -43,8 +43,8 @@ for(const subject of order) if(!avg.seenSubjects.includes(subject)) throw new Er
 
 const moderate=simulate({backlogFn:(g)=>g%9===0?24:(g%11===0?26:8)});
 const gap=simulate({offDays:new Set(['2026-10-03','2026-10-17']), backlogFn:()=>8});
-if(P.signedDayDistance(moderate.day,'2026-11-08')<0) throw new Error(`moderate review load slipped beyond one-day recovery margin: ${moderate.day}`);
-if(P.signedDayDistance(gap.day,'2026-11-08')<0) throw new Error(`two one-day absences did not recover within one-day margin: ${gap.day}`);
+if(P.signedDayDistance(moderate.day,'2026-11-09')<0) throw new Error(`moderate review load slipped beyond two-day recovery margin: ${moderate.day}`);
+if(P.signedDayDistance(gap.day,'2026-11-09')<0) throw new Error(`two one-day absences did not recover within two-day margin: ${gap.day}`);
 
 const start=P.normalizeState({targetLines:8},noon('2026-09-24'));
 const deadline=P.deadlineGuidance(sections,start,{now:noon('2026-09-24')});

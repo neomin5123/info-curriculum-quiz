@@ -15,6 +15,10 @@ node tests/engines/support-engines.test.js
 node tests/practice/practice-engine.test.js
 node tests/data/static-qa.js
 node tests/data/middle-info-recall-qa.js
+node tests/data/middle-info-gap-semantic-qa.js
+node tests/data/high-info-gap-semantic-qa.js
+node tests/data/ai-basic-gap-semantic-qa.js
+node tests/data/data-science-gap-semantic-qa.js
 node tests/release/current-release-qa.js
 node tests/simulation/planner-pace-simulation.js
 node tests/simulation/guided-scope-simulation.js

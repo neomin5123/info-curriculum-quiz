@@ -1,3 +1,50 @@
+## v7.8.7 공식 corpus 누락 12항목 복구 (WORKING)
+
+- 기출 crosswalk에서 발견한 중·고 정보 공통 교수⋅학습·평가 **12개 공식 항목(중 5, 고 7)**을 공개된 2022 개정 정보과 교육과정 최종안과 재대조한 뒤 corpus에 복구했다.
+- 기존 line ID는 변경하지 않고 신규 ID만 추가했다. 중학교 정보는 **139문장**, 고등학교 정보는 **131문장**, 6과목 전체는 **674문장 / 6,327 gaps**가 되었다.
+- 복구 문장의 핵심 빈칸은 최근 2022 개정 직접 기출(2024~2026)을 최우선으로 하되, 공통부 암기 강도 원칙(키워드 또는 +@)을 유지하도록 별도 semantic override로 관리한다.
+- 이전 `KNOWN_SOURCE_GAP` 경고 테스트를 제거하고, 12개 항목의 실제 존재·배치·핵심 인출을 검증하는 source-completeness QA로 교체했다.
+- production 문제은행, 2015 transition, 2015↔2022 mapping은 이번 복구에서 변경하지 않았다.
+- 이 파일은 **FINAL이 아니라 rolling WORKING checkpoint**다.
+
+## v7.8.6 기출 Crosswalk 재감사 상태
+
+- 중학교 정보 134문장 + 고등학교 정보 124문장을 2014~2026 전공 기출의 교육과정 출제 형식과 다시 대조했다.
+- 현재 직접 수정된 빈칸은 `MI-03-AC-CO-02` 1건이며, 2024 전공B가 직접 활용한 `학생의 수준 / 적합한 프로그래밍 언어`를 핵심 인출에 포함했다.
+- 기출 직접 출제 우선순위 QA를 추가했다.
+- **중요:** 기출과 공개 최종안을 통해 중·고 정보 공통 교수⋅학습·평가에서 12개 공식 항목 누락(중 5, 고 7)을 확인했다. 이번 체크포인트는 662/6,245 invariant를 임의 변경하지 않고 이 문제를 known source gap으로 고정한다. 즉 FINAL이 아니다.
+- 상세 근거: `docs/exams/MIDDLE_HIGH_EXAM_GAP_CROSSWALK.md`.
+
+# Working checkpoint — Middle + High Information full-subject re-review
+
+- **중학교 정보 134/134문장, 고등학교 정보 124/124문장**을 다시 검토했다. 기존 10개 내용 영역뿐 아니라 `성격·목표·교수⋅학습·평가` 공통 문장(중 23, 고 21)까지 source-lock과 semantic gap QA에 포함한다.
+- 이번 재검토에서 공식 표기와 어긋난 **12 line object**만 교정했다. 주요 유형은 공식 `⋅` 구분점, `‘정보’` 인용부호, `학습 격차` 띄어쓰기 등이다. 문장 수와 기존 6,245 gap inventory는 변하지 않는다.
+- 공통부는 암기 강도 원칙에 맞게 다시 낮췄다. `성격/교수학습·평가`는 키워드 중심, `목표`는 키워드+@ 중심이며, 한 문장의 일반 문구를 30~40%씩 복원시키던 선택을 줄였다.
+- 정확 암기 대상은 그대로 유지한다: 중학교 정보 59문장, 고등학교 정보 52문장. 비정확 암기 대상은 각각 75/72문장 모두 line-level semantic override로 관리한다.
+- 전체 QA/Red Team 통과 상태이며, 6과목/33영역/662문장/6,245 gaps, 성취기준 123개, planner section 225개, EX-001~031/110채점단위, transition mapping 20개를 유지한다.
+- 이 파일은 **FINAL release가 아니라 rolling checkpoint**다.
+
+# Working checkpoint — High-school information 5-area source/gap re-audit
+
+- 고등학교 정보의 5개 내용 영역 103문장을 영역 단위로 재검수했다. 마지막 3영역(알고리즘과 프로그래밍 36, 인공지능 16, 디지털 문화 15)은 업로드된 공식 [별책10] HWP와 직접 대조하여 67/67 source-lock을 추가했다. 고등학교 정보 전체 124문장 중 나머지 21문장은 성격·목표·교수학습·평가 공통 부분이다.
+- 마지막 3영역에서 공식 표기와 달랐던 22문장(쉼표, `⋅`, `진로설계` 띄어쓰기)을 교정했다. 문장 수와 6,245 gap inventory 수는 유지한다.
+- 비정확 암기 문장 31개는 답안 가치가 높은 관계·구별·조건을 우선하도록 semantic override를 다시 지정했다. 가치·태도는 문장 복원 대신 핵심 개념 또는 태도 방향 하나를 우선한다.
+- 전체 intensity QA는 가치·태도 25.0%, 성취기준 해설 12.5%, 적용 시 고려 사항 13.4%로 상한 내에 있다.
+- 이 파일은 FINAL release가 아니라 다음 과목 검수를 위한 rolling checkpoint다.
+
+# WORKING CHECKPOINT — High Info Areas 1–2 official-HWP audit (2026-09-26)
+
+- 고등학교 정보 `컴퓨팅 시스템` 15문장과 `데이터` 21문장을 업로드된 공식 [별책10] HWP와 직접 대조해 source-lock 했다.
+- 공식 원문과 달랐던 쉼표·띄어쓰기·가운뎃점 표기를 교정했고, 해당 gap 문자열도 공식 표기와 일치시켰다.
+- 두 영역의 비정확 암기 문장은 임용 답안 가치가 높은 관계·구별·조건 중심으로 다시 고정했다.
+- 중학교 정보 5영역 111문장의 source-lock과 기존 6과목 플래너/복습/구조연습은 유지한다.
+- 이 파일은 FINAL release가 아니라 다음 영역 검수를 위한 rolling checkpoint다.
+
+
+### Current rolling checkpoint: middle-info areas 1–5 re-audit
+`컴퓨팅 시스템`, `데이터`, `알고리즘과 프로그래밍`, `인공지능`, `디지털 문화` have now been source-rechecked against the published 2022 information-curriculum wording. Source-lock QA covers **111 official lines** (19 + 22 + 33 + 21 + 16). The curriculum hash changes intentionally when punctuation/typography drift is corrected; sentence and gap counts remain unchanged.
+
+The latest pass corrected punctuation/typography drift in the AI/digital-culture areas and re-selected their semantic core gaps. It also exposed a pre-existing checkpoint regression: achievement-consideration average hidden coverage was 14.3%, above the 14.0% QA ceiling. Four previously reviewed consideration lines were de-intensified only at the gap-selection metadata layer; their official source text and source locks were not changed. Full intensity QA now passes (value-attitude 25.0%, commentary 13.0%, considerations 13.6%). Practical mode remains free recall rather than a denser blanking mode.
 # CurriLoop
 
 2022 개정 정보과 교육과정 암기·복습·기출형 연습 PWA입니다.
@@ -14,7 +61,43 @@
 - `tests/`: 현재 production에 대한 회귀 테스트
 - `archive/`: 과거 문제은행·규칙·QA·테스트
 
-현재 기능 버전은 **v7.8.1**입니다. `오늘 학습 시작` 하나로 2022 개정 정보과 **6과목 전체**를 순차 학습하며, 04:00 학습일 경계·복습 우선·통회상·누적 혼합·D-day 역산을 한 흐름으로 통합한 시험 대비 동결 후보판입니다.
+현재 기능 버전은 **v7.8.7**입니다. `오늘 학습 시작` 하나로 2022 개정 정보과 **6과목 전체**를 순차 학습하며, 04:00 학습일 경계·복습 우선·통회상·누적 혼합·D-day 역산을 한 흐름으로 통합한 시험 대비 동결 후보판입니다.
+
+
+
+## v7.8.5 데이터 과학 빈칸 의미 검수
+
+- 데이터 과학 공식 문장 104개 중 정확 암기 대상 45개는 기존 정확 인출 구조를 유지한다.
+- 나머지 59개 문장은 자동 gap 분산 선택 대신 문장별 의미 기반 override를 사용한다.
+- 정형/비정형 데이터, 편향·결측치·이상치, 군집 내 유사성/군집 간 상이성, 지지도·신뢰도·향상도, 평가 방법·예측률·정확도, 성찰→수정→일반화→공유 등 답안 가치가 높은 구별·지표·과정을 기존 gap inventory 안에서 우선한다.
+- 해설/고려사항의 핵심 빈칸은 대표 개념만 남기고 전체 목록은 실전 통회상에서 회수하도록 분리하여 문장 복원 부담을 억제한다.
+- 공식 원문과 기존 6,245개 gap inventory는 변경하지 않는다. 중학교 정보·고등학교 정보·인공지능 기초의 의미 검수 결과도 그대로 유지한다.
+
+## v7.8.4 인공지능 기초 빈칸 의미 검수
+
+- 인공지능 기초 공식 문장 96개 중 정확 암기 대상 44개는 기존 정확 인출 구조를 유지한다.
+- 나머지 52개 문장은 자동 gap 분산 선택 대신 문장별 의미 기반 override를 사용한다.
+- 지도학습·비지도학습·강화학습, 결측치·이상치·속성·전처리, 인간/알고리즘/데이터 편향, 사회적 책임·공정성, 지속가능발전목표, 인공지능 문제 해결 과정 등 답안 가치가 높은 열거·구별·과정은 기존 normal gap까지 재사용하여 보존한다.
+- 공식 원문과 기존 6,245개 gap inventory는 변경하지 않는다.
+- 중학교 정보 75문장, 고등학교 정보 72문장의 의미 검수 결과도 그대로 유지한다.
+
+## v7.8.3 고등학교 정보 빈칸 의미 검수
+
+- 이번 증분판에서는 **고등학교 정보만 추가로** 문장 단위 의미 검수를 완료했다. 중학교 정보의 v7.8.2 검수 결과는 그대로 유지한다.
+- 고등학교 정보 공식 124문장 중 `지식·이해 / 과정·기능 / 성취기준` 52문장은 기존 정확 통회상 구조를 유지한다.
+- 나머지 72문장은 자동 위치 분산이 아니라 문장별 semantic gap override를 지정했다.
+- 핵심 빈칸은 기존 `easy / normal` gap inventory 안에서 답안 가치가 높은 명사구·관계·열거·구별을 선택한다. 공식 curriculum 텍스트와 gap 총량은 수정하지 않는다.
+- `윤리적인 문제`, `유기적 연결`, `데이터의 이동`, `객체 지향`, `추상화 과정↔자동화 과정`, `인식·학습·추론·행동`처럼 기존 easy 후보보다 normal 후보가 더 정확한 경우에는 기존 normal gap을 핵심 단계에서 재사용한다.
+- 가치·태도는 조사만 남는 형태를 피하고 핵심 개념 또는 태도 방향 하나를 중심으로 인출하도록 조정했다.
+- 나머지 4과목은 아직 문장별 의미 전수검수 완료로 간주하지 않는다.
+
+## v7.8.2 중학교 정보 빈칸 의미 검수
+
+- 이번 증분판에서는 **중학교 정보만** 빈칸을 문장 단위로 재검수했다. 나머지 5과목은 v7.8.1의 일반 intensity 규칙을 그대로 사용한다.
+- 중학교 정보 공식 134문장 중 `지식·이해 / 과정·기능 / 성취기준` 59문장은 기존 정확 통회상 구조를 유지한다.
+- 나머지 75문장은 모두 line-level semantic override를 지정하여 위치 분산식 자동 선택을 사용하지 않는다.
+- 해설의 열거·구별·조건처럼 답안 가치가 높은 항목은 여러 gap을 유지하고, 일반적인 수식어·범용어·교수학습 상투어는 핵심 빈칸에서 제외했다.
+- 공식 curriculum / production 문제은행 / 2015 transition / mapping 파일은 변경하지 않았다. 6과목/33영역/662문장/6,245 gap invariant도 유지한다.
 
 ## v7.8.1 6과목 통합 학습판
 
@@ -34,7 +117,7 @@
 
 ### 현재 고정 불변식
 
-- 공식 2022 corpus: 6과목 / 33영역 / 662문장 / 6,245 gaps
+- 공식 2022 corpus: 6과목 / 33영역 / **674문장 / 6,327 gaps**
 - 성취기준: 123개(중등 정보 25, 고등 정보 23, 인공지능 기초 19, 데이터 과학 19, 정보과학 18, 소프트웨어와 생활 19)
 - 자동 플래너 section: 225개
 - 2015↔2022 전환 mapping: 20개

@@ -1,3 +1,119 @@
+# CurriLoop v7.8.7 — Official Source Completeness Repair (WORKING)
+
+- 2014~2026 전공 기출 crosswalk 중 발견한 중·고 정보 공통 교수⋅학습·평가 누락 12항목을 공개된 2022 개정 정보과 교육과정 최종안과 재검증하여 corpus에 복구했다: 중학교 5개, 고등학교 7개.
+- 기존 source line ID는 유지하고 신규 ID만 추가했다. 중학교 정보는 134→**139문장**, 고등학교 정보는 124→**131문장**, 전체 corpus는 662→**674문장**, gap inventory는 6,245→**6,327개**로 재산정되었다.
+- 복구 문장의 핵심 빈칸은 기출 우선순위와 공통부 암기 강도 원칙을 함께 적용했다. 특히 중학교 `학생의 디지털 역량 수준/추가적인 교육 기회`, 고등학교 `최소 성취수준/난이도에 따른 평가기준 세분화`를 직접 기출 우선 QA에 고정했다.
+- `middle-high-source-completeness-warning.js`를 제거하고 `middle-high-source-completeness-qa.js`로 대체하여, 12개 공식 항목의 존재·공통부 배치·전체 674문장 수를 자동 검증한다.
+- 기존 production 문제은행, 2015 transition, 2015↔2022 mapping은 byte-identical 상태를 유지한다.
+- 버전/서비스워커 캐시를 **v7.8.7**로 올렸고, 평균 first-pass는 2026-11-07(D-21)을 유지한다. 중간 복습 적체 또는 두 번의 1일 결석 시나리오는 복구된 학습량을 반영해 2026-11-09까지를 현실적 회복 범위로 재고정했다.
+
+---
+
+# CurriLoop v7.8.6 — Middle/High Exam Crosswalk Re-audit (WORKING)
+
+- `전공 기출_260921_105741.pdf`의 2014~2026 교육과정 출제 패턴을 중·고 정보 258문장의 핵심 빈칸과 다시 crosswalk했다.
+- 2024 전공B 직접 출제 근거에 따라 `MI-03-AC-CO-02` 핵심 인출을 `학생의 수준 / 적합한 프로그래밍 언어 / 초등학교 실과 / 프로젝트의 수준`으로 보강했다.
+- 최근 직접 출제된 자동화·추상화, 평가 루브릭, 보고서·포트폴리오, 압축·암호화 등은 기존 선택이 이미 기출 요구와 일치함을 회귀검사로 고정했다.
+- 기출과 한국과학창의재단 2022 개정 정보과 교육과정 시안(최종안)을 교차대조하여 현재 662문장 corpus의 중·고 정보 공통 교수⋅학습·평가 항목에 12개 누락이 있음을 확인했다(중 5, 고 7).
+- 기존 662문장/6,245 gap 불변 조건을 임의로 깨지 않기 위해 이번 WORKING 체크포인트에는 누락 12개를 삽입하지 않았다. 따라서 공식 corpus 완전성 FINAL이 아니다.
+- `middle-high-exam-priority-qa.js`와 `middle-high-source-completeness-warning.js`를 추가하여 기출 우선 빈칸과 알려진 source gap을 자동 검출한다.
+
+---
+
+## 2026-09-26 — Middle + High Information full-subject re-review checkpoint
+- Re-reviewed **all 134 middle-school information lines and all 124 high-school information lines**, extending source-lock coverage beyond the ten content areas to the previously less-audited common `성격 / 목표 / 교수⋅학습 / 평가` sections (middle common 23, high common 21).
+- Re-checked the common-section wording against the published 2022 information-curriculum final-draft pages. The uploaded [별책10] HWP was materialized successfully but could not be parsed by the available local HWP tooling, so no unverified HWP-only correction was inferred.
+- Corrected source typography/spacing drift in **12 line objects** only: official `⋅` separators, quoted `‘정보’`, `학습 격차`, and related source punctuation/spacing. A logical object diff confirms the other 650 curriculum lines are unchanged in this pass.
+- Re-tuned common-section semantic core gaps to match the agreed memory strength (`성격/교수학습·평가 = 키워드`, `목표 = 키워드 +@`) instead of sentence reconstruction. Major over-blanked common lines were reduced while preserving answer-worthy relations and conditions.
+- Middle-info semantic QA now source-locks the full **134/134** lines; high-info semantic QA source-locks the full **124/124** lines. Their exact-recall counts remain 59 and 52 respectively, with semantic override counts 75 and 72.
+- Full intensity QA passes after the re-review. Common-section hidden coverage is approximately **18.9% middle / 20.3% high** on average; remaining high percentages are short content-area lines with a single high-value target rather than near-total sentence masking.
+- Full engine/data/release/simulation Red Team passes. Invariants remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps / 123 standards / 225 planner sections / EX-001~031 / 110 answer units / 20 transition mappings.
+- `production.js`, 2015 transition reference, and 2015↔2022 mapping remain byte-identical to the incoming checkpoint. `curriculum.js` and `gap-intensity.js` change intentionally because of the source corrections and common-section semantic re-tuning.
+
+## 2026-09-26 — High Info Areas 3–5 official-HWP re-audit checkpoint
+- Re-audited `high-info / 알고리즘과 프로그래밍` (36 official lines), `인공지능` (16), and `디지털 문화` (15) directly against the uploaded official 교육부 고시 제2022-33호 [별책10] HWP (SHA-256 `49183b90ab752dc30c1405555cef2c5db5071044c48656ae1706e374d05585b2`).
+- Corrected official-source drift in 22 lines: commas, official `⋅` separator glyphs, and `진로설계` spacing. The remaining three high-school areas now match the extracted HWP text 67/67.
+- Added a 67-line source-lock snapshot tied to the uploaded HWP hash. High-school information now has source locks for all five content areas (103 area sentences total: 36 previously locked + 67 newly locked). The remaining 21 high-info sentences are common character/goal/teaching-assessment sections and were not part of this area-only pass.
+- Re-selected all 31 non-exact semantic core gaps in the three reviewed areas. Commentary prioritizes additions/distinctions not already exact-memorized in standards; considerations prioritize instructional conditions and transfer; value-attitude lines avoid sentence-reconstruction overload.
+- Reduced two value-attitude outliers after UI-level coverage review: algorithm-efficiency attitude now recalls only `적극적으로 탐구`, and collaborative problem solving recalls `협력적 문제 해결력`.
+- Full intensity QA passes: value-attitude avg 25.0% (limit 26%), achievement commentary avg 12.5% (limit 13%), achievement considerations avg 13.4% (limit 14%).
+- Full engine/data/release/simulation Red Team passes; counts remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps / 225 planner sections. Production questions, 2015 transition, and 2015↔2022 mapping remain byte-identical.
+
+## 2026-09-26 — High Info Areas 1–2 official-HWP re-audit checkpoint
+- Re-audited `high-info / 컴퓨팅 시스템` (15 official lines) and `high-info / 데이터` (21 official lines) directly against the uploaded official 교육부 고시 제2022-33호 [별책10] HWP.
+- Corrected official-source drift in the reviewed areas: commas, spacing (`의사 소통`, `활용사례`), and official separator glyphs (`유⋅무선`, `비교⋅분석`, `송⋅수신`, `토의⋅토론`, `교수⋅학습`). No sentence or gap was added/removed.
+- Added source-lock assertions for all 36 lines across the two areas.
+- Re-selected semantic core gaps so the computing-systems area prioritizes connection principles/communication/network use and the data area prioritizes efficient compression/encryption, ethical conditions, comparison criteria, collection methods, carbon-neutral implications, and evidence-based discussion.
+- Full intensity QA remains within limits: value-attitude avg 25.0% (limit 26%), achievement commentary avg 13.0% (limit 13%), achievement considerations avg 13.6% (limit 14%).
+- Full engine/data/release/simulation Red Team passes; counts remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps / 225 planner sections. Production questions, 2015 transition, and 2015↔2022 mapping remain byte-identical.
+
+## 2026-09-26 — Middle Info Areas 4–5 source re-audit checkpoint
+- Re-audited `middle-info / 인공지능` (21 official lines) and `middle-info / 디지털 문화` (16 official lines) against the published 2022 information-curriculum final-draft pages 32, 36, and 37; the Ministry of Education notice confirms [별책10] as the official 실과(기술·가정)/정보과 curriculum.
+- Corrected source punctuation/typography drift in 8 reviewed lines (commas and `교수⋅학습` glyphs). No sentence or gap was added/removed.
+- Added source-lock assertions for all 37 lines across the two areas. Middle-info area source-lock coverage is now 19 + 22 + 33 + 21 + 16 = **111 official lines**.
+- Re-selected semantic core gaps for 10 AI lines and 7 digital-culture lines. AI emphasizes agent interaction, data bias, model/learning/data structure, ethical validity, and low-cognitive-load teaching conditions. Digital culture emphasizes new rules/risks, technology↔social-change relations, digital ethics cases, and democratic discussion.
+- Found that the incoming rolling checkpoint itself failed the global consideration-intensity QA (14.3% > 14.0%). Corrected four previously reviewed consideration overrides that were still over-blanked, without changing their source text or source locks.
+- Full intensity QA now passes: value-attitude avg 25.0% (limit 26%), achievement commentary avg 13.0% (limit 13%), achievement considerations avg 13.6% (limit 14%).
+- Counts remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps; production questions, 2015 transition, and 2015↔2022 mapping remain byte-identical.
+
+## 2026-09-26 — Middle Info Areas 2–3 source re-audit checkpoint
+- Re-audited `middle-info / 데이터` (22 official lines) and `middle-info / 알고리즘과 프로그래밍` (33 official lines) against the published 2022 information-curriculum final-draft pages.
+- Corrected source punctuation/typography drift in 12 data lines and 9 algorithm/programming lines (commas, `⋅`, and `설계, 제작`). No official sentence or gap was added/removed.
+- Added source-lock assertions for all 55 lines across the two areas.
+- Re-selected semantic core gaps for 11 data lines and 14 algorithm/programming lines, prioritizing relations, transfer conditions, design/assessment process, and answer-worthy lists over generic nouns.
+- Counts remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps; production questions, 2015 transition, and 2015↔2022 mapping remain byte-identical.
+
+
+## 2026-09-26 — Middle Info Area 1 source re-audit checkpoint
+- Re-audited only `middle-info / 컴퓨팅 시스템` from the first sentence.
+- Corrected punctuation drift in 7 official corpus lines after source re-check (achievement standards, commentary, considerations). No sentence/gap was added or removed.
+- Added a 19-line first-area source-lock regression test.
+- Re-selected semantic core blanks to prioritize relations, conditions, and answer-worthy additions over generic nouns.
+- Official counts remain 6 subjects / 33 areas / 662 sentences / 6,245 gaps.
+# Unreleased — Middle Info Area-by-Area Gap Audit
+
+## 컴퓨팅 시스템 영역 checkpoint (2026-09-26)
+
+- 중학교 정보 `컴퓨팅 시스템` 영역 19문장만 재검수했다. 정확 암기 9문장은 기존 구조를 유지하고, 비정확 암기 10문장의 핵심 gap 대상을 문장 의미 기준으로 재선정했다.
+- 핵심 아이디어는 일반 명사보다 관계(`유기적 연결`, `자원 할당의 가치`)를 우선하고, 가치·태도는 방향 동사(`판단`, `선택`)까지 인출하도록 보강했다.
+- 성취기준 해설은 성취기준에서 이미 정확 암기되는 중복어보다 해설의 추가 정보(`문제를 해결하는 방식`)를 우선했다.
+- 적용 시 고려 사항은 일반적인 과목명보다 수업 조건·전략(`괴리`, `미리 구성되어 있는`, `통합적으로 동작`, `피지컬 컴퓨팅 활동`)을 우선했다.
+- 공식 curriculum / 문제은행 / transition / mapping과 6,245 gap inventory는 변경하지 않았다.
+- 이 checkpoint는 FINAL release가 아니며 다음 영역 검수의 기준점이다.
+
+# CurriLoop v7.8.5 — Data Science Semantic Gap Audit (2026-09-26)
+
+- 작업 범위를 **데이터 과학 1과목**으로 제한하고 비정확 암기 59문장을 문장별 의미 기준으로 재검수했다.
+- 정확 암기 45문장은 기존 exact-recall 구조를 유지한다.
+- 정형/비정형, 데이터 편향·전처리, 군집, 연관분석 지표, 평가 지표, 프로젝트 성찰·수정·일반화·공유 등 답안 가치가 높은 개념을 기존 easy/normal gap에서 선별한다.
+- 과도한 목록 가림은 핵심 빈칸에서 줄이고 실전 자유회상으로 넘겨, 6과목 전체 해설/고려사항 평균 가림 상한을 유지한다.
+- 공식 curriculum / 문제은행 / transition / mapping 원문 데이터는 수정하지 않는다.
+
+# CurriLoop v7.8.4 — AI Basic Semantic Gap Audit (2026-09-26)
+
+- 인공지능 기초 96문장 중 비정확 암기 52문장을 문장별 의미 기준으로 재검수했다.
+- 정확 암기 44문장은 기존 exact-recall 구조를 유지한다.
+- easy 후보만으로 핵심어가 잘리는 사례를 보완하기 위해 기존 normal gap을 필요한 문장에서 핵심 단계에 재사용한다.
+- 지도/비지도/강화학습, 결측치/이상치/전처리, 편향/윤리/공정성, 지속가능발전목표, 인공지능 문제 해결 과정의 열거와 관계를 보존한다.
+- 공식 curriculum / 문제은행 / transition / mapping 원문 데이터는 수정하지 않는다.
+
+# CurriLoop v7.8.3 — High-Info Semantic Gap Audit (2026-09-25)
+
+- 작업 범위를 **고등학교 정보 1과목**으로 제한했다. v7.8.2 중학교 정보 검수 결과는 유지했다.
+- 고등학교 정보 124문장 중 정확 암기 52문장은 전체 통회상 구조를 유지하고, 비정확 암기 72문장은 모두 문장별 semantic gap override를 부여했다.
+- 핵심 빈칸 후보는 기존 gap inventory의 `easy`뿐 아니라 의미상 더 적절한 기존 `normal` gap도 선택할 수 있게 했다. 공식 curriculum.js와 전체 gap inventory는 변경하지 않았다.
+- 성취기준 해설의 목록·구별·비교 기준은 답안 가치가 있으면 유지하고, 적용 시 고려 사항의 일반적 교수·학습 문구와 가치·태도의 과도한 문장 복원은 줄였다.
+- `high-info-gap-semantic-qa.js`를 추가하여 124문장/52 exact/72 semantic override, 기존 gap 재사용, 과도한 가림 방지, 고위험 문장 타깃을 고정한다.
+- 나머지 4과목의 문장별 의미 검수는 후속 과목별 작업으로 남긴다.
+
+# CurriLoop v7.8.2 — Middle-Info Semantic Gap Audit (2026-09-25)
+
+- 작업 범위를 **중학교 정보 1과목**으로 제한했다.
+- 중학교 정보 134문장 중 정확 암기 59문장은 전체 통회상 구조를 유지하고, 비정확 암기 75문장은 모두 문장별 semantic gap override를 부여했다.
+- 해설/고려사항/가치·태도에서 일반어·수식어보다 임용 답안 가치가 높은 개념·관계·열거·조건을 우선하도록 수정했다.
+- 공식 curriculum, production 문제은행, 2015 transition reference, 2015↔2022 mapping은 byte-level SHA-256 불변이다.
+- 이 버전은 **중학교 정보 빈칸 검수 완료 증분판**이며, 나머지 5과목의 동일한 문장별 의미 검수는 후속 과목별 작업으로 남긴다.
+
 # CurriLoop v7.8.1 — Six-Course Study Integration (2026-09-24)
 
 - `오늘` 자동 플래너를 중학교 정보 전용 안전 게이트에서 **2022 정보과 6과목 전체**로 확장했다. 순서는 중학교 정보 → 고등학교 정보 → 인공지능 기초 → 데이터 과학 → 정보과학 → 소프트웨어와 생활이다.

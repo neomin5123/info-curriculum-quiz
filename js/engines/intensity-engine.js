@@ -9,6 +9,7 @@
   'use strict';
 
   const profiles = Config?.profiles || {};
+  const lineOverrides = Config?.lineOverrides || {};
   function cleanBody(text) {
     return String(text || '').replace(/^\[[^\]]+\]\s*/, '').trim();
   }
@@ -65,6 +66,11 @@
     const source = Array.isArray(entries) ? entries : [];
     if (!source.length) return [];
     if (tierKey === 'exact') return source.slice();
+    const override = lineOverrides[String(line?.id || '')];
+    if (Array.isArray(override) && override.length) {
+      const wanted = new Set(override.map(String));
+      return source.filter(entry => wanted.has(String(entry?.answer || '')));
+    }
     const wanted = targetCount(line, sectionTitle, sourceGroup, tierKey, source.length);
     return selectDistributed(source, line?.text || '', wanted);
   }
@@ -95,5 +101,5 @@
     return covered/source.length;
   }
 
-  return { profileFor, targetCount, selectDistributed, selectCoreEntries, hiddenCoverage };
+  return { profileFor, targetCount, selectDistributed, selectCoreEntries, hiddenCoverage, lineOverrides };
 });

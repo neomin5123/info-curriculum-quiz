@@ -15,6 +15,6 @@ const core=[...coreBlock.matchAll(/"([^"]+)"/g)].map(m=>m[1]);assert(core.length
 for(const u of core){const p=localPath(u);assert(p&&fs.existsSync(path.join(root,p)),`missing SW precache path ${u}`);}
 assert.equal(manifest.name,'CurriLoop');assert.equal(manifest.start_url,'/');assert.equal(manifest.scope,'/');assert.equal(manifest.display,'standalone');
 for(const icon of manifest.icons||[]){const p=localPath(icon.src);assert(p&&fs.existsSync(path.join(root,p)),`manifest icon ${icon.src}`);const b=fs.readFileSync(path.join(root,p));assert.equal(b.toString('ascii',1,4),'PNG',`${p}: png`);const w=b.readUInt32BE(16),h=b.readUInt32BE(20);const [ew,eh]=icon.sizes.split('x').map(Number);assert.equal(w,ew,`${p}: width`);assert.equal(h,eh,`${p}: height`);}
-assert(html.includes('v7.8.1'));assert(sw.includes('curriloop-v7-8-1-red-team-freeze-20260924'));
-assert(html.includes('/data/learning-aids/gap-intensity.js?v=7.8.1'));assert(html.includes('/js/engines/intensity-engine.js?v=7.8.1'));
+assert(html.includes('v7.8.7'));assert(sw.includes('curriloop-v7-8-7-source-repair-20260926'));
+assert(html.includes('/data/learning-aids/gap-intensity.js?v=7.8.7'));assert(html.includes('/js/engines/intensity-engine.js?v=7.8.7'));
 console.log(JSON.stringify({staticPackage:'OK',domIds:ids.length,htmlLocalRefs:refs.length,corePrecache:core.length,manifestIcons:(manifest.icons||[]).length},null,2));

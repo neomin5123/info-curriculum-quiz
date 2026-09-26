@@ -54,7 +54,7 @@ for(const sk of order){
   }
   report[sk]={areas:regular.length,lines:subjectLines,standards:subjectStandards,exactSections:subjectExact,structureQuestions:subjectQuestions};
 }
-assert.equal(lines,662,'official line count'); assert.equal(gaps,6245,'official gap count'); assert.equal(regularAreas,27,'regular area count');
+assert.equal(lines,674,'official line count'); assert.equal(gaps,6327,'official gap count'); assert.equal(regularAreas,27,'regular area count');
 assert.equal(standards,123,'achievement standard line count'); assert.equal(exactSections,27*3,'three exact sections per regular area');
 const expectedStandards={'middle-info':25,'high-info':23,'ai-basic':19,'data-science':19,'info-science':18,'software-life':19};
 for(const sk of order) assert.equal(report[sk].standards,expectedStandards[sk],`${sk}: official achievement-standard count`);
