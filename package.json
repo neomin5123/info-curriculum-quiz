@@ -1,0 +1,12 @@
+{
+  "name": "curriloop",
+  "version": "9.0.5-study-rc.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:data": "node tools/build-data.mjs",
+    "validate:data": "node tools/validate-data.mjs",
+    "validate:package": "node tools/validate-package.mjs",
+    "test": "npm run validate:data && npm run validate:package"
+  }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#315e48">
+  <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
+  <title>CurriLoop v9.0.5 Study RC</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.5-rc1">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>CurriLoop</h1>
+      <div class="version">v9.0.5 Study RC · 중·고 정보</div>
+    </div>
+    <div class="header-stats" id="headerStats" aria-live="polite"></div>
+  </header>
+
+  <main class="app-shell">
+    <section class="control-card" aria-label="학습 범위 설정">
+      <div class="control-grid">
+        <label>과목<select id="subjectSelect"></select></label>
+        <label>영역<select id="areaSelect"></select></label>
+        <label>출제 항목<select id="familySelect"></select></label>
+        <label>학습 단계<select id="stageSelect">
+          <option value="single">단일 회상</option>
+          <option value="practical">실전 조합</option>
+          <option value="full">영역 전체 회상</option>
+        </select></label>
+      </div>
+      <div class="mode-row">
+        <div class="segmented" role="tablist" aria-label="학습 모드">
+          <button data-mode="source" role="tab">원문</button>
+          <button data-mode="typing" role="tab">따라치기</button>
+          <button data-mode="mask" role="tab">마스킹</button>
+          <button data-mode="cloze" role="tab" class="active">빈칸 채우기</button>
+        </div>
+        <button class="source-button" id="sourceButton">원문 출처</button>
+      </div>
+    </section>
+
+    <section class="study-card" id="studyCard">
+      <div class="study-meta">
+        <span id="taskMeta"></span>
+        <span id="progressMeta"></span>
+      </div>
+      <div id="studyContent"></div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+      <div class="study-actions">
+        <button id="prevButton">이전</button>
+        <button id="checkButton" class="primary">채점</button>
+        <button id="revealButton">정답 보기</button>
+        <button id="nextButton" class="primary">다음</button>
+      </div>
+      <div class="secondary-actions">
+        <label class="switch-line"><input type="checkbox" id="retryToggle" checked> 오답 다시 묻기</label>
+        <button id="nextRoundButton" class="text-button">다음 바퀴</button>
+      </div>
+    </section>
+
+    <section class="compact-status" id="compactStatus"></section>
+  </main>
+
+  <dialog id="sourceDialog">
+    <div class="dialog-head"><strong>원문 출처</strong><button id="closeSource" aria-label="닫기">×</button></div>
+    <div id="sourceDialogBody"></div>
+  </dialog>
+
+  <script src="data/generated/study-data.js?v=9.0.5-rc1"></script>
+  <script src="js/core/config.js?v=9.0.5-rc1"></script>
+  <script src="js/core/storage.js?v=9.0.5-rc1"></script>
+  <script src="js/core/grading.js?v=9.0.5-rc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.5-rc1"></script>
+  <script src="js/app.js?v=9.0.5-rc1"></script>
+</body>
+</html>
