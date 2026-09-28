@@ -72,9 +72,10 @@ assert(app.includes('current.nextReviewAt = now + LearningEngine.DAY_MS'),'unres
 assert(app.includes('markDailyReviewCompleted(conceptKey, now)'),'unresolved daily review closes today plan without faking success');
 assert(app.includes('else if (status === "near" && item._nearRetried)'),'second near review also leaves today queue');
 
-assert(app.includes('빈칸 방식'),'middle-info fill variant label');
-assert(app.includes('setRecallFillVariant'),'middle-info segmented fill variant behavior');
-assert(app.includes('field.classList.add("hidden")'),'middle-info legacy difficulty dropdown hidden');
+assert(app.includes('학습 단계'),'policy subject adjustable study-level label');
+assert(app.includes('2단계 · 핵심 빈칸') && app.includes('3단계 · 다중 빈칸') && app.includes('4단계 · 실전 빈칸'),'adjustable 2-4 cloze stages');
+assert(app.includes('createPolicyClozeBlock'),'policy cloze renderer');
+assert(app.includes('field.classList.remove("hidden")'),'policy subject study-level dropdown visible');
 assert(app.includes('항목 수는 보여주지 않으며') && app.includes('recall-free-input'),'free recall must hide item count and slots');
 assert(app.includes('RecallEngine.isRecallMastered(item)'),'recall mastery must use strict spaced criterion');
 assert(R.recallMasteryStage({correctStreak:1}).label==='학습됨','recall learned stage');

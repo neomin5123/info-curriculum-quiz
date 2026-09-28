@@ -438,14 +438,18 @@
     const practicalVariant = document.getElementById("practicalFillVariantButton");
     const recallVariant = document.getElementById("recallFillVariantButton");
     if (panel) panel.classList.toggle("recall-course", pilot);
-    if (structure) structure.classList.toggle("hidden", !pilot);
+    if (structure) structure.classList.toggle("hidden", pilot ? true : !pilot);
+    const fillButton = document.getElementById("fillButton");
+    if (fillButton) fillButton.textContent = "빈칸 학습";
+    const originalButton = document.getElementById("originalButton");
+    if (originalButton) originalButton.textContent = pilot ? "1단계 · 원문" : "원문 보기";
     if (pilot) {
       const examCombo = isExamComboPracticalCourse(target);
-      setDifficultyOptions(examCombo ? [["easy","핵심"],["practical","실전"],["recall","통회상"]] : [["easy","핵심"],["practical","실전"]], "easy");
-      if (label) label.textContent = "빈칸 방식";
-      if (field) field.classList.add("hidden");
-      if (help) help.classList.add("hidden");
-      if (variant) variant.classList.toggle("hidden", studyMode !== "fill");
+      setDifficultyOptions([["easy","2단계 · 핵심 빈칸"],["normal","3단계 · 다중 빈칸"],["practical","4단계 · 실전 빈칸"]], "easy");
+      if (label) label.textContent = "학습 단계";
+      if (field) field.classList.remove("hidden");
+      if (help) { help.textContent = "1단계는 원문 보기, 2~4단계는 빈칸 수를 직접 조절합니다. S/A/B 정책은 유지되고 X는 출제하지 않습니다."; help.classList.remove("hidden"); }
+      if (variant) variant.classList.add("hidden");
       const activeDifficulty = getCurrentDifficulty();
       if (coreVariant) {
         const active = activeDifficulty === "easy";
@@ -1834,6 +1838,62 @@
     return wrap;
   }
 
+  function createPolicyClozeBlock(unit, section){
+    const wrap=document.createElement('div'); wrap.className='pilot-policy-task-block policy-cloze-block';
+    let activeCount=0;
+    (section.lines||[]).forEach((line,lineIndex)=>{
+      const tasks=window.CurriLoopPilotPolicyEngine?.tasksForLine?.(line.id)||[];
+      const byCanonical=new Map(tasks.map(t=>[t.canonicalAtomId,t]));
+      const candidates=[]; const seen=new Set();
+      [...rawConfiguredEntries(line,'easy'),...rawConfiguredEntries(line,'normal')].forEach(entry=>{
+        const mapped=window.CurriLoopPilotPolicyEngine?.legacyGapMapping?.(unit.subject,line.id||'',entry.gapId);
+        if(!mapped||!['S','A','B'].includes(mapped.grade)||!byCanonical.has(mapped.canonicalAtomId)) return;
+        const k=mapped.canonicalAtomId+'|'+normalize(entry.answer); if(seen.has(k)) return; seen.add(k);
+        candidates.push({...entry,mapped,task:byCanonical.get(mapped.canonicalAtomId)});
+      });
+      const difficulty=getCurrentDifficulty();
+      const blankLimit=difficulty==='practical'?4:(difficulty==='normal'?2:1);
+      const chosen=candidates.slice(0,blankLimit);
+      if(chosen.length){
+        activeCount++;
+        const card=document.createElement('div'); card.className='pilot-task policy-cloze-card';
+        const meta=document.createElement('div'); meta.className='pilot-task-meta';
+        const levelLabel=difficulty==='practical'?'4단계 · 실전 빈칸':(difficulty==='normal'?'3단계 · 다중 빈칸':'2단계 · 핵심 빈칸');
+        meta.textContent=`${levelLabel} · ${chosen.map(x=>x.mapped.grade).join('/')}`; card.appendChild(meta);
+        const p=document.createElement('div'); p.className='line-item policy-cloze-line';
+        const occurrences=chosen.map((item,i)=>({item,i,idx:line.text.indexOf(item.answer)})).filter(x=>x.idx>=0).sort((a,b)=>a.idx-b.idx);
+        if(occurrences.length){
+          let cursor=0; const inputs=[];
+          occurrences.forEach(({item,i,idx})=>{
+            if(idx<cursor) return;
+            p.appendChild(document.createTextNode(line.text.slice(cursor,idx)));
+            const input=document.createElement('input'); input.type='text'; input.className='gap-input policy-cloze-input'; input.autocomplete='off'; input.spellcheck=false; input.placeholder=String.fromCharCode(65+i); input.dataset.answer=item.answer; input.dataset.canonicalAtomId=item.mapped.canonicalAtomId; p.appendChild(input); inputs.push(input);
+            cursor=idx+item.answer.length;
+          });
+          p.appendChild(document.createTextNode(line.text.slice(cursor)));
+          const fb=document.createElement('span'); fb.className='pilot-task-feedback'; card.appendChild(p);
+          const controls=document.createElement('div'); controls.className='policy-cloze-controls';
+          const btn=document.createElement('button'); btn.type='button'; btn.className='btn small'; btn.textContent='확인';
+          const reveal=document.createElement('button'); reveal.type='button'; reveal.className='btn small ghost'; reveal.textContent='모름';
+          btn.addEventListener('click',()=>{let allOk=true; const wrong=[]; inputs.forEach(input=>{const ok=normalizePilotAnswer(input.value)===normalizePilotAnswer(input.dataset.answer); allOk=allOk&&ok; if(!ok)wrong.push(input.dataset.answer); const ck=`pilot|canonical|${input.dataset.canonicalAtomId}`; updateMastery(ck,ok?'correct':'wrong',makeGradingEventToken('cloze',ck,`${ok?'correct':'wrong'}|${Date.now()}`));}); fb.textContent=allOk?' 통과':` 정답: ${wrong.join(' / ')}`; fb.className=`pilot-task-feedback ${allOk?'correct':'wrong'}`; recordPlannerStudyActivity(Date.now());});
+          reveal.addEventListener('click',()=>{inputs.forEach(input=>{input.value=input.dataset.answer; const ck=`pilot|canonical|${input.dataset.canonicalAtomId}`; updateMastery(ck,'unknown',makeGradingEventToken('cloze',ck,`unknown|${Date.now()}`));}); fb.textContent=' 모름 처리 · 다시 회상'; fb.className='pilot-task-feedback wrong'; recordPlannerStudyActivity(Date.now());});
+          controls.appendChild(btn); controls.appendChild(reveal); controls.appendChild(fb); card.appendChild(controls);
+        } else { p.textContent=line.text; card.appendChild(p); }
+        wrap.appendChild(card);
+      } else {
+        // C is deliberately not turned into a four-choice quiz. It is a quick recognition/reveal check.
+        const cTask=tasks.find(t=>t.grade==='C');
+        if(cTask){ activeCount++; const card=document.createElement('div'); card.className='pilot-task grade-c policy-recognition-lite';
+          const meta=document.createElement('div'); meta.className='pilot-task-meta'; meta.textContent='C · 가벼운 확인'; card.appendChild(meta);
+          const cue=document.createElement('div'); cue.className='line-item'; cue.textContent=line.text; card.appendChild(cue);
+          const details=document.createElement('details'); const sum=document.createElement('summary'); sum.textContent='핵심만 확인'; details.appendChild(sum); const ans=document.createElement('div'); ans.textContent=cTask.label; details.appendChild(ans); card.appendChild(details); wrap.appendChild(card);
+        }
+      }
+    });
+    if(!activeCount){const note=document.createElement('div');note.className='pilot-no-active';note.textContent='이 구획은 active recall 대상이 아닙니다. 원문만 확인하면 됩니다.';wrap.appendChild(note);}
+    return wrap;
+  }
+
   function recallMemoryTier(section) {
     return RecallEngine.memoryTier(section?.title || "", section?._sourceGroup || getCurrentGroup());
   }
@@ -2801,7 +2861,7 @@
       const pilotPolicy = isStage5PilotSubject(unit.subject) && studyMode === "fill";
       const holistic = !pilotPolicy && isHolisticRecallFill(unit) && practicalRecallKind(section, unit.subject);
       if (pilotPolicy) {
-        td.appendChild(createPilotPolicyTaskBlock(unit, section));
+        td.appendChild(createPolicyClozeBlock(unit, section));
       } else if (holistic) {
         const block = createHolisticRecallBlock(unit, section, {scope:"study", persistDraft:true, showGradeButton:true});
         if (block) td.appendChild(block);

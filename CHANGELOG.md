@@ -1,3 +1,12 @@
+# Changelog
+
+## v8.0.3 — Adjustable study level
+- Added user-selectable 1–4 study stages for policy subjects.
+- Stage 1 shows the original curriculum text.
+- Stages 2–4 use 1, 2, or up to 4 cloze blanks respectively.
+- Preserved Stage 3R S/A/B/C/X policy; X remains excluded from active recall.
+- C uses lightweight recognition/reveal rather than forced written production.
+
 # CurriLoop v7.8.9 — Middle/High Exam-Demand Re-audit (WORKING)
 
 - 중·고 정보 270문장의 공식 corpus는 그대로 두고, v7.8.8의 기출 line profile을 원문 기출지 기준으로 다시 감사했다.

@@ -1,3 +1,5 @@
+> Current study UX: **v8.0.3 adjustable study level** (1–4 stages).
+
 # v8.0.0-rc — Stage 6 Full Policy Rollout
 
 Stage 3R canonical S/A/B/C/X policy is implemented across all six 2022 information-curriculum subjects.
