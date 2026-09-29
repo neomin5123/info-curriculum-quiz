@@ -1,131 +1,14 @@
-# Changelog
-
-## 9.0.17-ux-restoration.1
-- v8 채점 엔진의 핵심을 복원: correct / near / unknown / wrong 4상태
-- 공백·문장부호 정규화, 조사 차이, 제한적 유사 표현, Levenshtein, 한글 자모 오타 판정 복원
-- 짧은 공식 용어는 보수적으로 판정하고 near는 정답으로 승격하지 않음
-- 오답/near/미입력 즉시 정답 표시 복원
-- Enter는 현재 입력칸만 채점; 정확이면 다음 미완료 칸으로 자동 이동
-- Tab / Shift+Tab 이동 시 다음 입력칸을 화면 중앙으로 smooth scroll
-- 첫 클릭 전체 선택, 두 번째 클릭부터 커서 위치 선택 유지
-- 입력 중 답안과 필드별 판정 localStorage 저장/복원
-- 답안을 수정하면 기존 판정 자동 해제
-- 학습 범위별 round와 마지막 task를 독립 저장
-- `원문 출처` 버튼을 모드 행 우측 끝으로 복원
-- 화면 최하단에 현재 문서/과목/영역/출제항목/성취기준 번호 provenance 상시 표시
-- 빈칸 폭을 답 길이에 비례시키고 near/unknown/wrong/correct 시각 상태와 간격을 재디자인
-- 기존 v9 내용체계 표, 지식·이해 전체회상, 성취기준 composite 구조 유지
-- curriculum/policy/presentation 데이터 변경 없음
-
-## 9.0.16-study-rc.1
-- Enter 키는 더 이상 화면 전체를 채점하지 않고 **현재 입력칸 하나만 채점**
-- `채점` 버튼은 기존처럼 현재 문제 전체 채점
-- 지식·이해처럼 순서 무관 목록형 답은 Enter 채점 시 해당 범주의 정답 집합과 대조
-- 이미 다른 입력칸에서 정답 처리한 동일 답을 다시 입력하면 `중복` 처리
-- inline cloze는 현재 빈칸의 `data-answer`만 검사
-- Tab / Shift+Tab 이동, 첫 클릭 전체선택, 두 번째 클릭부터 커서 배치, IME 보호 유지
-- 공식 curriculum/policy/presentation 데이터 변경 없음
-
-## 9.0.15-study-rc.1
-- `내용체계 + 성취기준`을 영역당 **한 composite 화면**으로 수정
-- 내용체계 전체 표 아래에 성취기준을 같은 문제에서 함께 표시
-- 단일/실전/전체 회상 모두 같은 composite 화면 유지
-- 성취기준도 선택한 회상 방식에 맞춰 빈칸 밀도 적용
-- 특정 영역 드롭다운에서 `성취기준` 단독 항목 사용 가능 여부를 behavior QA로 고정
-- 공식 curriculum/policy/presentation 데이터 변경 없음
-
-## 9.0.14-study-rc.1
-- 버전 표기를 CurriLoop 제목 우측 인라인으로 이동해 상단 높이 축소
-- `내용체계`는 단일/실전/전체 회상 모두 영역당 표 1개를 유지
-- 단일 회상: production 가능한 각 비지식·이해 line에서 single presentation unit 1개씩 빈칸
-- 실전 조합: production 가능한 각 비지식·이해 line에서 representative practical set을 동시에 빈칸
-- 전체 회상: production 가능한 각 비지식·이해 line의 presentation unit 전체를 동시에 빈칸
-- 지식·이해: 난이도와 무관하게 해당 영역 항목 전체를 통째로 입력
-- C/X-only 항목은 표에는 보이되 production 빈칸으로 강제하지 않음
-- `통짜 회상` 명칭을 `전체 회상`으로 변경
-- v9.0.12 입력 UX(Enter 채점, Tab 이동, 첫 클릭 전체선택) 유지
-- v9.0.13 배포 캐시 방지(no-store, 기존 SW/cache 정리) 유지
-- 공식 curriculum/policy/presentation 데이터 변경 없음
-
-## 9.0.13-deploy-safe.1
-- v9.0.11/v9.0.12 content-system table scaffold behavior preserved
-- Service Worker registration disabled during Study RC
-- any existing CurriLoop Service Worker registration is unregistered on load
-- existing `curriloop-*` Cache Storage entries are deleted on load
-- service-worker.js now self-retires and clears old CurriLoop caches
-- Vercel `Cache-Control: no-store` added for RC deployment
-- `BUILD_ID.txt` added for immediate deployed-build verification
-- curriculum/policy/presentation data unchanged
-
-## 9.0.12-study-rc.1
-- 답 입력칸에서 Enter 키로 즉시 채점
-- 한글 IME 조합 확정 Enter는 채점으로 오인하지 않도록 `isComposing`/229 보호
-- Tab / Shift+Tab은 브라우저 기본 입력 순서 이동 유지
-- 각 입력칸의 첫 클릭은 입력값 전체 선택
-- 같은 입력칸의 두 번째 클릭부터는 클릭한 위치에 커서 배치
-- Shift+Enter는 textarea에서 줄바꿈 용도로 보존
-- 공식 교육과정/정책/빈칸 데이터 변경 없음
-
-## 9.0.11-study-rc.1
-- `내용체계`의 단일/실전/통짜 회상을 모두 동일한 전체 표 scaffold 위에서 실행
-- 단일 회상: 표 전체를 보여주고 한 recall unit만 빈칸
-- 실전 조합: 표 전체를 보여주고 해당 line의 practical cloze set만 빈칸
-- 지식·이해: 어느 회상 방식에서도 해당 영역 목록 전체를 한 번에 회상
-- 통짜 회상: production 대상 내용 요소 전체를 한 번에 회상
-- C/X-only 항목은 표에 보이되 production 빈칸으로 강제하지 않음
-- `내용체계 + 성취기준`의 단일/실전에서도 내용체계 부분은 동일한 표 task를 재사용
-- 공식 curriculum/policy 데이터 변경 없음
-
-## 9.0.10-study-rc.1
-- 화면 상단 통계/중·고 정보 문구/회상 안내/바퀴 수/debug status 제거
-- 우측 상단 화면 배율 추가 및 localStorage 저장
-- 원문 출처 버튼을 화면 최하단으로 이동
-- 출제 항목을 6개 묶음으로 재구성
-- 전체 영역/특정 영역에 따라 존재하지 않는 출제 묶음 자동 숨김
-- 회상 방식: 단일 회상 / 실전 조합 / 통짜 회상 공통 제공
-- 지식·이해는 단일/실전에서도 영역 전체 목록 회상 유지
-- 내용체계에 핵심 아이디어 포함
-- 통짜 회상은 논리 단위별 composite task로 생성
-
-## 9.0.9-study-rc.1
-- `내용체계 전체`를 line 순회가 아닌 영역별 composite table task로 변경
-- 지식·이해 / 과정·기능 / 가치·태도를 공식 내용체계 표처럼 한 화면에 표시
-- 빈칸 채우기에서 해당 영역의 모든 내용 요소를 동시에 입력
-- 전체 영역 선택 시 영역별 표 5개를 순회
-- 항목별 mastery와 오답 재출제 유지
-- v9.0.8 freeze candidate는 UX 구조 변경으로 freeze gate 재개방
-
-## 9.0.8-freeze-candidate.1
-- 270-line automated final audit
-- source/policy/history/presentation/package gates audited
-- curriculum data unchanged from v9.0.7
-- final freeze pending real-study UX confirmation
-
-## 9.0.7-study-rc.1
-- 영역 드롭다운의 `전체 영역`을 실제 세션 범위로 사용
-- 출제 항목에 `내용체계 전체` 추가
-- `학습 단계`를 `회상 방식`으로 변경
-- 지식·이해 전체 영역에서 `영역별 회상` / `전체 영역 통회상` 제공
-- 중·고 전체 통회상은 학교급별 2문제로 분리
-- 데이터/정책 레이어 변경 없음
-
-# Changelog
-
-## 9.0.6-study-rc.1
-- 비지식·이해 family에 source-faithful presentation layer 추가
-- 과도한 sentence-sized blank 60여 line을 term/phrase/list 단위로 재분절
-- representative practical set 최대 4개, 4+ 동시 빈칸 금지
-- 지식·이해 영역 전체회상 유지
-- underlying S/A/B/C/X 및 official source mutation 없음
-
-# Changelog
-
-## 9.0.5-study-rc.1
-- Git 저장소를 비운 상태에서도 바로 배포 가능한 clean rebase.
-- 중·고 정보 270-line v9.0.5 데이터 탑재.
-- 지식·이해를 학교급×영역 전체회상으로 전환.
-- UI를 데이터/엔진/저장소/CSS로 분리.
-- 원문/따라치기/마스킹/빈칸 채우기 구현.
-- 오답 지연 재출제 및 localStorage 진행 저장.
-- JSON → local-file-compatible JS mirror build script 추가.
-- service worker cache version을 새로 시작하여 구버전 혼합 방지.
+{
+  "name": "curriloop",
+  "version": "9.0.17-ux-restoration.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:data": "node tools/build-data.mjs",
+    "validate:data": "node tools/validate-data.mjs",
+    "validate:package": "node tools/validate-package.mjs",
+    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux",
+    "validate:behavior": "node tools/validate-behavior.mjs",
+    "validate:ux": "node tools/validate-ux.mjs"
+  }
+}

@@ -1,10 +1,10 @@
 (function(){
   window.CurriLoop=window.CurriLoop||{};
   window.CurriLoop.config={
-    appVersion:'9.0.15-study-rc.1',
+    appVersion:'9.0.17-ux-restoration.1',
     storageKey:'curriloop:v9:study-state',
     retryDelay:3,
     maxRetriesPerTaskPerRound:2,
-    officialSource:'2022 개정 실과(기술·가정)/정보과 교육과정 — 정보과 발췌'
+    officialSource:'교육부 「2022 개정 교육과정 [별책10] 실과(기술·가정)/정보과 교육과정」 — 정보과'
   };
 })();

@@ -1,14 +1,47 @@
-{
-  "name": "curriloop",
-  "version": "9.0.17-ux-restoration.1",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "build:data": "node tools/build-data.mjs",
-    "validate:data": "node tools/validate-data.mjs",
-    "validate:package": "node tools/validate-package.mjs",
-    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux",
-    "validate:behavior": "node tools/validate-behavior.mjs",
-    "validate:ux": "node tools/validate-ux.mjs"
-  }
-}
+8ffe9de56bd30c1a95cd945262d6e3ac355ada4111551dde41f67851b9f1fc55  .gitignore
+e9b15c4a13d43d137878297136b44b8329d8ace6c861294d56b77b08363f5fe4  BUILD_ID.txt
+f7aa727970166565d5aeb69d172aeeffa97830a94e95cd47848d8338fe0bb21c  CHANGELOG.md
+e65ee51ce65f200c7b44df79d94cd5a4e9234b2f3f40e11e16834de55a158d90  README.md
+e620bc11cf66b93cdb12cacfe26e65a9ff61e0e7eccb29b79e873e36c351557e  VERSION.json
+7212510259a3ead3a776ea3bd655bef46912dda1799d1f1c5566f970bbe63991  index.html
+9760295afe54650e972dbc001e071544798e9e4b25381f59569f11839e8b61c6  manifest.webmanifest
+1e48706314a81a2a7eef89b6c54e7d5f3f6236bd83f29cca6751ec6988382e60  package.json
+edb41c1235e22814d431870d3f301c24a623641bc8e753ec1755bb2c144970ce  service-worker.js
+b28ee1a6a65c6a8394afcaf7457b9b7abcdfebb3cc713f80bd8c27efcb3db446  vercel.json
+50e33feadddecf02154134abc8b261b9b7a0acfe0b77e8efa4f80c00f595acc7  assets/css/app.css
+b6a1239d5b3cb746a5c83d680727f8d32a625d5b6cd26f10165caaeb8f69b31b  assets/icons/icon.svg
+44f9779ab68e6c42f49852571d93f32b7d9892911f347a42ba158469019a5f00  data/audits/v9.0.10-ui-restructure-audit.json
+dba1e566a60b94af5fe384800609ad4d7bda8a50f815270f108745fcd5a4bbaa  data/audits/v9.0.11-table-scaffold-audit.json
+f089d5a29120bc732d32e57579b0895f7a26d09825d5010beb222b73c3ef6c6d  data/audits/v9.0.12-input-ux-audit.json
+65577abb08095a687e565be3f018837947c6674779cdaadb1dc212869d26b7ff  data/audits/v9.0.13-deployment-audit.json
+a6797d0598d8e0b6bc460d86657d475b0807c79c24b4f0a7304d9f7858ab39dc  data/audits/v9.0.14-table-wide-recall-audit.json
+df6bcb7b60696ab685a3f2a2b94e8ce5224530e9d967fd10f86880ae6fc18eb3  data/audits/v9.0.15-content-standards-audit.json
+978c528a30fe5159377543ddb6095d4ac03016350a94c29b74c8e01bc4ca1d35  data/audits/v9.0.16-input-grading-audit.json
+b5f60a4ff6ed562c526dc6e8cbc07b62047da990fca7cc4cdb24d0039f0ffd55  data/audits/v9.0.17-ux-restoration-audit.json
+6f47940abda3e6ac055c885b95a040dfeba61002f686b723405f43e4341bc89d  data/audits/v9.0.17-ux-restoration-audit.md
+b9afadaedf9e2074d67b7847bd92e9d125d67425a348fb2afe56e5a4bdefa12b  data/audits/v9.0.5-qa.json
+2a281149c184acec953ec37d2cb440ee7748666cd267cc16074f4ffb44cc8c6d  data/audits/v9.0.5-report.md
+ae981010d5253ad8fd0a438b8fc78d610d70f274088053818edd1195d689e229  data/audits/v9.0.6-qa.json
+fe7ac6805cb6d43253ca7c700e14a0d90d9585663c7966c19188697349daef59  data/audits/v9.0.6-report.md
+75c9c6ddeee3f8cbd906818ddbf1cb697b103ebdff464a485ce2d2c4bf322745  data/audits/v9.0.7-qa.json
+caceb9d490cc8a644a5ceb1c102e87fb424b7e01754650ad904f2664da997e69  data/audits/v9.0.7-report.md
+1cb20b4d861e9ef3e7849a973756add9f8bc924bb50b32903e197e24c94d8af5  data/audits/v9.0.8-freeze-audit.json
+9b1d28ce7801994e1fe73773e69cad1eedb4aade247a0829af5f81237b0d1e7c  data/audits/v9.0.8-freeze-audit.md
+4b295799333889ebc8de73cc06413feb4ca8bfb3c3d5cd58eb443ec24dd5b781  data/audits/v9.0.9-content-system-table-audit.json
+5f9ab985263e2e5f585e919e83eb070340a79ac7d552d807b879bd1e808178ea  data/curriculum/middle-high-v9.0.6.json
+c9b6a3fb4f6d9c6b64337954eec38bd6f28d307641e65ebad7b448bfa4daaac8  data/generated/study-data.js
+1f713f524921a8215fa2c3ba12ae971a6b679ce7718883815a29a4a20039ab2a  docs/ARCHITECTURE.md
+ef38a662f970d983bf1d6413680f6f95a52aa6056860a4199e363bbdffa753bb  docs/DATA_SCHEMA.md
+6d9115c5401bceeae9ca1ce0c25191af5950af7688a7222d50a3a607f6ab88ad  docs/DEPLOYMENT_CHECK.md
+fbc0bc7905a366627789783c708da8a0faaf731075a55c4457eb9535b22321e4  docs/RELEASE_CHECKLIST.md
+4ab5e4cd8bae3645dd19801c49a3f0560f03ee646e085b37df51e6edd0f25939  docs/STUDY_RULES.md
+4446fb8ec5387b92e76ea5ed3b0d16283392911d15c689aa335c59828735fada  js/app.js
+c9b74f37cf2a8836544e61d0807e4b1b71357ed0d9e909d78aeb0519763755c2  js/core/config.js
+1d610485d522d3fe95fa8b9d2bc5ab0ef85f6d0834c6443f652bf2e5ad080eaa  js/core/grading.js
+6bbe08958a39736ee3bb539e34fe8592b1521f7678690b5ad9d61016ba236183  js/core/storage.js
+70ec29ad655ca0073afaebd691aae0e98d28b9e7057ead58f5a5b565d6700942  js/core/study-engine.js
+747deda2998534174d365f5e7184b703e7e9338245fbdb59a50aed89099f7a46  tools/build-data.mjs
+5cf0a4dcac90a58cc271817c4f5dc7cf3b5e21ac3635c7380a626a278ef3b6b8  tools/validate-behavior.mjs
+9ad42724929e4982a250b469f335dfc397186aa2bf85c128a2142944542739fe  tools/validate-data.mjs
+5db27a435b6098dc8cb7d999eef249f458c5fa4e6f0f6947064f3dfaf159929c  tools/validate-package.mjs
+15fe973edf7bcd99ec38f96c1adf3b13cb60ef16580e33099234b352d3489200  tools/validate-ux.mjs

@@ -1,8 +1,8 @@
 (function(){
 'use strict';
 const DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
-const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);
-const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource')};
+const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
+const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter')};
 let revealed=false;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function option(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;return o;}
@@ -19,8 +19,8 @@ function initSelectors(){
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
 }
 function applyZoom(){const z=Number(el.zoom.value||100);state.ui.zoom=z;document.documentElement.style.setProperty('--ui-zoom',String(z/100));}
-function persist(){CL.storage.save(state);}
-function rebuild(){const id=engine.current()?engine.taskId(engine.current()):null;engine.rebuild(id);revealed=false;render();persist();}
+function persist(){CL.storage.noteScopeRound(state);CL.storage.noteScopeTask(state,engine.current()?engine.taskId(engine.current()):'');CL.storage.save(state);}
+function rebuild(preferredId=''){const currentId=engine.current()?engine.taskId(engine.current()):'';const id=preferredId||CL.storage.scopeTask(state)||currentId;engine.rebuild(id);revealed=false;render();persist();}
 function setMode(m){state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));revealed=false;render();persist();}
 function currentTask(){return engine.current();}
 function isGroupTask(t){return t&&['content-system','content-standards','whole-group'].includes(t.type);}
@@ -32,7 +32,7 @@ function taskContext(task){
 }
 function render(){
   const task=currentTask(),st=engine.stats();el.feedback.textContent='';el.feedback.className='feedback';
-  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';return;}
+  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.provenance)el.provenance.textContent='';return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;
   if(task.type==='content-system')renderContentSystem(task);
   else if(task.type==='content-standards')renderContentStandards(task);
@@ -41,7 +41,7 @@ function render(){
   else renderLine(task.line);
   const mode=state.ui.mode;let gradable=mode==='typing'||mode==='cloze';
   if(task.type==='line'&&mode==='cloze'){const set=engine.selectedSet(task.line);gradable=!!(set&&engine.keywordsForSet(task.line,set).length);}
-  el.check.disabled=!gradable;persist();
+  el.check.disabled=!gradable;renderProvenance(task);prepareAnswerFields();persist();
 }
 function sourceItems(items,masked=false){return `<div class="source-list">${items.map((it,i)=>`<div class="item"><span class="num">${i+1}.</span> ${masked?`<span class="mask" data-reveal>${esc(it.text)}</span>`:esc(it.text)}</div>`).join('')}</div>`;}
 function renderKI(g){
@@ -115,105 +115,104 @@ function renderLine(line){
 }
 function renderWithSpans(text,ks,replacer){let out='',cursor=0;ks.forEach((k,i)=>{out+=esc(text.slice(cursor,k.start))+replacer(k,i);cursor=k.end;});return out+esc(text.slice(cursor));}
 function bindMasks(){document.querySelectorAll('[data-reveal]').forEach(x=>x.onclick=()=>x.classList.toggle('revealed'));}
-function gradeSection(items,inputs,typing){
-  if(typing){let matched=0;inputs.forEach((inp,i)=>{const right=CL.grading.exact(inp.value,items[i]?.text||'');paintGroupInput(inp,right,right?'정답':'오답');CL.storage.recordItem(state,inp.dataset.lineId,right);if(right)matched++;});return {correct:matched===items.length&&items.length>0,matched,total:items.length};}
-  const grade=CL.grading.gradeSet(inputs.map(x=>x.value),items.map(x=>x.text));grade.results.forEach((r,i)=>{const inp=inputs[i];if(!inp)return;paintGroupInput(inp,r.status==='correct',r.status==='correct'?'정답':r.status==='duplicate'?'중복':r.status==='empty'?'미입력':'오답');});const matchedNorm=new Set(grade.matchedKeys);items.forEach(it=>CL.storage.recordItem(state,it.lineId,matchedNorm.has(CL.grading.norm(it.text))));return {correct:grade.correct,matched:grade.matchedCount,total:grade.total};
-}
-function paintGroupInput(inp,right,text){inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);const m=inp.parentElement.querySelector('.group-mark');if(m){m.textContent=text;m.className='group-mark '+(right?'good':'bad');}}
 function groupSections(task){
   if(task.type==='content-system')return [...(task.group.coreIdeas?.length?[{family:'핵심 아이디어',items:task.group.coreIdeas}]:[]),...task.group.rows];
   if(task.type==='content-standards')return [...(task.group.content?.coreIdeas?.length?[{family:'핵심 아이디어',items:task.group.content.coreIdeas}]:[]),...(task.group.content?.rows||[]),...(task.group.standards.length?[{family:'성취기준',items:task.group.standards}]:[])];
-  return task.group.sections||[];
+  if(task.type==='ki')return [{family:'지식·이해',items:task.group.items||[]}];
+  return task.group?.sections||[];
 }
-function gradeContentSystemTask(task,mode){
-  const activeIds=new Set(task.focus?.lineIds||[]);
-  let ok=true,matched=0,total=0;
-
-  groupSections(task).forEach(sec=>{
-    if(sec.family==='지식·이해'){
-      const items=sec.items.filter(it=>activeIds.has(it.lineId));
-      if(!items.length)return;
-      const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];
-      const r=gradeSection(items,inputs,mode==='typing');
-      matched+=r.matched;total+=r.total;if(!r.correct)ok=false;
-      return;
-    }
-
-    sec.items.filter(it=>activeIds.has(it.lineId)).forEach(it=>{
-      const line=engine.lineMap.get(it.lineId);
-      if(mode==='typing'){
-        const inp=document.querySelector(`.group-input[data-line-id="${CSS.escape(it.lineId)}"]`);
-        const right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
-        if(inp)paintGroupInput(inp,right,right?'정답':'오답');
-        CL.storage.recordItem(state,it.lineId,right);
-        matched+=right?1:0;total+=1;if(!right)ok=false;
-        return;
-      }
-      const inputs=[...document.querySelectorAll(`.cs-inline-input[data-line-id="${CSS.escape(it.lineId)}"]`)];
-      if(!inputs.length)return;
-      let lineOK=true,lineMatched=0;
-      inputs.forEach(inp=>{
-        const right=CL.grading.exact(inp.value,inp.dataset.answer);
-        inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
-        if(right)lineMatched++;else lineOK=false;
-      });
-      CL.storage.recordItem(state,it.lineId,lineOK);
-      matched+=lineMatched;total+=inputs.length;if(!lineOK)ok=false;
-    });
-  });
-
-  return {ok,matched,total};
+function statusLabel(status,reason=''){
+  if(status==='correct')return '정답';
+  if(status==='near')return reason?`확인 · ${CL.grading.reasonLabel(reason)}`:'표기 확인';
+  if(status==='unknown')return '모름';
+  if(status==='duplicate')return '중복';
+  return '오답';
 }
-function gradeStandardLines(task,mode){
-  let ok=true,matched=0,total=0;
-  (task.group.standards||[]).filter(it=>task.focus?.standardLineIds?.includes(it.lineId)).forEach(it=>{
-    const line=engine.lineMap.get(it.lineId);
-    if(mode==='typing'){
-      const inp=document.querySelector(`.standard-input[data-line-id="${CSS.escape(it.lineId)}"]`);
-      const right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
-      if(inp)paintGroupInput(inp,right,right?'정답':'오답');
-      CL.storage.recordItem(state,it.lineId,right);
-      matched+=right?1:0;total+=1;if(!right)ok=false;
-      return;
-    }
-    const inputs=[...document.querySelectorAll(`.standard-inline-input[data-line-id="${CSS.escape(it.lineId)}"]`)];
-    if(!inputs.length)return;
-    let lineOK=true,lineMatched=0;
-    inputs.forEach(inp=>{
-      const right=CL.grading.exact(inp.value,inp.dataset.answer);
-      inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
-      if(right)lineMatched++;else lineOK=false;
-    });
-    CL.storage.recordItem(state,it.lineId,lineOK);
-    matched+=lineMatched;total+=inputs.length;if(!lineOK)ok=false;
-  });
-  return {ok,matched,total};
+function statusClass(status){return status==='correct'?'good':status==='near'?'near':status==='unknown'?'unknown':'bad';}
+function gradeCounts(statuses){const out={correct:0,near:0,unknown:0,wrong:0,duplicate:0};statuses.forEach(s=>{if(out[s]!=null)out[s]++;});return out;}
+function taskStatusFrom(statuses){return CL.grading.aggregateStatus(statuses.map(s=>s==='duplicate'?'wrong':s));}
+function fieldNote(field){return field.closest('.answer-field-wrap')?.querySelector('.field-note')||null;}
+function fieldMark(field){return field.closest('.group-input-row,.cs-input-item,.ki-row')?.querySelector('.group-mark,.ki-mark')||null;}
+function resetFieldVisual(field){
+  ['correct','near','unknown','wrong'].forEach(c=>field.classList.remove(c));
+  const note=fieldNote(field);if(note){note.textContent='';note.className='field-note';}
+  const mark=fieldMark(field);if(mark){mark.textContent='';mark.className=mark.classList.contains('ki-mark')?'ki-mark':'group-mark';}
 }
-function gradeContentStandardsTask(task,mode){
-  let ok=true,matched=0,total=0;
-  if(task.group.content){
-    const contentTask={type:'content-system',group:task.group.content,focus:{kind:task.focus?.kind||state.ui.stage,lineIds:task.focus?.contentLineIds||[]}};
-    const r=gradeContentSystemTask(contentTask,mode);
-    matched+=r.matched;total+=r.total;if(!r.ok)ok=false;
+function applyFieldGrade(field,detail,expected='',save=true){
+  if(!field||!detail)return;
+  resetFieldVisual(field);
+  const status=detail.status==='duplicate'?'wrong':detail.status;
+  field.classList.add(status);
+  const label=statusLabel(detail.status,detail.reason),mark=fieldMark(field),note=fieldNote(field);
+  if(mark){mark.textContent=label;mark.className=(mark.classList.contains('ki-mark')?'ki-mark ':'group-mark ')+statusClass(detail.status);}
+  const answer=String(expected||detail.expected||detail.matched||'').trim();
+  if(note){
+    if(detail.status==='correct')note.textContent='';
+    else if(detail.status==='near')note.textContent=answer?`정답: ${answer}`:'공식 표현을 다시 확인하세요.';
+    else if(detail.status==='unknown')note.textContent=answer?`정답: ${answer}`:'미입력';
+    else if(detail.status==='duplicate')note.textContent=answer?`이미 사용한 답 · ${answer}`:'이미 사용한 답';
+    else note.textContent=answer?`정답: ${answer}`:'정답을 확인하세요.';
+    note.className='field-note '+statusClass(detail.status);
   }
-  const s=gradeStandardLines(task,mode);
-  matched+=s.matched;total+=s.total;if(!s.ok)ok=false;
-  return {ok,matched,total};
+  if(save&&field.dataset.fieldKey)CL.storage.setFieldGrade(state,field.dataset.fieldKey,{status:detail.status,reason:detail.reason||'',expected:answer});
+}
+function recordMatchedItem(items,result){
+  if(result?.answerIndex!=null&&items[result.answerIndex])CL.storage.recordItem(state,items[result.answerIndex].lineId,result.status==='duplicate'?'wrong':result.status);
+}
+function gradeSetFields(fields,items,save=true){
+  const answers=items.map(x=>x.text),grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),answers),matched=new Set();
+  grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;applyFieldGrade(f,r,r.expected,save);if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);recordMatchedItem(items,r);});
+  const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
+  items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
+  return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
+}
+function expectedItemsForField(field,task){
+  if(field.classList.contains('ki-input'))return task?.group?.items||[];
+  const family=field.dataset.section;if(!family)return [];
+  return groupSections(task).find(s=>s.family===family)?.items||[];
+}
+function claimedExpectedNorms(field){
+  const rowSelector=field.classList.contains('ki-input')?'.ki-input':`.group-input[data-section="${CSS.escape(field.dataset.section||'')}"]:not([data-answer])`;
+  const claimed=new Set();
+  document.querySelectorAll(rowSelector).forEach(other=>{if(other===field)return;const g=other.dataset.fieldKey?CL.storage.getFieldGrade(state,other.dataset.fieldKey):null;if(g&&['correct','near'].includes(g.status)&&g.expected)claimed.add(CL.grading.norm(g.expected));});
+  return claimed;
+}
+function fixedExpectedForField(field,task){
+  if(field.dataset.answer)return field.dataset.answer;
+  if(field.id==='typingInput'&&task?.type==='line')return task.line.sourceText;
+  return '';
+}
+function gradeFixedField(field,expected,save=true){
+  const detail=CL.grading.classifyDetailed(field.value,expected);applyFieldGrade(field,detail,expected,save);
+  if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  return detail;
+}
+function gradeUnorderedField(field,task,save=true){
+  const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
+  applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
+  return detail;
 }
 function check(){
-  const task=currentTask();if(!task)return;const mode=state.ui.mode;if(mode==='source'||mode==='mask'){el.feedback.textContent='이 모드는 채점하지 않습니다.';return;}let ok=false,matched=0,total=0;
-  if(task.type==='content-system'){
-    const r=gradeContentSystemTask(task,mode);ok=r.ok;matched=r.matched;total=r.total;el.feedback.textContent=ok?'정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
-  }else if(task.type==='content-standards'){
-    const r=gradeContentStandardsTask(task,mode);ok=r.ok;matched=r.matched;total=r.total;el.feedback.textContent=ok?'정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
-  }else if(isGroupTask(task)){
-    ok=true;groupSections(task).forEach(sec=>{const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];const r=gradeSection(sec.items,inputs,mode==='typing');matched+=r.matched;total+=r.total;if(!r.correct)ok=false;});el.feedback.textContent=ok?'전체 정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
-  }else if(isKITask(task)){
-    const answers=task.group.items.map(x=>x.text),values=mode==='typing'?String($('typingInput')?.value||'').split(/\n+/).map(x=>x.trim()).filter(Boolean):[...document.querySelectorAll('.ki-input')].map(x=>x.value),grade=CL.grading.gradeSet(values,answers);ok=grade.correct;if(mode==='cloze'){const rows=[...document.querySelectorAll('.ki-row')];grade.results.forEach((r,i)=>{const inp=rows[i]?.querySelector('input'),m=rows[i]?.querySelector('.ki-mark');if(!inp||!m)return;inp.classList.toggle('correct',r.status==='correct');inp.classList.toggle('wrong',r.status!=='correct');m.textContent=r.status==='correct'?'정답':r.status==='duplicate'?'중복':r.status==='empty'?'미입력':'오답';m.className='ki-mark '+(r.status==='correct'?'good':'bad');});}const matchedNorm=new Set(grade.matchedKeys);task.group.items.forEach(it=>CL.storage.recordItem(state,it.lineId,matchedNorm.has(CL.grading.norm(it.text))));el.feedback.textContent=ok?'전체 정답':`${grade.matchedCount}/${grade.total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
+  const task=currentTask();if(!task)return;const mode=state.ui.mode;
+  if(mode==='source'||mode==='mask'){el.feedback.textContent='이 모드는 채점하지 않습니다.';return;}
+  const statuses=[],processed=new Set();
+  if(task.type==='ki'&&mode==='typing'){
+    const field=$('typingInput'),values=String(field?.value||'').split(/\n+/).map(x=>x.trim()),r=CL.grading.gradeSetDetailed(values,task.group.items.map(x=>x.text));
+    const status=r.status;applyFieldGrade(field,{status,reason:status==='unknown'?'empty':'meaning',expected:task.group.items.map(x=>x.text).join(' / ')},task.group.items.map(x=>x.text).join(' / '));statuses.push(status);
   }else{
-    const line=task.line;if(mode==='typing')ok=CL.grading.exact($('typingInput')?.value,line.sourceText);else{const inputs=[...document.querySelectorAll('.inline-input')];ok=inputs.length>0;inputs.forEach(inp=>{const right=CL.grading.exact(inp.value,inp.dataset.answer);inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);if(!right)ok=false;});}el.feedback.textContent=ok?'정답':'원문과 다른 부분이 있습니다.';el.feedback.className='feedback '+(ok?'good':'bad');
+    const unorderedFamilies=new Map();
+    document.querySelectorAll('.group-input:not([data-answer]),.ki-input').forEach(field=>{const key=field.classList.contains('ki-input')?'지식·이해':field.dataset.section||'';if(!unorderedFamilies.has(key))unorderedFamilies.set(key,[]);unorderedFamilies.get(key).push(field);});
+    unorderedFamilies.forEach((fields,family)=>{const items=family==='지식·이해'&&task.type==='ki'?task.group.items:(groupSections(task).find(s=>s.family===family)?.items||[]);const r=gradeSetFields(fields,items);r.statuses.forEach(x=>statuses.push(x));fields.forEach(x=>processed.add(x));});
+    document.querySelectorAll('.inline-input,.group-input[data-answer]').forEach(field=>{if(processed.has(field))return;const d=gradeFixedField(field,fixedExpectedForField(field,task));statuses.push(d.status);});
+    if(task.type==='line'&&mode==='typing'){
+      const field=$('typingInput');if(field){const d=gradeFixedField(field,task.line.sourceText);statuses.push(d.status);}
+    }
   }
-  CL.storage.record(state,engine.taskId(task),ok);if(!ok)engine.scheduleRetry(task);persist();
+  if(!statuses.length){el.feedback.textContent='채점할 입력칸이 없습니다.';el.feedback.className='feedback';return;}
+  const status=taskStatusFrom(statuses),counts=gradeCounts(statuses);
+  const parts=[counts.correct?`정확 ${counts.correct}`:'',counts.near?`확인 ${counts.near}`:'',counts.unknown?`모름 ${counts.unknown}`:'',(counts.wrong+counts.duplicate)?`오답 ${counts.wrong+counts.duplicate}`:''].filter(Boolean);
+  el.feedback.textContent=status==='correct'?'전체 정답':parts.join(' · ');el.feedback.className='feedback '+statusClass(status);
+  CL.storage.record(state,engine.taskId(task),status);if(status!=='correct')engine.scheduleRetry(task);persist();
 }
 function reveal(){
   const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;let html='';
@@ -227,36 +226,90 @@ function sourceInfo(){
   el.dialogBody.className='source-dialog-body';el.dialogBody.innerHTML=`<dl><dt>문서</dt><dd>${esc(CL.config.officialSource)}</dd><dt>과목</dt><dd>${esc(c.subject)}</dd><dt>영역</dt><dd>${esc(c.area)}</dd><dt>구분</dt><dd>${esc(c.family)}</dd><dt>ID</dt><dd><code>${esc(c.id)}</code></dd></dl><div class="official">${esc(official)}</div>`;el.dialog.showModal();
 }
 
-function answerField(target){
-  return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;
+
+function renderProvenance(task){
+  if(!el.provenance||!task)return;
+  const c=taskContext(task),texts=[];
+  if(isGroupTask(task))groupSections(task).forEach(sec=>sec.items.forEach(it=>texts.push(it.text)));
+  else if(isKITask(task))task.group.items.forEach(it=>texts.push(it.text));
+  else texts.push(task.line?.sourceText||'');
+  const codes=[...new Set(texts.flatMap(t=>String(t).match(/\[[^\]]+\]/g)||[]))];
+  const range=codes.length?(codes.length<=4?codes.join(' · '):`${codes[0]} ~ ${codes[codes.length-1]}`):'';
+  const parts=['출처', '교육부 「2022 개정 교육과정 [별책10] 실과(기술·가정)/정보과 교육과정」', c.subject, c.area, c.family];
+  if(range)parts.push(`성취기준 ${range}`);
+  el.provenance.textContent=parts.filter(Boolean).join(' · ');
+}
+function answerField(target){return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;}
+function answerFields(){return [...el.content.querySelectorAll('.inline-input,.group-input,.ki-input,#typingInput')].filter(x=>!x.disabled);}
+function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';return [taskId,state.ui.stage,state.ui.mode,index].join('|');}
+function prepareAnswerFields(){
+  const fields=answerFields();
+  fields.forEach((field,index)=>{
+    field.dataset.fieldKey=makeFieldKey(field,index);
+    if(!field.closest('.answer-field-wrap')){
+      const wrap=document.createElement('span');wrap.className='answer-field-wrap'+(field.tagName==='TEXTAREA'?' block':'')+(field.classList.contains('inline-input')?' inline':'');
+      field.parentNode.insertBefore(wrap,field);wrap.appendChild(field);
+      const note=document.createElement('small');note.className='field-note';wrap.appendChild(note);
+    }
+    const expected=field.dataset.answer||'';
+    const ch=Math.max(8,Math.min(30,[...expected].length||18));field.style.setProperty('--answer-ch',String(ch));
+    const draft=CL.storage.getDraft(state,field.dataset.fieldKey);if(draft!==''&&field.value==='')field.value=draft;
+    const saved=CL.storage.getFieldGrade(state,field.dataset.fieldKey);if(saved)applyFieldGrade(field,saved,saved.expected,false);
+  });
+  if(fields.length&&state.ui.mode!=='source'&&state.ui.mode!=='mask')requestAnimationFrame(()=>{if(!el.content.contains(document.activeElement)){const f=fields.find(x=>!CL.storage.getFieldGrade(state,x.dataset.fieldKey))||fields[0];focusAnswerField(f,false);}});
+}
+function focusAnswerField(field,smooth=true){if(!field)return;try{field.focus({preventScroll:true});}catch(_){field.focus();}if(typeof field.select==='function'&&field.value)field.select();field.scrollIntoView({block:'center',behavior:smooth?'smooth':'auto'});}
+function nextAnswerField(field){const fields=answerFields(),i=fields.indexOf(field);for(let n=i+1;n<fields.length;n++){const g=CL.storage.getFieldGrade(state,fields[n].dataset.fieldKey);if(!g||g.status!=='correct')return fields[n];}return fields[i+1]||null;}
+function clearFieldState(field){resetFieldVisual(field);if(field.dataset.fieldKey)CL.storage.clearFieldGrade(state,field.dataset.fieldKey);}
+function gradeSingleAnswerField(field){
+  const task=currentTask();if(!task||!field)return null;let detail=null,matchedItem=null;
+  if(field.id==='typingInput'&&task.type==='ki'){
+    const values=String(field.value||'').split(/\n+/).map(x=>x.trim()),g=CL.grading.gradeSetDetailed(values,task.group.items.map(x=>x.text));
+    detail={status:g.status,reason:g.status==='unknown'?'empty':'meaning',expected:task.group.items.map(x=>x.text).join(' / ')};
+  }else{
+    const expected=fixedExpectedForField(field,task);
+    if(expected)detail=CL.grading.classifyDetailed(field.value,expected);
+    else{
+      const items=expectedItemsForField(field,task),claimed=claimedExpectedNorms(field);detail=CL.grading.bestMatch(field.value,items.map(x=>x.text),claimed);
+      if(detail.answerIndex!=null)matchedItem=items[detail.answerIndex];
+    }
+  }
+  if(!detail)return null;
+  const expected=detail.expected||fixedExpectedForField(field,task)||'';applyFieldGrade(field,detail,expected,true);
+  if(matchedItem)CL.storage.recordItem(state,matchedItem.lineId,detail.status);else if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  if(detail.status!=='correct'&&state.ui.retry)engine.scheduleRetry(task);
+  el.feedback.textContent=statusLabel(detail.status,detail.reason)+(detail.status==='correct'?'':expected?` · 정답 ${expected}`:'');el.feedback.className='feedback '+statusClass(detail.status);
+  persist();
+  if(detail.status==='correct'){const next=nextAnswerField(field);if(next)setTimeout(()=>focusAnswerField(next,true),60);}
+  return detail;
 }
 function installAnswerInputUX(){
-  // Enter = 채점. 한글 IME 조합 확정 Enter는 무시한다.
+  let tabNav=false;
+  el.content.addEventListener('input',e=>{const field=answerField(e.target);if(!field)return;CL.storage.setDraft(state,field.dataset.fieldKey||'',field.value);clearFieldState(field);persist();});
   el.content.addEventListener('keydown',e=>{
     const field=answerField(e.target);if(!field)return;
-    if(e.key==='Tab')return; // 브라우저 기본 Tab / Shift+Tab 순서를 그대로 사용
+    if(e.key==='Tab'){tabNav=true;setTimeout(()=>{const active=answerField(document.activeElement);if(active)active.scrollIntoView({block:'center',behavior:'smooth'});tabNav=false;},0);return;}
     if(e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey||e.repeat)return;
     if(e.isComposing||e.keyCode===229)return;
-    e.preventDefault();
-    if(!el.check.disabled)check();
+    e.preventDefault();gradeSingleAnswerField(field);
   });
-  // 각 입력칸의 첫 번째 포인터 클릭은 전체 선택.
-  // 동일 입력칸의 두 번째 클릭부터는 브라우저 기본 커서 위치 선택을 허용한다.
-  el.content.addEventListener('click',e=>{
-    const field=answerField(e.target);if(!field)return;
-    if(field.dataset.firstClickSelectDone==='1')return;
-    field.dataset.firstClickSelectDone='1';
-    if(typeof field.select==='function')field.select();
-  });
+  el.content.addEventListener('focusin',e=>{const field=answerField(e.target);if(field&&tabNav)setTimeout(()=>field.scrollIntoView({block:'center',behavior:'smooth'}),0);});
+  el.content.addEventListener('click',e=>{const field=answerField(e.target);if(!field)return;if(field.dataset.firstClickSelectDone==='1')return;field.dataset.firstClickSelectDone='1';if(typeof field.select==='function')field.select();});
 }
-function filterChange(kind){
-  if(kind==='subject')state.ui.subject=el.subject.value;
-  if(kind==='area')state.ui.area=el.area.value;
-  syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;rebuild();
-}
-initSelectors();engine.rebuild();render();installAnswerInputUX();
-el.subject.onchange=()=>filterChange('subject');el.area.onchange=()=>filterChange('area');el.family.onchange=()=>{state.ui.family=el.family.value;syncStages();rebuild();};el.stage.onchange=()=>{state.ui.stage=el.stage.value;rebuild();};el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{state.ui.retry=el.retry.checked;persist();};
-document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));el.check.onclick=check;el.reveal.onclick=reveal;el.next.onclick=()=>{engine.next();revealed=false;render();};el.prev.onclick=()=>{engine.prev();revealed=false;render();};el.round.onclick=()=>{engine.nextRound();revealed=false;render();};el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
+function changeScope(mutator){persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));}
+function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
+initSelectors();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();
+el.subject.onchange=()=>filterChange('subject');
+el.area.onchange=()=>filterChange('area');
+el.family.onchange=()=>changeScope(()=>{state.ui.family=el.family.value;});
+el.stage.onchange=()=>changeScope(()=>{state.ui.stage=el.stage.value;});
+el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{state.ui.retry=el.retry.checked;persist();};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+el.check.onclick=check;el.reveal.onclick=reveal;
+el.next.onclick=()=>{engine.next();revealed=false;render();};
+el.prev.onclick=()=>{engine.prev();revealed=false;render();};
+el.round.onclick=()=>{engine.nextRound();revealed=false;render();};
+el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
 if(location.protocol!=='file:')window.addEventListener('load',async()=>{
   try{
     if('serviceWorker' in navigator){
