@@ -57,3 +57,24 @@ Automated final QA candidate. Curriculum data is unchanged from v9.0.7; final fr
 
 ## v9.0.10 grouped study UI
 출제 항목은 교육과정 문서 구조를 기준으로 6개 학습 묶음으로 노출한다. 원본 family는 데이터에 그대로 유지되고 UI/engine에서만 묶는다. 특정 영역에서는 과목 공통 범주(성격·목표, 교수·학습·평가)를 자동으로 숨긴다. 회상 방식은 모든 묶음에서 단일/실전/통짜를 제공하되, 지식·이해는 어떤 회상 방식에서도 영역 전체 목록 recall task를 유지한다.
+
+
+## v9.0.11 — 표 scaffold 기반 회상
+`내용체계`는 회상 방식에 관계없이 항상 동일한 전체 표를 보여준다.
+
+- 단일 회상: 현재 recall unit의 빈칸만 뚫고 나머지 표는 원문으로 유지
+- 실전 조합: 현재 recall unit의 practical set만 여러 빈칸으로 출제
+- 지식·이해: single/practical에서도 해당 영역 목록 전체를 묶어서 회상
+- 통짜 회상: production 대상 항목을 한 화면에서 모두 회상
+- C/X-only 항목: 표에는 계속 보이지만 production 빈칸으로 만들지 않음
+
+이 방식은 표 구조 기억과 세부 cloze 연습을 분리하지 않고 같은 화면에서 누적하도록 설계한다.
+
+
+## v9.0.12 — 기본 입력 상호작용
+- Enter: 현재 문제 채점
+- Tab / Shift+Tab: 다음 / 이전 입력칸 이동
+- 입력칸 첫 클릭: 전체 선택
+- 같은 입력칸 두 번째 클릭부터: 클릭 위치에 커서
+- 한글 IME 조합 중 Enter는 채점하지 않음
+- textarea에서 Shift+Enter는 줄바꿈

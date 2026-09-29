@@ -19,7 +19,7 @@
 
     function taskId(t){
       if(t.type==='ki')return `KI:${t.group.groupId}`;
-      if(t.type==='content-system')return `CS:${t.group.subject}:${t.group.area}`;
+      if(t.type==='content-system')return `CS:${t.group.subject}:${t.group.area}:${t.focus?.id||'whole'}`;
       if(t.type==='content-standards')return `CST:${t.group.subject}:${t.group.area}`;
       if(t.type==='whole-group')return `WG:${t.group.familyGroup}:${t.group.subject}:${t.group.area}`;
       return `LINE:${t.line.lineId}`;
@@ -39,13 +39,26 @@
       return data.lines.some(l=>subs.includes(l.subject)&&ars.includes(l.area)&&def.families.includes(l.family));
     }
     function lineMatchesGroup(line,id){const def=groupDef(id);return !!def&&def.families.includes(line.family);}
-    function itemFromLine(l){return {lineId:l.lineId,text:l.sourceText,family:l.family,sourceDoc:l.sourceDoc||''};}
+    function itemFromLine(l){return {lineId:l.lineId,text:l.sourceText,family:l.family,sourceDoc:l.sourceDoc||'',recallable:(l.keywords||[]).some(k=>k.active)};}
     function buildContentSystemGroup(subject,area){
       const coreIdeas=data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='핵심 아이디어').map(itemFromLine);
       const rowOrder=['지식·이해','과정·기능','가치·태도'];
       const rows=rowOrder.map(family=>({family,items:data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family===family).map(itemFromLine)})).filter(r=>r.items.length);
       const items=[...coreIdeas,...rows.flatMap(r=>r.items)];if(!items.length)return null;
       return {groupId:`CS:${subject}:${area}`,subject,subjectLabel:labels[subject],area,familyGroup:'content-system',label:'내용체계',prompt:`${area} 영역의 내용체계를 완성하시오.`,coreIdeas,rows,items,itemCount:items.length};
+    }
+    function contentSystemRecallUnits(group){
+      const units=[];
+      (group.coreIdeas||[]).filter(it=>it.recallable).forEach(it=>units.push({id:`LINE:${it.lineId}`,kind:'line',family:'핵심 아이디어',lineIds:[it.lineId]}));
+      const ki=group.rows.find(r=>r.family==='지식·이해');
+      if(ki?.items?.length)units.push({id:`KI:${group.subject}:${group.area}`,kind:'ki',family:'지식·이해',lineIds:ki.items.map(x=>x.lineId)});
+      group.rows.filter(r=>r.family!=='지식·이해').forEach(r=>r.items.filter(it=>it.recallable).forEach(it=>units.push({id:`LINE:${it.lineId}`,kind:'line',family:r.family,lineIds:[it.lineId]})));
+      return units;
+    }
+    function buildContentSystemTasks(subject,area,stage){
+      const group=buildContentSystemGroup(subject,area);if(!group)return[];
+      if(stage==='whole')return [{type:'content-system',group,focus:{id:'whole',kind:'all',lineIds:group.items.filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId)}}];
+      return contentSystemRecallUnits(group).map(unit=>({type:'content-system',group,focus:unit}));
     }
     function buildWholeGroup(subject,area,familyGroup){
       const def=groupDef(familyGroup);if(!def)return null;
@@ -93,7 +106,22 @@
       });
       return out;
     }
-    function basePool(){return state.ui.stage==='whole'?buildWholeTasks():buildLineTasks();}
+    function basePool(){
+      if(state.ui.family==='content-system'){
+        const out=[];
+        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentSystemTasks(subject,area,state.ui.stage))));
+        return out;
+      }
+      if(state.ui.family==='content-standards'&&state.ui.stage!=='whole'){
+        const out=[];
+        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>{
+          out.push(...buildContentSystemTasks(subject,area,state.ui.stage));
+          data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='성취기준').forEach(line=>out.push({type:'line',line}));
+        }));
+        return out;
+      }
+      return state.ui.stage==='whole'?buildWholeTasks():buildLineTasks();
+    }
     function rebuild(preserveId){const pool=basePool();queue=pool.slice();retryCounts={};const idx=preserveId?queue.findIndex(t=>taskId(t)===preserveId):-1;cursor=idx>=0?idx:0;return queue;}
     function current(){return queue[cursor]||null;}
     function selectedSet(line){
@@ -111,7 +139,7 @@
     function prev(){if(cursor>0)cursor--;return current();}
     function nextRound(){state.round=(state.round||1)+1;rebuild();return current();}
     function stats(){return {cursor:queue.length?cursor+1:0,total:queue.length,round:state.round||1};}
-    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,buildWholeGroup,buildContentStandardsGroup,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,scheduleRetry,next,prev,nextRound,stats,get queue(){return queue;}};
+    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,scheduleRetry,next,prev,nextRound,stats,get queue(){return queue;}};
   }
   CL.study={makeEngine};
 })();

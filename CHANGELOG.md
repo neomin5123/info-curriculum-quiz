@@ -1,5 +1,24 @@
 # Changelog
 
+## 9.0.12-study-rc.1
+- 답 입력칸에서 Enter 키로 즉시 채점
+- 한글 IME 조합 확정 Enter는 채점으로 오인하지 않도록 `isComposing`/229 보호
+- Tab / Shift+Tab은 브라우저 기본 입력 순서 이동 유지
+- 각 입력칸의 첫 클릭은 입력값 전체 선택
+- 같은 입력칸의 두 번째 클릭부터는 클릭한 위치에 커서 배치
+- Shift+Enter는 textarea에서 줄바꿈 용도로 보존
+- 공식 교육과정/정책/빈칸 데이터 변경 없음
+
+## 9.0.11-study-rc.1
+- `내용체계`의 단일/실전/통짜 회상을 모두 동일한 전체 표 scaffold 위에서 실행
+- 단일 회상: 표 전체를 보여주고 한 recall unit만 빈칸
+- 실전 조합: 표 전체를 보여주고 해당 line의 practical cloze set만 빈칸
+- 지식·이해: 어느 회상 방식에서도 해당 영역 목록 전체를 한 번에 회상
+- 통짜 회상: production 대상 내용 요소 전체를 한 번에 회상
+- C/X-only 항목은 표에 보이되 production 빈칸으로 강제하지 않음
+- `내용체계 + 성취기준`의 단일/실전에서도 내용체계 부분은 동일한 표 task를 재사용
+- 공식 curriculum/policy 데이터 변경 없음
+
 ## 9.0.10-study-rc.1
 - 화면 상단 통계/중·고 정보 문구/회상 안내/바퀴 수/debug status 제거
 - 우측 상단 화면 배율 추가 및 localStorage 저장

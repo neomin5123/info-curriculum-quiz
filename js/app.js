@@ -34,7 +34,7 @@ function render(){
   const task=currentTask(),st=engine.stats();el.feedback.textContent='';el.feedback.className='feedback';
   if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;
-  if(task.type==='content-system')renderContentSystem(task.group);
+  if(task.type==='content-system')renderContentSystem(task);
   else if(task.type==='content-standards')renderContentStandards(task.group);
   else if(task.type==='whole-group')renderWholeGroup(task.group);
   else if(task.type==='ki')renderKI(task.group);
@@ -53,12 +53,34 @@ function inputRows(items,prefix,mode){
   if(mode==='source')return sourceItems(items,false);if(mode==='mask')return sourceItems(items,true);
   return `<div class="group-inputs">${items.map((it,i)=>`<label class="group-input-row">${mode==='typing'?`<span class="copy-source">${esc(it.text)}</span>`:`<span class="num">${i+1}</span>`}<input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" ${mode==='typing'?`data-answer="${esc(it.text)}"`:''} autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
 }
-function contentSystemHtml(g,mode){
-  const core=g.coreIdeas?.length?`<section class="core-ideas"><div class="section-title">핵심 아이디어</div>${inputRows(g.coreIdeas,'핵심 아이디어',mode)}</section>`:'';
-  const table=`<div class="cs-table" role="table"><div class="cs-head" role="row"><div>범주</div><div>내용 요소</div></div>${g.rows.map(row=>`<div class="cs-row" role="row" data-section-block="${esc(row.family)}"><div class="cs-family">${esc(row.family)}</div><div class="cs-items">${inputRows(row.items,row.family,mode)}</div></div>`).join('')}</div>`;
+function contentSystemItemHtml(task,it,family,mode,itemIx){
+  const focus=task?.focus||{kind:'all',lineIds:[it.lineId]},active=!!focus.lineIds?.includes(it.lineId);
+  if(mode==='source'||!active)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+  if(mode==='typing')return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
+  if(mode==='mask'){
+    if(focus.kind==='all'||family==='지식·이해'||focus.kind==='ki')return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span class="mask" data-reveal>${esc(it.text)}</span></div>`;
+    const line=engine.lineMap.get(it.lineId),set=line?engine.selectedSet(line):null,ks=line?engine.keywordsForSet(line,set):[];
+    if(!line||!ks.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+    return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,ks,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
+  }
+  // cloze
+  if(focus.kind==='all'||family==='지식·이해'||focus.kind==='ki'){
+    return `<label class="cs-input-item"><span class="cs-num">${itemIx+1}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" autocomplete="off"><span class="group-mark"></span></label>`;
+  }
+  const line=engine.lineMap.get(it.lineId),set=line?engine.selectedSet(line):null,ks=line?engine.keywordsForSet(line,set):[];
+  if(!line||!ks.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,ks,(k,i)=>`<input class="inline-input cs-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="${esc(family)} 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
+}
+function contentSystemSectionHtml(task,family,items,mode){
+  return items.map((it,i)=>contentSystemItemHtml(task,it,family,mode,i)).join('');
+}
+function contentSystemHtml(g,mode,task=null){
+  const effectiveTask=task||{focus:{kind:'all',lineIds:g.items.map(x=>x.lineId)}};
+  const core=g.coreIdeas?.length?`<section class="core-ideas"><div class="section-title">핵심 아이디어</div><div class="cs-items">${contentSystemSectionHtml(effectiveTask,'핵심 아이디어',g.coreIdeas,mode)}</div></section>`:'';
+  const table=`<div class="cs-table" role="table"><div class="cs-head" role="row"><div>범주</div><div>내용 요소</div></div>${g.rows.map(row=>`<div class="cs-row" role="row" data-section-block="${esc(row.family)}"><div class="cs-family">${esc(row.family)}</div><div class="cs-items">${contentSystemSectionHtml(effectiveTask,row.family,row.items,mode)}</div></div>`).join('')}</div>`;
   return `<div class="cs-wrap">${core}${table}</div>`;
 }
-function renderContentSystem(g){el.content.innerHTML=contentSystemHtml(g,state.ui.mode);if(state.ui.mode==='mask')bindMasks();}
+function renderContentSystem(task){el.content.innerHTML=contentSystemHtml(task.group,state.ui.mode,task);if(state.ui.mode==='mask')bindMasks();}
 function renderContentStandards(g){
   const mode=state.ui.mode,content=g.content?contentSystemHtml(g.content,mode):'',standards=g.standards.length?`<section class="whole-section standards-section"><div class="section-title">성취기준</div>${inputRows(g.standards,'성취기준',mode)}</section>`:'';
   el.content.innerHTML=`<div class="whole-wrap">${content}${standards}</div>`;if(mode==='mask')bindMasks();
@@ -83,9 +105,44 @@ function groupSections(task){
   if(task.type==='content-standards')return [...(task.group.content?.coreIdeas?.length?[{family:'핵심 아이디어',items:task.group.content.coreIdeas}]:[]),...(task.group.content?.rows||[]),...(task.group.standards.length?[{family:'성취기준',items:task.group.standards}]:[])];
   return task.group.sections||[];
 }
+function gradeContentSystemTask(task,mode){
+  const focus=task.focus||{kind:'all',lineIds:task.group.items.map(x=>x.lineId)};
+  let ok=true,matched=0,total=0;
+  if(focus.kind==='all'||focus.kind==='ki'){
+    const targetSections=groupSections(task).filter(sec=>focus.kind==='all'||sec.family==='지식·이해');
+    targetSections.forEach(sec=>{
+      const selected=focus.kind==='all'?sec.items:sec.items.filter(it=>focus.lineIds.includes(it.lineId));
+      const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];
+      const r=gradeSection(selected,inputs,mode==='typing');
+      matched+=r.matched;total+=r.total;if(!r.correct)ok=false;
+    });
+    return {ok,matched,total};
+  }
+  const lid=focus.lineIds?.[0];
+  if(!lid)return {ok:false,matched:0,total:0};
+  if(mode==='typing'){
+    const inp=document.querySelector(`.group-input[data-line-id="${CSS.escape(lid)}"]`);
+    const line=engine.lineMap.get(lid),right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
+    if(inp)paintGroupInput(inp,right,right?'정답':'오답');
+    CL.storage.recordItem(state,lid,right);
+    return {ok:right,matched:right?1:0,total:1};
+  }
+  const inputs=[...document.querySelectorAll(`.cs-inline-input[data-line-id="${CSS.escape(lid)}"]`)];
+  if(!inputs.length)return {ok:false,matched:0,total:0};
+  let lineOK=true;
+  inputs.forEach(inp=>{
+    const right=CL.grading.exact(inp.value,inp.dataset.answer);
+    inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
+    if(!right)lineOK=false;
+  });
+  CL.storage.recordItem(state,lid,lineOK);
+  return {ok:lineOK,matched:inputs.filter(inp=>!inp.classList.contains('wrong')).length,total:inputs.length};
+}
 function check(){
   const task=currentTask();if(!task)return;const mode=state.ui.mode;if(mode==='source'||mode==='mask'){el.feedback.textContent='이 모드는 채점하지 않습니다.';return;}let ok=false,matched=0,total=0;
-  if(isGroupTask(task)){
+  if(task.type==='content-system'){
+    const r=gradeContentSystemTask(task,mode);ok=r.ok;matched=r.matched;total=r.total;el.feedback.textContent=ok?'정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
+  }else if(isGroupTask(task)){
     ok=true;groupSections(task).forEach(sec=>{const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];const r=gradeSection(sec.items,inputs,mode==='typing');matched+=r.matched;total+=r.total;if(!r.correct)ok=false;});el.feedback.textContent=ok?'전체 정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
   }else if(isKITask(task)){
     const answers=task.group.items.map(x=>x.text),values=mode==='typing'?String($('typingInput')?.value||'').split(/\n+/).map(x=>x.trim()).filter(Boolean):[...document.querySelectorAll('.ki-input')].map(x=>x.value),grade=CL.grading.gradeSet(values,answers);ok=grade.correct;if(mode==='cloze'){const rows=[...document.querySelectorAll('.ki-row')];grade.results.forEach((r,i)=>{const inp=rows[i]?.querySelector('input'),m=rows[i]?.querySelector('.ki-mark');if(!inp||!m)return;inp.classList.toggle('correct',r.status==='correct');inp.classList.toggle('wrong',r.status!=='correct');m.textContent=r.status==='correct'?'정답':r.status==='duplicate'?'중복':r.status==='empty'?'미입력':'오답';m.className='ki-mark '+(r.status==='correct'?'good':'bad');});}const matchedNorm=new Set(grade.matchedKeys);task.group.items.forEach(it=>CL.storage.recordItem(state,it.lineId,matchedNorm.has(CL.grading.norm(it.text))));el.feedback.textContent=ok?'전체 정답':`${grade.matchedCount}/${grade.total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
@@ -105,12 +162,35 @@ function sourceInfo(){
   if(isGroupTask(task))official=groupSections(task).map(s=>`[${s.family}]\n${s.items.map(x=>'• '+x.text).join('\n')}`).join('\n\n');else if(isKITask(task))official=task.group.items.map(x=>'• '+x.text).join('\n');else official=task.line.sourceText;
   el.dialogBody.className='source-dialog-body';el.dialogBody.innerHTML=`<dl><dt>문서</dt><dd>${esc(CL.config.officialSource)}</dd><dt>과목</dt><dd>${esc(c.subject)}</dd><dt>영역</dt><dd>${esc(c.area)}</dd><dt>구분</dt><dd>${esc(c.family)}</dd><dt>ID</dt><dd><code>${esc(c.id)}</code></dd></dl><div class="official">${esc(official)}</div>`;el.dialog.showModal();
 }
+
+function answerField(target){
+  return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;
+}
+function installAnswerInputUX(){
+  // Enter = 채점. 한글 IME 조합 확정 Enter는 무시한다.
+  el.content.addEventListener('keydown',e=>{
+    const field=answerField(e.target);if(!field)return;
+    if(e.key==='Tab')return; // 브라우저 기본 Tab / Shift+Tab 순서를 그대로 사용
+    if(e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey||e.repeat)return;
+    if(e.isComposing||e.keyCode===229)return;
+    e.preventDefault();
+    if(!el.check.disabled)check();
+  });
+  // 각 입력칸의 첫 번째 포인터 클릭은 전체 선택.
+  // 동일 입력칸의 두 번째 클릭부터는 브라우저 기본 커서 위치 선택을 허용한다.
+  el.content.addEventListener('click',e=>{
+    const field=answerField(e.target);if(!field)return;
+    if(field.dataset.firstClickSelectDone==='1')return;
+    field.dataset.firstClickSelectDone='1';
+    if(typeof field.select==='function')field.select();
+  });
+}
 function filterChange(kind){
   if(kind==='subject')state.ui.subject=el.subject.value;
   if(kind==='area')state.ui.area=el.area.value;
   syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;rebuild();
 }
-initSelectors();engine.rebuild();render();
+initSelectors();engine.rebuild();render();installAnswerInputUX();
 el.subject.onchange=()=>filterChange('subject');el.area.onchange=()=>filterChange('area');el.family.onchange=()=>{state.ui.family=el.family.value;syncStages();rebuild();};el.stage.onchange=()=>{state.ui.stage=el.stage.value;rebuild();};el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{state.ui.retry=el.retry.checked;persist();};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));el.check.onclick=check;el.reveal.onclick=reveal;el.next.onclick=()=>{engine.next();revealed=false;render();};el.prev.onclick=()=>{engine.prev();revealed=false;render();};el.round.onclick=()=>{engine.nextRound();revealed=false;render();};el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));

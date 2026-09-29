@@ -3,3 +3,7 @@ const required=['index.html','assets/css/app.css','data/curriculum/middle-high-v
 const miss=required.filter(p=>!fs.existsSync(p));if(miss.length){console.error('missing:',miss);process.exit(1);}const html=fs.readFileSync('index.html','utf8');for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p)&&p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}
 const app=fs.readFileSync('js/app.js','utf8'),engine=fs.readFileSync('js/core/study-engine.js','utf8');
 for(const label of ['성격 + 목표','내용체계','성취기준','내용체계 + 성취기준','성취기준 해설 + 적용 시 고려사항','교수학습 + 평가'])if(!engine.includes(label)){console.error('group missing',label);process.exit(1);}for(const label of ['단일 회상','실전 조합','통짜 회상'])if(!app.includes(label)){console.error('stage missing',label);process.exit(1);}if(!html.includes('zoomSelect')||!html.includes('원문 출처')){console.error('zoom/source footer missing');process.exit(1);}if(html.includes('headerStats')||html.includes('scopeHint')||html.includes('compactStatus')){console.error('removed clutter still present');process.exit(1);}console.log('package static PASS');
+const appUX=fs.readFileSync('js/app.js','utf8');
+for(const token of ['installAnswerInputUX','e.key===\'Tab\'','e.key!==\'Enter\'','e.isComposing','keyCode===229','firstClickSelectDone','field.select()']){
+  if(!appUX.includes(token)){console.error(`input UX missing: ${token}`);process.exit(1);}
+}

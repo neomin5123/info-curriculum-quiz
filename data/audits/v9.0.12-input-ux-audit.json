@@ -1,0 +1,31 @@
+{
+  "version": "v9.0.12-study-rc.1",
+  "status": "PASS — STUDY RC READY",
+  "change": "fundamental answer-input keyboard and pointer UX",
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "inputUX": {
+    "Enter": "check answer",
+    "Tab": "native next field",
+    "ShiftTab": "native previous field",
+    "firstClick": "select all",
+    "secondAndLaterClick": "native caret placement",
+    "IMECompositionEnter": "ignored",
+    "ShiftEnterTextarea": "newline"
+  },
+  "humanUXGate": "pending",
+  "packageQA": {
+    "workingTree": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "npm test": "PASS"
+    },
+    "zipReextract": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "npm test": "PASS"
+    }
+  }
+}

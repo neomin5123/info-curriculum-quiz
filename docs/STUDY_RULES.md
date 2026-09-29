@@ -36,3 +36,23 @@
 - 전체 영역 + 내용체계 전체: 영역별 표 5개를 순회한다.
 - 표 안에서는 범주별로 답을 채점하며, 같은 범주 안의 입력 순서는 무관하다.
 - 원본 line과 item mastery는 그대로 유지한다.
+
+
+## v9.0.11 내용체계 회상 방식
+모든 `내용체계` 회상은 동일한 전체 표 scaffold를 사용한다.
+
+- `단일 회상`: 한 recall unit만 시험한다. 비지식·이해 line은 single presentation set을 사용한다.
+- `실전 조합`: 한 recall unit 안에서 representative practical set을 사용한다.
+- `지식·이해`: 회상 방식과 무관하게 해당 영역의 지식·이해 목록 전체를 하나의 recall unit으로 취급한다.
+- `통짜 회상`: active production 대상 항목을 동시에 묻는다.
+- C/X-only line은 표의 맥락으로 제시하되 production 입력을 요구하지 않는다.
+
+
+## 기본 키보드/포인터 UX
+학습 입력은 마우스 없이도 완료할 수 있어야 한다.
+- Enter = 채점
+- Tab / Shift+Tab = 입력칸 이동
+- 첫 클릭 = 전체 선택
+- 두 번째 클릭부터 = 커서 위치 선택
+- IME composing Enter는 채점 금지
+- Shift+Enter = textarea 줄바꿈
