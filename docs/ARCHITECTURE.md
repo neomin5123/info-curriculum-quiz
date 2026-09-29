@@ -20,3 +20,11 @@ tools/                     build/validation
 3. generated 파일은 build 산출물이다.
 4. 학습 상태는 line/group ID를 key로 저장하여 UI 재구조화와 분리한다.
 5. 새 버전은 service worker cache 이름을 반드시 변경한다.
+
+
+## Presentation layer (v9.0.6)
+`data.lines[*].presentation`은 UI 전용이다. 공식 원문/정책/legacy cloze와 분리한다. 향후 빈칸 길이·조합을 바꿀 때 이 레이어만 수정하면 된다.
+
+
+## v9.0.7 scope layer
+UI의 `content-system`, `ki-area`, `ki-all`은 engine의 task aggregation 규칙이다. curriculum JSON을 복제하거나 변형하지 않는다. 따라서 이후 범위 UX를 바꿔도 원문/정책/presentation data는 그대로 유지된다.

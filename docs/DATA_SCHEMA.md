@@ -15,3 +15,15 @@
 - 그룹 완료와 item mastery를 분리 가능
 
 `지식·이해`의 기존 개별 cloze set은 **추적성 보존용**으로 데이터에 남지만 메인 학습에서는 `presentationOverride.suppressIndividualClozeInMainStudy=true`로 차단합니다.
+
+
+## line.presentation
+```json
+{
+  "version": "v9.0.6",
+  "units": [{"unitId":"...","text":"...","start":0,"end":4,"unitType":"term|phrase|list"}],
+  "coreSets": [{"unitIds":["..."],"blankCount":1}],
+  "practicalSets": [{"unitIds":["...","..."],"blankCount":2}]
+}
+```
+`presentation`은 학습 화면용이며 legacy keyword/policy를 대체하지 않는다.

@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
   <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.5 Study RC</title>
+  <title>CurriLoop v9.0.8 Freeze Candidate</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.5-rc1">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.8-fc1">
 </head>
 <body>
   <header class="app-header">
     <div>
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.5 Study RC · 중·고 정보</div>
+      <div class="version">v9.0.8 Freeze Candidate · 중·고 정보</div>
     </div>
     <div class="header-stats" id="headerStats" aria-live="polite"></div>
   </header>
@@ -25,12 +25,9 @@
         <label>과목<select id="subjectSelect"></select></label>
         <label>영역<select id="areaSelect"></select></label>
         <label>출제 항목<select id="familySelect"></select></label>
-        <label>학습 단계<select id="stageSelect">
-          <option value="single">단일 회상</option>
-          <option value="practical">실전 조합</option>
-          <option value="full">영역 전체 회상</option>
-        </select></label>
+        <label>회상 방식<select id="stageSelect"></select></label>
       </div>
+      <div class="scope-hint" id="scopeHint" aria-live="polite"></div>
       <div class="mode-row">
         <div class="segmented" role="tablist" aria-label="학습 모드">
           <button data-mode="source" role="tab">원문</button>
@@ -69,11 +66,11 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.5-rc1"></script>
-  <script src="js/core/config.js?v=9.0.5-rc1"></script>
-  <script src="js/core/storage.js?v=9.0.5-rc1"></script>
-  <script src="js/core/grading.js?v=9.0.5-rc1"></script>
-  <script src="js/core/study-engine.js?v=9.0.5-rc1"></script>
-  <script src="js/app.js?v=9.0.5-rc1"></script>
+  <script src="data/generated/study-data.js?v=9.0.8-fc1"></script>
+  <script src="js/core/config.js?v=9.0.8-fc1"></script>
+  <script src="js/core/storage.js?v=9.0.8-fc1"></script>
+  <script src="js/core/grading.js?v=9.0.8-fc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.8-fc1"></script>
+  <script src="js/app.js?v=9.0.8-fc1"></script>
 </body>
 </html>
