@@ -1,0 +1,3 @@
+CurriLoop 9.0.15-study-rc.1
+Expected visible header: CurriLoop  v9.0.15 Study RC
+Content-system behavior: one full table per area; recall difficulty changes blank density across the table.

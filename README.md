@@ -78,3 +78,23 @@ Automated final QA candidate. Curriculum data is unchanged from v9.0.7; final fr
 - 같은 입력칸 두 번째 클릭부터: 클릭 위치에 커서
 - 한글 IME 조합 중 Enter는 채점하지 않음
 - textarea에서 Shift+Enter는 줄바꿈
+
+
+## v9.0.13 deployment guard
+The Study RC no longer uses a persistent Service Worker cache. `vercel.json` sets `no-store`, and old CurriLoop Service Worker/cache entries are cleared on load. The deployed header must read `v9.0.13 Deploy Safe`.
+
+
+## v9.0.14 — 표 전체에 난이도 적용
+내용체계 학습은 어느 회상 방식에서도 영역당 **표 1개**를 유지한다. 난이도는 표를 쪼개는 것이 아니라 표 안에 뚫리는 빈칸의 밀도로만 바뀐다.
+
+- 단일 회상: 각 production line의 single unit 1개씩
+- 실전 조합: 각 production line의 representative multi-blank set
+- 전체 회상: 각 production line의 presentation unit 전체
+- 지식·이해: 항상 해당 영역 목록 전체 입력
+- C/X-only: 문맥으로 보이되 강제 production 없음
+
+상단 버전 표기는 CurriLoop 제목 옆에 인라인으로 배치한다.
+
+
+## v9.0.15 — 내용체계 + 성취기준 한 화면
+특정 영역에서 `내용체계 + 성취기준`을 선택하면 내용체계 전체 표와 그 영역의 성취기준을 한 화면에 함께 표시한다. `성취기준` 단독 출제 항목도 그대로 제공된다.

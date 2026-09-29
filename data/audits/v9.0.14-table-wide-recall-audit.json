@@ -1,0 +1,42 @@
+{
+  "version": "v9.0.14-study-rc.1",
+  "status": "PASS — STUDY RC READY",
+  "officialLines": 270,
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "presentationDataMutated": false,
+  "contentSystemTaskUnit": "subject × area table",
+  "tasksPerSpecificArea": {
+    "single": 1,
+    "practical": 1,
+    "whole": 1
+  },
+  "blankDensity": {
+    "single": "one selected presentation unit per production-eligible non-KI line",
+    "practical": "representative practical set per production-eligible non-KI line",
+    "whole": "all presentation units per production-eligible non-KI line",
+    "knowledgeUnderstanding": "all official KI items regardless of stage",
+    "C_X_only": "visible source context, no forced production"
+  },
+  "header": "version inline to the right of CurriLoop",
+  "wholeRecallLabel": "전체 회상",
+  "inputUXPreserved": true,
+  "deployCacheGuardPreserved": true,
+  "humanUXGate": "pending",
+  "packageQA": {
+    "workingTree": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    },
+    "zipReextract": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    }
+  }
+}

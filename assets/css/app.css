@@ -32,3 +32,14 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .group-inputs{display:grid;gap:9px;padding:12px 14px}.group-input-row{display:grid;grid-template-columns:28px minmax(0,1fr) 58px;gap:8px;align-items:center}.group-input-row input{width:100%;min-width:0;padding:10px 11px}.group-input-row input.correct{border-color:var(--good);background:#eff8f2}.group-input-row input.wrong{border-color:var(--bad);background:#fff1ef}.group-mark{font-size:12px;font-weight:800}.group-mark.good{color:var(--good)}.group-mark.bad{color:var(--bad)}.copy-source{font-size:14px;line-height:1.55;color:#44564a;background:#f7f9f8;border-radius:8px;padding:8px 10px}.group-input-row:has(.copy-source){grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr) 58px}
 .cs-items .group-inputs{padding:0}.cs-items .source-list{margin:0}.core-ideas{margin-bottom:14px}.standards-section{margin-top:14px}
 @media(max-width:760px){.app-header{align-items:center}.zoom-control{font-size:12px}.group-input-row{grid-template-columns:24px minmax(0,1fr) 50px}.group-input-row:has(.copy-source){grid-template-columns:1fr}.group-input-row:has(.copy-source) .group-mark{min-height:16px}}
+
+/* v9.0.14 — compact header + table-wide recall density */
+.brand-row{display:flex;align-items:baseline;gap:12px;min-width:0}
+.brand-row h1{margin:0}
+.brand-row .version{white-space:nowrap;color:var(--muted);font-size:12px;font-weight:650}
+.app-header{padding-top:10px;padding-bottom:8px}
+.cs-inline-input{min-width:110px}
+@media(max-width:760px){
+  .brand-row{gap:8px}
+  .brand-row .version{font-size:11px}
+}

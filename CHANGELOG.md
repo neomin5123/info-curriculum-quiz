@@ -1,5 +1,36 @@
 # Changelog
 
+## 9.0.15-study-rc.1
+- `내용체계 + 성취기준`을 영역당 **한 composite 화면**으로 수정
+- 내용체계 전체 표 아래에 성취기준을 같은 문제에서 함께 표시
+- 단일/실전/전체 회상 모두 같은 composite 화면 유지
+- 성취기준도 선택한 회상 방식에 맞춰 빈칸 밀도 적용
+- 특정 영역 드롭다운에서 `성취기준` 단독 항목 사용 가능 여부를 behavior QA로 고정
+- 공식 curriculum/policy/presentation 데이터 변경 없음
+
+## 9.0.14-study-rc.1
+- 버전 표기를 CurriLoop 제목 우측 인라인으로 이동해 상단 높이 축소
+- `내용체계`는 단일/실전/전체 회상 모두 영역당 표 1개를 유지
+- 단일 회상: production 가능한 각 비지식·이해 line에서 single presentation unit 1개씩 빈칸
+- 실전 조합: production 가능한 각 비지식·이해 line에서 representative practical set을 동시에 빈칸
+- 전체 회상: production 가능한 각 비지식·이해 line의 presentation unit 전체를 동시에 빈칸
+- 지식·이해: 난이도와 무관하게 해당 영역 항목 전체를 통째로 입력
+- C/X-only 항목은 표에는 보이되 production 빈칸으로 강제하지 않음
+- `통짜 회상` 명칭을 `전체 회상`으로 변경
+- v9.0.12 입력 UX(Enter 채점, Tab 이동, 첫 클릭 전체선택) 유지
+- v9.0.13 배포 캐시 방지(no-store, 기존 SW/cache 정리) 유지
+- 공식 curriculum/policy/presentation 데이터 변경 없음
+
+## 9.0.13-deploy-safe.1
+- v9.0.11/v9.0.12 content-system table scaffold behavior preserved
+- Service Worker registration disabled during Study RC
+- any existing CurriLoop Service Worker registration is unregistered on load
+- existing `curriloop-*` Cache Storage entries are deleted on load
+- service-worker.js now self-retires and clears old CurriLoop caches
+- Vercel `Cache-Control: no-store` added for RC deployment
+- `BUILD_ID.txt` added for immediate deployed-build verification
+- curriculum/policy/presentation data unchanged
+
 ## 9.0.12-study-rc.1
 - 답 입력칸에서 Enter 키로 즉시 채점
 - 한글 IME 조합 확정 Enter는 채점으로 오인하지 않도록 `isComposing`/229 보호

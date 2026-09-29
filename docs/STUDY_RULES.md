@@ -56,3 +56,13 @@
 - 두 번째 클릭부터 = 커서 위치 선택
 - IME composing Enter는 채점 금지
 - Shift+Enter = textarea 줄바꿈
+
+
+## v9.0.14 내용체계 난이도 규칙
+내용체계의 학습 단위는 항상 `학교급 × 영역`의 전체 표다. 회상 방식은 표의 구조를 바꾸지 않고 빈칸 밀도만 바꾼다.
+
+- 단일 회상: production 가능한 비지식·이해 line마다 single presentation set
+- 실전 조합: production 가능한 비지식·이해 line마다 practical presentation set
+- 전체 회상: production 가능한 비지식·이해 line의 presentation units 전체
+- 지식·이해: 세 단계 모두 해당 영역의 지식·이해 항목 전체를 통째로 회상
+- C/X-only: 표에 원문으로 유지하고 production 답안을 요구하지 않음

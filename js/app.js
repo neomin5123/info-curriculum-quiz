@@ -9,7 +9,7 @@ function option(v,t){const o=document.createElement('option');o.value=v;o.textCo
 function setOptions(select,items,preferred){select.innerHTML='';items.forEach(([v,t])=>select.append(option(v,t)));select.value=items.some(x=>x[0]===preferred)?preferred:items[0]?.[0]||'';return select.value;}
 function familyItems(){return engine.familyGroupOrder.filter(id=>engine.groupAvailable(id,el.subject.value,state.ui.area)).map(id=>[id,engine.groupLabel(id)]);}
 function syncFamilies(preferred=state.ui.family){state.ui.family=setOptions(el.family,familyItems(),preferred);}
-function syncStages(preferred=state.ui.stage){state.ui.stage=setOptions(el.stage,[['single','단일 회상'],['practical','실전 조합'],['whole','통짜 회상']],preferred);}
+function syncStages(preferred=state.ui.stage){state.ui.stage=setOptions(el.stage,[['single','단일 회상'],['practical','실전 조합'],['whole','전체 회상']],preferred);}
 function initSelectors(){
   el.subject.append(option('all','중·고 정보 전체'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
   el.area.append(option('all','전체 영역'));engine.areas.forEach(a=>el.area.append(option(a,a)));
@@ -35,7 +35,7 @@ function render(){
   if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;
   if(task.type==='content-system')renderContentSystem(task);
-  else if(task.type==='content-standards')renderContentStandards(task.group);
+  else if(task.type==='content-standards')renderContentStandards(task);
   else if(task.type==='whole-group')renderWholeGroup(task.group);
   else if(task.type==='ki')renderKI(task.group);
   else renderLine(task.line);
@@ -54,36 +54,56 @@ function inputRows(items,prefix,mode){
   return `<div class="group-inputs">${items.map((it,i)=>`<label class="group-input-row">${mode==='typing'?`<span class="copy-source">${esc(it.text)}</span>`:`<span class="num">${i+1}</span>`}<input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" ${mode==='typing'?`data-answer="${esc(it.text)}"`:''} autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
 }
 function contentSystemItemHtml(task,it,family,mode,itemIx){
-  const focus=task?.focus||{kind:'all',lineIds:[it.lineId]},active=!!focus.lineIds?.includes(it.lineId);
+  const focus=task?.focus||{kind:'whole',lineIds:[it.lineId]},active=!!focus.lineIds?.includes(it.lineId);
   if(mode==='source'||!active)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
-  if(mode==='typing')return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
-  if(mode==='mask'){
-    if(focus.kind==='all'||family==='지식·이해'||focus.kind==='ki')return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span class="mask" data-reveal>${esc(it.text)}</span></div>`;
-    const line=engine.lineMap.get(it.lineId),set=line?engine.selectedSet(line):null,ks=line?engine.keywordsForSet(line,set):[];
-    if(!line||!ks.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
-    return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,ks,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
-  }
-  // cloze
-  if(focus.kind==='all'||family==='지식·이해'||focus.kind==='ki'){
+
+  // 지식·이해는 회상 난이도와 무관하게 해당 영역의 항목 전체를 통째로 회상한다.
+  if(family==='지식·이해'){
+    if(mode==='mask')return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span class="mask" data-reveal>${esc(it.text)}</span></div>`;
+    if(mode==='typing')return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
     return `<label class="cs-input-item"><span class="cs-num">${itemIx+1}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" autocomplete="off"><span class="group-mark"></span></label>`;
   }
-  const line=engine.lineMap.get(it.lineId),set=line?engine.selectedSet(line):null,ks=line?engine.keywordsForSet(line,set):[];
-  if(!line||!ks.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
-  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,ks,(k,i)=>`<input class="inline-input cs-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="${esc(family)} 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
+
+  const line=engine.lineMap.get(it.lineId);
+  const units=line?engine.recallUnitsForLine(line,focus.kind):[];
+
+  if(mode==='typing'){
+    return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
+  }
+  if(!line||!units.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+
+  if(mode==='mask'){
+    return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
+  }
+
+  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input cs-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="${esc(family)} 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
 }
 function contentSystemSectionHtml(task,family,items,mode){
   return items.map((it,i)=>contentSystemItemHtml(task,it,family,mode,i)).join('');
 }
 function contentSystemHtml(g,mode,task=null){
-  const effectiveTask=task||{focus:{kind:'all',lineIds:g.items.map(x=>x.lineId)}};
+  const effectiveTask=task||{focus:{kind:'whole',lineIds:g.items.filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId)}};
   const core=g.coreIdeas?.length?`<section class="core-ideas"><div class="section-title">핵심 아이디어</div><div class="cs-items">${contentSystemSectionHtml(effectiveTask,'핵심 아이디어',g.coreIdeas,mode)}</div></section>`:'';
   const table=`<div class="cs-table" role="table"><div class="cs-head" role="row"><div>범주</div><div>내용 요소</div></div>${g.rows.map(row=>`<div class="cs-row" role="row" data-section-block="${esc(row.family)}"><div class="cs-family">${esc(row.family)}</div><div class="cs-items">${contentSystemSectionHtml(effectiveTask,row.family,row.items,mode)}</div></div>`).join('')}</div>`;
   return `<div class="cs-wrap">${core}${table}</div>`;
 }
 function renderContentSystem(task){el.content.innerHTML=contentSystemHtml(task.group,state.ui.mode,task);if(state.ui.mode==='mask')bindMasks();}
-function renderContentStandards(g){
-  const mode=state.ui.mode,content=g.content?contentSystemHtml(g.content,mode):'',standards=g.standards.length?`<section class="whole-section standards-section"><div class="section-title">성취기준</div>${inputRows(g.standards,'성취기준',mode)}</section>`:'';
-  el.content.innerHTML=`<div class="whole-wrap">${content}${standards}</div>`;if(mode==='mask')bindMasks();
+function standardItemHtml(task,it,mode,itemIx){
+  const active=task.focus?.standardLineIds?.includes(it.lineId);
+  if(mode==='source'||!active)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+  const line=engine.lineMap.get(it.lineId),units=line?engine.recallUnitsForLine(line,task.focus?.kind||state.ui.stage):[];
+  if(mode==='typing')return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input standard-input" data-section="성취기준" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
+  if(!line||!units.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
+  if(mode==='mask')return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
+  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input standard-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="성취기준 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
+}
+function renderContentStandards(task){
+  const mode=state.ui.mode,g=task.group;
+  const contentTask=g.content?{type:'content-system',group:g.content,focus:{kind:task.focus?.kind||state.ui.stage,lineIds:task.focus?.contentLineIds||[]}}:null;
+  const content=g.content?contentSystemHtml(g.content,mode,contentTask):'';
+  const standards=g.standards.length?`<section class="whole-section standards-section"><div class="section-title">성취기준</div><div class="cs-items">${g.standards.map((it,i)=>standardItemHtml(task,it,mode,i)).join('')}</div></section>`:'';
+  el.content.innerHTML=`<div class="whole-wrap">${content}${standards}</div>`;
+  if(mode==='mask')bindMasks();
 }
 function renderWholeGroup(g){
   const mode=state.ui.mode;el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)}</div>${inputRows(s.items,s.family,mode)}</section>`).join('')}</div>`;if(mode==='mask')bindMasks();
@@ -106,42 +126,86 @@ function groupSections(task){
   return task.group.sections||[];
 }
 function gradeContentSystemTask(task,mode){
-  const focus=task.focus||{kind:'all',lineIds:task.group.items.map(x=>x.lineId)};
+  const activeIds=new Set(task.focus?.lineIds||[]);
   let ok=true,matched=0,total=0;
-  if(focus.kind==='all'||focus.kind==='ki'){
-    const targetSections=groupSections(task).filter(sec=>focus.kind==='all'||sec.family==='지식·이해');
-    targetSections.forEach(sec=>{
-      const selected=focus.kind==='all'?sec.items:sec.items.filter(it=>focus.lineIds.includes(it.lineId));
+
+  groupSections(task).forEach(sec=>{
+    if(sec.family==='지식·이해'){
+      const items=sec.items.filter(it=>activeIds.has(it.lineId));
+      if(!items.length)return;
       const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];
-      const r=gradeSection(selected,inputs,mode==='typing');
+      const r=gradeSection(items,inputs,mode==='typing');
       matched+=r.matched;total+=r.total;if(!r.correct)ok=false;
+      return;
+    }
+
+    sec.items.filter(it=>activeIds.has(it.lineId)).forEach(it=>{
+      const line=engine.lineMap.get(it.lineId);
+      if(mode==='typing'){
+        const inp=document.querySelector(`.group-input[data-line-id="${CSS.escape(it.lineId)}"]`);
+        const right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
+        if(inp)paintGroupInput(inp,right,right?'정답':'오답');
+        CL.storage.recordItem(state,it.lineId,right);
+        matched+=right?1:0;total+=1;if(!right)ok=false;
+        return;
+      }
+      const inputs=[...document.querySelectorAll(`.cs-inline-input[data-line-id="${CSS.escape(it.lineId)}"]`)];
+      if(!inputs.length)return;
+      let lineOK=true,lineMatched=0;
+      inputs.forEach(inp=>{
+        const right=CL.grading.exact(inp.value,inp.dataset.answer);
+        inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
+        if(right)lineMatched++;else lineOK=false;
+      });
+      CL.storage.recordItem(state,it.lineId,lineOK);
+      matched+=lineMatched;total+=inputs.length;if(!lineOK)ok=false;
     });
-    return {ok,matched,total};
-  }
-  const lid=focus.lineIds?.[0];
-  if(!lid)return {ok:false,matched:0,total:0};
-  if(mode==='typing'){
-    const inp=document.querySelector(`.group-input[data-line-id="${CSS.escape(lid)}"]`);
-    const line=engine.lineMap.get(lid),right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
-    if(inp)paintGroupInput(inp,right,right?'정답':'오답');
-    CL.storage.recordItem(state,lid,right);
-    return {ok:right,matched:right?1:0,total:1};
-  }
-  const inputs=[...document.querySelectorAll(`.cs-inline-input[data-line-id="${CSS.escape(lid)}"]`)];
-  if(!inputs.length)return {ok:false,matched:0,total:0};
-  let lineOK=true;
-  inputs.forEach(inp=>{
-    const right=CL.grading.exact(inp.value,inp.dataset.answer);
-    inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
-    if(!right)lineOK=false;
   });
-  CL.storage.recordItem(state,lid,lineOK);
-  return {ok:lineOK,matched:inputs.filter(inp=>!inp.classList.contains('wrong')).length,total:inputs.length};
+
+  return {ok,matched,total};
+}
+function gradeStandardLines(task,mode){
+  let ok=true,matched=0,total=0;
+  (task.group.standards||[]).filter(it=>task.focus?.standardLineIds?.includes(it.lineId)).forEach(it=>{
+    const line=engine.lineMap.get(it.lineId);
+    if(mode==='typing'){
+      const inp=document.querySelector(`.standard-input[data-line-id="${CSS.escape(it.lineId)}"]`);
+      const right=!!(inp&&line&&CL.grading.exact(inp.value,line.sourceText));
+      if(inp)paintGroupInput(inp,right,right?'정답':'오답');
+      CL.storage.recordItem(state,it.lineId,right);
+      matched+=right?1:0;total+=1;if(!right)ok=false;
+      return;
+    }
+    const inputs=[...document.querySelectorAll(`.standard-inline-input[data-line-id="${CSS.escape(it.lineId)}"]`)];
+    if(!inputs.length)return;
+    let lineOK=true,lineMatched=0;
+    inputs.forEach(inp=>{
+      const right=CL.grading.exact(inp.value,inp.dataset.answer);
+      inp.classList.toggle('correct',right);inp.classList.toggle('wrong',!right);
+      if(right)lineMatched++;else lineOK=false;
+    });
+    CL.storage.recordItem(state,it.lineId,lineOK);
+    matched+=lineMatched;total+=inputs.length;if(!lineOK)ok=false;
+  });
+  return {ok,matched,total};
+}
+function gradeContentStandardsTask(task,mode){
+  let ok=true,matched=0,total=0;
+  if(task.group.content){
+    const contentTask={type:'content-system',group:task.group.content,focus:{kind:task.focus?.kind||state.ui.stage,lineIds:task.focus?.contentLineIds||[]}};
+    const r=gradeContentSystemTask(contentTask,mode);
+    matched+=r.matched;total+=r.total;if(!r.ok)ok=false;
+  }
+  const s=gradeStandardLines(task,mode);
+  matched+=s.matched;total+=s.total;if(!s.ok)ok=false;
+  return {ok,matched,total};
 }
 function check(){
   const task=currentTask();if(!task)return;const mode=state.ui.mode;if(mode==='source'||mode==='mask'){el.feedback.textContent='이 모드는 채점하지 않습니다.';return;}let ok=false,matched=0,total=0;
   if(task.type==='content-system'){
     const r=gradeContentSystemTask(task,mode);ok=r.ok;matched=r.matched;total=r.total;el.feedback.textContent=ok?'정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
+  }else if(task.type==='content-standards'){
+    const r=gradeContentStandardsTask(task,mode);ok=r.ok;matched=r.matched;total=r.total;el.feedback.textContent=ok?'정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
   }else if(isGroupTask(task)){
     ok=true;groupSections(task).forEach(sec=>{const inputs=[...document.querySelectorAll(`.group-input[data-section="${CSS.escape(sec.family)}"]`)];const r=gradeSection(sec.items,inputs,mode==='typing');matched+=r.matched;total+=r.total;if(!r.correct)ok=false;});el.feedback.textContent=ok?'전체 정답':`${matched}/${total}개 정답`;el.feedback.className='feedback '+(ok?'good':'bad');
   }else if(isKITask(task)){
@@ -193,5 +257,16 @@ function filterChange(kind){
 initSelectors();engine.rebuild();render();installAnswerInputUX();
 el.subject.onchange=()=>filterChange('subject');el.area.onchange=()=>filterChange('area');el.family.onchange=()=>{state.ui.family=el.family.value;syncStages();rebuild();};el.stage.onchange=()=>{state.ui.stage=el.stage.value;rebuild();};el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{state.ui.retry=el.retry.checked;persist();};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));el.check.onclick=check;el.reveal.onclick=reveal;el.next.onclick=()=>{engine.next();revealed=false;render();};el.prev.onclick=()=>{engine.prev();revealed=false;render();};el.round.onclick=()=>{engine.nextRound();revealed=false;render();};el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
-if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+if(location.protocol!=='file:')window.addEventListener('load',async()=>{
+  try{
+    if('serviceWorker' in navigator){
+      const regs=await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r=>r.unregister()));
+    }
+    if('caches' in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.filter(k=>k.startsWith('curriloop-')).map(k=>caches.delete(k)));
+    }
+  }catch(_){}
+});
 })();

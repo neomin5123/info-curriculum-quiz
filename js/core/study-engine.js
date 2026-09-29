@@ -57,8 +57,8 @@
     }
     function buildContentSystemTasks(subject,area,stage){
       const group=buildContentSystemGroup(subject,area);if(!group)return[];
-      if(stage==='whole')return [{type:'content-system',group,focus:{id:'whole',kind:'all',lineIds:group.items.filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId)}}];
-      return contentSystemRecallUnits(group).map(unit=>({type:'content-system',group,focus:unit}));
+      const lineIds=group.items.filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId);
+      return [{type:'content-system',group,focus:{id:stage,kind:stage,lineIds}}];
     }
     function buildWholeGroup(subject,area,familyGroup){
       const def=groupDef(familyGroup);if(!def)return null;
@@ -72,6 +72,12 @@
       const standards=data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='성취기준').map(itemFromLine);
       if(!content&&!standards.length)return null;
       return {groupId:`CST:${subject}:${area}`,subject,subjectLabel:labels[subject],area,familyGroup:'content-standards',label:'내용체계 + 성취기준',prompt:`${area} 영역의 내용체계와 성취기준을 모두 회상하시오.`,content,standards,items:[...(content?.items||[]),...standards]};
+    }
+    function buildContentStandardsTasks(subject,area,stage){
+      const group=buildContentStandardsGroup(subject,area);if(!group)return[];
+      const contentLineIds=(group.content?.items||[]).filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId);
+      const standardLineIds=(group.standards||[]).filter(x=>x.recallable).map(x=>x.lineId);
+      return [{type:'content-standards',group,focus:{id:stage,kind:stage,contentLineIds,standardLineIds}}];
     }
     function buildWholeTasks(){
       const u=state.ui,id=u.family,def=groupDef(id),out=[];if(!def)return out;
@@ -112,12 +118,9 @@
         selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentSystemTasks(subject,area,state.ui.stage))));
         return out;
       }
-      if(state.ui.family==='content-standards'&&state.ui.stage!=='whole'){
+      if(state.ui.family==='content-standards'){
         const out=[];
-        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>{
-          out.push(...buildContentSystemTasks(subject,area,state.ui.stage));
-          data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='성취기준').forEach(line=>out.push({type:'line',line}));
-        }));
+        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentStandardsTasks(subject,area,state.ui.stage))));
         return out;
       }
       return state.ui.stage==='whole'?buildWholeTasks():buildLineTasks();
@@ -134,12 +137,20 @@
       if(line.presentation&&set.unitIds){const map=new Map(line.presentation.units.map(u=>[u.unitId,u]));return set.unitIds.map(id=>map.get(id)).filter(Boolean).sort((a,b)=>a.start-b.start);}
       const map=new Map(line.keywords.map(k=>[k.keywordId,k]));return set.keywordIds.map(id=>map.get(id)).filter(Boolean).sort((a,b)=>a.start-b.start);
     }
+    function recallUnitsForLine(line,stage=state.ui.stage){
+      if(stage==='whole'){
+        if(line.presentation?.units?.length)return line.presentation.units.slice().sort((a,b)=>a.start-b.start);
+        return line.keywords.filter(k=>k.active).slice().sort((a,b)=>a.start-b.start);
+      }
+      const set=selectedSet(line);
+      return keywordsForSet(line,set);
+    }
     function scheduleRetry(task){if(!state.ui.retry)return;const id=taskId(task),count=retryCounts[id]||0;if(count>=CL.config.maxRetriesPerTaskPerRound)return;retryCounts[id]=count+1;queue.splice(Math.min(cursor+1+CL.config.retryDelay,queue.length),0,task);}
     function next(){if(!queue.length)return null;if(cursor<queue.length-1){cursor++;return current();}state.round=(state.round||1)+1;rebuild();return current();}
     function prev(){if(cursor>0)cursor--;return current();}
     function nextRound(){state.round=(state.round||1)+1;rebuild();return current();}
     function stats(){return {cursor:queue.length?cursor+1:0,total:queue.length,round:state.round||1};}
-    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,scheduleRetry,next,prev,nextRound,stats,get queue(){return queue;}};
+    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,nextRound,stats,get queue(){return queue;}};
   }
   CL.study={makeEngine};
 })();
