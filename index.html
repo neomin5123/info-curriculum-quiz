@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
   <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.17 UX Restoration</title>
+  <title>CurriLoop v9.0.21 Study RC</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.17-ux1">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.21-rc1">
 </head>
-<body data-build="9.0.17-ux-restoration.1">
+<body data-build="9.0.21-study-rc.1">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.17 UX Restoration</div>
+      <div class="version">v9.0.21 Study RC</div>
     </div>
     <label class="zoom-control">화면 배율
       <select id="zoomSelect" aria-label="화면 배율">
@@ -24,6 +24,12 @@
   </header>
 
   <main class="app-shell">
+    <nav class="main-tabs" role="tablist" aria-label="CurriLoop 주요 화면">
+      <button id="studyMainTab" class="main-tab active" role="tab" aria-selected="true" aria-controls="studyPage">학습</button>
+      <button id="reviewMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="reviewPage">복습</button>
+    </nav>
+
+    <section id="studyPage" role="tabpanel" aria-labelledby="studyMainTab">
     <section class="control-card" aria-label="학습 범위 설정">
       <div class="control-grid">
         <label>과목<select id="subjectSelect"></select></label>
@@ -56,18 +62,42 @@
     </section>
 
     <footer class="provenance-footer" id="provenanceFooter" aria-label="현재 학습 출처"></footer>
+    </section>
+
+    <section id="reviewPage" class="review-page hidden" role="tabpanel" aria-labelledby="reviewMainTab">
+      <section class="review-card">
+        <div class="review-head">
+          <div><span class="review-kicker">복습</span><h2>다시 꺼내기</h2></div>
+          <div id="reviewSummary" class="review-summary"></div>
+        </div>
+        <div class="review-stats">
+          <div class="review-stat"><span>지연 재인출</span><strong id="reviewRetryCount">0</strong><small>오답·모름·표기 확인</small></div>
+          <div class="review-stat"><span>취약 항목</span><strong id="reviewWeakCount">0</strong><small>누적 실패 기록이 있는 원문</small></div>
+        </div>
+        <section class="review-section">
+          <div class="review-section-head"><h3>지연 재인출</h3><small>카드를 눌러 원래 문맥에서 다시 답합니다.</small></div>
+          <div id="reviewRetryList" class="review-list"></div>
+        </section>
+        <section class="review-section">
+          <div class="review-section-head"><h3>취약 항목</h3><small>누적 기록 기준 상위 항목</small></div>
+          <div id="reviewWeakList" class="review-list"></div>
+        </section>
+      </section>
+    </section>
   </main>
+
+  <aside id="retryDock" class="retry-dock" aria-label="지연 재인출 카드" aria-live="polite"></aside>
 
   <dialog id="sourceDialog">
     <div class="dialog-head"><strong>원문 출처</strong><button id="closeSource" aria-label="닫기">×</button></div>
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.17-ux1"></script>
-  <script src="js/core/config.js?v=9.0.17-ux1"></script>
-  <script src="js/core/storage.js?v=9.0.17-ux1"></script>
-  <script src="js/core/grading.js?v=9.0.17-ux1"></script>
-  <script src="js/core/study-engine.js?v=9.0.17-ux1"></script>
-  <script src="js/app.js?v=9.0.17-ux1"></script>
+  <script src="data/generated/study-data.js?v=9.0.21-rc1"></script>
+  <script src="js/core/config.js?v=9.0.21-rc1"></script>
+  <script src="js/core/storage.js?v=9.0.21-rc1"></script>
+  <script src="js/core/grading.js?v=9.0.21-rc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.21-rc1"></script>
+  <script src="js/app.js?v=9.0.21-rc1"></script>
 </body>
 </html>

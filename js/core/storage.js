@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   const CL=window.CurriLoop=window.CurriLoop||{};
-  function fresh(){return {version:CL.config.appVersion,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'single',mode:'cloze',retry:true,zoom:100},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},scopeRounds:{},scopeTasks:{}};}
+  function fresh(){return {version:CL.config.appVersion,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'single',mode:'cloze',retry:true,zoom:100,mainTab:'study'},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},scopeRounds:{},scopeTasks:{},answerSerial:0,fieldRetries:{},fieldRetryCounts:{}};}
   function migrateUi(ui){
     const out=Object.assign({},ui||{});
     const familyMap={'핵심 아이디어':'content-system','지식·이해':'content-system','과정·기능':'content-system','가치·태도':'content-system','성취기준':'standards','해설':'explain-consider','고려사항':'explain-consider','성격':'character-goals','목표':'character-goals','교수·학습':'teaching-eval','평가':'teaching-eval','all':'content-system'};
@@ -10,9 +10,10 @@
     if(!['single','practical','whole'].includes(out.stage))out.stage='single';
     if(out.area==='과목 공통')out.area='all';
     const z=Number(out.zoom);out.zoom=[85,90,100,110,125].includes(z)?z:100;
+    out.mainTab=out.mainTab==='review'?'review':'study';
     return out;
   }
-  function load(){try{const raw=localStorage.getItem(CL.config.storageKey);if(!raw)return fresh();const p=JSON.parse(raw),base=fresh();return Object.assign(base,p,{ui:Object.assign(base.ui,migrateUi(p.ui)),progress:p.progress||{},itemProgress:p.itemProgress||{},drafts:p.drafts||{},fieldGrades:p.fieldGrades||{},scopeRounds:p.scopeRounds||{},scopeTasks:p.scopeTasks||{}});}catch(e){return fresh();}}
+  function load(){try{const raw=localStorage.getItem(CL.config.storageKey);if(!raw)return fresh();const p=JSON.parse(raw),base=fresh();return Object.assign(base,p,{ui:Object.assign(base.ui,migrateUi(p.ui)),progress:p.progress||{},itemProgress:p.itemProgress||{},drafts:p.drafts||{},fieldGrades:p.fieldGrades||{},scopeRounds:p.scopeRounds||{},scopeTasks:p.scopeTasks||{},answerSerial:Number(p.answerSerial||0),fieldRetries:p.fieldRetries||{},fieldRetryCounts:p.fieldRetryCounts||{}});}catch(e){return fresh();}}
   function save(state){try{state.version=CL.config.appVersion;localStorage.setItem(CL.config.storageKey,JSON.stringify(state));}catch(e){console.warn('CurriLoop save failed',e);}}
   function normalizeStatus(result){if(result===true)return 'correct';if(result===false)return 'wrong';return ['correct','near','unknown','wrong','duplicate'].includes(String(result))?String(result):'wrong';}
   function recordInto(bucket,id,result){const status=normalizeStatus(result),p=bucket[id]||{attempts:0,correct:0,near:0,unknown:0,wrong:0,duplicate:0};p.attempts++;p[status]=Number(p[status]||0)+1;p.lastResult=status;p.updatedAt=new Date().toISOString();bucket[id]=p;return p;}
