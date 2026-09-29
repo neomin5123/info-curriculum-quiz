@@ -1,17 +1,3 @@
-{
-  "name": "CurriLoop",
-  "short_name": "CurriLoop",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#f4f7f5",
-  "theme_color": "#315e48",
-  "lang": "ko",
-  "icons": [
-    {
-      "src": "assets/icons/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
-}
+CurriLoop 9.0.17-ux-restoration.1
+Expected visible header: CurriLoop  v9.0.17 UX Restoration
+Content-system behavior: one full table per area; recall difficulty changes blank density across the table.
