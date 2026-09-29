@@ -1,5 +1,13 @@
 # Changelog
 
+## 9.0.9-study-rc.1
+- `내용체계 전체`를 line 순회가 아닌 영역별 composite table task로 변경
+- 지식·이해 / 과정·기능 / 가치·태도를 공식 내용체계 표처럼 한 화면에 표시
+- 빈칸 채우기에서 해당 영역의 모든 내용 요소를 동시에 입력
+- 전체 영역 선택 시 영역별 표 5개를 순회
+- 항목별 mastery와 오답 재출제 유지
+- v9.0.8 freeze candidate는 UX 구조 변경으로 freeze gate 재개방
+
 ## 9.0.8-freeze-candidate.1
 - 270-line automated final audit
 - source/policy/history/presentation/package gates audited

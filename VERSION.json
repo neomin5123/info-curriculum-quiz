@@ -1,7 +1,7 @@
 {
-  "version": "9.0.8-freeze-candidate.1",
+  "version": "9.0.9-study-rc.1",
   "dataVersion": "v9.0.6-granularity-redesign",
-  "status": "FREEZE_CANDIDATE",
+  "status": "STUDY_RC",
   "scope": [
     "middle-info",
     "high-info"
@@ -13,5 +13,5 @@
     "지식·이해 영역별 회상",
     "지식·이해 전체 영역 통회상"
   ],
-  "freezeGate": "AUTOMATED_QA_PASS_HUMAN_USE_CONFIRMATION_PENDING"
+  "freezeGate": "REOPENED_FOR_CONTENT_SYSTEM_TABLE_UX"
 }

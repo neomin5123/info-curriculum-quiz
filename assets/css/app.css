@@ -8,3 +8,16 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 @media(max-width:480px){.app-shell,.app-header{padding-left:12px;padding-right:12px}.control-grid{grid-template-columns:1fr}.mode-row{display:grid}.source-button{justify-self:end}.segmented{display:grid;grid-template-columns:1fr 1fr}.segmented button{padding:9px 8px}}
 
 .scope-hint{min-height:20px;margin:10px 2px -2px;color:var(--muted);font-size:13px}.ki-source-group{margin:12px 0 18px}.ki-source-title{font-size:15px;font-weight:800;color:var(--brand);margin-bottom:8px}.recall-note{font-size:13px;color:var(--muted);margin:-7px 0 12px}.ki-grid{max-width:100%}
+
+/* v9.0.9 content-system composite table */
+.cs-wrap{width:100%}.cs-table{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.cs-head,.cs-row{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr)}
+.cs-head{background:#f1f5f2;font-weight:800;color:#355442;border-bottom:1px solid var(--line)}
+.cs-head>div,.cs-family,.cs-items{padding:13px 14px}.cs-head>div:first-child,.cs-family{border-right:1px solid var(--line)}
+.cs-row+.cs-row{border-top:1px solid var(--line)}.cs-family{font-weight:800;background:#fafcfb}
+.cs-items{display:grid;gap:9px}.cs-source-item{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;align-items:start;line-height:1.65}
+.cs-num{font-weight:800;color:var(--muted)}.cs-input-item{display:grid;grid-template-columns:28px minmax(0,1fr) 58px;gap:8px;align-items:center}
+.cs-input-item input{width:100%;min-width:0;padding:10px 11px}.cs-input-item input.correct{border-color:var(--good);background:#eff8f2}.cs-input-item input.wrong{border-color:var(--bad);background:#fff1ef}
+.cs-mark{font-size:12px;font-weight:800}.cs-mark.good{color:var(--good)}.cs-mark.bad{color:var(--bad)}
+.cs-typing-item{grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr) 58px}.cs-copy-source{font-size:14px;line-height:1.55;color:#44564a;background:#f7f9f8;border-radius:8px;padding:8px 10px}
+@media(max-width:760px){.cs-head{display:none}.cs-row{grid-template-columns:1fr}.cs-family{border-right:0;border-bottom:1px solid var(--line);padding:10px 12px}.cs-items{padding:12px}.cs-typing-item{grid-template-columns:1fr}.cs-typing-item .cs-mark{min-height:16px}.cs-input-item{grid-template-columns:24px minmax(0,1fr) 50px}}

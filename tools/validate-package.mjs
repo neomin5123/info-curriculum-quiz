@@ -4,3 +4,5 @@ const miss=required.filter(p=>!fs.existsSync(p));if(miss.length){console.error('
 
 if(!html.includes('내용체계 전체') && !fs.readFileSync('js/app.js','utf8').includes('내용체계 전체')){console.error('content-system UI missing');process.exit(1);}
 if(!html.includes('회상 방식')){console.error('recall-mode label missing');process.exit(1);}
+
+const app=fs.readFileSync('js/app.js','utf8');if(!app.includes('renderContentSystem')||!app.includes('cs-table')){console.error('content-system composite table renderer missing');process.exit(1);} 

@@ -49,3 +49,7 @@
 
 ## v9.0.8 Freeze Candidate
 Automated final QA candidate. Curriculum data is unchanged from v9.0.7; final freeze waits only for real-study UX confirmation.
+
+
+## v9.0.9 — 내용체계 표 전체 회상
+`내용체계 전체`는 더 이상 개별 line task를 이어 붙이지 않는다. `학교급 × 영역`을 하나의 composite task로 만들고, 지식·이해/과정·기능/가치·태도를 한 표에서 전부 회상한다. 그룹은 원본 line에서 런타임에 파생하므로 중복 데이터가 없다.
