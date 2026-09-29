@@ -53,3 +53,7 @@ Automated final QA candidate. Curriculum data is unchanged from v9.0.7; final fr
 
 ## v9.0.9 — 내용체계 표 전체 회상
 `내용체계 전체`는 더 이상 개별 line task를 이어 붙이지 않는다. `학교급 × 영역`을 하나의 composite task로 만들고, 지식·이해/과정·기능/가치·태도를 한 표에서 전부 회상한다. 그룹은 원본 line에서 런타임에 파생하므로 중복 데이터가 없다.
+
+
+## v9.0.10 grouped study UI
+출제 항목은 교육과정 문서 구조를 기준으로 6개 학습 묶음으로 노출한다. 원본 family는 데이터에 그대로 유지되고 UI/engine에서만 묶는다. 특정 영역에서는 과목 공통 범주(성격·목표, 교수·학습·평가)를 자동으로 숨긴다. 회상 방식은 모든 묶음에서 단일/실전/통짜를 제공하되, 지식·이해는 어떤 회상 방식에서도 영역 전체 목록 recall task를 유지한다.

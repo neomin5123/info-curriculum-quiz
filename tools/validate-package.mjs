@@ -1,8 +1,5 @@
 import fs from 'node:fs';
 const required=['index.html','assets/css/app.css','data/curriculum/middle-high-v9.0.6.json','data/generated/study-data.js','js/core/config.js','js/core/storage.js','js/core/grading.js','js/core/study-engine.js','js/app.js','service-worker.js','manifest.webmanifest'];
-const miss=required.filter(p=>!fs.existsSync(p));if(miss.length){console.error('missing:',miss);process.exit(1);}const html=fs.readFileSync('index.html','utf8');for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p) && p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}console.log('package static PASS');
-
-if(!html.includes('내용체계 전체') && !fs.readFileSync('js/app.js','utf8').includes('내용체계 전체')){console.error('content-system UI missing');process.exit(1);}
-if(!html.includes('회상 방식')){console.error('recall-mode label missing');process.exit(1);}
-
-const app=fs.readFileSync('js/app.js','utf8');if(!app.includes('renderContentSystem')||!app.includes('cs-table')){console.error('content-system composite table renderer missing');process.exit(1);} 
+const miss=required.filter(p=>!fs.existsSync(p));if(miss.length){console.error('missing:',miss);process.exit(1);}const html=fs.readFileSync('index.html','utf8');for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p)&&p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}
+const app=fs.readFileSync('js/app.js','utf8'),engine=fs.readFileSync('js/core/study-engine.js','utf8');
+for(const label of ['성격 + 목표','내용체계','성취기준','내용체계 + 성취기준','성취기준 해설 + 적용 시 고려사항','교수학습 + 평가'])if(!engine.includes(label)){console.error('group missing',label);process.exit(1);}for(const label of ['단일 회상','실전 조합','통짜 회상'])if(!app.includes(label)){console.error('stage missing',label);process.exit(1);}if(!html.includes('zoomSelect')||!html.includes('원문 출처')){console.error('zoom/source footer missing');process.exit(1);}if(html.includes('headerStats')||html.includes('scopeHint')||html.includes('compactStatus')){console.error('removed clutter still present');process.exit(1);}console.log('package static PASS');
