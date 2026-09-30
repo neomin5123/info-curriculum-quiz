@@ -1,0 +1,27 @@
+{
+  "version": "v9.0.13-deploy-safe.1",
+  "status": "PASS — DEPLOY-SAFE STUDY RC",
+  "reason": "user screenshot still showed v9.0.10, proving stale/old deployment was being served",
+  "expectedVisibleVersion": "v9.0.13 Deploy Safe",
+  "serviceWorkerPersistentCache": false,
+  "vercelNoStore": true,
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "tableScaffoldBehaviorPreserved": true,
+  "packageQA": {
+    "workingTree": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    },
+    "zipReextract": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "version": "v9.0.32-study-rc.1",
+  "status": "PASS — MEMO DOCK GEOMETRY + IDENTITY",
+  "rootCause": "collapsed shell exposed its rightmost 46px, but memo tab was placed in the leftmost grid column; panel edge/X was exposed instead",
+  "fix": {
+    "panelColumn": 1,
+    "tabColumn": 2,
+    "collapsedVisibleTarget": "memo tab",
+    "visualCues": [
+      "pencil glyph",
+      "vertical 메모 label",
+      "ruled paper",
+      "MEMO badge"
+    ],
+    "close": [
+      "X",
+      "outside pointer",
+      "Escape"
+    ]
+  },
+  "storageLogicChanged": false,
+  "curriculumDataMutated": false
+}

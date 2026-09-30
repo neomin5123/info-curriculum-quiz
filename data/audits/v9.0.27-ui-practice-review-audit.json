@@ -1,0 +1,60 @@
+{
+  "version": "v9.0.27-study-rc.1",
+  "uiFixes": {
+    "outsidePointerClosesRetryCard": true,
+    "touchSupportedViaPointerEvent": true,
+    "contentSystemClozeDedicatedContainer": true,
+    "koreanWordBreak": "keep-all",
+    "clozeWidthHardCap": true
+  },
+  "practiceBankReview": {
+    "source": "v8.0.3 data/questions/production.js",
+    "questionCount": 31,
+    "ratings": {
+      "높음": 16,
+      "보통": 10,
+      "낮음": 5
+    },
+    "highIds": [
+      "EX-001",
+      "EX-003",
+      "EX-004",
+      "EX-006",
+      "EX-007",
+      "EX-008",
+      "EX-013",
+      "EX-014",
+      "EX-015",
+      "EX-018",
+      "EX-023",
+      "EX-024",
+      "EX-028",
+      "EX-029",
+      "EX-030",
+      "EX-031"
+    ],
+    "mediumIds": [
+      "EX-002",
+      "EX-005",
+      "EX-009",
+      "EX-011",
+      "EX-012",
+      "EX-019",
+      "EX-020",
+      "EX-025",
+      "EX-026",
+      "EX-027"
+    ],
+    "lowIds": [
+      "EX-010",
+      "EX-016",
+      "EX-017",
+      "EX-021",
+      "EX-022"
+    ],
+    "generalBankCount": 28,
+    "restoredToUI": false
+  },
+  "curriculumDataMutated": false,
+  "policyDataMutated": false
+}
