@@ -416,3 +416,75 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .retry-dock .practical-retry-panel *{
   pointer-events:auto;
 }
+
+/* v9.0.29 — 따라치기 전용 grid cascade fix
+   .cs-typing-item의 3열 규칙이 뒤쪽 .cs-input-item 규칙에 덮여
+   원문 열이 25px로 축소되던 문제를 최종 cascade에서 강제로 복구한다. */
+.cs-input-item.cs-typing-item{
+  display:grid;
+  grid-template-columns:minmax(240px,.95fr) minmax(280px,1.05fr) 82px!important;
+  gap:10px;
+  align-items:start;
+}
+.cs-input-item.cs-typing-item .cs-copy-source{
+  min-width:0;
+  width:auto;
+  line-height:1.65;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  white-space:normal;
+}
+.cs-input-item.cs-typing-item .answer-field-wrap{
+  width:100%;
+  min-width:0;
+  margin:0;
+}
+.cs-input-item.cs-typing-item .group-input{
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+
+/* 핵심 아이디어/일반 그룹 따라치기도 동일한 원칙으로 고정.
+   :has() 지원 여부나 뒤쪽 generic rule 순서에 영향받지 않는다. */
+.group-input-row.copy-mode{
+  display:grid;
+  grid-template-columns:minmax(240px,.95fr) minmax(280px,1.05fr) 82px!important;
+  gap:10px;
+  align-items:start;
+}
+.group-input-row.copy-mode .copy-source{
+  min-width:0;
+  line-height:1.65;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.group-input-row.copy-mode .answer-field-wrap{
+  width:100%;
+  min-width:0;
+  margin:0;
+}
+.group-input-row.copy-mode .group-input{
+  width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+
+@media(max-width:900px){
+  .cs-input-item.cs-typing-item,
+  .group-input-row.copy-mode{
+    grid-template-columns:minmax(180px,.9fr) minmax(220px,1.1fr) 64px!important;
+  }
+}
+@media(max-width:760px){
+  .cs-input-item.cs-typing-item,
+  .group-input-row.copy-mode{
+    grid-template-columns:1fr!important;
+    gap:7px;
+  }
+  .cs-input-item.cs-typing-item .group-mark,
+  .group-input-row.copy-mode .group-mark{
+    min-height:0;
+    padding-top:0;
+  }
+}

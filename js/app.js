@@ -474,7 +474,7 @@ function renderKI(g){
 }
 function inputRows(items,prefix,mode){
   if(mode==='source')return sourceItems(items,false);if(mode==='mask')return sourceItems(items,true);
-  return `<div class="group-inputs">${items.map((it,i)=>`<label class="group-input-row">${mode==='typing'?`<span class="copy-source">${esc(it.text)}</span>`:`<span class="num">${i+1}</span>`}<input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" ${mode==='typing'?`data-answer="${esc(it.text)}"`:''} autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
+  return `<div class="group-inputs">${items.map((it,i)=>`<label class="group-input-row ${mode==='typing'?'copy-mode':''}">${mode==='typing'?`<span class="copy-source">${esc(it.text)}</span>`:`<span class="num">${i+1}</span>`}<input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" ${mode==='typing'?`data-answer="${esc(it.text)}"`:''} autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
 }
 
 function valueAttitudeWholeCue(line){

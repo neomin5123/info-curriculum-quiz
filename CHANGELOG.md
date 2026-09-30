@@ -1,5 +1,15 @@
 # Changelog
 
+## 9.0.29-study-rc.1
+- `따라치기`에서 원문이 한 글자씩 세로로 찌그러지던 별도 CSS cascade 오류 수정
+- 원인: 초기 `.cs-typing-item` 3열 규칙 뒤에 v9.0.17의 generic `.cs-input-item { grid-template-columns:25px ... }`가 선언되어 같은 요소의 원문 열을 25px로 다시 덮어씀
+- 내용체계 따라치기는 `.cs-input-item.cs-typing-item`로 specificity를 높이고 최종 cascade에서 원문/입력/판정 3열을 명시
+- 일반 그룹/핵심 아이디어 따라치기는 `copy-mode` 클래스를 추가해 `:has()`와 CSS 선언 순서에 의존하지 않도록 보강
+- 원문은 `word-break:keep-all`, 입력 wrapper는 min-width 0 + width 100%로 안정화
+- 760px 이하에서는 원문 → 입력칸 → 판정 순으로 1열 stack
+- v9.0.28의 우측 카드 hit-testing 수정 유지
+- 교육과정/복습/SRS/채점 데이터 변경 없음
+
 ## 9.0.28-study-rc.1
 - 우측 재인출 카드가 접힌 상태에서도 고정 `retryDock`의 투명한 450px 영역이 메인 학습 화면 클릭을 가로채던 버그 수정
 - `retryDock` 및 카드 컨테이너 자체는 `pointer-events:none`
