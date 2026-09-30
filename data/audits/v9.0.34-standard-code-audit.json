@@ -1,0 +1,13 @@
+{
+  "version": "v9.0.34-study-rc.1",
+  "status": "PASS — STANDARD CODE/BODY SPLIT",
+  "standards": 48,
+  "behavior": {
+    "codeRequiredInTypingAnswer": false,
+    "codePosition": "left label",
+    "originalBodyPosition": "above input",
+    "inputExpected": "body only"
+  },
+  "officialSourceTextMutated": false,
+  "reviewPolicyMutated": false
+}

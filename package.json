@@ -1,19 +1,24 @@
 {
   "name": "curriloop",
-  "version": "9.0.30-study-rc.1",
+  "version": "9.0.34-study-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
     "build:data": "node tools/build-data.mjs",
     "validate:data": "node tools/validate-data.mjs",
     "validate:package": "node tools/validate-package.mjs",
-    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo",
+    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo && npm run validate:trace-guide && npm run validate:memo-visual && npm run validate:memo-defaults && npm run validate:answer-visibility && npm run validate:standard-code",
     "validate:behavior": "node tools/validate-behavior.mjs",
     "validate:ux": "node tools/validate-ux.mjs",
     "validate:retry": "node tools/validate-retry-card.mjs",
     "validate:layout": "node tools/validate-layout-v9027.mjs",
     "validate:hittest": "node tools/validate-hit-testing-v9028.mjs",
     "validate:typing-layout": "node tools/validate-typing-layout-v9029.mjs",
-    "validate:memo": "node tools/validate-area-memo-v9030.mjs"
+    "validate:memo": "node tools/validate-area-memo-v9030.mjs",
+    "validate:trace-guide": "node tools/validate-trace-guide-v9031.mjs",
+    "validate:memo-visual": "node tools/validate-area-memo-visual-v9032.mjs",
+    "validate:memo-defaults": "node tools/validate-memo-defaults-v9033.mjs",
+    "validate:answer-visibility": "node tools/validate-answer-visibility-v9033.mjs",
+    "validate:standard-code": "node tools/validate-standard-code-v9034.mjs"
   }
 }

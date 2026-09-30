@@ -548,3 +548,271 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
   .area-memo-tab{min-height:92px}.area-memo-panel{max-height:58vh}
   .area-memo-text{min-height:210px;max-height:44vh}
 }
+
+/* v9.0.31 — 구버전 따라치기: 작은 가이드를 입력칸 바로 위에 표시 */
+.trace-copy-row,
+.cs-input-item.cs-typing-item.trace-copy-row,
+.group-input-row.copy-mode.trace-copy-row{
+  display:grid;
+  grid-template-columns:25px minmax(0,1fr) 82px!important;
+  gap:8px;
+  align-items:start;
+}
+.trace-copy-stack{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:3px;
+  min-width:0;
+  width:100%;
+}
+.trace-guide{
+  display:block;
+  max-width:100%;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.32;
+  font-weight:650;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  white-space:normal;
+}
+.trace-copy-stack .answer-field-wrap,
+.trace-copy-stack .group-input{
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  margin:0;
+  box-sizing:border-box;
+}
+.trace-copy-stack .group-input{min-height:2.55rem}
+.trace-typing-area{display:grid;gap:5px}
+.trace-guide-block{padding:0 2px;font-size:11.5px;line-height:1.45}
+.trace-guide-list{display:grid;gap:2px;padding:0 2px 2px}
+.trace-guide-list>span{display:block;min-width:0}
+.trace-typing-area textarea{margin-top:0}
+@media(max-width:760px){
+  .trace-copy-row,
+  .cs-input-item.cs-typing-item.trace-copy-row,
+  .group-input-row.copy-mode.trace-copy-row{
+    grid-template-columns:22px minmax(0,1fr)!important;
+  }
+  .trace-copy-row .group-mark{grid-column:2;padding-top:0}
+  .trace-guide{font-size:10.5px;line-height:1.38}
+  .trace-guide-block{font-size:11px}
+}
+
+/* v9.0.32 — left memo dock geometry + notebook identity
+   The exposed 46px must be the memo tab itself, not the panel's right edge. */
+.area-memo-shell{
+  grid-template-columns:minmax(0,1fr) 46px!important;
+  transform:translateX(calc(-100% + 46px))!important;
+}
+.area-memo-panel{
+  grid-column:1!important;
+  grid-row:1;
+  border-left:0;
+  border-right:1px solid var(--line);
+  border-radius:0 14px 14px 0;
+}
+.area-memo-tab{
+  grid-column:2!important;
+  grid-row:1;
+  justify-self:stretch;
+  min-width:46px;
+  border:1px solid #d4dfd8;
+  border-left:0;
+  border-radius:0 12px 12px 0;
+  background:
+    linear-gradient(90deg,rgba(63,105,81,.08),transparent 9px),
+    rgba(255,255,255,.98);
+}
+.area-memo-tab-icon{
+  display:block;
+  font-size:15px;
+  line-height:1;
+  color:#51735f;
+  transform:rotate(-8deg);
+}
+.area-memo-tab-short{
+  writing-mode:vertical-rl;
+  text-orientation:upright;
+  letter-spacing:.14em;
+  font-size:12px;
+  font-weight:900;
+  color:#315a46;
+}
+
+/* Notebook-paper cue: subtle ruled lines and a margin rule. */
+.area-memo-text{
+  background-color:#fffdf9!important;
+  background-image:
+    linear-gradient(90deg,transparent 0,transparent 26px,rgba(191,102,91,.14) 26px,rgba(191,102,91,.14) 27px,transparent 27px),
+    repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(72,108,88,.10) 27px,rgba(72,108,88,.10) 28px)!important;
+  background-position:0 0,0 8px!important;
+  padding-left:38px!important;
+  line-height:28px!important;
+}
+.area-memo-head{
+  position:relative;
+}
+.area-memo-head::before{
+  content:"MEMO";
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:40px;
+  height:18px;
+  margin-right:2px;
+  border:1px solid rgba(70,105,84,.18);
+  border-radius:5px;
+  background:#edf4ef;
+  color:#557160;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.08em;
+}
+.area-memo-head>div{
+  flex:1 1 auto;
+}
+.area-memo-icon-button{
+  opacity:.58;
+  transition:opacity .14s ease,background .14s ease;
+}
+.area-memo-icon-button:hover,
+.area-memo-icon-button:focus-visible{
+  opacity:1;
+  background:#eef3ef;
+  border-radius:6px;
+}
+
+/* While only peeking, the tab is the only intentionally visible hit target. */
+.area-memo-shell:not(.open):not(:hover):not(:focus-within) .area-memo-panel{
+  visibility:hidden;
+}
+.area-memo-shell.open .area-memo-panel,
+.area-memo-shell:hover .area-memo-panel,
+.area-memo-shell:focus-within .area-memo-panel{
+  visibility:visible;
+}
+
+@media(max-width:760px){
+  .area-memo-shell{
+    grid-template-columns:minmax(0,1fr) 42px!important;
+    transform:translateX(calc(-100% + 42px))!important;
+  }
+  .area-memo-tab{min-width:42px}
+  .area-memo-text{padding-left:34px!important}
+}
+
+/* v9.0.33 — full-answer visibility */
+.trace-answer-textarea{
+  display:block;
+  width:100%!important;
+  min-width:0!important;
+  min-height:44px!important;
+  max-height:none!important;
+  resize:none!important;
+  overflow:hidden!important;
+  white-space:pre-wrap;
+  overflow-wrap:break-word;
+  word-break:keep-all;
+  line-height:1.55!important;
+  padding:9px 11px!important;
+  box-sizing:border-box;
+  font:inherit;
+}
+
+/* 짧은 빈칸은 문장 안에 남기되 실제 입력 길이에 맞춰 더 넓게 확장한다. */
+.cloze-text .answer-field-wrap.inline{
+  max-width:min(84vw,48rem)!important;
+}
+.cloze-text .inline-input{
+  width:clamp(9rem,calc(var(--answer-ch,14) * .88rem),46rem)!important;
+  max-width:min(84vw,46rem)!important;
+}
+.cs-cloze-content .answer-field-wrap.inline{
+  max-width:min(72vw,44rem)!important;
+}
+.cs-cloze-content .inline-input,
+.cs-cloze-content .cs-inline-input,
+.cs-cloze-content .standard-inline-input{
+  width:clamp(9rem,calc(var(--answer-ch,14) * .88rem),42rem)!important;
+  max-width:100%!important;
+}
+@media(max-width:760px){
+  .trace-answer-textarea{min-height:48px!important}
+  .cloze-text .inline-input,
+  .cs-cloze-content .inline-input,
+  .cs-cloze-content .cs-inline-input,
+  .cs-cloze-content .standard-inline-input{
+    width:min(78vw,calc(var(--answer-ch,14) * .78rem))!important;
+    max-width:78vw!important;
+  }
+}
+
+/* v9.0.34 — 성취기준 코드는 암기 답안이 아니라 고정 라벨 */
+.standard-row{
+  display:grid;
+  grid-template-columns:92px minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+  width:100%;
+  min-width:0;
+  padding:7px 0;
+}
+.standard-row.standard-typing-row{
+  grid-template-columns:92px minmax(0,1fr) 82px!important;
+}
+.standard-code{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:5px 7px;
+  border:1px solid #d7e0da;
+  border-radius:8px;
+  background:#f4f7f5;
+  color:#456352;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+  box-sizing:border-box;
+}
+.standard-body{
+  min-width:0;
+  line-height:1.75;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.standard-typing-row .trace-copy-stack{
+  min-width:0;
+}
+.standard-typing-row .trace-guide{
+  padding-left:1px;
+}
+.standard-typing-row .trace-answer-textarea{
+  width:100%!important;
+  min-width:0!important;
+}
+.standard-cloze-row .cs-cloze-content{
+  width:100%;
+  min-width:0;
+}
+@media(max-width:760px){
+  .standard-row{
+    grid-template-columns:78px minmax(0,1fr);
+    gap:7px;
+  }
+  .standard-row.standard-typing-row{
+    grid-template-columns:78px minmax(0,1fr)!important;
+  }
+  .standard-typing-row .group-mark{
+    grid-column:2;
+    padding-top:0;
+  }
+  .standard-code{
+    min-height:32px;
+    padding:4px 5px;
+    font-size:11px;
+  }
+}
