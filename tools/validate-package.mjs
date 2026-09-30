@@ -5,8 +5,8 @@ const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('js/app.js',
 for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p)&&p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}
 for(const label of ['성격 + 목표','내용체계','성취기준','내용체계 + 성취기준','성취기준 해설 + 적용 시 고려사항','교수학습 + 평가'])if(!engine.includes(label)){console.error('group missing',label);process.exit(1);}
 for(const label of ['단일 회상','실전 조합','전체 회상'])if(!app.includes(label)){console.error('stage missing',label);process.exit(1);}
-if(!html.includes('v9.0.23 Study RC')||!html.includes('data-build="9.0.23-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
-if(!config.includes("9.0.23-study-rc.1")){console.error('config version mismatch');process.exit(1);}
+if(!html.includes('v9.0.28 Study RC')||!html.includes('data-build="9.0.28-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
+if(!config.includes("9.0.28-study-rc.1")){console.error('config version mismatch');process.exit(1);}
 if(!html.includes('<button class="source-button" id="sourceButton">원문 출처</button>')||!html.includes('id="provenanceFooter"')){console.error('source placement/provenance missing');process.exit(1);}
 for(const token of ['classifyDetailed','likelyTypo','decomposeHangul','gradeSetDetailed','aggregateStatus'])if(!grading.includes(token)){console.error('grading restoration missing',token);process.exit(1);}
 for(const token of ['drafts','fieldGrades','scopeRounds','scopeTasks','noteScopeRound','restoreScopeRound'])if(!storage.includes(token)){console.error('storage restoration missing',token);process.exit(1);}
@@ -55,3 +55,44 @@ if(appV22.includes("engine.scheduleRetry(task)")){console.error('old task-level 
 
 const cssV23=fs.readFileSync('assets/css/app.css','utf8');
 for(const token of ['.retry-dock .retry-card{','display:block;','grid-template-columns:none;','writing-mode:horizontal-tb;']){if(!cssV23.includes(token)){console.error(`v9.0.23 hover card layout fix missing ${token}`);process.exit(1);}}
+
+const appV24=fs.readFileSync('js/app.js','utf8');
+const cssV24=fs.readFileSync('assets/css/app.css','utf8');
+for(const token of ['showRetryResult','재인출 완료 ✓','재인출 실패','표현 확인 필요','1000']){
+  if(!appV24.includes(token)){console.error(`v9.0.24 retry feedback missing ${token}`);process.exit(1);}
+}
+for(const token of ['.retry-result-overlay','.retry-result-overlay.result-good','.retry-result-overlay.result-bad','.retry-card-input.correct']){
+  if(!cssV24.includes(token)){console.error(`v9.0.24 retry feedback CSS missing ${token}`);process.exit(1);}
+}
+
+const appV25=fs.readFileSync('js/app.js','utf8');
+for(const token of ['retryCardOrderSnapshot','nextRetryCardIdAfter','advanceRetryCardAfter(id,orderBefore,1000)','valueAttitudeWholeCue','data-review-policy="recognition-cue"']){
+  if(!appV25.includes(token)){console.error(`v9.0.25 missing ${token}`);process.exit(1);}
+}
+
+const appV26=fs.readFileSync('js/app.js','utf8');
+const cssV26=fs.readFileSync('assets/css/app.css','utf8');
+for(const token of ['retrySafeLabel','retryDockVisibleEntries','single-multiline','grading-lock']){
+  if(!appV26.includes(token)&&!cssV26.includes(token)){console.error(`v9.0.26 retry-card audit fix missing ${token}`);process.exit(1);}
+}
+if((appV26.match(/function retryEntries\(/g)||[]).length!==1||(appV26.match(/function retryMeta\(/g)||[]).length!==1){
+  console.error('duplicate retry helper declarations remain');process.exit(1);
+}
+
+const appV27=fs.readFileSync('js/app.js','utf8');
+const cssV27=fs.readFileSync('assets/css/app.css','utf8');
+for(const token of ['cs-cloze-content',"document.addEventListener('pointerdown'"]){
+  if(!appV27.includes(token)){console.error(`v9.0.27 app fix missing ${token}`);process.exit(1);}
+}
+for(const token of ['word-break:keep-all','display:inline-flex!important','max-width:min(48vw,29rem)!important']){
+  if(!cssV27.includes(token)){console.error(`v9.0.27 CSS fix missing ${token}`);process.exit(1);}
+}
+if(!fs.existsSync('docs/PRACTICE_BANK_REVIEW_v9.0.27.md')){console.error('practice review report missing');process.exit(1);}
+
+const cssV28=fs.readFileSync('assets/css/app.css','utf8');
+if(!cssV28.includes('.retry-dock.has-cards{\n  pointer-events:none!important;')){
+  console.error('v9.0.28 retry dock pointer-through fix missing');process.exit(1);
+}
+for(const token of ['.retry-dock .retry-card-peek','.retry-dock .practical-retry-panel']){
+  if(!cssV28.includes(token)){console.error(`v9.0.28 interactive retry child missing ${token}`);process.exit(1);}
+}

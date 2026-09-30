@@ -1,4 +1,4 @@
-const BUILD='9.0.23-study-rc.1';
+const BUILD='9.0.28-study-rc.1';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{

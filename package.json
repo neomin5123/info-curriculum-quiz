@@ -1,14 +1,17 @@
 {
   "name": "curriloop",
-  "version": "9.0.23-study-rc.1",
+  "version": "9.0.28-study-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
     "build:data": "node tools/build-data.mjs",
     "validate:data": "node tools/validate-data.mjs",
     "validate:package": "node tools/validate-package.mjs",
-    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux",
+    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest",
     "validate:behavior": "node tools/validate-behavior.mjs",
-    "validate:ux": "node tools/validate-ux.mjs"
+    "validate:ux": "node tools/validate-ux.mjs",
+    "validate:retry": "node tools/validate-retry-card.mjs",
+    "validate:layout": "node tools/validate-layout-v9027.mjs",
+    "validate:hittest": "node tools/validate-hit-testing-v9028.mjs"
   }
 }

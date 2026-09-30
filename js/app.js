@@ -34,44 +34,57 @@ function taskContainsLine(task,lineId){
   if(task.type==='line')return task.line?.lineId===lineId;
   return !!task.group?.items?.some(x=>x.lineId===lineId);
 }
-function retryEntries({dueOnly=false}={}){
-  const serial=Number(state.answerSerial||0);
-  return Object.entries(state.fieldRetries||{})
-    .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
-    .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
-}
-function retryMeta(r){
-  const scope=r.scope||{};
-  const area=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
-  const section=r.section||r.family||'빈칸';
-  return `${area} · ${section}`;
-}
 
-function retryBlankText(text,answer){
-  const source=String(text||''),target=String(answer||'').trim();
-  if(!source)return '정답을 다시 떠올려 입력하세요.';
-  if(!target||source===target)return source;
-  const i=source.indexOf(target);
-  if(i<0)return source;
-  return `${source.slice(0,i)}〔　　　　〕${source.slice(i+target.length)}`;
-}
 function retryEntries({dueOnly=false}={}){
   const serial=Number(state.answerSerial||0);
   return Object.entries(state.fieldRetries||{})
     .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
     .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
 }
+function retryAnswerList(r){
+  if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
+  return [String(r?.correctAnswer||'').trim()].filter(Boolean);
+}
+function retrySafeLabel(text,answers,fallback='해당 항목'){
+  const value=String(text||'').trim();
+  if(!value)return fallback;
+  const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
+  const vn=norm(value);
+  const leaks=(answers||[]).some(ans=>{
+    const an=norm(ans);
+    return an&&vn.includes(an);
+  });
+  return leaks?fallback:value;
+}
 function retryMeta(r){
-  const scope=r.scope||{};
-  const area=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
-  const section=r.section||r.family||'빈칸';
+  const scope=r.scope||{},answers=retryAnswerList(r);
+  const areaRaw=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
+  const sectionRaw=r.section||r.family||'빈칸';
+  const area=retrySafeLabel(areaRaw,answers,'해당 영역');
+  const section=retrySafeLabel(sectionRaw,answers,'해당 구분');
   return `${area} · ${section}`;
+}
+function retryBlankText(text,answer,label='이 항목'){
+  const source=String(text||'').trim(),target=String(answer||'').trim();
+  const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
+  const safeLabel=retrySafeLabel(label,[target],'이 항목');
+  if(!target)return `${safeLabel}의 정답을 다시 떠올려 입력하세요.`;
+  if(!source||norm(source)===norm(target))return `${safeLabel} 전체를 다시 작성하세요.`;
+  if(!source.includes(target))return `${safeLabel}의 정답을 다시 작성하세요.`;
+
+  // 동일 정답이 원문에 여러 번 등장하면 전부 가려서 다른 위치에서 답이 노출되지 않게 한다.
+  const masked=source.split(target).join('〔　　　　〕');
+  // 띄어쓰기/기호만 다른 동일 표현이 남아 있으면 원문 자체를 보여주지 않는 쪽으로 안전하게 fallback.
+  if(norm(target)&&norm(masked).includes(norm(target)))return `${safeLabel}의 핵심 표현을 다시 작성하세요.`;
+  return masked;
 }
 function retryCardPanelHtml(id,r){
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
+  const answers=retryAnswerList(r);
+  const sectionLabel=retrySafeLabel(r.section||'내용 요소',answers,'해당 항목');
   const prompt=setMode
-    ? `${r.section||'내용 요소'} 전체를 다시 쓰세요.`
-    : retryBlankText(r.contextText||'',r.correctAnswer||'');
+    ? `${sectionLabel} 전체를 다시 쓰세요.`
+    : retryBlankText(r.contextText||'',r.correctAnswer||'',`${sectionLabel} 항목`);
   const inputHtml=setMode
     ? `<div class="practical-retry-set">${r.setAnswers.map((_,i)=>`<input class="retry-card-input" data-retry-set-index="${i}" type="text" autocomplete="off" spellcheck="false" aria-label="재인출 답 ${i+1}" placeholder="${i+1}번">`).join('')}</div>`
     : `<input class="retry-card-input" type="text" autocomplete="off" spellcheck="false" aria-label="다시 꺼내기 답 입력" placeholder="정답을 다시 떠올려 입력">`;
@@ -89,7 +102,15 @@ function retryCardPanelHtml(id,r){
         <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
       </div>
       <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div>
+      <div class="retry-result-overlay" data-retry-result="${esc(id)}" aria-live="polite"></div>
     </div>`;
+}
+function retryDockVisibleEntries(due){
+  const visible=due.slice(0,6);
+  if(!activeRetryCardId||visible.some(([id])=>id===activeRetryCardId))return visible;
+  const active=due.find(([id])=>id===activeRetryCardId);
+  if(!active)return visible;
+  return [...due.slice(0,5),active];
 }
 function renderRetryDock(){
   if(!el.retryDock)return;
@@ -101,8 +122,9 @@ function renderRetryDock(){
     return;
   }
   if(activeRetryCardId&&!due.some(([id])=>id===activeRetryCardId))activeRetryCardId='';
+  const visible=retryDockVisibleEntries(due);
   el.retryDock.classList.add('has-cards');
-  el.retryDock.innerHTML=due.slice(0,6).map(([id,r],i)=>{
+  el.retryDock.innerHTML=visible.map(([id,r],i)=>{
     const expanded=activeRetryCardId===id;
     return `<section class="retry-card ${expanded?'expanded':''}" data-retry-id="${esc(id)}" style="--stack-i:${i}">
       <button class="retry-card-peek" type="button" data-retry-open="${esc(id)}" aria-expanded="${expanded}">
@@ -125,6 +147,23 @@ function setRetryFeedback(id,text,status=''){
   f.textContent=text;
   f.className='practical-retry-feedback '+status;
 }
+
+function showRetryResult(id,status,text){
+  const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
+  const overlay=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
+  if(!panel||!overlay)return;
+  panel.classList.remove('result-good','result-near','result-bad');
+  const cls=status==='correct'?'result-good':status==='near'?'result-near':'result-bad';
+  panel.classList.add(cls);
+  overlay.textContent=text;
+  overlay.className=`retry-result-overlay show ${cls}`;
+}
+function clearRetryResult(id){
+  const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
+  const overlay=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
+  if(panel)panel.classList.remove('result-good','result-near','result-bad');
+  if(overlay){overlay.textContent='';overlay.className='retry-result-overlay';}
+}
 function collapseRetryCard(id=''){
   if(!id||activeRetryCardId===id)activeRetryCardId='';
   renderRetryDock();
@@ -139,20 +178,26 @@ function deferRetryCard(id){
 }
 function completeRetryRecord(id,r){
   if(r.kind==='set'){
-    (r.sourceFieldKeys||[]).forEach((key,i)=>{
-      const expected=(r.setAnswers||[])[i]||'';
-      if(key){
-        CL.storage.setDraft(state,key,expected);
-        CL.storage.setFieldGrade(state,key,{status:'correct',reason:'retry',expected});
-      }
-    });
+    if(r.sourceMode==='single-multiline'&&(r.sourceFieldKeys||[])[0]){
+      const key=r.sourceFieldKeys[0],expected=(r.setAnswers||[]).join('\n');
+      CL.storage.setDraft(state,key,expected);
+      CL.storage.setFieldGrade(state,key,{status:'correct',reason:'retry',expected:(r.setAnswers||[]).join(' / ')});
+    }else{
+      (r.sourceFieldKeys||[]).forEach((key,i)=>{
+        const expected=(r.setAnswers||[])[i]||'';
+        if(key){
+          CL.storage.setDraft(state,key,expected);
+          CL.storage.setFieldGrade(state,key,{status:'correct',reason:'retry',expected});
+        }
+      });
+    }
     (r.lineIds||[]).forEach(lineId=>CL.storage.recordItem(state,lineId,'correct'));
   }else{
     if(r.fieldKey){
       CL.storage.setDraft(state,r.fieldKey,r.correctAnswer||'');
       CL.storage.setFieldGrade(state,r.fieldKey,{status:'correct',reason:'retry',expected:r.correctAnswer||''});
     }
-    if(r.lineId)CL.storage.recordItem(state,r.lineId,'correct');
+    if(r.lineId&&!r.recognitionCue)CL.storage.recordItem(state,r.lineId,'correct');
   }
   delete state.fieldRetries[id];
 }
@@ -166,20 +211,51 @@ function rescheduleRetryRecord(id,r,status){
   r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
   return true;
 }
+
+function retryCardOrderSnapshot(){
+  return retryEntries({dueOnly:true}).map(([id])=>id);
+}
+function nextRetryCardIdAfter(currentId,orderBefore){
+  const dueNow=new Set(retryEntries({dueOnly:true}).map(([id])=>id));
+  if(!dueNow.size)return '';
+  const order=Array.isArray(orderBefore)&&orderBefore.length?orderBefore:[...dueNow];
+  const start=order.indexOf(currentId);
+  const i=start>=0?start:0;
+  for(let step=1;step<=order.length;step++){
+    const candidate=order[(i+step)%order.length];
+    if(candidate&&candidate!==currentId&&dueNow.has(candidate))return candidate;
+  }
+  return '';
+}
+function advanceRetryCardAfter(currentId,orderBefore,delayMs=1000){
+  setTimeout(()=>{
+    activeRetryCardId=nextRetryCardIdAfter(currentId,orderBefore)||'';
+    renderRetryDock();
+  },delayMs);
+}
 function gradeRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
-  if(!panel)return;
+  if(!panel||panel.dataset.gradingLock==='1')return;
+  panel.dataset.gradingLock='1';
+  panel.classList.add('grading-lock');
+  panel.querySelectorAll('input,button').forEach(control=>{control.disabled=true;});
+  const orderBefore=retryCardOrderSnapshot();
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
-  let status='wrong',expected='';
+  let status='wrong',expected='',hasWrong=false,hasUnknown=false,hasNear=false;
+
   if(setMode){
     const fields=[...panel.querySelectorAll('.retry-card-input')],values=fields.map(x=>x.value);
     const grade=CL.grading.gradeSetDetailed(values,r.setAnswers);
     status=grade.status;
     grade.results.forEach((g,i)=>{
       const f=fields[i];if(!f)return;
+      const visual=g.status==='duplicate'?'wrong':g.status;
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
-      f.classList.add(g.status==='duplicate'?'wrong':g.status);
+      f.classList.add(visual);
+      if(visual==='wrong')hasWrong=true;
+      else if(visual==='unknown')hasUnknown=true;
+      else if(visual==='near')hasNear=true;
     });
     expected=r.setAnswers.join(' / ');
   }else{
@@ -188,24 +264,32 @@ function gradeRetryCard(id){
     const d=CL.grading.classifyDetailed(input.value,r.correctAnswer||'');
     status=d.status;
     expected=r.correctAnswer||d.expected||'';
+    const visual=status==='duplicate'?'wrong':status;
     ['correct','near','unknown','wrong'].forEach(c=>input.classList.remove(c));
-    input.classList.add(status==='duplicate'?'wrong':status);
+    input.classList.add(visual);
+    hasWrong=visual==='wrong';
+    hasUnknown=visual==='unknown';
+    hasNear=visual==='near';
   }
 
   if(status==='correct'){
+    showRetryResult(id,'correct','재인출 완료 ✓');
+    setRetryFeedback(id,'모두 정확했습니다.','good');
     completeRetryRecord(id,r);
-    setRetryFeedback(id,'회복 완료 ✓','good');
-    persist();renderReviewPage();
-    setTimeout(()=>{activeRetryCardId='';renderRetryDock();},650);
+    CL.storage.save(state);renderReviewPage();
+    advanceRetryCardAfter(id,orderBefore,1000);
     return;
   }
 
+  const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
+  showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
+
   const requeued=rescheduleRetryRecord(id,r,status);
-  const label=status==='near'?'표기 확인':status==='unknown'?'모름':'오답';
-  const tail=requeued?' · 몇 항목 뒤 다시 확인합니다.':' · 이번 회차에서는 여기까지 하고 복습 탭에 취약 기록을 남깁니다.';
-  setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,status==='near'?'near':status==='unknown'?'unknown':'bad');
-  persist();renderReviewPage();
-  setTimeout(()=>{activeRetryCardId='';renderRetryDock();},requeued?1250:1500);
+  const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
+  const tail=requeued?' · 잠시 뒤 다시 묻습니다.':' · 취약 기록에 남겼습니다.';
+  setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  CL.storage.save(state);renderReviewPage();
+  advanceRetryCardAfter(id,orderBefore,1000);
 }
 function openRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
@@ -234,7 +318,7 @@ function dailyReviewGroups(){
     const units=reviewUnitsForLine(line);
     if(!units.length)return;
     const unit=units[Number(rec.reviewCount||0)%units.length];
-    groups.push({id:`LINE:${line.lineId}`,kind:'line',lineIds:[line.lineId],line,rec,answer:unit.text,prompt:retryBlankText(line.sourceText,unit.text)});
+    groups.push({id:`LINE:${line.lineId}`,kind:'line',lineIds:[line.lineId],line,rec,answer:unit.text,prompt:retryBlankText(line.sourceText,unit.text,`${line.family||'이'} 항목`)});
   });
   kiMap.forEach(g=>{
     const kg=(engine.data.knowledgeUnderstandingGroups||[]).find(x=>x.subject===g.subject&&x.area===g.area);
@@ -392,6 +476,19 @@ function inputRows(items,prefix,mode){
   if(mode==='source')return sourceItems(items,false);if(mode==='mask')return sourceItems(items,true);
   return `<div class="group-inputs">${items.map((it,i)=>`<label class="group-input-row">${mode==='typing'?`<span class="copy-source">${esc(it.text)}</span>`:`<span class="num">${i+1}</span>`}<input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" ${mode==='typing'?`data-answer="${esc(it.text)}"`:''} autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
 }
+
+function valueAttitudeWholeCue(line){
+  if(!line||line.family!=='가치·태도')return null;
+  const source=String(line.sourceText||'');
+  const cues=(line.keywords||[]).filter(k=>{
+    const grades=Array.isArray(k.stage3RGrades)?k.stage3RGrades:[];
+    return !k.active&&grades.includes('C')&&Number.isInteger(k.start)&&Number.isInteger(k.end)&&k.end>k.start&&source.slice(k.start,k.end)===k.text;
+  });
+  if(!cues.length)return null;
+  const ix=(Math.max(1,Number(state.round||1))-1)%cues.length;
+  const k=cues[ix];
+  return {text:k.text,start:k.start,end:k.end,recognitionCue:true};
+}
 function contentSystemItemHtml(task,it,family,mode,itemIx){
   const focus=task?.focus||{kind:'whole',lineIds:[it.lineId]},active=!!focus.lineIds?.includes(it.lineId);
   if(mode==='source'||!active)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
@@ -404,7 +501,13 @@ function contentSystemItemHtml(task,it,family,mode,itemIx){
   }
 
   const line=engine.lineMap.get(it.lineId);
-  const units=line?engine.recallUnitsForLine(line,focus.kind):[];
+  let units=line?engine.recallUnitsForLine(line,focus.kind):[];
+  let recognitionCueOnly=false;
+
+  if(line&&family==='가치·태도'&&focus.kind==='whole'&&!units.length){
+    const cue=valueAttitudeWholeCue(line);
+    if(cue){units=[cue];recognitionCueOnly=true;}
+  }
 
   if(mode==='typing'){
     return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input" data-section="${esc(family)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
@@ -415,7 +518,7 @@ function contentSystemItemHtml(task,it,family,mode,itemIx){
     return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
   }
 
-  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input cs-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="${esc(family)} 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
+  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><div class="cs-cloze-content">${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input cs-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" ${recognitionCueOnly?'data-review-policy="recognition-cue"':''} aria-label="${esc(family)} 빈칸 ${i+1}" autocomplete="off">`)}</div></div>`;
 }
 function contentSystemSectionHtml(task,family,items,mode){
   return items.map((it,i)=>contentSystemItemHtml(task,it,family,mode,i)).join('');
@@ -434,7 +537,7 @@ function standardItemHtml(task,it,mode,itemIx){
   if(mode==='typing')return `<label class="cs-input-item cs-typing-item"><span class="cs-copy-source">${esc(it.text)}</span><input class="group-input standard-input" data-section="성취기준" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"><span class="group-mark"></span></label>`;
   if(!line||!units.length)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
   if(mode==='mask')return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</span></div>`;
-  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><span>${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input standard-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="성취기준 빈칸 ${i+1}" autocomplete="off">`)}</span></div>`;
+  return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><div class="cs-cloze-content">${renderWithSpans(it.text,units,(k,i)=>`<input class="inline-input standard-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(k.text)}" aria-label="성취기준 빈칸 ${i+1}" autocomplete="off">`)}</div></div>`;
 }
 function renderContentStandards(task){
   const mode=state.ui.mode,g=task.group;
@@ -506,13 +609,14 @@ function gradeSetFields(fields,items,save=true){
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
     recordMatchedItem(items,r);
     if(r.status==='correct')cancelFieldRetry(f);else scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
+    noteAnswerAttempt();
   });
   const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
   items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
   return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
 }
 function expectedItemsForField(field,task){
-  if(field.classList.contains('ki-input'))return task?.group?.items||[];
+  if(field.classList.contains('ki-input')||(field.id==='typingInput'&&task?.type==='ki'))return task?.group?.items||[];
   const family=field.dataset.section;if(!family)return [];
   return groupSections(task).find(s=>s.family===family)?.items||[];
 }
@@ -529,8 +633,10 @@ function fixedExpectedForField(field,task){
 }
 function gradeFixedField(field,expected,save=true){
   const detail=CL.grading.classifyDetailed(field.value,expected);applyFieldGrade(field,detail,expected,save);
-  if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
+  if(field.dataset.lineId&&!recognitionCue)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
   if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,{...detail,expected},null);
+  noteAnswerAttempt();
   return detail;
 }
 function gradeUnorderedField(field,task,save=true){
@@ -544,8 +650,21 @@ function check(){
   if(mode==='source'||mode==='mask'){el.feedback.textContent='이 모드는 채점하지 않습니다.';return;}
   const statuses=[],processed=new Set();
   if(task.type==='ki'&&mode==='typing'){
-    const field=$('typingInput'),values=String(field?.value||'').split(/\n+/).map(x=>x.trim()),r=CL.grading.gradeSetDetailed(values,task.group.items.map(x=>x.text));
-    const status=r.status;applyFieldGrade(field,{status,reason:status==='unknown'?'empty':'meaning',expected:task.group.items.map(x=>x.text).join(' / ')},task.group.items.map(x=>x.text).join(' / '));statuses.push(status);
+    const field=$('typingInput'),items=task.group.items,values=String(field?.value||'').split(/\n+/).map(x=>x.trim()),r=CL.grading.gradeSetDetailed(values,items.map(x=>x.text));
+    const status=r.status,detail={status,reason:status==='unknown'?'empty':'meaning',expected:items.map(x=>x.text).join(' / ')};
+    applyFieldGrade(field,detail,detail.expected);
+    const matched=new Set();
+    r.results.forEach(result=>{
+      if(result.answerIndex!=null){
+        CL.storage.recordItem(state,items[result.answerIndex].lineId,result.status);
+        if(['correct','near'].includes(result.status))matched.add(result.answerIndex);
+      }
+    });
+    const failureStatus=r.results.some(x=>['wrong','duplicate'].includes(x.status))?'wrong':'unknown';
+    items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
+    if(status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,status,detail,null);
+    noteAnswerAttempt();
+    statuses.push(status);
   }else{
     const unorderedFamilies=new Map();
     document.querySelectorAll('.group-input:not([data-answer]),.ki-input').forEach(field=>{const key=field.classList.contains('ki-input')?'지식·이해':field.dataset.section||'';if(!unorderedFamilies.has(key))unorderedFamilies.set(key,[]);unorderedFamilies.get(key).push(field);});
@@ -616,7 +735,7 @@ function clearFieldState(field){resetFieldVisual(field);if(field.dataset.fieldKe
 
 function retryIdForField(field){
   const task=currentTask(),section=field.dataset.section||'';
-  const unordered=field.classList.contains('ki-input')||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
+  const unordered=field.classList.contains('ki-input')||(field.id==='typingInput'&&task?.type==='ki')||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
   if(unordered)return `${engine.taskId(task)}|SET:${section||'지식·이해'}|round:${state.round||1}`;
   return `${field.dataset.fieldKey||''}|round:${state.round||1}`;
 }
@@ -642,11 +761,14 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   const ctx=taskContext(task),section=field.dataset.section||ctx.family||'빈칸';
   const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
   const line=lineId?engine.lineMap.get(lineId):null;
+  const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
   const expected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
-  const unordered=field.classList.contains('ki-input')||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
+  const kiTyping=field.id==='typingInput'&&task?.type==='ki';
+  const unordered=field.classList.contains('ki-input')||kiTyping||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
 
   if(unordered){
     const fields=answerFields().filter(x=>{
+      if(kiTyping)return x===field;
       if(field.classList.contains('ki-input'))return x.classList.contains('ki-input');
       return x.classList.contains('group-input')&&!x.dataset.answer&&x.dataset.section===section;
     });
@@ -655,6 +777,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
     state.fieldRetries[id]={
       ...existing,
       kind:'set',
+      sourceMode:kiTyping?'single-multiline':'multi-field',
       fieldKey:field.dataset.fieldKey,
       sourceFieldKeys:fields.map(x=>x.dataset.fieldKey),
       fieldIndex:answerFields().indexOf(field),
@@ -675,6 +798,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   state.fieldRetries[id]={
     ...existing,
     kind:'single',
+    recognitionCue,
     fieldKey:field.dataset.fieldKey,
     fieldIndex:answerFields().indexOf(field),
     lineId,
@@ -723,10 +847,11 @@ function noteAnswerAttempt(){
   state.answerSerial=Number(state.answerSerial||0)+1;
 }
 function gradeSingleAnswerField(field){
-  const task=currentTask();if(!task||!field)return null;let detail=null,matchedItem=null;
+  const task=currentTask();if(!task||!field)return null;let detail=null,matchedItem=null,setGrade=null;
   if(field.id==='typingInput'&&task.type==='ki'){
-    const values=String(field.value||'').split(/\n+/).map(x=>x.trim()),g=CL.grading.gradeSetDetailed(values,task.group.items.map(x=>x.text));
-    detail={status:g.status,reason:g.status==='unknown'?'empty':'meaning',expected:task.group.items.map(x=>x.text).join(' / ')};
+    const values=String(field.value||'').split(/\n+/).map(x=>x.trim());
+    setGrade=CL.grading.gradeSetDetailed(values,task.group.items.map(x=>x.text));
+    detail={status:setGrade.status,reason:setGrade.status==='unknown'?'empty':'meaning',expected:task.group.items.map(x=>x.text).join(' / ')};
   }else{
     const expected=fixedExpectedForField(field,task);
     if(expected)detail=CL.grading.classifyDetailed(field.value,expected);
@@ -738,8 +863,21 @@ function gradeSingleAnswerField(field){
   if(!detail)return null;
   const expected=detail.expected||fixedExpectedForField(field,task)||'';
   applyFieldGrade(field,detail,expected,true);
-  if(matchedItem)CL.storage.recordItem(state,matchedItem.lineId,detail.status);
-  else if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
+  if(setGrade&&task.type==='ki'){
+    const matched=new Set();
+    setGrade.results.forEach(result=>{
+      if(result.answerIndex!=null){
+        CL.storage.recordItem(state,task.group.items[result.answerIndex].lineId,result.status);
+        if(['correct','near'].includes(result.status))matched.add(result.answerIndex);
+      }
+    });
+    const failureStatus=setGrade.results.some(x=>['wrong','duplicate'].includes(x.status))?'wrong':'unknown';
+    task.group.items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
+  }else if(!recognitionCue){
+    if(matchedItem)CL.storage.recordItem(state,matchedItem.lineId,detail.status);
+    else if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  }
 
   noteAnswerAttempt();
   if(detail.status==='correct')cancelFieldRetry(field);
@@ -800,6 +938,12 @@ el.retryDock.addEventListener('keydown',e=>{
   if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}
   e.preventDefault();gradeRetryCard(panel.dataset.retryPanel);
 });
+document.addEventListener('pointerdown',e=>{
+  if(!activeRetryCardId||!el.retryDock)return;
+  if(el.retryDock.contains(e.target))return;
+  activeRetryCardId='';
+  renderRetryDock();
+},{capture:true});
 el.reviewRetryList.addEventListener('click',e=>{const row=e.target.closest('[data-retry-id]');if(row){showMainTab('study');openRetryCard(row.dataset.retryId);}});
 el.reviewWeakList.addEventListener('click',e=>{const row=e.target.closest('[data-line-id]');if(row)openWeakItem(row.dataset.lineId);});
 el.dailyReviewList.addEventListener('click',e=>{const b=e.target.closest('[data-daily-grade]');if(b)gradeDailyReview(b.dataset.dailyGrade);});

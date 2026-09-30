@@ -254,3 +254,165 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 }
 .retry-dock .retry-card:hover .retry-card-peek,
 .retry-dock .retry-card:focus-within .retry-card-peek{overflow:visible}
+
+/* v9.0.24 — sidebar retry-card grading feedback */
+.practical-retry-panel{position:relative;overflow:hidden}
+.retry-card-input.correct{
+  border-color:#3f8059!important;
+  background:#e6f4ea!important;
+  color:#1f5f3b!important;
+  box-shadow:inset 0 -1px 0 rgba(31,95,59,.18);
+  font-weight:760;
+}
+.retry-card-input.near{
+  border-color:#b88a28!important;
+  background:#fff6dd!important;
+  color:#805b10!important;
+  font-weight:720;
+}
+.retry-card-input.unknown,
+.retry-card-input.wrong{
+  border-color:#b85a50!important;
+  background:#fff0ee!important;
+  color:#973f37!important;
+  font-weight:720;
+}
+.retry-result-overlay{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  border-radius:0 0 0 14px;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  font-size:20px;
+  font-weight:850;
+  letter-spacing:.01em;
+  text-align:center;
+  backdrop-filter:blur(1.5px);
+  transition:opacity .14s ease,visibility .14s ease;
+}
+.retry-result-overlay.show{opacity:1;visibility:visible}
+.retry-result-overlay.result-good{
+  color:#1f5f3b;
+  background:rgba(230,244,234,.92);
+}
+.retry-result-overlay.result-near{
+  color:#805b10;
+  background:rgba(255,246,221,.93);
+}
+.retry-result-overlay.result-bad{
+  color:#973f37;
+  background:rgba(255,240,238,.93);
+}
+
+/* v9.0.25 — fast chained retry cards */
+.retry-card{transition:transform .17s ease,opacity .16s ease,filter .16s ease}
+.retry-card.expanded .practical-retry-panel{animation:retryPanelIn .16s ease-out}
+@keyframes retryPanelIn{
+  from{opacity:0;transform:translateX(8px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* v9.0.26 — retry-card red-team fixes */
+.practical-retry-panel{
+  max-height:min(72vh,620px);
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.practical-retry-set{
+  max-height:min(44vh,420px);
+  overflow-y:auto;
+  padding-right:3px;
+}
+.practical-retry-panel.grading-lock .retry-card-input,
+.practical-retry-panel.grading-lock button{
+  cursor:default;
+}
+.retry-result-overlay{
+  inset:auto auto 12px 50%!important;
+  width:max-content;
+  max-width:calc(100% - 30px);
+  min-width:0;
+  padding:8px 13px!important;
+  border-radius:999px!important;
+  transform:translate(-50%,6px);
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25;
+  box-shadow:0 8px 22px rgba(25,42,33,.14);
+  backdrop-filter:blur(3px);
+}
+.retry-result-overlay.show{
+  transform:translate(-50%,0);
+}
+.retry-result-overlay.result-good{background:rgba(230,244,234,.97)}
+.retry-result-overlay.result-near{background:rgba(255,246,221,.97)}
+.retry-result-overlay.result-bad{background:rgba(255,240,238,.97)}
+@media(max-width:760px){
+  .practical-retry-panel{max-height:62vh}
+  .practical-retry-set{max-height:34vh}
+}
+
+/* v9.0.27 — content-table cloze layout hardening + outside-card interaction */
+.cs-source-item.cs-cloze-item{
+  grid-template-columns:28px minmax(0,1fr);
+  align-items:start;
+}
+.cs-cloze-content{
+  display:block;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  line-height:1.8;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.cs-cloze-content .answer-field-wrap.inline{
+  display:inline-flex!important;
+  flex-direction:column;
+  width:auto!important;
+  min-width:0;
+  max-width:min(48vw,29rem)!important;
+  vertical-align:middle;
+  margin:.08rem .18rem;
+}
+.cs-cloze-content .inline-input,
+.cs-cloze-content .cs-inline-input,
+.cs-cloze-content .standard-inline-input{
+  display:inline-block;
+  width:clamp(9rem,calc(var(--answer-ch,14) * .86rem),27rem)!important;
+  max-width:100%!important;
+  min-width:8rem;
+  box-sizing:border-box;
+}
+.core-ideas .cs-cloze-content,
+.standards-section .cs-cloze-content{
+  word-break:keep-all;
+}
+@media(max-width:760px){
+  .cs-cloze-content{line-height:1.75}
+  .cs-cloze-content .answer-field-wrap.inline{max-width:min(68vw,23rem)!important}
+  .cs-cloze-content .inline-input,
+  .cs-cloze-content .cs-inline-input,
+  .cs-cloze-content .standard-inline-input{
+    width:clamp(8rem,calc(var(--answer-ch,14) * .74rem),21rem)!important;
+  }
+}
+
+/* v9.0.28 — retry dock hit-testing fix
+   The fixed 450px dock is visual-only. Only actual visible cards/panels may receive pointer events. */
+.retry-dock,
+.retry-dock.has-cards{
+  pointer-events:none!important;
+}
+.retry-dock .retry-card{
+  pointer-events:none!important;
+}
+.retry-dock .retry-card-peek,
+.retry-dock .practical-retry-panel,
+.retry-dock .practical-retry-panel *{
+  pointer-events:auto;
+}
