@@ -5,8 +5,8 @@ const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('js/app.js',
 for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p)&&p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}
 for(const label of ['성격 + 목표','내용체계','성취기준','내용체계 + 성취기준','성취기준 해설 + 적용 시 고려사항','교수학습 + 평가'])if(!engine.includes(label)){console.error('group missing',label);process.exit(1);}
 for(const label of ['단일 회상','실전 조합','전체 회상'])if(!app.includes(label)){console.error('stage missing',label);process.exit(1);}
-if(!html.includes('v9.0.29 Study RC')||!html.includes('data-build="9.0.29-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
-if(!config.includes("9.0.29-study-rc.1")){console.error('config version mismatch');process.exit(1);}
+if(!html.includes('v9.0.30 Study RC')||!html.includes('data-build="9.0.30-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
+if(!config.includes("9.0.30-study-rc.1")){console.error('config version mismatch');process.exit(1);}
 if(!html.includes('<button class="source-button" id="sourceButton">원문 출처</button>')||!html.includes('id="provenanceFooter"')){console.error('source placement/provenance missing');process.exit(1);}
 for(const token of ['classifyDetailed','likelyTypo','decomposeHangul','gradeSetDetailed','aggregateStatus'])if(!grading.includes(token)){console.error('grading restoration missing',token);process.exit(1);}
 for(const token of ['drafts','fieldGrades','scopeRounds','scopeTasks','noteScopeRound','restoreScopeRound'])if(!storage.includes(token)){console.error('storage restoration missing',token);process.exit(1);}
@@ -105,3 +105,9 @@ if(!cssV29.includes('.cs-input-item.cs-typing-item{')||!cssV29.includes('.group-
 if(!appV29.includes("mode==='typing'?'copy-mode':''")){
   console.error('v9.0.29 copy-mode markup missing');process.exit(1);
 }
+
+const htmlV30=fs.readFileSync('index.html','utf8');
+const appV30=fs.readFileSync('js/app.js','utf8');
+const cssV30=fs.readFileSync('assets/css/app.css','utf8');
+if(!htmlV30.includes('areaMemoDock')||!htmlV30.includes('areaMemoText')){console.error('v9.0.30 memo HTML missing');process.exit(1);}
+if(!appV30.includes('curriloop-area-notes-v1')||!cssV30.includes('.area-memo-shell.open')){console.error('v9.0.30 memo implementation missing');process.exit(1);}

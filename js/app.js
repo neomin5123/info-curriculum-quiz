@@ -2,9 +2,79 @@
 'use strict';
 const DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
 const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
-const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList')};
-let revealed=false,activeRetryCardId='';
+const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
+areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
+areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
+areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
+areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose')};
+let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+const AREA_MEMO_STORAGE_KEY='curriloop-area-notes-v1';
+function areaMemoStore(){
+  try{
+    const raw=localStorage.getItem(AREA_MEMO_STORAGE_KEY);
+    const parsed=raw?JSON.parse(raw):{};
+    return parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{};
+  }catch(_){return {};}
+}
+function areaMemoSaveStore(store){
+  try{localStorage.setItem(AREA_MEMO_STORAGE_KEY,JSON.stringify(store||{}));}
+  catch(e){console.warn('CurriLoop area memo save failed',e);}
+}
+function areaMemoKey(){return `${state.ui.subject||'middle-info'}|${state.ui.area||'all'}`;}
+function areaMemoSubjectLabel(){
+  if(state.ui.subject==='all')return '중·고 정보 전체';
+  return engine.labels?.[state.ui.subject]||state.ui.subject||'정보';
+}
+function areaMemoAreaLabel(){return !state.ui.area||state.ui.area==='all'?'전체 영역':state.ui.area;}
+function areaMemoScopeLabel(){return `${areaMemoSubjectLabel()} · ${areaMemoAreaLabel()}`;}
+function updateAreaMemoLabels(){
+  if(!el.areaMemoTitle)return;
+  el.areaMemoTitle.textContent=`${areaMemoAreaLabel()} 메모`;
+  el.areaMemoScope.textContent=areaMemoScopeLabel();
+}
+function loadAreaMemo(){
+  if(!el.areaMemoText)return;
+  const store=areaMemoStore(),value=String(store[areaMemoKey()]||'');
+  el.areaMemoText.value=value;
+  updateAreaMemoLabels();
+  if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent=value?'저장됨':'자동 저장';
+}
+function saveAreaMemoNow(){
+  if(!el.areaMemoText)return;
+  if(areaMemoSaveTimer){clearTimeout(areaMemoSaveTimer);areaMemoSaveTimer=null;}
+  const store=areaMemoStore(),key=areaMemoKey(),value=el.areaMemoText.value;
+  if(value.trim())store[key]=value;else delete store[key];
+  areaMemoSaveStore(store);
+  if(el.areaMemoSaveStatus){
+    el.areaMemoSaveStatus.textContent='저장됨';
+    setTimeout(()=>{if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='자동 저장';},900);
+  }
+}
+function scheduleAreaMemoSave(){
+  if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='저장 중…';
+  if(areaMemoSaveTimer)clearTimeout(areaMemoSaveTimer);
+  areaMemoSaveTimer=setTimeout(saveAreaMemoNow,350);
+}
+function setAreaMemoOpen(open){
+  areaMemoOpen=!!open;
+  if(!el.areaMemoShell)return;
+  el.areaMemoShell.classList.toggle('open',areaMemoOpen);
+  el.areaMemoTab?.setAttribute('aria-expanded',areaMemoOpen?'true':'false');
+  if(areaMemoOpen){
+    loadAreaMemo();
+    requestAnimationFrame(()=>{try{el.areaMemoText?.focus({preventScroll:true});}catch(_){el.areaMemoText?.focus();}});
+  }else saveAreaMemoNow();
+}
+function clearCurrentAreaMemo(){
+  const ok=window.confirm(`${areaMemoScopeLabel()} 메모를 비울까요?\n학습/복습 데이터에는 영향을 주지 않습니다.`);
+  if(!ok)return;
+  const store=areaMemoStore();delete store[areaMemoKey()];areaMemoSaveStore(store);
+  if(el.areaMemoText)el.areaMemoText.value='';
+  if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='비움';
+  setTimeout(()=>{if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='자동 저장';},900);
+}
 function option(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;return o;}
 function setOptions(select,items,preferred){select.innerHTML='';items.forEach(([v,t])=>select.append(option(v,t)));select.value=items.some(x=>x[0]===preferred)?preferred:items[0]?.[0]||'';return select.value;}
 function familyItems(){return engine.familyGroupOrder.filter(id=>engine.groupAvailable(id,el.subject.value,state.ui.area)).map(id=>[id,engine.groupLabel(id)]);}
@@ -919,11 +989,17 @@ function resetReviewData(){
   if(!ok)return;
   activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
 }
-function changeScope(mutator){persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));}
+function changeScope(mutator){saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();}
 function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
-initSelectors();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();
+initSelectors();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
+
+el.areaMemoTab?.addEventListener('click',e=>{e.preventDefault();setAreaMemoOpen(!areaMemoOpen);});
+el.areaMemoClose?.addEventListener('click',e=>{e.preventDefault();setAreaMemoOpen(false);});
+el.areaMemoText?.addEventListener('input',scheduleAreaMemoSave);
+el.areaMemoText?.addEventListener('blur',saveAreaMemoNow);
+el.areaMemoClear?.addEventListener('click',e=>{e.preventDefault();clearCurrentAreaMemo();});
 el.retryDock.addEventListener('click',e=>{
   const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
   const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
@@ -944,6 +1020,11 @@ document.addEventListener('pointerdown',e=>{
   activeRetryCardId='';
   renderRetryDock();
 },{capture:true});
+document.addEventListener('pointerdown',e=>{
+  if(!areaMemoOpen||!el.areaMemoShell)return;
+  if(el.areaMemoShell.contains(e.target))return;
+  setAreaMemoOpen(false);
+},{capture:true});
 el.reviewRetryList.addEventListener('click',e=>{const row=e.target.closest('[data-retry-id]');if(row){showMainTab('study');openRetryCard(row.dataset.retryId);}});
 el.reviewWeakList.addEventListener('click',e=>{const row=e.target.closest('[data-line-id]');if(row)openWeakItem(row.dataset.lineId);});
 el.dailyReviewList.addEventListener('click',e=>{const b=e.target.closest('[data-daily-grade]');if(b)gradeDailyReview(b.dataset.dailyGrade);});
@@ -961,6 +1042,7 @@ el.next.onclick=()=>{engine.next();revealed=false;render();};
 el.prev.onclick=()=>{engine.prev();revealed=false;render();};
 el.round.onclick=()=>{engine.nextRound();revealed=false;render();};
 el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
+window.addEventListener('pagehide',saveAreaMemoNow);
 if(location.protocol!=='file:')window.addEventListener('load',async()=>{
   try{
     if('serviceWorker' in navigator){

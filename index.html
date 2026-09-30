@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
   <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.29 Study RC</title>
+  <title>CurriLoop v9.0.30 Study RC</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.29-rc1">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.30-rc1">
 </head>
-<body data-build="9.0.29-study-rc.1">
+<body data-build="9.0.30-study-rc.1">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.29 Study RC</div>
+      <div class="version">v9.0.30 Study RC</div>
     </div>
     <label class="zoom-control">화면 배율
       <select id="zoomSelect" aria-label="화면 배율">
@@ -91,6 +91,29 @@
     </section>
   </main>
 
+
+  <aside id="areaMemoDock" class="area-memo-dock" aria-label="영역별 메모장">
+    <section id="areaMemoShell" class="area-memo-shell">
+      <button id="areaMemoTab" class="area-memo-tab" type="button" aria-expanded="false" aria-controls="areaMemoPanel">
+        <span class="area-memo-tab-short">메모</span>
+      </button>
+      <div id="areaMemoPanel" class="area-memo-panel">
+        <div class="area-memo-head">
+          <div>
+            <strong id="areaMemoTitle">영역 메모</strong>
+            <small id="areaMemoScope">현재 영역</small>
+          </div>
+          <button id="areaMemoClose" class="area-memo-icon-button" type="button" aria-label="메모장 접기">×</button>
+        </div>
+        <textarea id="areaMemoText" class="area-memo-text" spellcheck="false" placeholder="이 영역에서 헷갈리는 점, 외울 것, 문제 풀이 메모를 적어두세요."></textarea>
+        <div class="area-memo-foot">
+          <span id="areaMemoSaveStatus" class="area-memo-save-status">자동 저장</span>
+          <button id="areaMemoClear" class="area-memo-clear" type="button">메모 비우기</button>
+        </div>
+      </div>
+    </section>
+  </aside>
+
   <aside id="retryDock" class="retry-dock" aria-label="지연 재인출 카드" aria-live="polite"></aside>
 
   <dialog id="sourceDialog">
@@ -98,11 +121,11 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.29-rc1"></script>
-  <script src="js/core/config.js?v=9.0.29-rc1"></script>
-  <script src="js/core/storage.js?v=9.0.29-rc1"></script>
-  <script src="js/core/grading.js?v=9.0.29-rc1"></script>
-  <script src="js/core/study-engine.js?v=9.0.29-rc1"></script>
-  <script src="js/app.js?v=9.0.29-rc1"></script>
+  <script src="data/generated/study-data.js?v=9.0.30-rc1"></script>
+  <script src="js/core/config.js?v=9.0.30-rc1"></script>
+  <script src="js/core/storage.js?v=9.0.30-rc1"></script>
+  <script src="js/core/grading.js?v=9.0.30-rc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.30-rc1"></script>
+  <script src="js/app.js?v=9.0.30-rc1"></script>
 </body>
 </html>
