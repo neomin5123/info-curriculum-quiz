@@ -2,7 +2,7 @@
 'use strict';
 const DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
 const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
-const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList')};
+const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList')};
 let revealed=false,activeRetryCardId='';
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function option(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;return o;}
@@ -215,6 +215,72 @@ function openRetryCard(id){
   persist();
   renderRetryDock();
 }
+
+function reviewUnitsForLine(line){
+  if(!line)return [];
+  if(line.presentation?.units?.length)return line.presentation.units.slice().sort((x,y)=>x.start-y.start);
+  return (line.keywords||[]).filter(k=>k.active).slice().sort((x,y)=>x.start-y.start);
+}
+function dailyReviewGroups(){
+  const due=CL.storage.dueReviewItems(state),groups=[],kiMap=new Map();
+  due.forEach(rec=>{
+    const line=engine.lineMap.get(rec.lineId);if(!line)return;
+    if(line.family==='지식·이해'){
+      const key=`KI:${line.subject}:${line.area}`;
+      if(!kiMap.has(key))kiMap.set(key,{id:key,kind:'ki',subject:line.subject,subjectLabel:line.subjectLabel,area:line.area,lineIds:[]});
+      kiMap.get(key).lineIds.push(line.lineId);
+      return;
+    }
+    const units=reviewUnitsForLine(line);
+    if(!units.length)return;
+    const unit=units[Number(rec.reviewCount||0)%units.length];
+    groups.push({id:`LINE:${line.lineId}`,kind:'line',lineIds:[line.lineId],line,rec,answer:unit.text,prompt:retryBlankText(line.sourceText,unit.text)});
+  });
+  kiMap.forEach(g=>{
+    const kg=(engine.data.knowledgeUnderstandingGroups||[]).find(x=>x.subject===g.subject&&x.area===g.area);
+    if(!kg)return;
+    g.answers=kg.items.map(x=>x.text);g.allLineIds=kg.items.map(x=>x.lineId);groups.unshift(g);
+  });
+  return groups;
+}
+function dailyReviewCardHtml(g){
+  if(g.kind==='ki'){
+    return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
+      <div class="daily-review-card-head"><div><strong>${esc(g.subjectLabel)} · ${esc(g.area)} · 지식·이해</strong><small>영역 전체 회상</small></div><span>${g.lineIds.length}개 예정</span></div>
+      <div class="daily-review-prompt">이 영역의 지식·이해 내용 요소를 모두 입력하세요.</div>
+      <div class="daily-review-inputs">${g.answers.map((_,i)=>`<input class="daily-review-input" data-daily-index="${i}" autocomplete="off" spellcheck="false" placeholder="${i+1}번">`).join('')}</div>
+      <div class="daily-review-actions"><button type="button" class="primary" data-daily-grade="${esc(g.id)}">채점</button></div>
+      <div class="daily-review-feedback"></div>
+    </article>`;
+  }
+  return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
+    <div class="daily-review-card-head"><div><strong>${esc(g.line.subjectLabel)} · ${esc(g.line.area)}</strong><small>${esc(g.line.family)}</small></div><span>${Number(g.rec.stage||0)+1}단계</span></div>
+    <div class="daily-review-prompt">${esc(g.prompt)}</div>
+    <div class="daily-review-inline"><input class="daily-review-input" autocomplete="off" spellcheck="false" placeholder="정답 입력"><button type="button" class="primary" data-daily-grade="${esc(g.id)}">채점</button></div>
+    <div class="daily-review-feedback"></div>
+  </article>`;
+}
+function gradeDailyReview(id){
+  const group=dailyReviewGroups().find(g=>g.id===id);if(!group)return;
+  const card=el.dailyReviewList?.querySelector(`[data-daily-review="${CSS.escape(id)}"]`);if(!card)return;
+  let status='wrong',expected='';
+  if(group.kind==='ki'){
+    const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
+    status=grade.status;expected=group.answers.join(' / ');
+    grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(r.status==='duplicate'?'wrong':r.status);});
+  }else{
+    const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
+    status=d.status;expected=group.answer;
+    if(f){['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(status==='duplicate'?'wrong':status);}
+  }
+  const lineIds=group.kind==='ki'?group.lineIds:group.lineIds;
+  lineIds.forEach(lineId=>{CL.storage.recordItem(state,lineId,status);CL.storage.completeDailyReview(state,lineId,status);});
+  const fb=card.querySelector('.daily-review-feedback'),label=status==='correct'?'정답':status==='near'?'표기 확인':status==='unknown'?'모름':'오답';
+  fb.textContent=status==='correct'?'오늘 복습 완료 ✓':`${label} · 정답: ${expected}`;
+  fb.className='daily-review-feedback '+statusClass(status);
+  CL.storage.save(state);renderRetryDock();
+  setTimeout(()=>renderReviewPage(),status==='correct'?650:1450);
+}
 function weakReviewItems(){
   return Object.entries(state.itemProgress||{})
     .map(([lineId,p])=>{
@@ -229,10 +295,12 @@ function weakReviewItems(){
 }
 function renderReviewPage(){
   if(!el.reviewPage)return;
-  const retries=retryEntries(),due=retryEntries({dueOnly:true}),weak=weakReviewItems(),serial=Number(state.answerSerial||0);
+  const retries=retryEntries(),due=retryEntries({dueOnly:true}),weak=weakReviewItems(),daily=dailyReviewGroups(),serial=Number(state.answerSerial||0);
+  if(el.reviewTodayCount)el.reviewTodayCount.textContent=String(daily.length);
   if(el.reviewRetryCount)el.reviewRetryCount.textContent=String(due.length);
   if(el.reviewWeakCount)el.reviewWeakCount.textContent=String(weak.length);
-  if(el.reviewSummary)el.reviewSummary.textContent=due.length?`지금 다시 풀 수 있는 카드 ${due.length}개`:(retries.length?'재인출 대기 중':'대기 중인 재인출 없음');
+  if(el.dailyReviewList)el.dailyReviewList.innerHTML=daily.length?daily.map(dailyReviewCardHtml).join(''):`<div class="review-empty">오늘 예정된 장기 복습이 없습니다.</div>`;
+  if(el.reviewSummary)el.reviewSummary.textContent=daily.length?`오늘의 복습 ${daily.length}개`:(due.length?`지금 다시 풀 수 있는 카드 ${due.length}개`:(retries.length?'재인출 대기 중':'오늘 복습 완료'));
   if(el.reviewRetryList){
     el.reviewRetryList.innerHTML=retries.length?retries.map(([id,r])=>{
       const left=Math.max(0,Number(r.dueAt)-serial),ready=left===0;
@@ -432,7 +500,13 @@ function recordMatchedItem(items,result){
 }
 function gradeSetFields(fields,items,save=true){
   const answers=items.map(x=>x.text),grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),answers),matched=new Set();
-  grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;applyFieldGrade(f,r,r.expected,save);if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);recordMatchedItem(items,r);});
+  grade.results.forEach((r,i)=>{
+    const f=fields[i];if(!f)return;
+    applyFieldGrade(f,r,r.expected,save);
+    if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
+    recordMatchedItem(items,r);
+    if(r.status==='correct')cancelFieldRetry(f);else scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
+  });
   const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
   items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
   return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
@@ -456,11 +530,13 @@ function fixedExpectedForField(field,task){
 function gradeFixedField(field,expected,save=true){
   const detail=CL.grading.classifyDetailed(field.value,expected);applyFieldGrade(field,detail,expected,save);
   if(field.dataset.lineId)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
+  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,{...detail,expected},null);
   return detail;
 }
 function gradeUnorderedField(field,task,save=true){
   const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
   applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
+  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
   return detail;
 }
 function check(){
@@ -483,7 +559,7 @@ function check(){
   const status=taskStatusFrom(statuses),counts=gradeCounts(statuses);
   const parts=[counts.correct?`정확 ${counts.correct}`:'',counts.near?`확인 ${counts.near}`:'',counts.unknown?`모름 ${counts.unknown}`:'',(counts.wrong+counts.duplicate)?`오답 ${counts.wrong+counts.duplicate}`:''].filter(Boolean);
   el.feedback.textContent=status==='correct'?'전체 정답':parts.join(' · ');el.feedback.className='feedback '+statusClass(status);
-  CL.storage.record(state,engine.taskId(task),status);if(status!=='correct')engine.scheduleRetry(task);persist();
+  CL.storage.record(state,engine.taskId(task),status);persist();
 }
 function reveal(){
   const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;let html='';
@@ -694,6 +770,17 @@ function installAnswerInputUX(){
   el.content.addEventListener('focusin',e=>{const field=answerField(e.target);if(field&&tabNav)setTimeout(()=>field.scrollIntoView({block:'center',behavior:'smooth'}),0);});
   el.content.addEventListener('click',e=>{const field=answerField(e.target);if(!field)return;if(field.dataset.firstClickSelectDone==='1')return;field.dataset.firstClickSelectDone='1';if(typeof field.select==='function')field.select();});
 }
+
+function clearFilledAnswers(){
+  const ok=window.confirm('저장된 빈칸 입력값과 채점 표시를 모두 비울까요?\n복습 일정·취약 기록·학습 범위는 유지됩니다.');
+  if(!ok)return;
+  CL.storage.clearStudyInputs(state);revealed=false;render();persist();
+}
+function resetReviewData(){
+  const ok=window.confirm('복습 데이터를 초기화할까요?\n오늘의 복습 일정, 취약 통계, 지연 재인출 카드가 모두 삭제됩니다.\n빈칸 입력값과 학습 범위/바퀴는 유지됩니다.');
+  if(!ok)return;
+  activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
+}
 function changeScope(mutator){persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));}
 function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
 initSelectors();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();
@@ -715,6 +802,10 @@ el.retryDock.addEventListener('keydown',e=>{
 });
 el.reviewRetryList.addEventListener('click',e=>{const row=e.target.closest('[data-retry-id]');if(row){showMainTab('study');openRetryCard(row.dataset.retryId);}});
 el.reviewWeakList.addEventListener('click',e=>{const row=e.target.closest('[data-line-id]');if(row)openWeakItem(row.dataset.lineId);});
+el.dailyReviewList.addEventListener('click',e=>{const b=e.target.closest('[data-daily-grade]');if(b)gradeDailyReview(b.dataset.dailyGrade);});
+el.dailyReviewList.addEventListener('keydown',e=>{const f=e.target.closest('.daily-review-input');if(!f||e.isComposing||e.keyCode===229||e.key!=='Enter')return;const card=f.closest('[data-daily-review]');if(!card)return;const fields=[...card.querySelectorAll('.daily-review-input')],i=fields.indexOf(f);if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}e.preventDefault();gradeDailyReview(card.dataset.dailyReview);});
+el.clearAnswers.onclick=clearFilledAnswers;
+el.resetReview.onclick=resetReviewData;
 el.subject.onchange=()=>filterChange('subject');
 el.area.onchange=()=>filterChange('area');
 el.family.onchange=()=>changeScope(()=>{state.ui.family=el.family.value;});

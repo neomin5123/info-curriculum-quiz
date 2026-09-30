@@ -5,8 +5,8 @@ const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('js/app.js',
 for(const p of required.filter(x=>/\.(js|css)$/.test(x))){if(!html.includes(p)&&p!=='service-worker.js'){console.error('index does not reference',p);process.exit(1);}}
 for(const label of ['성격 + 목표','내용체계','성취기준','내용체계 + 성취기준','성취기준 해설 + 적용 시 고려사항','교수학습 + 평가'])if(!engine.includes(label)){console.error('group missing',label);process.exit(1);}
 for(const label of ['단일 회상','실전 조합','전체 회상'])if(!app.includes(label)){console.error('stage missing',label);process.exit(1);}
-if(!html.includes('v9.0.21 Study RC')||!html.includes('data-build="9.0.21-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
-if(!config.includes("9.0.21-study-rc.1")){console.error('config version mismatch');process.exit(1);}
+if(!html.includes('v9.0.22 Study RC')||!html.includes('data-build="9.0.22-study-rc.1"')){console.error('deploy build marker missing');process.exit(1);}
+if(!config.includes("9.0.22-study-rc.1")){console.error('config version mismatch');process.exit(1);}
 if(!html.includes('<button class="source-button" id="sourceButton">원문 출처</button>')||!html.includes('id="provenanceFooter"')){console.error('source placement/provenance missing');process.exit(1);}
 for(const token of ['classifyDetailed','likelyTypo','decomposeHangul','gradeSetDetailed','aggregateStatus'])if(!grading.includes(token)){console.error('grading restoration missing',token);process.exit(1);}
 for(const token of ['drafts','fieldGrades','scopeRounds','scopeTasks','noteScopeRound','restoreScopeRound'])if(!storage.includes(token)){console.error('storage restoration missing',token);process.exit(1);}
@@ -42,3 +42,13 @@ for(const token of ['retryCardPanelHtml','gradeRetryCard','deferRetryCard','prac
 }
 if(appV21.includes("Object.assign(state.ui,{\n    subject:scope.subject")){console.error('retry card still navigates main study context');process.exit(1);}
 if(!cssV21.includes('v8-style self-contained delayed-recall cards')){console.error('v8-style retry card CSS missing');process.exit(1);}
+
+const appV22=fs.readFileSync('js/app.js','utf8');
+const htmlV22=fs.readFileSync('index.html','utf8');
+const storageV22=fs.readFileSync('js/core/storage.js','utf8');
+const configV22=fs.readFileSync('js/core/config.js','utf8');
+for(const token of ['clearAnswersButton','resetReviewButton','reviewTodayCount','dailyReviewList']){if(!htmlV22.includes(token)){console.error(`v9.0.22 HTML missing ${token}`);process.exit(1);}}
+for(const token of ['clearFilledAnswers','resetReviewData','dailyReviewGroups','gradeDailyReview','scheduleFieldRetry']){if(!appV22.includes(token)){console.error(`v9.0.22 app missing ${token}`);process.exit(1);}}
+for(const token of ['draftDate','dayChanged','reviewSchedule','completeDailyReview','clearStudyInputs','clearReviewData']){if(!storageV22.includes(token)){console.error(`v9.0.22 storage missing ${token}`);process.exit(1);}}
+if(!configV22.includes('reviewIntervalsDays:[1,3,7,14,21,30]')){console.error('compressed review interval config missing');process.exit(1);}
+if(appV22.includes("engine.scheduleRetry(task)")){console.error('old task-level retry still active; field-card retry should own checkbox behavior');process.exit(1);}
