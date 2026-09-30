@@ -225,3 +225,32 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
   .daily-review-inputs{grid-template-columns:1fr}
   .secondary-actions{align-items:flex-start}.secondary-button-group{flex-wrap:wrap;justify-content:flex-end}
 }
+
+/* v9.0.23 — retry-card hover reveal layout fix
+   Reset legacy v9.0.20 grid properties that squeezed the v9.0.21+ card into an 8px column. */
+.retry-dock .retry-card{
+  display:block;
+  grid-template-columns:none;
+  gap:0;
+  align-items:initial;
+  text-align:initial;
+  min-height:0;
+  padding:0;
+  overflow:visible;
+}
+.retry-dock .retry-card-peek{
+  display:grid;
+  grid-template-columns:10px minmax(0,1fr);
+  width:100%;
+  min-width:0;
+  overflow:hidden;
+}
+.retry-dock .retry-card-body{min-width:0;overflow:hidden}
+.retry-dock .retry-card-body strong,
+.retry-dock .retry-card-body small{
+  display:block;
+  writing-mode:horizontal-tb;
+  white-space:nowrap;
+}
+.retry-dock .retry-card:hover .retry-card-peek,
+.retry-dock .retry-card:focus-within .retry-card-peek{overflow:visible}

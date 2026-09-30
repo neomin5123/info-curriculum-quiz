@@ -1,6 +1,6 @@
 {
   "name": "curriloop",
-  "version": "9.0.22-study-rc.1",
+  "version": "9.0.23-study-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
