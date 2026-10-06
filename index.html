@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
   <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.35 Study RC</title>
+  <title>CurriLoop v9.0.37 Study RC</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.35-rc1">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.37-rc1">
 </head>
-<body data-build="9.0.35-study-rc.1">
+<body data-build="9.0.37-study-rc.1">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.35 Study RC</div>
+      <div class="version">v9.0.37 Study RC</div>
     </div>
     <label class="zoom-control">화면 배율
       <select id="zoomSelect" aria-label="화면 배율">
@@ -45,7 +45,7 @@
           <button data-mode="cloze" role="tab" class="active">빈칸 채우기</button>
         </div>
         <div class="mode-tools">
-          <label class="retry-pill" title="오답·모름·표기 확인을 다른 답 3개 뒤 우측 카드로 다시 묻습니다.">
+          <label class="retry-pill" title="ON: 오답·모름·표기 확인을 3개 뒤 카드로 다시 묻습니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
             <input type="checkbox" id="retryToggle" checked>
             <span class="retry-pill-label">오답 카드</span>
             <strong id="retryToggleState">ON</strong>
@@ -57,7 +57,7 @@
     </section>
 
     <section class="study-card" id="studyCard">
-      <div class="study-meta"><span id="taskMeta" class="task-meta-hidden" aria-hidden="true"></span><span id="progressMeta"></span></div>
+      <div class="study-meta"><div id="areaNavigator" class="area-navigator" hidden><button id="prevAreaButton" type="button" aria-label="이전 영역">‹</button><strong id="currentAreaLabel"></strong><button id="nextAreaButton" type="button" aria-label="다음 영역">›</button></div><span id="taskMeta" class="task-meta-hidden" aria-hidden="true"></span><span id="progressMeta"></span></div>
       <div id="studyContent"></div>
       <div id="feedback" class="feedback" aria-live="polite"></div>
       <div class="study-actions">
@@ -127,16 +127,18 @@
 
   <aside id="retryDock" class="retry-dock" aria-label="지연 재인출 카드" aria-live="polite"></aside>
 
+  <nav class="page-jump-dock" aria-label="페이지 빠른 이동"><button id="scrollTopButton" type="button" title="맨 위로">↑ 맨 위</button><button id="scrollBottomButton" type="button" title="맨 아래로">맨 아래 ↓</button></nav>
+
   <dialog id="sourceDialog">
     <div class="dialog-head"><strong>원문 출처</strong><button id="closeSource" aria-label="닫기">×</button></div>
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.35-rc1"></script>
-  <script src="js/core/config.js?v=9.0.35-rc1"></script>
-  <script src="js/core/storage.js?v=9.0.35-rc1"></script>
-  <script src="js/core/grading.js?v=9.0.35-rc1"></script>
-  <script src="js/core/study-engine.js?v=9.0.35-rc1"></script>
-  <script src="js/app.js?v=9.0.35-rc1"></script>
+  <script src="data/generated/study-data.js?v=9.0.37-rc1"></script>
+  <script src="js/core/config.js?v=9.0.37-rc1"></script>
+  <script src="js/core/storage.js?v=9.0.37-rc1"></script>
+  <script src="js/core/grading.js?v=9.0.37-rc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.37-rc1"></script>
+  <script src="js/app.js?v=9.0.37-rc1"></script>
 </body>
 </html>

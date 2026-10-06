@@ -1004,3 +1004,22 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
     grid-column:2;
   }
 }
+
+/* v9.0.36 — 전체영역 네비게이션 / 따라치기 Enter / spellcheck / page jumps */
+.study-meta{display:flex!important;align-items:center;justify-content:space-between!important;gap:10px}
+.area-navigator{display:inline-flex;align-items:center;gap:6px;min-width:0;padding:3px 5px;border:1px solid #dde5df;border-radius:999px;background:#f8faf9}
+.area-navigator[hidden]{display:none!important}
+.area-navigator button{width:27px;height:27px;padding:0;display:grid;place-items:center;border-radius:999px;background:#fff;color:#496353;font-size:18px;line-height:1}
+.area-navigator button:disabled{opacity:.32;cursor:default}
+.area-navigator strong{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px;color:#355f4b;font-size:11.5px;font-weight:800}
+.study-actions button[hidden]{display:none!important}
+.trace-copy-stack{max-width:52rem!important}
+.trace-answer-textarea{min-height:34px!important;padding:4px 8px!important;line-height:1.35!important;max-width:52rem!important}
+.standard-typing-row .trace-copy-stack{max-width:50rem!important}.standard-typing-row .trace-answer-textarea{max-width:50rem!important}
+.cloze-text .inline-input{width:clamp(7.5rem,calc(var(--answer-ch,14) * .76rem),32rem)!important;max-width:min(78vw,32rem)!important;min-height:2.1rem!important;padding:3px 7px!important}
+.cs-cloze-content .inline-input,.cs-cloze-content .cs-inline-input,.cs-cloze-content .standard-inline-input{width:clamp(7.5rem,calc(var(--answer-ch,14) * .76rem),31rem)!important;min-height:2.1rem!important;padding:3px 7px!important}
+.trace-answer-textarea,#typingInput,.group-input,.ki-input,.inline-input{text-decoration:none!important}
+.page-jump-dock{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:67;display:flex;gap:4px;padding:4px;border:1px solid rgba(205,216,209,.92);border-radius:999px;background:rgba(255,255,255,.91);box-shadow:0 7px 22px rgba(29,49,37,.11);backdrop-filter:blur(7px);opacity:.78;transition:opacity .15s,transform .15s}
+.page-jump-dock:hover,.page-jump-dock:focus-within{opacity:1;transform:translateX(-50%) translateY(-1px)}
+.page-jump-dock button{padding:5px 9px;border:0;border-radius:999px;background:transparent;color:#53645a;font-size:10.5px}.page-jump-dock button:hover{background:#eef4f0;color:#2e5742}
+@media(max-width:760px){.area-navigator strong{max-width:180px;font-size:10.5px}.area-navigator button{width:25px;height:25px}.trace-copy-stack,.trace-answer-textarea,.standard-typing-row .trace-copy-stack,.standard-typing-row .trace-answer-textarea{max-width:100%!important}.page-jump-dock{bottom:8px}.page-jump-dock button{padding:5px 7px;font-size:10px}}

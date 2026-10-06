@@ -148,9 +148,10 @@
     function scheduleRetry(task){if(!state.ui.retry)return;const id=taskId(task),count=retryCounts[id]||0;if(count>=CL.config.maxRetriesPerTaskPerRound)return;retryCounts[id]=count+1;queue.splice(Math.min(cursor+1+CL.config.retryDelay,queue.length),0,task);}
     function next(){if(!queue.length)return null;if(cursor<queue.length-1){cursor++;return current();}state.round=(state.round||1)+1;rebuild();return current();}
     function prev(){if(cursor>0)cursor--;return current();}
+    function goTo(index){if(!Number.isInteger(index)||index<0||index>=queue.length)return null;cursor=index;return current();}
     function nextRound(){state.round=(state.round||1)+1;rebuild();return current();}
     function stats(){return {cursor:queue.length?cursor+1:0,total:queue.length,round:state.round||1};}
-    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,nextRound,stats,get queue(){return queue;}};
+    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,goTo,nextRound,stats,get queue(){return queue;}};
   }
   CL.study={makeEngine};
 })();

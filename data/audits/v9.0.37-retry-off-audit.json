@@ -1,0 +1,12 @@
+{
+  "version": "v9.0.37-study-rc.1",
+  "status": "PASS — RETRY OFF PURGES PENDING CARDS",
+  "behavior": {
+    "offDeletesFieldRetries": true,
+    "offClearsFieldRetryCounts": true,
+    "offClosesActiveRetryCard": true,
+    "reenableDoesNotRestoreOldCards": true,
+    "longTermSrsUnchanged": true
+  },
+  "curriculumDataMutated": false
+}
