@@ -17,7 +17,7 @@ assert(e.queue.length===1&&e.queue[0].type==='content-system'&&e.queue[0].focus.
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','whole'));e.rebuild();
 assert(e.queue.length===1&&e.queue[0].type==='content-system'&&e.queue[0].focus.kind==='whole','whole content-system must be one full-table task');
 const sampleLine=e.lineMap.get('MI-01-CS-KI-01');
-assert(e.recallUnitsForLine(sampleLine,'whole').length===4,'whole recall should blank every presentation unit on the sample core idea');
+assert(e.recallUnitsForLine(sampleLine,'whole').length===3,'whole recall should use the three semantic presentation units on the sample core idea');
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','single'));e.rebuild();
 assert(e.recallUnitsForLine(e.lineMap.get('MI-01-CS-KI-01'),'single').length===1,'single recall should blank one presentation unit per non-KI line');
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','practical'));e.rebuild();

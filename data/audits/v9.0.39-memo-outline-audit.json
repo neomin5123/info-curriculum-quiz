@@ -1,0 +1,15 @@
+{
+  "version": "v9.0.39-study-rc.1",
+  "baseline": "v9.0.38-study-rc.1",
+  "change": "memo-default-outline-and-safe-legacy-migration",
+  "outlineAreas": 10,
+  "uiMemoScopes": 18,
+  "migrationPolicy": "exact-match-old-auto-default-only",
+  "preservesUserEditedMemo": true,
+  "preservesBlankMemo": true,
+  "curriculumSourceChanged": false,
+  "stage3RChanged": false,
+  "presentationGranularityChanged": false,
+  "srsChanged": false,
+  "browserE2ERun": false
+}

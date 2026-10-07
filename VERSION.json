@@ -1,6 +1,6 @@
 {
-  "version": "9.0.37-study-rc.1",
-  "dataVersion": "v9.0.6-granularity-redesign",
+  "version": "9.0.39-study-rc.1",
+  "dataVersion": "v9.0.38-presentation-granularity-audit",
   "status": "STUDY_RC",
   "scope": [
     "middle-info",
@@ -13,5 +13,5 @@
     "지식·이해 영역별 회상",
     "지식·이해 전체 영역 통회상"
   ],
-  "freezeGate": "REOPENED_FOR_RETRY_OFF_PURGE"
+  "freezeGate": "MEMO_OUTLINE_MIGRATION"
 }

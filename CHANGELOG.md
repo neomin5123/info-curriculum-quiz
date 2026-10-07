@@ -1,5 +1,26 @@
 # Changelog
 
+## 9.0.39-study-rc.1
+- 좌측 영역 메모의 자동 기본 개요를 긴 `A → B → C` 한 줄에서 번호형 outline으로 재구성
+- 중학교 5영역 + 고등학교 5영역 모두 `1. 단계` / `- 하위 개념` 구조로 변경
+- 특정 영역 메모에서는 영역명 반복을 제거하고, 전체 영역에서만 `[영역명]` 구획 표시
+- v9.0.33~v9.0.38에서 이미 자동 생성된 구형 기본문은 **저장값이 과거 기본문과 정확히 동일한 경우에만** 새 개요로 migration
+- 사용자가 한 글자라도 수정한 메모와 빈 문자열 메모는 migration에서 제외하여 그대로 보존
+- `개요로 초기화`는 새 번호형 개요를 복원
+- 공식 교육과정 sourceText, presentation granularity, Stage3R, SRS/재인출 정책은 변경하지 않음
+
+## 9.0.38-study-rc.1
+- 전체 회상 presentation granularity 전수 재감사
+- B 의미 단위의 과분절을 강결합 표현 중심으로 병합하고, 단어 단위 빈칸을 의미 덩어리로 재구성
+- presentation unit 407개 → 370개
+- 활성 학습 atom의 presentation 누락 21개 → 0개
+- 정책 근거 atom 없이 전체 회상에 포함되던 presentation unit 15개 → 0개
+- S exact-production presentation unit 30개는 문구/매핑을 그대로 보존
+- A는 구조적 회상 원칙을 유지하고, 정책 근거가 없던 1개 unit을 제거하면서 해당 line의 구조 표현만 보정
+- 단일/실전/전체 set을 수정된 presentation unit 기준으로 재생성
+- v9.0.38 granularity QA 추가: 공식 sourceText hash, frozen keyword-policy hash, S exact signature, active atom coverage, policy-backed unit, overlap, 4+ blank 금지 검증
+- 공식 sourceText, legacy keyword/set, Stage3R S/A/B/C/X 정책은 변경하지 않음
+
 ## 9.0.37-study-rc.1
 - `오답 카드`를 OFF로 바꾸면 현재 대기 중인 우측 지연 재인출 카드를 즉시 삭제
 - 단순 숨김이 아니라 `fieldRetries` 자체를 비워서 다시 ON으로 바꿔도 예전 카드가 되살아나지 않음

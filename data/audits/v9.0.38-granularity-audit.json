@@ -1,0 +1,144 @@
+{
+  "version": "v9.0.38-study-rc.1",
+  "audit": "presentation-granularity",
+  "status": "PASS",
+  "baseline": "v9.0.37-study-rc.1",
+  "scope": {
+    "presentationOnly": true,
+    "officialSourceTextMutated": false,
+    "stage3RPolicyMutated": false,
+    "knowledgeUnderstandingRecallPolicyMutated": false
+  },
+  "results": {
+    "officialLines": 270,
+    "changedPresentationLines": 53,
+    "changedBySubject": {
+      "middle-info": 26,
+      "high-info": 27
+    },
+    "changedByFamily": {
+      "핵심 아이디어": 15,
+      "과정·기능": 16,
+      "해설": 19,
+      "고려사항": 2,
+      "성취기준": 1
+    },
+    "presentationUnitsBefore": 407,
+    "presentationUnitsAfter": 370,
+    "bOnlyUnitsBefore": 209,
+    "bOnlyUnitsAfter": 189,
+    "bOnlyUnitsLengthLe3Before": 18,
+    "bOnlyUnitsLengthLe3After": 2,
+    "activeKeywordCoverageMissingBefore": 21,
+    "activeKeywordCoverageMissingAfter": 0,
+    "policylessPresentationUnitsBefore": 15,
+    "policylessPresentationUnitsAfter": 0,
+    "invalidPresentationKeywordRefsAfter": 0,
+    "overlappingPresentationUnitsAfter": 0,
+    "sExactPresentationUnits": 30,
+    "sExactPresentationChanged": 0,
+    "aPresentationLinesChanged": 1
+  },
+  "integrityHashes": {
+    "officialSourceTextSha256": "a1da9c9decf6dce91affadf05f0d14a296613b5026f7a870c54f345dc602fc95",
+    "frozenKeywordPolicySha256": "fb07736cacfa2f967a8b88e41c1db7934811dc51b13014da1fea1afb31a6afa3",
+    "sExactPresentationSignatureSha256": "5cfa1be81ad2c38cb068ddbae1204abca4378651fddb008a9b21229597fbcebd"
+  },
+  "representativeChanges": [
+    {
+      "lineId": "MI-01-CS-KI-01",
+      "before": [
+        "하드웨어",
+        "소프트웨어",
+        "컴퓨팅 시스템",
+        "사회적, 기술적 가치"
+      ],
+      "after": [
+        "하드웨어와 소프트웨어",
+        "컴퓨팅 시스템",
+        "사회적, 기술적 가치"
+      ]
+    },
+    {
+      "lineId": "MI-03-CS-PF-01",
+      "before": [
+        "초기 상태",
+        "현재 상태",
+        "목표 상태"
+      ],
+      "after": [
+        "초기 상태, 현재 상태, 목표 상태"
+      ]
+    },
+    {
+      "lineId": "HI-02-AC-EX-02",
+      "beforeCount": 5,
+      "after": [
+        "치환형, 전치형",
+        "암호 기법",
+        "암호화, 복호화"
+      ]
+    }
+  ],
+  "changedLineIds": [
+    "MI-01-CS-KI-01",
+    "MI-01-CS-PF-01",
+    "MI-01-AC-EX-02",
+    "MI-02-CS-KI-03",
+    "MI-02-AC-EX-01",
+    "MI-02-AC-EX-02",
+    "MI-02-AC-EX-03",
+    "MI-03-CS-KI-02",
+    "MI-03-CS-KI-03",
+    "MI-03-CS-PF-01",
+    "MI-03-CS-PF-02",
+    "MI-03-CS-PF-03",
+    "MI-03-CS-PF-04",
+    "MI-03-AC-EX-01",
+    "MI-03-AC-EX-02",
+    "MI-03-AC-EX-03",
+    "MI-03-AC-CO-02",
+    "MI-04-CS-KI-01",
+    "MI-04-CS-KI-02",
+    "MI-04-CS-PF-03",
+    "MI-04-CS-PF-04",
+    "MI-04-AC-EX-01",
+    "MI-04-AC-EX-02",
+    "MI-04-AC-EX-03",
+    "MI-05-CS-KI-01",
+    "MI-05-AC-EX-01",
+    "HI-01-CS-KI-01",
+    "HI-01-CS-KI-02",
+    "HI-01-CS-PF-01",
+    "HI-01-AC-EX-01",
+    "HI-02-CS-KI-01",
+    "HI-02-CS-PF-01",
+    "HI-02-AC-EX-01",
+    "HI-02-AC-EX-02",
+    "HI-02-AC-CO-01",
+    "HI-03-CS-KI-01",
+    "HI-03-CS-KI-02",
+    "HI-03-CS-KI-03",
+    "HI-03-CS-PF-02",
+    "HI-03-CS-PF-03",
+    "HI-03-CS-PF-04",
+    "HI-03-CS-PF-05",
+    "HI-03-AC-ST-02",
+    "HI-03-AC-EX-01",
+    "HI-03-AC-EX-03",
+    "HI-04-CS-KI-02",
+    "HI-04-CS-PF-01",
+    "HI-04-AC-EX-01",
+    "HI-04-AC-EX-02",
+    "HI-05-CS-KI-02",
+    "HI-05-CS-PF-01",
+    "HI-05-CS-PF-02",
+    "HI-05-AC-EX-01"
+  ],
+  "qa": {
+    "granularityValidator": "PASS",
+    "fullNpmTest": "PASS",
+    "browserE2EExecuted": false,
+    "note": "Browser E2E was not executed; automated Node/data/package/behavior/UX regression validators were executed."
+  }
+}

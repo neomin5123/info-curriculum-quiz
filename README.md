@@ -1,6 +1,19 @@
-# CurriLoop v9.0.7 Study RC
+# CurriLoop v9.0.39 Study RC
 
 중학교 정보 + 고등학교 정보 **270개 공식 교육과정 line**을 즉시 공부할 수 있는 정적 웹앱입니다. GitHub Pages/Vercel에 그대로 올릴 수 있고, 데이터는 코드와 분리되어 있습니다.
+
+
+## v9.0.39 — 메모 기본 개요 가독성 개선
+- 10개 영역의 자동 기본 개요를 번호형 outline으로 변경했습니다.
+- 과거 자동 기본문과 정확히 일치하는 저장값만 새 개요로 안전하게 migration합니다.
+- 사용자 편집 메모와 사용자가 비운 빈 메모는 보존합니다.
+- 특정 영역은 영역명을 반복하지 않고, 전체 영역에서만 영역 구획 제목을 표시합니다.
+
+## v9.0.38 — 전체 회상 granularity 재감사
+- 공식 원문과 Stage3R 정책은 그대로 두고 `presentation` 레이어만 재분절했습니다.
+- B는 단어 조각이 아니라 의미 덩어리로 회상하도록 강결합 표현을 병합했습니다.
+- active atom은 모두 presentation에 연결되고, 정책 근거 없는 presentation unit은 제거했습니다.
+- S exact-production unit은 그대로 보존합니다.
 
 ## 바로 사용
 

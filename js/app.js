@@ -12,7 +12,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 
 const AREA_MEMO_STORAGE_KEY='curriloop-area-notes-v1';
 
-const AREA_MEMO_DEFAULTS={
+const AREA_MEMO_LEGACY_DEFAULTS={
   'middle-info':{
     '컴퓨팅 시스템':'컴퓨팅 시스템(구성요소·동작 원리) → 운영체제(기능) → 피지컬 컴퓨팅(개념·사례) → 필요성·가치 → 구성요소 선택 → 시스템 구상',
     '데이터':'디지털 데이터 표현 → 문제에 맞는 데이터 수집 → 목적에 맞게 구분·관리 → 표·다이어그램으로 구조화 → 데이터 관계 파악·의미 해석 → 수집·분석을 통한 융합 문제 해결',
@@ -28,27 +28,163 @@ const AREA_MEMO_DEFAULTS={
     '디지털 문화':'디지털 기술의 사회적 영향 분석·진로 설계 → 보호/공유 정보 구분 → 올바른 정보 보호 실천 → 정보보안 필요성·보안 기술 활용 → 디지털 윤리 실천'
   }
 };
+
+const AREA_MEMO_DEFAULTS={
+  'middle-info':{
+    '컴퓨팅 시스템':`1. 컴퓨팅 시스템
+   - 구성요소·동작 원리
+2. 운영체제
+   - 기능
+3. 피지컬 컴퓨팅
+   - 개념·사례
+4. 피지컬 컴퓨팅 시스템
+   - 필요성·가치
+   - 구성요소 선택
+5. 시스템 구상`,
+    '데이터':`1. 디지털 데이터 표현
+2. 문제에 맞는 데이터 수집
+3. 데이터 관리
+   - 목적에 맞게 구분·관리
+4. 데이터 구조화
+   - 표·다이어그램 활용
+5. 데이터 분석
+   - 관계 파악
+   - 의미 해석
+6. 융합 문제 해결
+   - 데이터 수집·분석 활용`,
+    '알고리즘과 프로그래밍':`1. 문제 상태 정의·구조화
+2. 추상화
+   - 핵심요소 추출
+3. 알고리즘
+   - 표현
+   - 비교·분석
+   - 전략 선택
+4. 순차 데이터 저장
+5. 논리 연산·중첩 제어
+6. 함수·디버깅
+7. 실생활 문제 프로그래밍
+8. 협력 SW 개발`,
+    '인공지능':`1. 인공지능
+   - 개념·특성·구별
+2. 데이터
+   - 중요성
+   - 수집·분류
+3. 인공지능 시스템
+   - 구성·적용
+4. 문제 해결
+   - 해결 가능한 문제 발견
+   - 적합한 시스템 적용
+5. 데이터 윤리
+   - 문제 해결 방안`,
+    '디지털 문화':`1. 디지털 사회
+   - 특성·직업 변화
+2. 생활 규칙
+   - 민주적 논의·실천
+3. 정보와 권리 보호
+   - 개인 정보
+   - 권리
+   - 저작권`
+  },
+  'high-info':{
+    '컴퓨팅 시스템':`1. 유·무선 네트워크 특성
+2. 네트워크 환경 구성
+3. 사물인터넷
+   - 구성·동작 원리
+   - 삶·사회 변화 예측
+4. 피지컬 장치 선택
+5. 사물인터넷 시스템 설계`,
+    '데이터':`1. 데이터 압축
+   - 개념·필요성
+   - 압축 효율 분석·평가
+2. 암호화
+   - 개념
+   - 안전 관리 사례
+3. 빅데이터
+   - 개념·특징
+4. 문제에 맞는 데이터 수집
+5. 데이터 분석
+   - 분석 도구·시각화
+   - 의미·가치 해석`,
+    '알고리즘과 프로그래밍':`1. 문제 분해·모델링
+2. 정렬·탐색 알고리즘
+   - 효율 비교
+3. 자료형 선택
+4. 표준/파일 입출력
+5. 다차원 데이터
+6. 복합 제어 구조
+7. 클래스·인스턴스
+8. 협력 설계·구현
+9. 성능 평가·공유`,
+    '인공지능':`1. 지능 에이전트
+   - 개념·특성
+2. 인간과 인공지능의 관계
+3. 기계학습
+   - 개념
+   - 지도학습·비지도학습 비교
+4. 적용 가능 문제 구분
+5. 사회문제에 기계학습 적용`,
+    '디지털 문화':`1. 디지털 기술
+   - 사회적 영향 분석
+   - 진로 설계
+2. 정보 구분
+   - 보호 정보
+   - 공유 정보
+3. 올바른 정보 보호 실천
+4. 정보보안
+   - 필요성
+   - 보안 기술 활용
+5. 디지털 윤리 실천`
+  }
+};
+const AREA_MEMO_AREA_ORDER=['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'];
+function areaMemoTextFor(defaults,subject,area){
+  const one=(s,a)=>defaults[s]?.[a]||'';
+  if(subject==='all'&&area==='all'){
+    const block=s=>AREA_MEMO_AREA_ORDER.map(x=>`[${x}]\n${one(s,x)}`).join('\n\n');
+    return `[중학교 정보]\n${block('middle-info')}\n\n[고등학교 정보]\n${block('high-info')}`;
+  }
+  if(subject==='all'){
+    const m=one('middle-info',area),h=one('high-info',area);
+    return [`[중학교]\n${m}`,`[고등학교]\n${h}`].filter(Boolean).join('\n\n');
+  }
+  if(area==='all')return AREA_MEMO_AREA_ORDER.map(x=>`[${x}]\n${one(subject,x)}`).join('\n\n');
+  return one(subject,area);
+}
 function areaMemoDefaultText(){
-  const subject=state.ui.subject||'middle-info',area=state.ui.area||'all';
-  const one=(s,a)=>AREA_MEMO_DEFAULTS[s]?.[a]||'';
-  const areaOrder=['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'];
+  return areaMemoTextFor(AREA_MEMO_DEFAULTS,state.ui.subject||'middle-info',state.ui.area||'all');
+}
+function areaMemoLegacyTextFor(subject,area){
+  const one=(s,a)=>AREA_MEMO_LEGACY_DEFAULTS[s]?.[a]||'';
   if(subject==='all'&&area==='all'){
     return [
       '[중학교 정보]',
-      ...areaOrder.map(x=>`- ${x}: ${one('middle-info',x)}`),
+      ...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('middle-info',x)}`),
       '',
       '[고등학교 정보]',
-      ...areaOrder.map(x=>`- ${x}: ${one('high-info',x)}`)
+      ...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('high-info',x)}`)
     ].join('\n');
   }
   if(subject==='all'){
     const m=one('middle-info',area),h=one('high-info',area);
     return [`[중학교] ${m}`,`[고등학교] ${h}`].filter(Boolean).join('\n\n');
   }
-  if(area==='all'){
-    return areaOrder.map(x=>`- ${x}: ${one(subject,x)}`).join('\n');
-  }
+  if(area==='all')return AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one(subject,x)}`).join('\n');
   return one(subject,area);
+}
+function migrateLegacyAreaMemoDefaults(store){
+  let changed=false,count=0;
+  for(const [key,saved] of Object.entries(store||{})){
+    const sep=key.indexOf('|');if(sep<0)continue;
+    const subject=key.slice(0,sep),area=key.slice(sep+1);
+    if(!['middle-info','high-info','all'].includes(subject))continue;
+    if(![...AREA_MEMO_AREA_ORDER,'all'].includes(area))continue;
+    const legacy=areaMemoLegacyTextFor(subject,area);
+    if(String(saved??'')!==legacy)continue;
+    const next=areaMemoTextFor(AREA_MEMO_DEFAULTS,subject,area);
+    if(next===legacy)continue;
+    store[key]=next;changed=true;count++;
+  }
+  return {changed,count};
 }
 function areaMemoStore(){
   try{
@@ -75,13 +211,11 @@ function updateAreaMemoLabels(){
 }
 function loadAreaMemo(){
   if(!el.areaMemoText)return;
-  const store=areaMemoStore(),key=areaMemoKey();
+  const store=areaMemoStore(),migration=migrateLegacyAreaMemoDefaults(store),key=areaMemoKey();
   const hasSaved=Object.prototype.hasOwnProperty.call(store,key);
   const value=hasSaved?String(store[key]??''):areaMemoDefaultText();
-  if(!hasSaved){
-    store[key]=value;
-    areaMemoSaveStore(store);
-  }
+  if(!hasSaved)store[key]=value;
+  if(!hasSaved||migration.changed)areaMemoSaveStore(store);
   el.areaMemoText.value=value;
   updateAreaMemoLabels();
   if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='저장됨';
