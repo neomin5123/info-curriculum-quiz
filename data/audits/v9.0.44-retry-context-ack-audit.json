@@ -1,0 +1,22 @@
+{
+  "version": "9.0.44-study-rc.1",
+  "status": "PASS",
+  "curriculumLines": 270,
+  "presentationUnits": 370,
+  "changes": {
+    "retryMetaUsesActualFamily": true,
+    "achievementStandardCodeContextRetained": true,
+    "wholeSetRetryCreationDisabledForNewMisses": true,
+    "legacySetRetryMigrated": true,
+    "wholeRewritePromptRemoved": true,
+    "postGradeAutoAdvanceRemoved": true,
+    "manualAcknowledgeRequired": true,
+    "resultToastTransient": true
+  },
+  "example": {
+    "area": "데이터",
+    "family": "과정·기능",
+    "source": "다양한 데이터를 디지털 데이터로 표현하기",
+    "retryTarget": "디지털 데이터로 표현"
+  }
+}

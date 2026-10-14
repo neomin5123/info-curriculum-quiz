@@ -1,3 +1,3 @@
-CurriLoop 9.0.41-study-rc.1
-Expected visible header: CurriLoop  v9.0.41 Study RC
-Retry cards: miss-event persistence + end-of-round tail drain before advancing to the next round.
+CurriLoop 9.0.44-study-rc.1
+Expected visible header: CurriLoop  v9.0.44 Study RC
+Retry card: exact family context, one-at-a-time relearning, manual post-grade dismissal.

@@ -12,5 +12,5 @@ for(const token of [
   "atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3)",
   '남은 오답 카드 ${pending.length}개를 복습하면 이번 회차가 끝납니다.'
 ]) assert(app.includes(token),`tail-drain invariant missing: ${token}`);
-assert(html.includes('v9.0.41 Study RC'),'v9.0.41 visible build marker missing');
+assert(/v9\.0\.(?:41|42|43|44) Study RC/.test(html),'v9.0.41+ visible build marker missing');
 console.log(JSON.stringify({status:'PASS',tailStarvationRemoved:true,roundAdvanceBlockedUntilRetryDrain:true},null,2));
