@@ -581,12 +581,20 @@ function gradeRetryCard(id){
   retryGradePending.set(id,{status,expected,overallNear,hasWrong,hasUnknown,orderBefore});
   panel.dataset.gradingLock='0';
   panel.classList.remove('grading-lock');
-  if(gradeButton){gradeButton.disabled=false;gradeButton.textContent='확인';}
+  if(gradeButton){
+    gradeButton.disabled=false;
+    gradeButton.textContent='Enter';
+    gradeButton.setAttribute('aria-label','Enter를 눌러 확인');
+    gradeButton.title='Enter 키로 다음 단계로 이동';
+    requestAnimationFrame(()=>{try{gradeButton.focus({preventScroll:true});}catch(_){gradeButton.focus();}});
+  }
 
   if(status==='correct'){
     flashRetryResult(id,'correct','재인출 완료 ✓');
-    setRetryFeedback(id,'정확합니다. 확인을 누르면 카드를 닫습니다.','good');
+    setRetryFeedback(id,'정확합니다. 잠시 후 다음 카드로 넘어갑니다.','good');
+    if(gradeButton)gradeButton.hidden=true;
     if(laterButton)laterButton.hidden=true;
+    setTimeout(()=>{if(retryGradePending.has(id))acknowledgeRetryCard(id,false);},1000);
     return;
   }
 

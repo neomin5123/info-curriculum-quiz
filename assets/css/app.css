@@ -1033,3 +1033,29 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
   .mode-study-group{width:100%;align-items:center}
   .mode-study-group .area-navigator strong{max-width:160px}
 }
+
+
+/* v9.0.45 — fixed-width area navigator for repeat clicking */
+.mode-study-group .area-navigator{
+  width:212px;
+  min-width:212px;
+  max-width:212px;
+  box-sizing:border-box;
+  justify-content:space-between;
+  flex:0 0 212px;
+}
+.mode-study-group .area-navigator strong{
+  flex:1 1 auto;
+  min-width:0;
+  max-width:none;
+  text-align:center;
+}
+@media(max-width:760px){
+  .mode-study-group .area-navigator{
+    width:192px;
+    min-width:192px;
+    max-width:192px;
+    flex-basis:192px;
+  }
+  .mode-study-group .area-navigator strong{max-width:none}
+}
