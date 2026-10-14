@@ -8,6 +8,7 @@ areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
 areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton')};
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null;
+const retryGradePending=new Map(),retryResultTimers=new Map();
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 const AREA_MEMO_STORAGE_KEY='curriloop-area-notes-v1';
@@ -359,7 +360,7 @@ function retryBlankText(text,answer,label='이 항목'){
   const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
   const safeLabel=retrySafeLabel(label,[target],'이 항목');
   if(!target)return `${safeLabel}의 정답을 다시 떠올려 입력하세요.`;
-  if(!source||norm(source)===norm(target))return `${safeLabel} 전체를 다시 작성하세요.`;
+  if(!source||norm(source)===norm(target))return `${safeLabel}을 다시 떠올려 입력하세요.`;
   if(!source.includes(target))return `${safeLabel}의 정답을 다시 작성하세요.`;
 
   // 동일 정답이 원문에 여러 번 등장하면 전부 가려서 다른 위치에서 답이 노출되지 않게 한다.
@@ -373,7 +374,7 @@ function retryCardPanelHtml(id,r){
   const answers=retryAnswerList(r);
   const sectionLabel=retrySafeLabel(r.section||'내용 요소',answers,'해당 항목');
   const prompt=setMode
-    ? `${sectionLabel} 전체를 다시 쓰세요.`
+    ? `${sectionLabel} 항목을 하나씩 다시 떠올려 입력하세요.`
     : retryBlankText(r.contextText||'',r.correctAnswer||'',`${sectionLabel} 항목`);
   const inputHtml=setMode
     ? `<div class="practical-retry-set">${r.setAnswers.map((_,i)=>`<input class="retry-card-input" data-retry-set-index="${i}" type="text" autocomplete="off" spellcheck="false" aria-label="재인출 답 ${i+1}" placeholder="${i+1}번">`).join('')}</div>`
@@ -388,7 +389,7 @@ function retryCardPanelHtml(id,r){
       <div class="practical-retry-prompt">${esc(prompt)}</div>
       <div class="practical-retry-row ${setMode?'set-mode':''}">
         ${inputHtml}
-        <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">확인</button>
+        <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">채점</button>
         <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
       </div>
       <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div>
@@ -454,7 +455,15 @@ function clearRetryResult(id){
   if(panel)panel.classList.remove('result-good','result-near','result-bad');
   if(overlay){overlay.textContent='';overlay.className='retry-result-overlay';}
 }
+function flashRetryResult(id,status,text,duration=1150){
+  const prev=retryResultTimers.get(id);if(prev)clearTimeout(prev);
+  showRetryResult(id,status,text);
+  const timer=setTimeout(()=>{retryResultTimers.delete(id);clearRetryResult(id);},duration);
+  retryResultTimers.set(id,timer);
+}
 function collapseRetryCard(id=''){
+  const target=id||activeRetryCardId;
+  if(target&&retryGradePending.has(target))return;
   if(!id||activeRetryCardId===id)activeRetryCardId='';
   renderRetryDock();
 }
@@ -485,8 +494,9 @@ function completeRetryRecord(id,r){
     (r.lineIds||[]).forEach(lineId=>CL.storage.recordItem(state,lineId,'correct'));
   }else{
     if(r.fieldKey){
-      CL.storage.setDraft(state,r.fieldKey,r.correctAnswer||'');
-      CL.storage.setFieldGrade(state,r.fieldKey,{status:'correct',reason:'retry',expected:r.correctAnswer||''});
+      const sourceExpected=r.sourceExpected||r.correctAnswer||'';
+      CL.storage.setDraft(state,r.fieldKey,sourceExpected);
+      CL.storage.setFieldGrade(state,r.fieldKey,{status:'correct',reason:'retry',expected:sourceExpected});
     }
     if(r.lineId&&!r.recognitionCue)CL.storage.recordItem(state,r.lineId,'correct');
   }
@@ -526,12 +536,15 @@ function advanceRetryCardAfter(currentId,orderBefore,delayMs=1000){
   },delayMs);
 }
 function gradeRetryCard(id){
-  const r=state.fieldRetries?.[id];if(!r)return;
+  const r=state.fieldRetries?.[id];if(!r||retryGradePending.has(id))return;
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
   if(!panel||panel.dataset.gradingLock==='1')return;
   panel.dataset.gradingLock='1';
   panel.classList.add('grading-lock');
-  panel.querySelectorAll('input,button').forEach(control=>{control.disabled=true;});
+  panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
+  const gradeButton=panel.querySelector(`[data-retry-grade="${CSS.escape(id)}"]`);
+  const laterButton=panel.querySelector(`[data-retry-later="${CSS.escape(id)}"]`);
+  if(gradeButton)gradeButton.disabled=true;
   const orderBefore=retryCardOrderSnapshot();
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   let status='wrong',expected='',hasWrong=false,hasUnknown=false,hasNear=false;
@@ -564,28 +577,48 @@ function gradeRetryCard(id){
     hasNear=visual==='near';
   }
 
+  const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
+  retryGradePending.set(id,{status,expected,overallNear,hasWrong,hasUnknown,orderBefore});
+  panel.dataset.gradingLock='0';
+  panel.classList.remove('grading-lock');
+  if(gradeButton){gradeButton.disabled=false;gradeButton.textContent='확인';}
+
   if(status==='correct'){
-    showRetryResult(id,'correct','재인출 완료 ✓');
-    setRetryFeedback(id,'모두 정확했습니다.','good');
-    completeRetryRecord(id,r);
-    CL.storage.save(state);renderReviewPage();
-    if(atRoundEnd()&&!currentRoundRetryEntries().length){
-      el.feedback.textContent='이번 회차의 오답 복습을 모두 마쳤습니다. 다음을 누르면 다음 회차로 넘어갑니다.';
-      el.feedback.className='feedback good';
-    }
-    advanceRetryCardAfter(id,orderBefore,1000);
+    flashRetryResult(id,'correct','재인출 완료 ✓');
+    setRetryFeedback(id,'정확합니다. 확인을 누르면 카드를 닫습니다.','good');
+    if(laterButton)laterButton.hidden=true;
     return;
   }
 
-  const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
-  showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
-
-  const requeued=rescheduleRetryRecord(id,r,status);
+  flashRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
   const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
-  const tail=requeued?' · 잠시 뒤 다시 묻습니다.':' · 취약 기록에 남겼습니다.';
-  setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
-  CL.storage.save(state);renderReviewPage();
-  advanceRetryCardAfter(id,orderBefore,1000);
+  setRetryFeedback(id,`${label} · 정답: ${expected} · 확인 후 다시 묻습니다.`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  if(laterButton){laterButton.hidden=false;laterButton.disabled=false;}
+}
+function acknowledgeRetryCard(id,later=false){
+  const pending=retryGradePending.get(id),r=state.fieldRetries?.[id];
+  if(!pending||!r)return;
+  const {status,orderBefore}=pending;
+  retryGradePending.delete(id);
+  const timer=retryResultTimers.get(id);if(timer){clearTimeout(timer);retryResultTimers.delete(id);}
+
+  if(status==='correct'){
+    completeRetryRecord(id,r);
+  }else if(later){
+    const serial=Number(state.answerSerial||0);
+    r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
+  }else{
+    rescheduleRetryRecord(id,r,status);
+  }
+
+  CL.storage.save(state);
+  renderReviewPage();
+  if(status==='correct'&&atRoundEnd()&&!currentRoundRetryEntries().length){
+    el.feedback.textContent='이번 회차의 오답 복습을 모두 마쳤습니다. 다음을 누르면 다음 회차로 넘어갑니다.';
+    el.feedback.className='feedback good';
+  }
+  activeRetryCardId=nextRetryCardIdAfter(id,orderBefore)||'';
+  renderRetryDock();
 }
 function openRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
@@ -781,8 +814,9 @@ function jumpArea(delta){
   const groups=areaNavGroups(),key=currentAreaNavKey(currentTask()),idx=groups.findIndex(x=>x.key===key);
   if(idx<0)return;
   const target=groups[idx+delta];if(!target)return;
+  const viewport={x:window.scrollX||0,y:window.scrollY||0};
   engine.goTo(target.index);revealed=false;render();
-  document.getElementById('studyCard')?.scrollIntoView({block:'start',behavior:'smooth'});
+  requestAnimationFrame(()=>window.scrollTo({left:viewport.x,top:viewport.y,behavior:'auto'}));
 }
 function setMode(m){state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));revealed=false;render();persist();}
 function currentTask(){return engine.current();}
@@ -1004,9 +1038,9 @@ function gradeSetFields(fields,items,save=true){
     applyFieldGrade(f,r,r.expected,save);
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
     recordMatchedItem(items,r);
-    if(r.status!=='correct')scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
     noteAnswerAttempt();
   });
+  scheduleSetRetryFailures(fields,items,grade);
   const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
   items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
   return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
@@ -1038,7 +1072,11 @@ function gradeFixedField(field,expected,save=true){
 function gradeUnorderedField(field,task,save=true){
   const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
   applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
-  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
+  if(detail.status!=='correct'){
+    const norm=CL.grading.norm;
+    const item=detail.answerIndex!=null?items[detail.answerIndex]:items.find(x=>norm(x.text)===norm(detail.expected))||items[0];
+    if(item)scheduleFieldRetry(field,detail.status,{...detail,expected:item.text},item,{forceSingle:true,itemKey:item.lineId});
+  }
   return detail;
 }
 function check(){
@@ -1058,7 +1096,7 @@ function check(){
     });
     const failureStatus=r.results.some(x=>['wrong','duplicate'].includes(x.status))?'wrong':'unknown';
     items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
-    if(status!=='correct')scheduleFieldRetry(field,status,detail,null);
+    if(status!=='correct')scheduleSetRetryFailures(Array(r.results.length).fill(field),items,r);
     noteAnswerAttempt();
     statuses.push(status);
   }else{
@@ -1147,30 +1185,59 @@ function focusAnswerField(field,smooth=true){if(!field)return;try{field.focus({p
 function nextAnswerField(field){const fields=answerFields(),i=fields.indexOf(field);for(let n=i+1;n<fields.length;n++){const g=CL.storage.getFieldGrade(state,fields[n].dataset.fieldKey);if(!g||g.status!=='correct')return fields[n];}return fields[i+1]||null;}
 function clearFieldState(field){resetFieldVisual(field);if(field.dataset.fieldKey)CL.storage.clearFieldGrade(state,field.dataset.fieldKey);}
 
-function retryIdForField(field){
+function retryIdForField(field,itemKey=''){
   const task=currentTask(),section=field.dataset.section||'';
+  if(itemKey)return `${field.dataset.fieldKey||engine.taskId(task)}|ITEM:${itemKey}|round:${state.round||1}`;
   const unordered=field.classList.contains('ki-input')||(field.id==='typingInput'&&task?.type==='ki')||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
   if(unordered)return `${engine.taskId(task)}|SET:${section||'지식·이해'}|round:${state.round||1}`;
   return `${field.dataset.fieldKey||''}|round:${state.round||1}`;
 }
-function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
+function retryTargetForLine(line,fallback){
+  const source=String(line?.sourceText||'').trim(),full=String(fallback||'').trim();
+  if(!line||!source||!full)return {answer:full,contextText:source||full,sourceExpected:full};
+  const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
+  if(line.family==='지식·이해'||norm(source)!==norm(full))return {answer:full,contextText:source,sourceExpected:full};
+  const presentation=(line.presentation?.units||[]).filter(u=>u?.text&&norm(u.text)!==norm(source)&&[...String(u.text).trim()].length>=2&&[...String(u.text).trim()].length<=22);
+  if(presentation.length){
+    const pick=presentation.slice().sort((a,b)=>[...String(b.text)].length-[...String(a.text)].length||Number(a.start||0)-Number(b.start||0))[0];
+    return {answer:String(pick.text).trim(),contextText:source,sourceExpected:full};
+  }
+  const candidates=(line.keywords||[]).filter(k=>{
+    if(!k||!k.text||k.active)return false;
+    const grades=Array.isArray(k.stage3RGrades)?k.stage3RGrades:[];
+    if(grades.includes('X'))return false;
+    if(!Number.isInteger(k.start)||!Number.isInteger(k.end)||k.end<=k.start)return false;
+    const t=String(k.text).trim();
+    return t&&norm(t)!==norm(source)&&[...t].length>=2&&[...t].length<=18;
+  }).sort((a,b)=>{
+    const ag=(a.stage3RGrades||[]).includes('S')?4:(a.stage3RGrades||[]).includes('A')?3:(a.stage3RGrades||[]).includes('B')?2:1;
+    const bg=(b.stage3RGrades||[]).includes('S')?4:(b.stage3RGrades||[]).includes('A')?3:(b.stage3RGrades||[]).includes('B')?2:1;
+    return bg-ag||[...String(b.text)].length-[...String(a.text)].length||a.start-b.start;
+  });
+  const pick=candidates[0];
+  return pick?{answer:String(pick.text).trim(),contextText:source,sourceExpected:full}:{answer:full,contextText:source,sourceExpected:full};
+}
+function scheduleFieldRetry(field,status,detail=null,matchedItem=null,options={}){
   // Once a miss creates a retry record, later correction in the main study field does not erase it.
   // Only grading the retry card itself as correct (or an explicit reset/OFF purge) resolves the card.
   if(!state.ui.retry||!field?.dataset?.fieldKey||status==='correct')return;
   state.fieldRetries=state.fieldRetries||{};
   state.fieldRetryCounts=state.fieldRetryCounts||{};
-  const task=currentTask(),id=retryIdForField(field);
+  const task=currentTask(),ctx=taskContext(task);
+  const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
+  const line=lineId?engine.lineMap.get(lineId):null;
+  const section=field.dataset.section||line?.family||ctx.family||'빈칸';
+  const originalExpected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
+  const target=options.forceSingle?retryTargetForLine(line,originalExpected):{answer:originalExpected,contextText:line?.sourceText||ctx.family||'',sourceExpected:originalExpected};
+  const itemKey=options.itemKey||matchedItem?.lineId||'';
+  const id=retryIdForField(field,itemKey);
   const count=Number(state.fieldRetryCounts[id]||0);
   if(count>=CL.config.maxRetriesPerTaskPerRound&&!state.fieldRetries[id])return;
   if(!state.fieldRetries[id])state.fieldRetryCounts[id]=count+1;
 
-  const ctx=taskContext(task),section=field.dataset.section||ctx.family||'빈칸';
-  const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
-  const line=lineId?engine.lineMap.get(lineId):null;
   const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
-  const expected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
   const kiTyping=field.id==='typingInput'&&task?.type==='ki';
-  const unordered=field.classList.contains('ki-input')||kiTyping||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
+  const unordered=!options.forceSingle&&(field.classList.contains('ki-input')||kiTyping||(field.classList.contains('group-input')&&!field.dataset.answer&&section));
 
   if(unordered){
     const fields=answerFields().filter(x=>{
@@ -1209,14 +1276,57 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
     fieldIndex:answerFields().indexOf(field),
     lineId,
     section,
-    correctAnswer:expected,
-    contextText:line?.sourceText||ctx.family||'',
+    correctAnswer:target.answer,
+    sourceExpected:target.sourceExpected||originalExpected,
+    contextText:target.contextText||line?.sourceText||ctx.family||'',
     taskId:engine.taskId(task),
     round:Number(state.round||1),
     dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay||3)),
     status,
     scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
   };
+}
+function scheduleSetRetryFailures(fields,items,grade){
+  if(!state.ui.retry||!grade?.results?.length||!items?.length)return;
+  const matched=new Set(grade.results.filter(r=>['correct','near'].includes(r.status)&&r.answerIndex!=null).map(r=>r.answerIndex));
+  const missing=items.map((_,i)=>i).filter(i=>!matched.has(i));
+  let missCursor=0;
+  grade.results.forEach((r,i)=>{
+    if(r.status==='correct')return;
+    let answerIndex=(r.status==='near'&&r.answerIndex!=null)?r.answerIndex:null;
+    if(answerIndex==null||r.status==='duplicate')answerIndex=missing[missCursor++] ?? r.answerIndex ?? 0;
+    const item=items[answerIndex]||items[0];
+    if(!item)return;
+    const field=fields[i]||fields[0];
+    if(!field)return;
+    scheduleFieldRetry(field,r.status,{...r,expected:item.text},item,{forceSingle:true,itemKey:item.lineId||String(answerIndex)});
+  });
+  while(missCursor<missing.length){
+    const answerIndex=missing[missCursor++],item=items[answerIndex],field=fields[0];
+    if(!item||!field)continue;
+    scheduleFieldRetry(field,'unknown',{status:'unknown',reason:'empty',expected:item.text},item,{forceSingle:true,itemKey:item.lineId||String(answerIndex)});
+  }
+}
+function migrateLegacySetRetries(){
+  state.fieldRetries=state.fieldRetries||{};
+  let changed=false;
+  for(const [id,r] of Object.entries({...state.fieldRetries})){
+    if(r?.kind!=='set'||!Array.isArray(r.setAnswers)||!r.setAnswers.length)continue;
+    delete state.fieldRetries[id];changed=true;
+    r.setAnswers.forEach((answer,i)=>{
+      const lineId=(r.lineIds||[])[i]||'';
+      const line=lineId?engine.lineMap.get(lineId):null;
+      const target=retryTargetForLine(line,answer);
+      const childId=`${id}|ITEM:${lineId||i}`;
+      state.fieldRetries[childId]={
+        kind:'single',fieldKey:(r.sourceFieldKeys||[])[i]||r.fieldKey||'',fieldIndex:r.fieldIndex||0,lineId,
+        section:line?.family||r.section||'해당 항목',correctAnswer:target.answer,sourceExpected:target.sourceExpected||answer,
+        contextText:target.contextText||line?.sourceText||String(answer),taskId:r.taskId,round:r.round,dueAt:r.dueAt,status:r.status,
+        scope:r.scope||{}
+      };
+    });
+  }
+  if(changed)CL.storage.save(state);
 }
 function dueRetryForCurrentTask(){
   state.fieldRetries=state.fieldRetries||{};
@@ -1281,7 +1391,11 @@ function gradeSingleAnswerField(field){
   }
 
   noteAnswerAttempt();
-  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,detail,matchedItem);
+  if(detail.status!=='correct'){
+    if(setGrade&&task.type==='ki')scheduleSetRetryFailures(Array(setGrade.results.length).fill(field),task.group.items,setGrade);
+    else if(matchedItem)scheduleFieldRetry(field,detail.status,{...detail,expected:matchedItem.text},matchedItem,{forceSingle:true,itemKey:matchedItem.lineId});
+    else scheduleFieldRetry(field,detail.status,detail,matchedItem);
+  }
 
   // 개별 Enter 채점은 입력칸 근처 피드백만 사용한다.
   // 전역 feedback은 전체 '채점' 버튼 결과 요약용으로 남긴다.
@@ -1326,11 +1440,11 @@ function clearFilledAnswers(){
 function resetReviewData(){
   const ok=window.confirm('복습 데이터를 초기화할까요?\n오늘의 복습 일정, 취약 통계, 지연 재인출 카드가 모두 삭제됩니다.\n빈칸 입력값과 학습 범위/바퀴는 유지됩니다.');
   if(!ok)return;
-  activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
+  activeRetryCardId='';retryGradePending.clear();retryResultTimers.forEach(t=>clearTimeout(t));retryResultTimers.clear();CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
 }
 function changeScope(mutator){saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();}
 function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
-initSelectors();updateRetryToggleUI();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();
+initSelectors();updateRetryToggleUI();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));migrateLegacySetRetries();render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
 el.prevArea?.addEventListener('click',()=>jumpArea(-1));
@@ -1351,8 +1465,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&areaMemoOpen&&!e.isComposing)setAreaMemoOpen(false);
 });
 el.retryDock.addEventListener('click',e=>{
-  const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
-  const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
+  const grade=e.target.closest('[data-retry-grade]');if(grade){const id=grade.dataset.retryGrade;retryGradePending.has(id)?acknowledgeRetryCard(id,false):gradeRetryCard(id);return;}
+  const later=e.target.closest('[data-retry-later]');if(later){const id=later.dataset.retryLater;retryGradePending.has(id)?acknowledgeRetryCard(id,true):deferRetryCard(id);return;}
   const collapse=e.target.closest('[data-retry-collapse]');if(collapse){collapseRetryCard(collapse.dataset.retryCollapse);return;}
   const open=e.target.closest('[data-retry-open]');if(open){openRetryCard(open.dataset.retryOpen);}
 });
@@ -1362,11 +1476,12 @@ el.retryDock.addEventListener('keydown',e=>{
   const panel=input.closest('[data-retry-panel]');if(!panel)return;
   const fields=[...panel.querySelectorAll('.retry-card-input')],i=fields.indexOf(input);
   if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}
-  e.preventDefault();gradeRetryCard(panel.dataset.retryPanel);
+  e.preventDefault();const id=panel.dataset.retryPanel;retryGradePending.has(id)?acknowledgeRetryCard(id,false):gradeRetryCard(id);
 });
 document.addEventListener('pointerdown',e=>{
   if(!activeRetryCardId||!el.retryDock)return;
   if(el.retryDock.contains(e.target))return;
+  if(retryGradePending.has(activeRetryCardId))return;
   activeRetryCardId='';
   renderRetryDock();
 },{capture:true});
@@ -1389,6 +1504,7 @@ el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
   state.ui.retry=el.retry.checked;
   if(!state.ui.retry){
     activeRetryCardId='';
+    retryGradePending.clear();retryResultTimers.forEach(t=>clearTimeout(t));retryResultTimers.clear();
     state.fieldRetries={};
     state.fieldRetryCounts={};
   }
