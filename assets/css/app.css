@@ -181,6 +181,10 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .retry-card-input.wrong{border-color:var(--bad);background:var(--bad-bg)}
 .retry-card-grade,.retry-card-later{padding:9px 11px;border-radius:8px}
 .retry-card-grade.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.practical-retry-answer{margin-top:8px;color:var(--ink);font-size:12px;font-weight:800;line-height:1.45}
+.practical-retry-answer.near{color:var(--near)}
+.practical-retry-answer.unknown{color:var(--unknown)}
+.practical-retry-answer.bad{color:var(--bad)}
 .practical-retry-feedback{min-height:20px;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.45}
 .practical-retry-feedback.good{color:var(--good);font-weight:750}
 .practical-retry-feedback.near{color:var(--near);font-weight:750}

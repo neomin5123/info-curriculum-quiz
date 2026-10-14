@@ -347,13 +347,34 @@ function retrySafeLabel(text,answers,fallback='해당 항목'){
   });
   return leaks?fallback:value;
 }
+function retrySectionPosition(r){
+  const lineId=String(r?.lineId||((Array.isArray(r?.lineIds)&&r.lineIds.length===1)?r.lineIds[0]:'')||'').trim();
+  if(!lineId)return '';
+  const line=engine.lineMap.get(lineId);if(!line)return '';
+  const section=String(r?.section||line.family||'').trim();if(!section)return '';
+  const peers=(engine.data?.lines||[]).filter(x=>x.subject===line.subject&&x.area===line.area&&x.family===section);
+  if(peers.length<=1)return '';
+  const index=peers.findIndex(x=>x.lineId===line.lineId);
+  return index>=0?`${index+1}/${peers.length}`:'';
+}
+function retrySourceArea(r){
+  const ids=[];
+  if(r?.lineId)ids.push(String(r.lineId));
+  if(Array.isArray(r?.lineIds))r.lineIds.forEach(id=>{if(id)ids.push(String(id));});
+  const areas=[...new Set(ids.map(id=>engine.lineMap.get(id)?.area).filter(Boolean))];
+  if(areas.length===1)return areas[0];
+  const scope=r?.scope||{};
+  if(scope.area&&scope.area!=='all')return scope.area;
+  return areas.length>1?'여러 영역':'전체 영역';
+}
 function retryMeta(r){
-  const scope=r.scope||{},answers=retryAnswerList(r);
-  const areaRaw=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
+  const answers=retryAnswerList(r);
+  const areaRaw=retrySourceArea(r);
   const sectionRaw=r.section||r.family||'빈칸';
   const area=retrySafeLabel(areaRaw,answers,'해당 영역');
   const section=retrySafeLabel(sectionRaw,answers,'해당 구분');
-  return `${area} · ${section}`;
+  const position=retrySectionPosition(r);
+  return `${area} · ${section}${position?` ${position}`:''}`;
 }
 function retryBlankText(text,answer,label='이 항목'){
   const source=String(text||'').trim(),target=String(answer||'').trim();
@@ -392,6 +413,7 @@ function retryCardPanelHtml(id,r){
         <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">채점</button>
         <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
       </div>
+      <div class="practical-retry-answer" data-retry-answer="${esc(id)}" hidden></div>
       <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div>
       <div class="retry-result-overlay" data-retry-result="${esc(id)}" aria-live="polite"></div>
     </div>`;
@@ -431,6 +453,13 @@ function renderRetryDock(){
       if(first){try{first.focus({preventScroll:true});}catch(_){first.focus();}}
     });
   }
+}
+function setRetryAnswer(id,text,status=''){
+  const a=el.retryDock?.querySelector(`[data-retry-answer="${CSS.escape(id)}"]`);
+  if(!a)return;
+  a.textContent=text||'';
+  a.hidden=!text;
+  a.className='practical-retry-answer '+status;
 }
 function setRetryFeedback(id,text,status=''){
   const f=el.retryDock?.querySelector(`[data-retry-feedback="${CSS.escape(id)}"]`);
@@ -591,6 +620,7 @@ function gradeRetryCard(id){
 
   if(status==='correct'){
     flashRetryResult(id,'correct','재인출 완료 ✓');
+    setRetryAnswer(id,'','');
     setRetryFeedback(id,'정확합니다. 잠시 후 다음 카드로 넘어갑니다.','good');
     if(gradeButton)gradeButton.hidden=true;
     if(laterButton)laterButton.hidden=true;
@@ -599,8 +629,9 @@ function gradeRetryCard(id){
   }
 
   flashRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
-  const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
-  setRetryFeedback(id,`${label} · 정답: ${expected} · 확인 후 다시 묻습니다.`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  const feedbackStatus=overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad';
+  setRetryAnswer(id,`정답: ${expected}`,feedbackStatus);
+  setRetryFeedback(id,'확인 후 다시 묻습니다.',feedbackStatus);
   if(laterButton){laterButton.hidden=false;laterButton.disabled=false;}
 }
 function acknowledgeRetryCard(id,later=false){
