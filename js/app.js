@@ -293,6 +293,44 @@ function retryEntries({dueOnly=false}={}){
     .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
     .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
 }
+function retryScopeMatchesCurrent(r){
+  const scope=r?.scope||{};
+  return Number(r?.round||0)===Number(state.round||1)
+    && scope.subject===state.ui.subject
+    && scope.area===state.ui.area
+    && scope.family===state.ui.family
+    && scope.stage===state.ui.stage;
+}
+function currentRoundRetryEntries(){
+  return Object.entries(state.fieldRetries||{})
+    .filter(([,r])=>r&&retryScopeMatchesCurrent(r))
+    .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
+}
+function atRoundEnd(){
+  const st=engine.stats();
+  return !!st.total&&st.cursor===st.total;
+}
+function currentTaskFullyGraded(){
+  const fields=answerFields();
+  return !fields.length||fields.every(f=>!!CL.storage.getFieldGrade(state,f.dataset.fieldKey||''));
+}
+function promoteTailRetries({requireFullyGraded=false,announce=false}={}){
+  if(!state.ui.retry||!atRoundEnd())return false;
+  if(requireFullyGraded&&!currentTaskFullyGraded())return false;
+  const pending=currentRoundRetryEntries();
+  if(!pending.length)return false;
+  const serial=Number(state.answerSerial||0);
+  pending.forEach(([,r])=>{r.dueAt=Math.min(Number(r.dueAt??Infinity),serial);});
+  if(!activeRetryCardId)activeRetryCardId=pending[0][0];
+  CL.storage.save(state);
+  renderRetryDock();
+  if(state.ui.mainTab==='review')renderReviewPage();
+  if(announce){
+    el.feedback.textContent=`새 문제를 모두 풀었습니다. 남은 오답 카드 ${pending.length}개를 복습하면 이번 회차가 끝납니다.`;
+    el.feedback.className='feedback near';
+  }
+  return true;
+}
 function retryAnswerList(r){
   if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
   return [String(r?.correctAnswer||'').trim()].filter(Boolean);
@@ -422,7 +460,8 @@ function collapseRetryCard(id=''){
 }
 function deferRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
-  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
+  const serial=Number(state.answerSerial||0);
+  r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
   activeRetryCardId='';
   persist();
   renderRetryDock();
@@ -460,7 +499,8 @@ function rescheduleRetryRecord(id,r,status){
     delete state.fieldRetries[id];
     return false;
   }
-  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
+  const serial=Number(state.answerSerial||0);
+  r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
   return true;
 }
 
@@ -529,6 +569,10 @@ function gradeRetryCard(id){
     setRetryFeedback(id,'모두 정확했습니다.','good');
     completeRetryRecord(id,r);
     CL.storage.save(state);renderReviewPage();
+    if(atRoundEnd()&&!currentRoundRetryEntries().length){
+      el.feedback.textContent='이번 회차의 오답 복습을 모두 마쳤습니다. 다음을 누르면 다음 회차로 넘어갑니다.';
+      el.feedback.className='feedback good';
+    }
     advanceRetryCardAfter(id,orderBefore,1000);
     return;
   }
@@ -960,7 +1004,7 @@ function gradeSetFields(fields,items,save=true){
     applyFieldGrade(f,r,r.expected,save);
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
     recordMatchedItem(items,r);
-    if(r.status==='correct')cancelFieldRetry(f);else scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
+    if(r.status!=='correct')scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
     noteAnswerAttempt();
   });
   const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
@@ -987,14 +1031,14 @@ function gradeFixedField(field,expected,save=true){
   const detail=CL.grading.classifyDetailed(field.value,expected);applyFieldGrade(field,detail,expected,save);
   const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
   if(field.dataset.lineId&&!recognitionCue)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
-  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,{...detail,expected},null);
+  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,{...detail,expected},null);
   noteAnswerAttempt();
   return detail;
 }
 function gradeUnorderedField(field,task,save=true){
   const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
   applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
-  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
+  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
   return detail;
 }
 function check(){
@@ -1014,7 +1058,7 @@ function check(){
     });
     const failureStatus=r.results.some(x=>['wrong','duplicate'].includes(x.status))?'wrong':'unknown';
     items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
-    if(status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,status,detail,null);
+    if(status!=='correct')scheduleFieldRetry(field,status,detail,null);
     noteAnswerAttempt();
     statuses.push(status);
   }else{
@@ -1031,6 +1075,7 @@ function check(){
   const parts=[counts.correct?`정확 ${counts.correct}`:'',counts.near?`확인 ${counts.near}`:'',counts.unknown?`모름 ${counts.unknown}`:'',(counts.wrong+counts.duplicate)?`오답 ${counts.wrong+counts.duplicate}`:''].filter(Boolean);
   el.feedback.textContent=status==='correct'?'전체 정답':parts.join(' · ');el.feedback.className='feedback '+statusClass(status);
   CL.storage.record(state,engine.taskId(task),status);persist();
+  promoteTailRetries({requireFullyGraded:true});
 }
 function reveal(){
   const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;let html='';
@@ -1108,17 +1153,9 @@ function retryIdForField(field){
   if(unordered)return `${engine.taskId(task)}|SET:${section||'지식·이해'}|round:${state.round||1}`;
   return `${field.dataset.fieldKey||''}|round:${state.round||1}`;
 }
-function cancelFieldRetry(field){
-  if(!field?.dataset?.fieldKey)return;
-  state.fieldRetries=state.fieldRetries||{};
-  Object.entries(state.fieldRetries).forEach(([id,r])=>{
-    if(r?.kind==='set'&&Array.isArray(r.sourceFieldKeys)&&r.sourceFieldKeys.includes(field.dataset.fieldKey)){
-      const allCorrect=r.sourceFieldKeys.every(key=>CL.storage.getFieldGrade(state,key)?.status==='correct');
-      if(allCorrect)delete state.fieldRetries[id];
-    }else if(r?.fieldKey===field.dataset.fieldKey)delete state.fieldRetries[id];
-  });
-}
 function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
+  // Once a miss creates a retry record, later correction in the main study field does not erase it.
+  // Only grading the retry card itself as correct (or an explicit reset/OFF purge) resolves the card.
   if(!state.ui.retry||!field?.dataset?.fieldKey||status==='correct')return;
   state.fieldRetries=state.fieldRetries||{};
   state.fieldRetryCounts=state.fieldRetryCounts||{};
@@ -1195,11 +1232,6 @@ function activateDueFieldRetry(){
   const [id,retry]=due;
   const field=answerFields().find(x=>x.dataset.fieldKey===retry.fieldKey);
   if(!field)return false;
-  const saved=CL.storage.getFieldGrade(state,field.dataset.fieldKey);
-  if(saved?.status==='correct'){
-    delete state.fieldRetries[id];
-    return false;
-  }
   field.value='';
   CL.storage.setDraft(state,field.dataset.fieldKey,'');
   CL.storage.clearFieldGrade(state,field.dataset.fieldKey);
@@ -1249,8 +1281,7 @@ function gradeSingleAnswerField(field){
   }
 
   noteAnswerAttempt();
-  if(detail.status==='correct')cancelFieldRetry(field);
-  else scheduleFieldRetry(field,detail.status,detail,matchedItem);
+  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,detail,matchedItem);
 
   // 개별 Enter 채점은 입력칸 근처 피드백만 사용한다.
   // 전역 feedback은 전체 '채점' 버튼 결과 요약용으로 남긴다.
@@ -1258,6 +1289,7 @@ function gradeSingleAnswerField(field){
   el.feedback.className='feedback';
   persist();
   renderRetryDock();
+  promoteTailRetries({requireFullyGraded:true});
   if(detail.status==='correct'){
     const next=nextAnswerField(field);
     if(next)setTimeout(()=>focusAnswerField(next,true),60);
@@ -1367,7 +1399,10 @@ el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
 };
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 el.check.onclick=check;el.reveal.onclick=reveal;
-el.next.onclick=()=>{engine.next();revealed=false;render();};
+el.next.onclick=()=>{
+  if(promoteTailRetries({announce:true}))return;
+  engine.next();revealed=false;render();
+};
 el.prev.onclick=()=>{engine.prev();revealed=false;render();};
 el.round.onclick=()=>{engine.nextRound();revealed=false;render();};
 el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();

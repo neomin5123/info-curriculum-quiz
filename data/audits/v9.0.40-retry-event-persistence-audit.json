@@ -1,0 +1,24 @@
+{
+  "version": "v9.0.40-study-rc.1",
+  "status": "PASS — STUDY RC READY",
+  "behavior": {
+    "missCreatesPersistentRetry": true,
+    "laterMainCorrectCancelsRetry": false,
+    "retryCardCorrectResolvesRetry": true,
+    "retryOffPurgesPending": true,
+    "reviewResetPurgesPending": true
+  },
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "presentationDataMutated": false,
+  "qa": {
+    "npmTest": "PASS",
+    "retryPersistenceValidator": "PASS",
+    "curriculumLines": 270,
+    "presentationUnits": 370,
+    "sourceHash": "a1da9c9decf6dce91affadf05f0d14a296613b5026f7a870c54f345dc602fc95",
+    "policyHash": "fb07736cacfa2f967a8b88e41c1db7934811dc51b13014da1fea1afb31a6afa3",
+    "sExactHash": "5cfa1be81ad2c38cb068ddbae1204abca4378651fddb008a9b21229597fbcebd",
+    "browserE2E": "NOT_RUN"
+  }
+}
