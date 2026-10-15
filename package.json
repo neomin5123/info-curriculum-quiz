@@ -1,13 +1,13 @@
 {
   "name": "curriloop",
-  "version": "9.0.44-study-rc.1",
+  "version": "9.0.54-study-rc.1",
   "private": true,
   "type": "module",
   "scripts": {
     "build:data": "node tools/build-data.mjs",
     "validate:data": "node tools/validate-data.mjs",
     "validate:package": "node tools/validate-package.mjs",
-    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo && npm run validate:trace-guide && npm run validate:memo-visual && npm run validate:memo-defaults && npm run validate:answer-visibility && npm run validate:standard-code && npm run validate:ux-v9035 && npm run validate:ux-v9036 && npm run validate:retry-off && npm run validate:granularity && npm run validate:memo-outline && npm run validate:retry-persistence && npm run validate:retry-tail-drain && npm run validate:area-nav-scroll && npm run validate:toolbar-v9043 && npm run validate:retry-ux-v9044",
+    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo && npm run validate:trace-guide && npm run validate:memo-visual && npm run validate:memo-defaults && npm run validate:answer-visibility && npm run validate:standard-code && npm run validate:ux-v9035 && npm run validate:ux-v9036 && npm run validate:retry-off && npm run validate:granularity && npm run validate:memo-outline && npm run validate:retry-persistence && npm run validate:retry-tail-drain && npm run validate:area-nav-scroll && npm run validate:toolbar-v9043 && npm run validate:retry-ux-v9044 && npm run validate:area-nav-width-v9045 && npm run validate:retry-enter-v9046 && npm run validate:retry-correct-auto-v9047 && npm run validate:retry-position-v9048 && npm run validate:retry-feedback-v9049 && npm run validate:retry-source-area-v9050 && npm run validate:unified-recall-v9051 && npm run validate:ai-basics-v9052 && npm run validate:final-qa-v9053 && npm run validate:hardening-v9054",
     "validate:behavior": "node tools/validate-behavior.mjs",
     "validate:ux": "node tools/validate-ux.mjs",
     "validate:retry": "node tools/validate-retry-card.mjs",
@@ -29,6 +29,16 @@
     "validate:retry-tail-drain": "node tools/validate-retry-tail-drain-v9041.mjs",
     "validate:area-nav-scroll": "node tools/validate-area-nav-scroll-v9042.mjs",
     "validate:toolbar-v9043": "node tools/validate-toolbar-v9043.mjs",
-    "validate:retry-ux-v9044": "node tools/validate-retry-ux-v9044.mjs"
+    "validate:retry-ux-v9044": "node tools/validate-retry-ux-v9044.mjs",
+    "validate:area-nav-width-v9045": "node tools/validate-area-nav-width-v9045.mjs",
+    "validate:retry-enter-v9046": "node tools/validate-retry-enter-v9046.mjs",
+    "validate:retry-correct-auto-v9047": "node tools/validate-retry-correct-auto-v9047.mjs",
+    "validate:retry-position-v9048": "node tools/validate-retry-position-v9048.mjs",
+    "validate:retry-feedback-v9049": "node tools/validate-retry-feedback-v9049.mjs",
+    "validate:retry-source-area-v9050": "node tools/validate-retry-source-area-v9050.mjs",
+    "validate:unified-recall-v9051": "node tools/validate-unified-recall-v9051.mjs",
+    "validate:ai-basics-v9052": "node tools/validate-ai-basics-v9052.mjs",
+    "validate:final-qa-v9053": "node tools/validate-final-qa-v9053.mjs",
+    "validate:hardening-v9054": "node tools/validate-hardening-v9054.mjs"
   }
 }

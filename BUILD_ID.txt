@@ -1,3 +1,2 @@
-CurriLoop 9.0.44-study-rc.1
-Expected visible header: CurriLoop  v9.0.44 Study RC
-Retry card: exact family context, one-at-a-time relearning, manual post-grade dismissal.
+CurriLoop 9.0.54-study-rc.1
+Expected visible header: CurriLoop  v9.0.54 Study RC

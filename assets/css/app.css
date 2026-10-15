@@ -1063,3 +1063,14 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
   }
   .mode-study-group .area-navigator strong{max-width:none}
 }
+
+/* v9.0.51 — unified recall presentation */
+.daily-review-card.recall-card{padding:15px 16px}
+.daily-review-card.recall-card .daily-review-card-head{margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.daily-review-card.recall-card .daily-review-card-head small{font-weight:750;color:var(--ink)}
+.daily-review-card.recall-card .daily-review-prompt{margin-bottom:10px}
+.daily-review-answer[hidden]{display:none}
+@media(max-width:760px){
+  .daily-review-card.recall-card{padding:13px 12px}
+  .daily-review-card.recall-card .daily-review-card-head{gap:6px}
+}

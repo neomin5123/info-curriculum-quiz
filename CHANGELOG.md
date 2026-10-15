@@ -1,3 +1,85 @@
+## 9.0.54-study-rc.1
+- Aggressive red-team hardening release.
+- Short-horizon exam review: 1/3/7/10/14 days, capped at 14 days; old 21/30-day due dates are migrated inside the cap.
+- Multi-unit review now advances unit-by-unit and only raises a line stage after every unit at that stage is passed; failed units stay on the same cursor.
+- Round-scoped field keys prevent prior-round draft/grade contamination.
+- Retry cards no longer disappear after repeated failure; individual Enter grading cannot recreate set retries.
+- Action-verb conflicts are graded as wrong before typo tolerance.
+- Fixed grade-set underfill status, daily-review reset race, delay-count leakage, retry-counter pruning, scoped legacy SW cleanup, reveal scheduling, stale multi-tab writes, and corrupt-state backup.
+- Added deployment security headers.
+- Curriculum data unchanged: 374 official lines / 557 presentation units.
+
+## 9.0.53-study-rc.1
+- Stage 4 re-audit: AI Basics source structure and recall behavior rechecked.
+- Stage 5 final QA: official curriculum text cross-check and packaging.
+- Fixed one truncated recall target in AI-TE-MET-04: `활용에 대한 경험은 높` → `활용에 대한 경험은 높일 수 있도록`.
+- No changes to legacy middle/high source text or study-state semantics.
+
+## 9.0.52-study-rc.1
+
+- 2022 개정 `인공지능 기초` 공식 교육과정 104개 line을 추가했습니다.
+  - 성격 2, 목표 5
+  - 핵심 아이디어 8, 지식·이해 11, 과정·기능 14, 가치·태도 9
+  - 성취기준 19, 해설 10, 적용 시 고려사항 10
+  - 교수·학습 9, 평가 7
+- `지식·이해`는 영역별 전체 항목 회상, `과정·기능`은 항목 전체 회상으로 구성했습니다.
+- 성취기준은 번호를 유지하고 핵심 명사·관계·행동동사를 회상하도록 구성했습니다.
+- 성취기준 해설의 전문용어·열거형(지도/비지도/강화학습, 분류/예측/군집, 컴퓨터 비전/음성 인식/자연어처리 등)을 강한 회상 대상으로 반영했습니다.
+- 과목별 영역 선택기를 동적으로 분리해 인공지능 기초 선택 시 4개 영역만 표시합니다.
+- 인공지능 기초용 영역 메모 기본 개요를 추가했습니다.
+- 기존 중·고 정보 270개 line의 source/policy hash를 고정 검증하여 기존 데이터가 변하지 않았음을 확인합니다.
+
+## 9.0.51-study-rc.1
+
+- 오답 재인출과 `오늘의 복습`이 동일한 `recallPromptModel`을 사용하도록 출력 문맥 생성을 통합했습니다.
+- 오늘의 복습은 여러 카드를 한꺼번에 펼치지 않고 **한 장씩** 표시합니다.
+- 장기 복습 카드에도 실제 `영역 · 범주 · n/m` 문맥을 표시하여 어느 항목인지 식별할 수 있습니다.
+- `지식·이해` 장기 복습은 영역 전체를 한 번에 다시 쓰게 하지 않고 예정된 공식 내용 요소를 **항목별**로 복습합니다.
+- 장기 복습 정답은 잠시 표시 후 자동 진행하고, 오답/유사/모름은 정답을 확인한 뒤 `Enter`로 넘어갑니다.
+- SRS 일정, 오답 재인출 일정, 일반 학습 진도는 서로 독립된 상태로 유지합니다.
+- 교육과정 데이터는 변경하지 않았습니다(270 lines / 370 presentation units).
+
+## 9.0.50-study-rc.1
+
+- `전체 영역`에서 재인출하더라도 카드 메타에는 실제 출처 영역을 표시합니다.
+  - 예: `[9정04-05]` → `인공지능 · 성취기준`
+- 단일 항목은 `lineId`의 실제 영역을 우선 사용하고, 여러 항목이 섞인 경우에만 기존 범위 표기를 사용합니다.
+- v9.0.49의 정답/안내 줄 분리와 `표기 확인` 상태 문구 제거는 그대로 유지합니다.
+- 교육과정 데이터와 채점/재인출 스케줄 로직은 변경하지 않았습니다.
+
+## 9.0.49-study-rc.1
+
+- 재인출 오답/유사표현 피드백에서 `표기 확인` 상태 문구를 제거했습니다.
+- 재인출 정답은 입력란 아래 별도 줄에 `정답: …` 형식으로 표시합니다.
+- `확인 후 다시 묻습니다.` 안내는 정답 줄 아래로 분리했습니다.
+- 채점/재인출/자동 진행 로직과 교육과정 데이터는 변경하지 않았습니다.
+
+# Changelog
+
+## 9.0.48-study-rc.1
+
+- 재인출 카드 메타에 동일 범주 내 항목 순번을 `n/m`으로 표시합니다.
+  - 예: `전체 영역 · 지식·이해 2/3`
+  - 정답 단서나 시작 어절은 추가하지 않았습니다.
+- 기존 재인출/오답 처리 로직과 학습 데이터는 변경하지 않았습니다.
+
+## 9.0.48-study-rc.1
+- 재인출 카드에서 정답을 맞히면 `재인출 완료 ✓`를 잠시 보여 준 뒤 1초 후 자동으로 다음 카드로 진행
+- 정답 상태에서는 `Enter`/`나중에` 확인 버튼을 숨겨 추가 입력 없이 넘어가도록 복원
+- 오답/모름/표기 확인은 기존 v9.0.46 동작을 유지하여 정답을 확인한 뒤 `Enter` 또는 `나중에`로 닫음
+- 교육과정 데이터, SRS, 오답 예약/세션 말미 drain 로직은 변경하지 않음
+
+## 9.0.46-study-rc.1
+- 오답 카드 채점 후 `확인` 버튼 문구를 `Enter`로 변경
+- 채점 직후 `Enter` 버튼으로 포커스를 이동하여 키보드 Enter만 눌러도 카드를 확인하고 다음 단계로 진행
+- `나중에` 동작과 재인출 예약/SRS/교육과정 데이터는 변경하지 않음
+
+## 9.0.45-study-rc.1
+- 영역 이동 컨트롤을 데스크톱 212px, 모바일 192px 고정 폭으로 변경
+- 영역명 길이에 상관없이 이전/다음 화살표의 위치가 흔들리지 않도록 정렬
+- 중앙 영역명은 고정 폭 안에서 말줄임 처리
+- 교육과정 데이터/오답 카드/SRS 로직 변경 없음
+
 # Changelog
 
 ## 9.0.44-study-rc.1
