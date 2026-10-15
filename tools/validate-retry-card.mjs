@@ -65,8 +65,8 @@ assert(!failures.length,`answer leakage remains: ${JSON.stringify(failures.slice
 for(const token of [
   'function retryDockVisibleEntries',
   "panel.dataset.gradingLock==='1'",
-  "field.id==='typingInput'&&task?.type==='ki'",
-  "sourceMode:kiTyping?'single-multiline':'multi-field'",
+  "scheduleSetRetryFailures",
+  "forceSingle:true",
   'noteAnswerAttempt();',
   "source.split(target).join('〔　　　　〕')",
   "retrySafeLabel(areaRaw,answers,'해당 영역')"
@@ -90,7 +90,7 @@ console.log(JSON.stringify({
     'whole-source prompt hiding',
     'repeated occurrence masking',
     'metadata masking',
-    'KI typing as set retry',
+    'KI typing misses split into single retry cards',
     'whole-check answerSerial advance',
     'active card outside first six',
     'double-submit lock',

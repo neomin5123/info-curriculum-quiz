@@ -27,7 +27,11 @@
     function groupDef(id){return familyGroups[id]||null;}
     function groupLabel(id){return groupDef(id)?.label||id;}
     function selectedSubjects(){return state.ui.subject==='all'?subjects:[state.ui.subject];}
-    function selectedAreas(){return state.ui.area==='all'?contentAreas:[state.ui.area];}
+    function areasForSubject(subjectSel=state.ui.subject){
+      const subs=subjectSel==='all'?subjects:[subjectSel];
+      return [...new Set(data.lines.filter(l=>subs.includes(l.subject)&&l.area!=='과목 공통').map(l=>l.area))];
+    }
+    function selectedAreas(){return state.ui.area==='all'?areasForSubject():[state.ui.area];}
     function groupAvailable(id,subjectSel=state.ui.subject,areaSel=state.ui.area){
       const def=groupDef(id);if(!def)return false;
       const subs=subjectSel==='all'?subjects:[subjectSel];
@@ -35,7 +39,7 @@
         if(areaSel!=='all')return false;
         return data.lines.some(l=>subs.includes(l.subject)&&l.area==='과목 공통'&&def.families.includes(l.family));
       }
-      const ars=areaSel==='all'?contentAreas:[areaSel];
+      const ars=areaSel==='all'?areasForSubject(subjectSel):[areaSel];
       return data.lines.some(l=>subs.includes(l.subject)&&ars.includes(l.area)&&def.families.includes(l.family));
     }
     function lineMatchesGroup(line,id){const def=groupDef(id);return !!def&&def.families.includes(line.family);}
@@ -151,7 +155,7 @@
     function goTo(index){if(!Number.isInteger(index)||index<0||index>=queue.length)return null;cursor=index;return current();}
     function nextRound(){state.round=(state.round||1)+1;rebuild();return current();}
     function stats(){return {cursor:queue.length?cursor+1:0,total:queue.length,round:state.round||1};}
-    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,goTo,nextRound,stats,get queue(){return queue;}};
+    return {data,state,lineMap,subjects,labels,areas:contentAreas,areasForSubject,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,goTo,nextRound,stats,get queue(){return queue;}};
   }
   CL.study={makeEngine};
 })();

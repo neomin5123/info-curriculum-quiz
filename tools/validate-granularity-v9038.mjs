@@ -3,9 +3,10 @@ import crypto from 'node:crypto';
 const d=JSON.parse(fs.readFileSync('data/curriculum/middle-high-v9.0.6.json','utf8'));
 const fail=[];
 const hash=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
-const sourceHash=hash(d.lines.map(l=>[l.lineId,l.sourceText]));
-const policyHash=hash(d.lines.map(l=>[l.lineId,l.keywords.map(k=>[k.keywordId,k.text,k.start,k.end,!!k.active,k.stage3RGrades||[],k.canonicalAtomIds||[],k.importance])]))
-const sSig=d.lines.flatMap(l=>(l.presentation?.units||[]).filter(u=>(u.stage3RGrades||[]).includes('S')).map(u=>[l.lineId,u.text,u.start,u.end,u.sourceKeywordIds,u.stage3RGrades]));
+const legacyLines=d.lines.filter(l=>l.subject!=='ai-basics');
+const sourceHash=hash(legacyLines.map(l=>[l.lineId,l.sourceText]));
+const policyHash=hash(legacyLines.map(l=>[l.lineId,l.keywords.map(k=>[k.keywordId,k.text,k.start,k.end,!!k.active,k.stage3RGrades||[],k.canonicalAtomIds||[],k.importance])]))
+const sSig=legacyLines.flatMap(l=>(l.presentation?.units||[]).filter(u=>(u.stage3RGrades||[]).includes('S')).map(u=>[l.lineId,u.text,u.start,u.end,u.sourceKeywordIds,u.stage3RGrades]));
 const sHash=hash(sSig);
 if(sourceHash!=='a1da9c9decf6dce91affadf05f0d14a296613b5026f7a870c54f345dc602fc95')fail.push(`official source hash changed ${sourceHash}`);
 if(policyHash!=='fb07736cacfa2f967a8b88e41c1db7934811dc51b13014da1fea1afb31a6afa3')fail.push(`frozen keyword policy hash changed ${policyHash}`);
@@ -45,7 +46,7 @@ for(const l of d.lines){
     for(const id of s.unitIds)if(!um.has(id))fail.push(`broken unit ref ${s.setId}:${id}`);
   }
 }
-if(units!==370)fail.push(`presentation unit count ${units} != 370`);
-if(d.metadata.presentationLayer!=='v9.0.38')fail.push(`presentationLayer ${d.metadata.presentationLayer}`);
+if(units!==557)fail.push(`presentation unit count ${units} != 557`);
+if(d.metadata.presentationLayer!=='v9.0.53')fail.push(`presentationLayer ${d.metadata.presentationLayer}`);
 if(fail.length){console.error(fail.join('\n'));process.exit(1);}
 console.log(JSON.stringify({status:'PASS',presentationUnits:units,missingCoverage,unsupported,invalidRefs,overlaps,sExactUnits:sSig.length,sourceHash,policyHash,sHash},null,2));

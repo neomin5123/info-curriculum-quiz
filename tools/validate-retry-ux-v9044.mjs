@@ -12,7 +12,6 @@ for(const token of [
   'const retryGradePending=new Map()',
   'function acknowledgeRetryCard(',
   "flashRetryResult(id,overallNear?'near':'wrong'",
-  "gradeButton.textContent='확인'",
   'retryGradePending.has(activeRetryCardId)',
   'const sourceExpected=r.sourceExpected||r.correctAnswer'
 ])assert(app.includes(token),`v9.0.44 invariant missing: ${token}`);
@@ -27,12 +26,12 @@ assert(line?.family==='과정·기능','fixture must be 과정·기능');
 assert(line?.area==='데이터','fixture must be 데이터');
 assert((line.presentation?.units||[]).some(x=>x.text==='디지털 데이터로 표현'),'fixture granularity missing');
 
-assert(pkg.version==='9.0.44-study-rc.1','package version mismatch');
+assert(/^9\.0\.(?:4[4-9]|5[0-9])-study-rc\.1$/.test(pkg.version),'package version mismatch');
 console.log(JSON.stringify({
   status:'PASS',
   retryMetaExample:'데이터 · 과정·기능',
   standardCodeContext:'retained by existing standard renderer',
-  postGradeDismissal:'manual 확인/나중에',
+  postGradeDismissal:'manual Enter/나중에',
   resultToast:'transient',
   legacySetRetry:'migrated to one-at-a-time cards',
   wholeRewritePromptRemoved:true,

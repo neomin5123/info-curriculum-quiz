@@ -2,7 +2,7 @@ import fs from 'node:fs';
 const p='data/curriculum/middle-high-v9.0.6.json';
 const d=JSON.parse(fs.readFileSync(p,'utf8'));
 const fail=[]; const lineIds=new Set();
-if(d.lines.length!==270)fail.push(`official line count ${d.lines.length} != 270`);
+if(d.lines.length!==374)fail.push(`official line count ${d.lines.length} != 374`);
 for(const l of d.lines){
   if(lineIds.has(l.lineId))fail.push(`duplicate lineId ${l.lineId}`); lineIds.add(l.lineId);
   const km=new Map(l.keywords.map(k=>[k.keywordId,k]));
@@ -37,8 +37,8 @@ for(const l of d.lines){
 const ki=d.lines.filter(l=>l.family==='지식·이해');
 const grouped=(d.knowledgeUnderstandingGroups||[]).flatMap(g=>g.items);
 const groupedIds=new Set(grouped.map(x=>x.lineId));
-if(ki.length!==32)fail.push(`KI line count ${ki.length} != 32`);
-if(grouped.length!==32)fail.push(`KI grouped item count ${grouped.length} != 32`);
+if(ki.length!==43)fail.push(`KI line count ${ki.length} != 43`);
+if(grouped.length!==43)fail.push(`KI grouped item count ${grouped.length} != 43`);
 for(const l of ki){if(!groupedIds.has(l.lineId))fail.push(`KI missing group ${l.lineId}`);if(!l.presentationOverride?.suppressIndividualClozeInMainStudy)fail.push(`KI suppression missing ${l.lineId}`);}
 for(const g of d.knowledgeUnderstandingGroups||[]){
   const texts=g.items.map(x=>x.text);

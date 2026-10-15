@@ -4,7 +4,7 @@
   function localDateKey(date=new Date()){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');return `${y}-${m}-${d}`;}
   function addDays(key,days){const [y,m,d]=String(key||localDateKey()).split('-').map(Number),dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()+Number(days||0));return localDateKey(dt);}
   function earlierDate(a,b){if(!a)return b;if(!b)return a;return a<=b?a:b;}
-  function fresh(){return {version:CL.config.appVersion,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'single',mode:'cloze',retry:true,zoom:100,mainTab:'study'},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},draftDate:localDateKey(),scopeRounds:{},scopeTasks:{},answerSerial:0,fieldRetries:{},fieldRetryCounts:{},reviewSchedule:{},reviewHistory:{}};}
+  function fresh(){return {version:CL.config.appVersion,_revision:0,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'single',mode:'cloze',retry:true,zoom:100,mainTab:'study'},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},draftDate:localDateKey(),scopeRounds:{},scopeTasks:{},answerSerial:0,fieldRetries:{},fieldRetryCounts:{},reviewSchedule:{},reviewHistory:{}};}
   function migrateUi(ui){
     const out=Object.assign({},ui||{});
     const familyMap={'핵심 아이디어':'content-system','지식·이해':'content-system','과정·기능':'content-system','가치·태도':'content-system','성취기준':'standards','해설':'explain-consider','고려사항':'explain-consider','성격':'character-goals','목표':'character-goals','교수·학습':'teaching-eval','평가':'teaching-eval','all':'content-system'};
@@ -16,13 +16,32 @@
     out.mainTab=out.mainTab==='review'?'review':'study';
     return out;
   }
+  function corruptBackupKey(){return `${CL.config.storageKey}:corrupt-backup:${Date.now()}`;}
+  function backupCorruptRaw(raw){
+    if(!raw)return '';
+    try{const key=corruptBackupKey();localStorage.setItem(key,String(raw));return key;}catch(_){return '';}
+  }
   function load(){
+    const raw=localStorage.getItem(CL.config.storageKey);if(!raw)return fresh();
     try{
-      const raw=localStorage.getItem(CL.config.storageKey);if(!raw)return fresh();
       const p=JSON.parse(raw),base=fresh(),today=localDateKey();
       const storedDraftDate=String(p.draftDate||today);
       const dayChanged=storedDraftDate!==today;
+      const intervals=(CL.config.reviewIntervalsDays||[1,3,7,10,14]).map(Number).filter(n=>Number.isFinite(n)&&n>0);
+      const maxStage=Math.max(0,intervals.length-1),maxDue=addDays(today,intervals[intervals.length-1]||14);
+      const reviewSchedule={};
+      for(const [id,rawRec] of Object.entries(p.reviewSchedule||{})){
+        if(!rawRec)continue;
+        const rec={...rawRec};
+        rec.lineId=rec.lineId||id;
+        rec.stage=Math.max(0,Math.min(maxStage,Number(rec.stage||0)));
+        rec.unitCursor=Math.max(0,Number(rec.unitCursor||0));
+        if(!rec.dueDate)rec.dueDate=addDays(today,1);
+        if(String(rec.dueDate)>maxDue)rec.dueDate=maxDue;
+        reviewSchedule[id]=rec;
+      }
       return Object.assign(base,p,{
+        _revision:Math.max(0,Number(p._revision||0)),
         ui:Object.assign(base.ui,migrateUi(p.ui)),
         progress:p.progress||{},
         itemProgress:p.itemProgress||{},
@@ -34,12 +53,34 @@
         answerSerial:Number(p.answerSerial||0),
         fieldRetries:p.fieldRetries||{},
         fieldRetryCounts:p.fieldRetryCounts||{},
-        reviewSchedule:p.reviewSchedule||{},
+        reviewSchedule,
         reviewHistory:p.reviewHistory||{}
       });
-    }catch(e){return fresh();}
+    }catch(e){
+      const out=fresh(),backupKey=backupCorruptRaw(raw);
+      out._recoveredFromCorrupt=true;out._corruptBackupKey=backupKey;
+      return out;
+    }
   }
-  function save(state){try{state.version=CL.config.appVersion;localStorage.setItem(CL.config.storageKey,JSON.stringify(state));}catch(e){console.warn('CurriLoop save failed',e);}}
+  function save(state){
+    try{
+      const raw=localStorage.getItem(CL.config.storageKey);
+      let latestRevision=-1;
+      if(raw){
+        try{latestRevision=Math.max(0,Number(JSON.parse(raw)?._revision||0));}
+        catch(_){backupCorruptRaw(raw);}
+      }
+      const stateRevision=Math.max(0,Number(state._revision||0));
+      if(latestRevision>stateRevision){
+        try{window.dispatchEvent(new CustomEvent('curriloop:stale-state'));}catch(_){}
+        return false;
+      }
+      state.version=CL.config.appVersion;
+      state._revision=Math.max(latestRevision,stateRevision)+1;
+      localStorage.setItem(CL.config.storageKey,JSON.stringify(state));
+      return true;
+    }catch(e){console.warn('CurriLoop save failed',e);return false;}
+  }
   function normalizeStatus(result){if(result===true)return 'correct';if(result===false)return 'wrong';return ['correct','near','unknown','wrong','duplicate'].includes(String(result))?String(result):'wrong';}
   function recordInto(bucket,id,result){const status=normalizeStatus(result),p=bucket[id]||{attempts:0,correct:0,near:0,unknown:0,wrong:0,duplicate:0};p.attempts++;p[status]=Number(p[status]||0)+1;p.lastResult=status;p.updatedAt=new Date().toISOString();bucket[id]=p;return p;}
   function record(state,id,result){return recordInto(state.progress,id,result);}
@@ -49,9 +90,10 @@
     const today=localDateKey(),tomorrow=addDays(today,1),status=normalizeStatus(result);
     let r=state.reviewSchedule[id];
     if(!r){
-      r={lineId:id,stage:0,dueDate:tomorrow,lastReviewedDate:'',lastStudyDate:today,lastStatus:status,reviewCount:0,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
+      r={lineId:id,stage:0,unitCursor:0,dueDate:tomorrow,lastReviewedDate:'',lastStudyDate:today,lastStatus:status,reviewCount:0,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};
       state.reviewSchedule[id]=r;
     }else{
+      r.lineId=id;r.stage=Math.max(0,Number(r.stage||0));r.unitCursor=Math.max(0,Number(r.unitCursor||0));
       r.lastStudyDate=today;r.lastStatus=status;r.updatedAt=new Date().toISOString();
       if(['wrong','unknown','duplicate','near'].includes(status))r.dueDate=earlierDate(r.dueDate,tomorrow);
     }
@@ -72,18 +114,30 @@
   function dueReviewItems(state,date=localDateKey()){
     return Object.values(state.reviewSchedule||{}).filter(r=>r&&r.lineId&&String(r.dueDate||'')<=date).sort((a,b)=>String(a.dueDate).localeCompare(String(b.dueDate)));
   }
-  function completeDailyReview(state,id,result){
+  function completeDailyReview(state,id,result,options={}){
     if(!id)return null;
     state.reviewSchedule=state.reviewSchedule||{};state.reviewHistory=state.reviewHistory||{};
-    const intervals=(CL.config.reviewIntervalsDays||[1,3,7,14,21,30]).map(Number);
-    const today=localDateKey(),status=normalizeStatus(result);
-    const r=state.reviewSchedule[id]||{lineId:id,stage:0,dueDate:today,lastReviewedDate:'',lastStudyDate:today,lastStatus:status,reviewCount:0};
+    const intervals=(CL.config.reviewIntervalsDays||[1,3,7,10,14]).map(Number).filter(n=>Number.isFinite(n)&&n>0);
+    const today=localDateKey(),status=normalizeStatus(result),unitCount=Math.max(1,Number(options.unitCount||1));
+    const r=state.reviewSchedule[id]||{lineId:id,stage:0,unitCursor:0,dueDate:today,lastReviewedDate:'',lastStudyDate:today,lastStatus:status,reviewCount:0};
     let stage=Math.max(0,Math.min(intervals.length-1,Number(r.stage||0)));
-    if(status==='correct')stage=Math.min(intervals.length-1,stage+1);
-    else if(status==='near')stage=Math.max(0,stage-1);
-    else stage=0;
-    const days=intervals[stage]||1;
-    Object.assign(r,{stage,dueDate:addDays(today,days),lastReviewedDate:today,lastStatus:status,reviewCount:Number(r.reviewCount||0)+1,updatedAt:new Date().toISOString()});
+    let unitCursor=Math.max(0,Number(r.unitCursor||0))%unitCount;
+    let days=1;
+    if(status==='correct'){
+      if(unitCursor+1<unitCount){
+        unitCursor+=1;
+        days=intervals[0]||1;
+      }else{
+        unitCursor=0;
+        stage=Math.min(intervals.length-1,stage+1);
+        days=intervals[stage]||intervals[intervals.length-1]||1;
+      }
+    }else{
+      if(status==='near')stage=Math.max(0,stage-1);
+      else stage=0;
+      days=intervals[0]||1;
+    }
+    Object.assign(r,{lineId:id,stage,unitCursor,dueDate:addDays(today,days),lastReviewedDate:today,lastStatus:status,reviewCount:Number(r.reviewCount||0)+1,updatedAt:new Date().toISOString()});
     state.reviewSchedule[id]=r;
     const h=state.reviewHistory[today]||{attempts:0,correct:0,near:0,unknown:0,wrong:0,duplicate:0};
     h.attempts++;h[status]=Number(h[status]||0)+1;state.reviewHistory[today]=h;
