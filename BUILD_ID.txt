@@ -1,2 +1,4 @@
-CurriLoop 9.0.54-study-rc.1
-Expected visible header: CurriLoop  v9.0.54 Study RC
+CurriLoop 9.0.41-study-rc.1
+Expected visible header: CurriLoop  v9.0.41 Study RC
+Practical: fully correct task auto-advances after 950ms; end-of-round rotates practical set when alternatives exist.
+Navigation: bottom previous/next area controls work in both specific-area and all-area scopes.

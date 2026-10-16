@@ -1,20 +1,20 @@
 (function(){
 'use strict';
 const DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
-const $=id=>document.getElementById(id),state=CL.storage.load(),recoveryNotice=!!state._recoveredFromCorrupt,engine=CL.study.makeEngine(DATA,state);delete state._recoveredFromCorrupt;delete state._corruptBackupKey;CL.storage.restoreScopeRound(state);
+const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
 const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
 areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
-areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton')};
-let revealed=false,activeRetryCardId='',activeDailyReviewId='',areaMemoOpen=false,areaMemoSaveTimer=null;
-let dailyReviewPending=null,dailyReviewAdvanceTimer=null;
-const retryGradePending=new Map(),retryResultTimers=new Map();
+areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
+controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody')};
+let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
+const PRACTICAL_AUTO_ADVANCE_DELAY_MS=950;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 const AREA_MEMO_STORAGE_KEY='curriloop-area-notes-v1';
 
-const AREA_MEMO_LEGACY_DEFAULTS={
+const LEGACY_AREA_MEMO_DEFAULTS={
   'middle-info':{
     '컴퓨팅 시스템':'컴퓨팅 시스템(구성요소·동작 원리) → 운영체제(기능) → 피지컬 컴퓨팅(개념·사례) → 필요성·가치 → 구성요소 선택 → 시스템 구상',
     '데이터':'디지털 데이터 표현 → 문제에 맞는 데이터 수집 → 목적에 맞게 구분·관리 → 표·다이어그램으로 구조화 → 데이터 관계 파악·의미 해석 → 수집·분석을 통한 융합 문제 해결',
@@ -30,11 +30,11 @@ const AREA_MEMO_LEGACY_DEFAULTS={
     '디지털 문화':'디지털 기술의 사회적 영향 분석·진로 설계 → 보호/공유 정보 구분 → 올바른 정보 보호 실천 → 정보보안 필요성·보안 기술 활용 → 디지털 윤리 실천'
   }
 };
-
 const AREA_MEMO_DEFAULTS={
   'middle-info':{
     '컴퓨팅 시스템':`1. 컴퓨팅 시스템
-   - 구성요소·동작 원리
+   - 구성요소
+   - 동작 원리
 2. 운영체제
    - 기능
 3. 피지컬 컴퓨팅
@@ -42,18 +42,19 @@ const AREA_MEMO_DEFAULTS={
 4. 피지컬 컴퓨팅 시스템
    - 필요성·가치
    - 구성요소 선택
-5. 시스템 구상`,
+   - 시스템 구상`,
     '데이터':`1. 디지털 데이터 표현
-2. 문제에 맞는 데이터 수집
+2. 데이터 수집
+   - 문제에 맞는 데이터
 3. 데이터 관리
    - 목적에 맞게 구분·관리
 4. 데이터 구조화
-   - 표·다이어그램 활용
-5. 데이터 분석
-   - 관계 파악
+   - 표·다이어그램
+5. 데이터 해석
+   - 데이터 관계 파악
    - 의미 해석
 6. 융합 문제 해결
-   - 데이터 수집·분석 활용`,
+   - 수집·분석 활용`,
     '알고리즘과 프로그래밍':`1. 문제 상태 정의·구조화
 2. 추상화
    - 핵심요소 추출
@@ -77,12 +78,13 @@ const AREA_MEMO_DEFAULTS={
    - 해결 가능한 문제 발견
    - 적합한 시스템 적용
 5. 데이터 윤리
-   - 문제 해결 방안`,
+   - 문제와 해결 방안`,
     '디지털 문화':`1. 디지털 사회
-   - 특성·직업 변화
-2. 생활 규칙
+   - 특성
+   - 직업 변화
+2. 디지털 생활 규칙
    - 민주적 논의·실천
-3. 정보와 권리 보호
+3. 정보 권리 보호
    - 개인 정보
    - 권리
    - 저작권`
@@ -97,21 +99,26 @@ const AREA_MEMO_DEFAULTS={
 5. 사물인터넷 시스템 설계`,
     '데이터':`1. 데이터 압축
    - 개념·필요성
-   - 압축 효율 분석·평가
+   - 효율 분석·평가
 2. 암호화
    - 개념
    - 안전 관리 사례
 3. 빅데이터
    - 개념·특징
-4. 문제에 맞는 데이터 수집
+4. 데이터 수집
+   - 문제에 맞는 데이터
 5. 데이터 분석
-   - 분석 도구·시각화
-   - 의미·가치 해석`,
+   - 분석 도구
+   - 시각화
+6. 데이터 해석
+   - 의미·가치`,
     '알고리즘과 프로그래밍':`1. 문제 분해·모델링
 2. 정렬·탐색 알고리즘
    - 효율 비교
 3. 자료형 선택
-4. 표준/파일 입출력
+4. 입출력
+   - 표준입출력
+   - 파일입출력
 5. 다차원 데이터
 6. 복합 제어 구조
 7. 클래스·인스턴스
@@ -119,84 +126,49 @@ const AREA_MEMO_DEFAULTS={
 9. 성능 평가·공유`,
     '인공지능':`1. 지능 에이전트
    - 개념·특성
-2. 인간과 인공지능의 관계
+2. 인간과 인공지능
+   - 관계
 3. 기계학습
    - 개념
    - 지도학습·비지도학습 비교
-4. 적용 가능 문제 구분
-5. 사회문제에 기계학습 적용`,
-    '디지털 문화':`1. 디지털 기술
+4. 문제 구분
+   - 기계학습 적용 가능성
+5. 사회문제 해결
+   - 기계학습 적용`,
+    '디지털 문화':`1. 디지털 기술과 사회
    - 사회적 영향 분석
    - 진로 설계
 2. 정보 구분
-   - 보호 정보
-   - 공유 정보
-3. 올바른 정보 보호 실천
+   - 보호할 정보
+   - 공유할 정보
+3. 정보 보호 실천
 4. 정보보안
    - 필요성
    - 보안 기술 활용
 5. 디지털 윤리 실천`
-  },
-  'ai-basics':{
-    '인공지능의 이해':`1. 인공지능의 원리
-2. 인공지능과 탐색
-   - 맹목적 탐색·정보 이용 탐색
-3. 지식의 표현과 추론`,
-    '인공지능과 학습':`1. 기계학습 문제 정의
-2. 데이터 선정·수집·전처리
-3. 기계학습 유형·알고리즘 선정
-4. 훈련 데이터로 학습
-   - 테스트 데이터로 성능 평가
-5. 인공신경망·딥러닝
-6. 딥러닝 문제 해결`,
-    '인공지능의 사회적 영향':`1. 인공지능의 발전과 사회 변화
-2. 삶·직업의 변화와 진로
-3. 인간과 인공지능의 공존
-4. 인공지능 윤리
-   - 윤리적 딜레마`,
-    '인공지능 프로젝트':`1. 지속가능발전목표와 인공지능
-2. 프로젝트 주제 도출
-3. 문제 해결 과정 기반 수행 계획
-4. 인공지능 소프트웨어 개발
-5. 평가 결과 반영·성능 개선`
   }
 };
 const AREA_MEMO_AREA_ORDER=['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'];
-const AREA_MEMO_SUBJECT_ORDER=['middle-info','high-info','ai-basics'];
-const AREA_MEMO_SUBJECT_LABELS={'middle-info':'중학교 정보','high-info':'고등학교 정보','ai-basics':'인공지능 기초'};
-const AREA_MEMO_AREA_ORDER_BY_SUBJECT={
-  'middle-info':AREA_MEMO_AREA_ORDER,
-  'high-info':AREA_MEMO_AREA_ORDER,
-  'ai-basics':['인공지능의 이해','인공지능과 학습','인공지능의 사회적 영향','인공지능 프로젝트']
-};
-function areaMemoTextFor(defaults,subject,area){
+function areaMemoDefaultTextFor(subject,area,defaults=AREA_MEMO_DEFAULTS){
   const one=(s,a)=>defaults[s]?.[a]||'';
-  const areas=s=>AREA_MEMO_AREA_ORDER_BY_SUBJECT[s]||[];
   if(subject==='all'&&area==='all'){
-    return AREA_MEMO_SUBJECT_ORDER.map(s=>{
-      const block=areas(s).map(x=>`[${x}]\n${one(s,x)}`).filter(x=>!x.endsWith('\n')).join('\n\n');
-      return block?`[${AREA_MEMO_SUBJECT_LABELS[s]}]\n${block}`:'';
-    }).filter(Boolean).join('\n\n');
+    const schoolBlock=(label,s)=>[`[${label}]`,...AREA_MEMO_AREA_ORDER.flatMap(x=>[`[${x}]`,one(s,x),''])].join('\n').trim();
+    return `${schoolBlock('중학교 정보','middle-info')}\n\n${schoolBlock('고등학교 정보','high-info')}`;
   }
   if(subject==='all'){
-    return AREA_MEMO_SUBJECT_ORDER.map(s=>{const v=one(s,area);return v?`[${AREA_MEMO_SUBJECT_LABELS[s]}]\n${v}`:'';}).filter(Boolean).join('\n\n');
+    const m=one('middle-info',area),h=one('high-info',area);
+    return [`[중학교]\n${m}`,`[고등학교]\n${h}`].filter(Boolean).join('\n\n');
   }
-  if(area==='all')return areas(subject).map(x=>`[${x}]\n${one(subject,x)}`).filter(x=>!x.endsWith('\n')).join('\n\n');
+  if(area==='all'){
+    return AREA_MEMO_AREA_ORDER.flatMap(x=>[`[${x}]`,one(subject,x),'']).join('\n').trim();
+  }
   return one(subject,area);
 }
-function areaMemoDefaultText(){
-  return areaMemoTextFor(AREA_MEMO_DEFAULTS,state.ui.subject||'middle-info',state.ui.area||'all');
-}
-function areaMemoLegacyTextFor(subject,area){
-  const one=(s,a)=>AREA_MEMO_LEGACY_DEFAULTS[s]?.[a]||'';
+function areaMemoDefaultText(){return areaMemoDefaultTextFor(state.ui.subject||'middle-info',state.ui.area||'all');}
+function legacyAreaMemoDefaultTextFor(subject,area){
+  const one=(s,a)=>LEGACY_AREA_MEMO_DEFAULTS[s]?.[a]||'';
   if(subject==='all'&&area==='all'){
-    return [
-      '[중학교 정보]',
-      ...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('middle-info',x)}`),
-      '',
-      '[고등학교 정보]',
-      ...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('high-info',x)}`)
-    ].join('\n');
+    return ['[중학교 정보]',...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('middle-info',x)}`),'','[고등학교 정보]',...AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one('high-info',x)}`)].join('\n');
   }
   if(subject==='all'){
     const m=one('middle-info',area),h=one('high-info',area);
@@ -205,20 +177,22 @@ function areaMemoLegacyTextFor(subject,area){
   if(area==='all')return AREA_MEMO_AREA_ORDER.map(x=>`- ${x}: ${one(subject,x)}`).join('\n');
   return one(subject,area);
 }
-function migrateLegacyAreaMemoDefaults(store){
-  let changed=false,count=0;
-  for(const [key,saved] of Object.entries(store||{})){
-    const sep=key.indexOf('|');if(sep<0)continue;
-    const subject=key.slice(0,sep),area=key.slice(sep+1);
-    if(!['middle-info','high-info','all'].includes(subject))continue;
-    if(![...AREA_MEMO_AREA_ORDER,'all'].includes(area))continue;
-    const legacy=areaMemoLegacyTextFor(subject,area);
-    if(String(saved??'')!==legacy)continue;
-    const next=areaMemoTextFor(AREA_MEMO_DEFAULTS,subject,area);
-    if(next===legacy)continue;
-    store[key]=next;changed=true;count++;
+function migrateAreaMemoDefaults(){
+  if(areaMemoMigrationChecked)return;
+  areaMemoMigrationChecked=true;
+  const store=areaMemoStore();let changed=false;
+  for(const subject of ['middle-info','high-info','all']){
+    for(const area of ['all',...AREA_MEMO_AREA_ORDER]){
+      const key=`${subject}|${area}`;
+      if(!Object.prototype.hasOwnProperty.call(store,key))continue;
+      const saved=String(store[key]??'');
+      if(saved===legacyAreaMemoDefaultTextFor(subject,area)){
+        store[key]=areaMemoDefaultTextFor(subject,area);
+        changed=true;
+      }
+    }
   }
-  return {changed,count};
+  if(changed)areaMemoSaveStore(store);
 }
 function areaMemoStore(){
   try{
@@ -233,7 +207,7 @@ function areaMemoSaveStore(store){
 }
 function areaMemoKey(){return `${state.ui.subject||'middle-info'}|${state.ui.area||'all'}`;}
 function areaMemoSubjectLabel(){
-  if(state.ui.subject==='all')return '전체 과목';
+  if(state.ui.subject==='all')return '중·고 정보 전체';
   return engine.labels?.[state.ui.subject]||state.ui.subject||'정보';
 }
 function areaMemoAreaLabel(){return !state.ui.area||state.ui.area==='all'?'전체 영역':state.ui.area;}
@@ -245,11 +219,14 @@ function updateAreaMemoLabels(){
 }
 function loadAreaMemo(){
   if(!el.areaMemoText)return;
-  const store=areaMemoStore(),migration=migrateLegacyAreaMemoDefaults(store),key=areaMemoKey();
+  migrateAreaMemoDefaults();
+  const store=areaMemoStore(),key=areaMemoKey();
   const hasSaved=Object.prototype.hasOwnProperty.call(store,key);
   const value=hasSaved?String(store[key]??''):areaMemoDefaultText();
-  if(!hasSaved)store[key]=value;
-  if(!hasSaved||migration.changed)areaMemoSaveStore(store);
+  if(!hasSaved){
+    store[key]=value;
+    areaMemoSaveStore(store);
+  }
   el.areaMemoText.value=value;
   updateAreaMemoLabels();
   if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='저장됨';
@@ -291,18 +268,56 @@ function clearCurrentAreaMemo(){
   if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='개요로 초기화됨';
   setTimeout(()=>{if(el.areaMemoSaveStatus)el.areaMemoSaveStatus.textContent='자동 저장';},1100);
 }
+const MOBILE_CONTROL_STORAGE_KEY='curriloop-mobile-controls-collapsed-v1';
+const mobileControlMedia=window.matchMedia?window.matchMedia('(max-width:760px)'):null;
+function currentSelectText(select){return select?.selectedOptions?.[0]?.textContent?.trim()||'';}
+function mobileModeLabel(){
+  const active=document.querySelector('[data-mode].active');
+  return active?.textContent?.trim()||'';
+}
+function updateMobileControlSummary(){
+  if(!el.controlSummary)return;
+  const parts=[currentSelectText(el.subject),currentSelectText(el.area),currentSelectText(el.family),currentSelectText(el.stage),mobileModeLabel()].filter(Boolean);
+  el.controlSummary.textContent=parts.join(' · ');
+}
+function applyMobileControlsCollapsed(collapsed,{save=false}={}){
+  const mobile=mobileControlMedia?mobileControlMedia.matches:window.innerWidth<=760;
+  mobileControlsCollapsed=mobile&&!!collapsed;
+  if(el.controlCard)el.controlCard.classList.toggle('mobile-controls-collapsed',mobileControlsCollapsed);
+  if(el.controlToggle){
+    el.controlToggle.setAttribute('aria-expanded',mobileControlsCollapsed?'false':'true');
+    el.controlToggle.setAttribute('aria-label',mobileControlsCollapsed?'학습 설정 펼치기':'학습 설정 접기');
+  }
+  if(save){try{localStorage.setItem(MOBILE_CONTROL_STORAGE_KEY,mobileControlsCollapsed?'1':'0');}catch(_){}}
+}
+function initMobileControlCollapse(){
+  if(!el.controlToggle||!el.controlCard)return;
+  let saved=false;
+  try{saved=localStorage.getItem(MOBILE_CONTROL_STORAGE_KEY)==='1';}catch(_){}
+  applyMobileControlsCollapsed(saved);
+  updateMobileControlSummary();
+  el.controlToggle.addEventListener('click',()=>{
+    const next=!mobileControlsCollapsed;
+    if(next&&el.controlBody?.contains(document.activeElement))el.controlToggle.focus();
+    applyMobileControlsCollapsed(next,{save:true});
+  });
+  const onMediaChange=e=>applyMobileControlsCollapsed(e.matches?saved:false);
+  if(mobileControlMedia?.addEventListener)mobileControlMedia.addEventListener('change',e=>{
+    try{saved=localStorage.getItem(MOBILE_CONTROL_STORAGE_KEY)==='1';}catch(_){}
+    onMediaChange(e);
+  });
+  else if(mobileControlMedia?.addListener)mobileControlMedia.addListener(onMediaChange);
+}
 function option(v,t){const o=document.createElement('option');o.value=v;o.textContent=t;return o;}
 function setOptions(select,items,preferred){select.innerHTML='';items.forEach(([v,t])=>select.append(option(v,t)));select.value=items.some(x=>x[0]===preferred)?preferred:items[0]?.[0]||'';return select.value;}
-function areaItems(subject=el.subject.value){return [['all','전체 영역'],...engine.areasForSubject(subject).map(a=>[a,a])];}
-function syncAreas(preferred=state.ui.area){state.ui.area=setOptions(el.area,areaItems(),preferred);}
 function familyItems(){return engine.familyGroupOrder.filter(id=>engine.groupAvailable(id,el.subject.value,state.ui.area)).map(id=>[id,engine.groupLabel(id)]);}
 function syncFamilies(preferred=state.ui.family){state.ui.family=setOptions(el.family,familyItems(),preferred);}
 function syncStages(preferred=state.ui.stage){state.ui.stage=setOptions(el.stage,[['single','단일 회상'],['practical','실전 조합'],['whole','전체 회상']],preferred);}
 function initSelectors(){
-  el.subject.append(option('all','전체 과목'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
+  el.subject.append(option('all','중·고 정보 전체'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
+  el.area.append(option('all','전체 영역'));engine.areas.forEach(a=>el.area.append(option(a,a)));
   el.subject.value=[...el.subject.options].some(o=>o.value===state.ui.subject)?state.ui.subject:'middle-info';
-  syncAreas(state.ui.area);
-  if(!state.ui.area)state.ui.area=el.subject.value==='middle-info'?'컴퓨팅 시스템':'all';
+  el.area.value=[...el.area.options].some(o=>o.value===state.ui.area)?state.ui.area:'컴퓨팅 시스템';state.ui.area=el.area.value;
   syncFamilies();syncStages();el.retry.checked=state.ui.retry;el.zoom.value=String(state.ui.zoom||100);applyZoom();
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
 }
@@ -322,57 +337,12 @@ function taskContainsLine(task,lineId){
   if(task.type==='line')return task.line?.lineId===lineId;
   return !!task.group?.items?.some(x=>x.lineId===lineId);
 }
-function taskLineIds(task){
-  if(!task)return [];
-  if(task.type==='line')return task.line?.lineId?[task.line.lineId]:[];
-  if(isKITask(task))return (task.group?.items||[]).map(x=>x.lineId).filter(Boolean);
-  if(isGroupTask(task))return groupSections(task).flatMap(s=>s.items||[]).map(x=>x.lineId).filter(Boolean);
-  return (task.group?.items||[]).map(x=>x.lineId).filter(Boolean);
-}
 
 function retryEntries({dueOnly=false}={}){
   const serial=Number(state.answerSerial||0);
   return Object.entries(state.fieldRetries||{})
     .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
     .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
-}
-function retryScopeMatchesCurrent(r){
-  const scope=r?.scope||{};
-  return Number(r?.round||0)===Number(state.round||1)
-    && scope.subject===state.ui.subject
-    && scope.area===state.ui.area
-    && scope.family===state.ui.family
-    && scope.stage===state.ui.stage;
-}
-function currentRoundRetryEntries(){
-  return Object.entries(state.fieldRetries||{})
-    .filter(([,r])=>r&&retryScopeMatchesCurrent(r))
-    .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
-}
-function atRoundEnd(){
-  const st=engine.stats();
-  return !!st.total&&st.cursor===st.total;
-}
-function currentTaskFullyGraded(){
-  const fields=answerFields();
-  return !fields.length||fields.every(f=>!!CL.storage.getFieldGrade(state,f.dataset.fieldKey||''));
-}
-function promoteTailRetries({requireFullyGraded=false,announce=false}={}){
-  if(!state.ui.retry||!atRoundEnd())return false;
-  if(requireFullyGraded&&!currentTaskFullyGraded())return false;
-  const pending=currentRoundRetryEntries();
-  if(!pending.length)return false;
-  const serial=Number(state.answerSerial||0);
-  pending.forEach(([,r])=>{r.dueAt=Math.min(Number(r.dueAt??Infinity),serial);});
-  if(!activeRetryCardId)activeRetryCardId=pending[0][0];
-  CL.storage.save(state);
-  renderRetryDock();
-  if(state.ui.mainTab==='review')renderReviewPage();
-  if(announce){
-    el.feedback.textContent=`새 문제를 모두 풀었습니다. 남은 오답 카드 ${pending.length}개를 복습하면 이번 회차가 끝납니다.`;
-    el.feedback.className='feedback near';
-  }
-  return true;
 }
 function retryAnswerList(r){
   if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
@@ -389,41 +359,20 @@ function retrySafeLabel(text,answers,fallback='해당 항목'){
   });
   return leaks?fallback:value;
 }
-function retrySectionPosition(r){
-  const lineId=String(r?.lineId||((Array.isArray(r?.lineIds)&&r.lineIds.length===1)?r.lineIds[0]:'')||'').trim();
-  if(!lineId)return '';
-  const line=engine.lineMap.get(lineId);if(!line)return '';
-  const section=String(r?.section||line.family||'').trim();if(!section)return '';
-  const peers=(engine.data?.lines||[]).filter(x=>x.subject===line.subject&&x.area===line.area&&x.family===section);
-  if(peers.length<=1)return '';
-  const index=peers.findIndex(x=>x.lineId===line.lineId);
-  return index>=0?`${index+1}/${peers.length}`:'';
-}
-function retrySourceArea(r){
-  const ids=[];
-  if(r?.lineId)ids.push(String(r.lineId));
-  if(Array.isArray(r?.lineIds))r.lineIds.forEach(id=>{if(id)ids.push(String(id));});
-  const areas=[...new Set(ids.map(id=>engine.lineMap.get(id)?.area).filter(Boolean))];
-  if(areas.length===1)return areas[0];
-  const scope=r?.scope||{};
-  if(scope.area&&scope.area!=='all')return scope.area;
-  return areas.length>1?'여러 영역':'전체 영역';
-}
 function retryMeta(r){
-  const answers=retryAnswerList(r);
-  const areaRaw=retrySourceArea(r);
+  const scope=r.scope||{},answers=retryAnswerList(r);
+  const areaRaw=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
   const sectionRaw=r.section||r.family||'빈칸';
   const area=retrySafeLabel(areaRaw,answers,'해당 영역');
   const section=retrySafeLabel(sectionRaw,answers,'해당 구분');
-  const position=retrySectionPosition(r);
-  return `${area} · ${section}${position?` ${position}`:''}`;
+  return `${area} · ${section}`;
 }
 function retryBlankText(text,answer,label='이 항목'){
   const source=String(text||'').trim(),target=String(answer||'').trim();
   const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
   const safeLabel=retrySafeLabel(label,[target],'이 항목');
   if(!target)return `${safeLabel}의 정답을 다시 떠올려 입력하세요.`;
-  if(!source||norm(source)===norm(target))return `${safeLabel}을 다시 떠올려 입력하세요.`;
+  if(!source||norm(source)===norm(target))return `${safeLabel} 전체를 다시 작성하세요.`;
   if(!source.includes(target))return `${safeLabel}의 정답을 다시 작성하세요.`;
 
   // 동일 정답이 원문에 여러 번 등장하면 전부 가려서 다른 위치에서 답이 노출되지 않게 한다.
@@ -432,18 +381,13 @@ function retryBlankText(text,answer,label='이 항목'){
   if(norm(target)&&norm(masked).includes(norm(target)))return `${safeLabel}의 핵심 표현을 다시 작성하세요.`;
   return masked;
 }
-function recallPromptModel(r){
-  const setMode=r?.kind==='set'&&Array.isArray(r?.setAnswers)&&r.setAnswers.length;
-  const answers=retryAnswerList(r||{});
-  const sectionLabel=retrySafeLabel(r?.section||r?.family||'내용 요소',answers,'해당 항목');
-  const prompt=setMode
-    ? `${sectionLabel} 항목을 하나씩 다시 떠올려 입력하세요.`
-    : retryBlankText(r?.contextText||'',r?.correctAnswer||'',`${sectionLabel} 항목`);
-  return {setMode,answers,sectionLabel,prompt,meta:retryMeta(r||{})};
-}
 function retryCardPanelHtml(id,r){
-  const model=recallPromptModel(r),setMode=model.setMode;
-  const prompt=model.prompt;
+  const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
+  const answers=retryAnswerList(r);
+  const sectionLabel=retrySafeLabel(r.section||'내용 요소',answers,'해당 항목');
+  const prompt=setMode
+    ? `${sectionLabel} 전체를 다시 쓰세요.`
+    : retryBlankText(r.contextText||'',r.correctAnswer||'',`${sectionLabel} 항목`);
   const inputHtml=setMode
     ? `<div class="practical-retry-set">${r.setAnswers.map((_,i)=>`<input class="retry-card-input" data-retry-set-index="${i}" type="text" autocomplete="off" spellcheck="false" aria-label="재인출 답 ${i+1}" placeholder="${i+1}번">`).join('')}</div>`
     : `<input class="retry-card-input" type="text" autocomplete="off" spellcheck="false" aria-label="다시 꺼내기 답 입력" placeholder="정답을 다시 떠올려 입력">`;
@@ -453,14 +397,13 @@ function retryCardPanelHtml(id,r){
         <div class="practical-retry-kicker">${setMode?'전체 회상 · 다시 꺼내기':'다시 꺼내기'}</div>
         <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
       </div>
-      <div class="practical-retry-meta">${esc(model.meta)}</div>
+      <div class="practical-retry-meta">${esc(retryMeta(r))}</div>
       <div class="practical-retry-prompt">${esc(prompt)}</div>
       <div class="practical-retry-row ${setMode?'set-mode':''}">
         ${inputHtml}
-        <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">채점</button>
+        <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">확인</button>
         <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
       </div>
-      <div class="practical-retry-answer" data-retry-answer="${esc(id)}" hidden></div>
       <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div>
       <div class="retry-result-overlay" data-retry-result="${esc(id)}" aria-live="polite"></div>
     </div>`;
@@ -501,13 +444,6 @@ function renderRetryDock(){
     });
   }
 }
-function setRetryAnswer(id,text,status=''){
-  const a=el.retryDock?.querySelector(`[data-retry-answer="${CSS.escape(id)}"]`);
-  if(!a)return;
-  a.textContent=text||'';
-  a.hidden=!text;
-  a.className='practical-retry-answer '+status;
-}
 function setRetryFeedback(id,text,status=''){
   const f=el.retryDock?.querySelector(`[data-retry-feedback="${CSS.escape(id)}"]`);
   if(!f)return;
@@ -531,22 +467,13 @@ function clearRetryResult(id){
   if(panel)panel.classList.remove('result-good','result-near','result-bad');
   if(overlay){overlay.textContent='';overlay.className='retry-result-overlay';}
 }
-function flashRetryResult(id,status,text,duration=1150){
-  const prev=retryResultTimers.get(id);if(prev)clearTimeout(prev);
-  showRetryResult(id,status,text);
-  const timer=setTimeout(()=>{retryResultTimers.delete(id);clearRetryResult(id);},duration);
-  retryResultTimers.set(id,timer);
-}
 function collapseRetryCard(id=''){
-  const target=id||activeRetryCardId;
-  if(target&&retryGradePending.has(target))return;
   if(!id||activeRetryCardId===id)activeRetryCardId='';
   renderRetryDock();
 }
 function deferRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
-  const serial=Number(state.answerSerial||0);
-  r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
+  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
   activeRetryCardId='';
   persist();
   renderRetryDock();
@@ -570,20 +497,21 @@ function completeRetryRecord(id,r){
     (r.lineIds||[]).forEach(lineId=>CL.storage.recordItem(state,lineId,'correct'));
   }else{
     if(r.fieldKey){
-      const sourceExpected=r.sourceExpected||r.correctAnswer||'';
-      CL.storage.setDraft(state,r.fieldKey,sourceExpected);
-      CL.storage.setFieldGrade(state,r.fieldKey,{status:'correct',reason:'retry',expected:sourceExpected});
+      CL.storage.setDraft(state,r.fieldKey,r.correctAnswer||'');
+      CL.storage.setFieldGrade(state,r.fieldKey,{status:'correct',reason:'retry',expected:r.correctAnswer||''});
     }
     if(r.lineId&&!r.recognitionCue)CL.storage.recordItem(state,r.lineId,'correct');
   }
   delete state.fieldRetries[id];
-  if(state.fieldRetryCounts)delete state.fieldRetryCounts[id];
 }
 function rescheduleRetryRecord(id,r,status){
   r.status=status;
   r.retryAttempts=Number(r.retryAttempts||0)+1;
-  const serial=Number(state.answerSerial||0);
-  r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
+  if(r.retryAttempts>=Number(CL.config.maxRetriesPerTaskPerRound||2)){
+    delete state.fieldRetries[id];
+    return false;
+  }
+  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
   return true;
 }
 
@@ -609,15 +537,12 @@ function advanceRetryCardAfter(currentId,orderBefore,delayMs=1000){
   },delayMs);
 }
 function gradeRetryCard(id){
-  const r=state.fieldRetries?.[id];if(!r||retryGradePending.has(id))return;
+  const r=state.fieldRetries?.[id];if(!r)return;
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
   if(!panel||panel.dataset.gradingLock==='1')return;
   panel.dataset.gradingLock='1';
   panel.classList.add('grading-lock');
-  panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
-  const gradeButton=panel.querySelector(`[data-retry-grade="${CSS.escape(id)}"]`);
-  const laterButton=panel.querySelector(`[data-retry-later="${CSS.escape(id)}"]`);
-  if(gradeButton)gradeButton.disabled=true;
+  panel.querySelectorAll('input,button').forEach(control=>{control.disabled=true;});
   const orderBefore=retryCardOrderSnapshot();
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   let status='wrong',expected='',hasWrong=false,hasUnknown=false,hasNear=false;
@@ -650,58 +575,24 @@ function gradeRetryCard(id){
     hasNear=visual==='near';
   }
 
-  const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
-  retryGradePending.set(id,{status,expected,overallNear,hasWrong,hasUnknown,orderBefore});
-  panel.dataset.gradingLock='0';
-  panel.classList.remove('grading-lock');
-  if(gradeButton){
-    gradeButton.disabled=false;
-    gradeButton.textContent='Enter';
-    gradeButton.setAttribute('aria-label','Enter를 눌러 확인');
-    gradeButton.title='Enter 키로 다음 단계로 이동';
-    requestAnimationFrame(()=>{try{gradeButton.focus({preventScroll:true});}catch(_){gradeButton.focus();}});
-  }
-
   if(status==='correct'){
-    flashRetryResult(id,'correct','재인출 완료 ✓');
-    setRetryAnswer(id,'','');
-    setRetryFeedback(id,'정확합니다. 잠시 후 다음 카드로 넘어갑니다.','good');
-    if(gradeButton)gradeButton.hidden=true;
-    if(laterButton)laterButton.hidden=true;
-    setTimeout(()=>{if(retryGradePending.has(id))acknowledgeRetryCard(id,false);},1000);
+    showRetryResult(id,'correct','재인출 완료 ✓');
+    setRetryFeedback(id,'모두 정확했습니다.','good');
+    completeRetryRecord(id,r);
+    CL.storage.save(state);renderReviewPage();
+    advanceRetryCardAfter(id,orderBefore,1000);
     return;
   }
 
-  flashRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
-  const feedbackStatus=overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad';
-  setRetryAnswer(id,`정답: ${expected}`,feedbackStatus);
-  setRetryFeedback(id,'확인 후 다시 묻습니다.',feedbackStatus);
-  if(laterButton){laterButton.hidden=false;laterButton.disabled=false;}
-}
-function acknowledgeRetryCard(id,later=false){
-  const pending=retryGradePending.get(id),r=state.fieldRetries?.[id];
-  if(!pending||!r)return;
-  const {status,orderBefore}=pending;
-  retryGradePending.delete(id);
-  const timer=retryResultTimers.get(id);if(timer){clearTimeout(timer);retryResultTimers.delete(id);}
+  const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
+  showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
 
-  if(status==='correct'){
-    completeRetryRecord(id,r);
-  }else if(later){
-    const serial=Number(state.answerSerial||0);
-    r.dueAt=atRoundEnd()&&retryScopeMatchesCurrent(r)?serial:serial+Number(CL.config.retryDelay||3);
-  }else{
-    rescheduleRetryRecord(id,r,status);
-  }
-
-  CL.storage.save(state);
-  renderReviewPage();
-  if(status==='correct'&&atRoundEnd()&&!currentRoundRetryEntries().length){
-    el.feedback.textContent='이번 회차의 오답 복습을 모두 마쳤습니다. 다음을 누르면 다음 회차로 넘어갑니다.';
-    el.feedback.className='feedback good';
-  }
-  activeRetryCardId=nextRetryCardIdAfter(id,orderBefore)||'';
-  renderRetryDock();
+  const requeued=rescheduleRetryRecord(id,r,status);
+  const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
+  const tail=requeued?' · 잠시 뒤 다시 묻습니다.':' · 취약 기록에 남겼습니다.';
+  setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  CL.storage.save(state);renderReviewPage();
+  advanceRetryCardAfter(id,orderBefore,1000);
 }
 function openRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
@@ -718,77 +609,64 @@ function reviewUnitsForLine(line){
   return (line.keywords||[]).filter(k=>k.active).slice().sort((x,y)=>x.start-y.start);
 }
 function dailyReviewGroups(){
-  return CL.storage.dueReviewItems(state).map(rec=>{
-    const line=engine.lineMap.get(rec.lineId);if(!line)return null;
-    const rawUnits=line.family==='지식·이해'?[]:reviewUnitsForLine(line);
-    const units=(rawUnits.length?rawUnits:[{text:String(line.sourceText||'').trim()}]).filter(u=>String(u?.text||'').trim());
-    if(!units.length)return null;
-    const unitCursor=Math.max(0,Number(rec.unitCursor||0))%units.length;
-    const answer=String(units[unitCursor]?.text||'').trim();
-    if(!answer)return null;
-    const recallRecord={lineId:line.lineId,section:line.family,correctAnswer:answer,contextText:line.sourceText||'',scope:{subject:line.subject,area:line.area}};
-    const model=recallPromptModel(recallRecord);
-    return {id:`LINE:${line.lineId}`,kind:'line',lineIds:[line.lineId],line,rec,answer,model,unitCount:units.length,unitCursor};
-  }).filter(Boolean);
+  const due=CL.storage.dueReviewItems(state),groups=[],kiMap=new Map();
+  due.forEach(rec=>{
+    const line=engine.lineMap.get(rec.lineId);if(!line)return;
+    if(line.family==='지식·이해'){
+      const key=`KI:${line.subject}:${line.area}`;
+      if(!kiMap.has(key))kiMap.set(key,{id:key,kind:'ki',subject:line.subject,subjectLabel:line.subjectLabel,area:line.area,lineIds:[]});
+      kiMap.get(key).lineIds.push(line.lineId);
+      return;
+    }
+    const units=reviewUnitsForLine(line);
+    if(!units.length)return;
+    const unit=units[Number(rec.reviewCount||0)%units.length];
+    groups.push({id:`LINE:${line.lineId}`,kind:'line',lineIds:[line.lineId],line,rec,answer:unit.text,prompt:retryBlankText(line.sourceText,unit.text,`${line.family||'이'} 항목`)});
+  });
+  kiMap.forEach(g=>{
+    const kg=(engine.data.knowledgeUnderstandingGroups||[]).find(x=>x.subject===g.subject&&x.area===g.area);
+    if(!kg)return;
+    g.answers=kg.items.map(x=>x.text);g.allLineIds=kg.items.map(x=>x.lineId);groups.unshift(g);
+  });
+  return groups;
 }
-function dailyReviewCardHtml(g,index,total){
-  const pending=dailyReviewPending?.id===g.id?dailyReviewPending:null;
-  const stage=`${Number(g.rec.stage||0)+1}단계`;
-  const unitProgress=g.unitCount>1?` · 항목 ${g.unitCursor+1}/${g.unitCount}`:'';
-  const progress=(total>1?`${index+1}/${total} · ${stage}`:stage)+unitProgress;
-  const answerText=pending?`정답: ${pending.expected}`:'';
-  const feedbackText=pending?'확인 후 다음 복습으로 넘어갑니다.':'예정된 항목을 한 장씩 다시 꺼내 보세요.';
-  const feedbackClass=pending?statusClass(pending.status):'';
-  return `<article class="daily-review-card recall-card" data-daily-review="${esc(g.id)}">
-    <div class="daily-review-card-head"><div><strong>${esc(g.line.subjectLabel)}</strong><small>${esc(g.model.meta)}</small></div><span>${esc(progress)}</span></div>
-    <div class="daily-review-prompt practical-retry-prompt">${esc(g.model.prompt)}</div>
-    <div class="daily-review-inline practical-retry-row">
-      <input class="daily-review-input retry-card-input" autocomplete="off" spellcheck="false" placeholder="정답을 다시 떠올려 입력" ${pending?'disabled':''}>
-      <button type="button" class="primary" data-daily-grade="${esc(g.id)}">${pending?'Enter':'채점'}</button>
-    </div>
-    <div class="daily-review-answer practical-retry-answer ${esc(feedbackClass)}" ${answerText?'':'hidden'}>${esc(answerText)}</div>
-    <div class="daily-review-feedback practical-retry-feedback ${esc(feedbackClass)}">${esc(feedbackText)}</div>
+function dailyReviewCardHtml(g){
+  if(g.kind==='ki'){
+    return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
+      <div class="daily-review-card-head"><div><strong>${esc(g.subjectLabel)} · ${esc(g.area)} · 지식·이해</strong><small>영역 전체 회상</small></div><span>${g.lineIds.length}개 예정</span></div>
+      <div class="daily-review-prompt">이 영역의 지식·이해 내용 요소를 모두 입력하세요.</div>
+      <div class="daily-review-inputs">${g.answers.map((_,i)=>`<input class="daily-review-input" data-daily-index="${i}" autocomplete="off" spellcheck="false" placeholder="${i+1}번">`).join('')}</div>
+      <div class="daily-review-actions"><button type="button" class="primary" data-daily-grade="${esc(g.id)}">채점</button></div>
+      <div class="daily-review-feedback"></div>
+    </article>`;
+  }
+  return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
+    <div class="daily-review-card-head"><div><strong>${esc(g.line.subjectLabel)} · ${esc(g.line.area)}</strong><small>${esc(g.line.family)}</small></div><span>${Number(g.rec.stage||0)+1}단계</span></div>
+    <div class="daily-review-prompt">${esc(g.prompt)}</div>
+    <div class="daily-review-inline"><input class="daily-review-input" autocomplete="off" spellcheck="false" placeholder="정답 입력"><button type="button" class="primary" data-daily-grade="${esc(g.id)}">채점</button></div>
+    <div class="daily-review-feedback"></div>
   </article>`;
 }
-function finishDailyReview(group,status){
-  group.lineIds.forEach(lineId=>{
-    CL.storage.recordItem(state,lineId,status);
-    CL.storage.completeDailyReview(state,lineId,status,{unitCount:group.unitCount||1});
-  });
-  CL.storage.save(state);
-  activeDailyReviewId='';
-  dailyReviewPending=null;
-  renderRetryDock();
-  renderReviewPage();
-}
-function acknowledgeDailyReview(id){
-  if(!dailyReviewPending||dailyReviewPending.id!==id)return false;
-  const group=dailyReviewGroups().find(g=>g.id===id);
-  if(!group){dailyReviewPending=null;activeDailyReviewId='';renderReviewPage();return false;}
-  finishDailyReview(group,dailyReviewPending.status);
-  return true;
-}
 function gradeDailyReview(id){
-  if(dailyReviewPending?.id===id){acknowledgeDailyReview(id);return;}
   const group=dailyReviewGroups().find(g=>g.id===id);if(!group)return;
   const card=el.dailyReviewList?.querySelector(`[data-daily-review="${CSS.escape(id)}"]`);if(!card)return;
-  const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
-  const status=d.status,visual=status==='duplicate'?'wrong':status;
-  if(f){['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(visual);f.disabled=true;}
-  const button=card.querySelector(`[data-daily-grade="${CSS.escape(id)}"]`);
-  const fb=card.querySelector('.daily-review-feedback');
-  if(status==='correct'){
-    if(fb){fb.textContent='오늘 복습 완료 ✓';fb.className='daily-review-feedback practical-retry-feedback good';}
-    if(button){button.disabled=true;button.hidden=true;}
-    if(dailyReviewAdvanceTimer)clearTimeout(dailyReviewAdvanceTimer);
-    dailyReviewAdvanceTimer=setTimeout(()=>{dailyReviewAdvanceTimer=null;finishDailyReview(group,status);},650);
-    return;
+  let status='wrong',expected='';
+  if(group.kind==='ki'){
+    const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
+    status=grade.status;expected=group.answers.join(' / ');
+    grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(r.status==='duplicate'?'wrong':r.status);});
+  }else{
+    const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
+    status=d.status;expected=group.answer;
+    if(f){['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(status==='duplicate'?'wrong':status);}
   }
-  dailyReviewPending={id,status,expected:group.answer};
-  const answer=card.querySelector('.daily-review-answer');
-  if(answer){answer.hidden=false;answer.textContent=`정답: ${group.answer}`;answer.className=`daily-review-answer practical-retry-answer ${statusClass(status)}`;}
-  if(fb){fb.textContent='확인 후 다음 복습으로 넘어갑니다.';fb.className=`daily-review-feedback practical-retry-feedback ${statusClass(status)}`;}
-  if(button){button.textContent='Enter';button.disabled=false;requestAnimationFrame(()=>{try{button.focus({preventScroll:true});}catch(_){button.focus();}});}
+  const lineIds=group.kind==='ki'?group.lineIds:group.lineIds;
+  lineIds.forEach(lineId=>{CL.storage.recordItem(state,lineId,status);CL.storage.completeDailyReview(state,lineId,status);});
+  const fb=card.querySelector('.daily-review-feedback'),label=status==='correct'?'정답':status==='near'?'표기 확인':status==='unknown'?'모름':'오답';
+  fb.textContent=status==='correct'?'오늘 복습 완료 ✓':`${label} · 정답: ${expected}`;
+  fb.className='daily-review-feedback '+statusClass(status);
+  CL.storage.save(state);renderRetryDock();
+  setTimeout(()=>renderReviewPage(),status==='correct'?650:1450);
 }
 function weakReviewItems(){
   return Object.entries(state.itemProgress||{})
@@ -808,18 +686,14 @@ function renderReviewPage(){
   if(el.reviewTodayCount)el.reviewTodayCount.textContent=String(daily.length);
   if(el.reviewRetryCount)el.reviewRetryCount.textContent=String(due.length);
   if(el.reviewWeakCount)el.reviewWeakCount.textContent=String(weak.length);
-  if(activeDailyReviewId&&!daily.some(g=>g.id===activeDailyReviewId))activeDailyReviewId='';
-  if(!activeDailyReviewId&&daily.length)activeDailyReviewId=daily[0].id;
-  const dailyIndex=Math.max(0,daily.findIndex(g=>g.id===activeDailyReviewId));
-  const dailyActive=daily[dailyIndex]||null;
-  if(el.dailyReviewList)el.dailyReviewList.innerHTML=dailyActive?dailyReviewCardHtml(dailyActive,dailyIndex,daily.length):`<div class="review-empty">오늘 예정된 간격 복습이 없습니다.</div>`;
+  if(el.dailyReviewList)el.dailyReviewList.innerHTML=daily.length?daily.map(dailyReviewCardHtml).join(''):`<div class="review-empty">오늘 예정된 장기 복습이 없습니다.</div>`;
   if(el.reviewSummary)el.reviewSummary.textContent=daily.length?`오늘의 복습 ${daily.length}개`:(due.length?`지금 다시 풀 수 있는 카드 ${due.length}개`:(retries.length?'재인출 대기 중':'오늘 복습 완료'));
   if(el.reviewRetryList){
     el.reviewRetryList.innerHTML=retries.length?retries.map(([id,r])=>{
       const left=Math.max(0,Number(r.dueAt)-serial),ready=left===0;
       return `<button class="review-row retry-review-row ${ready?'ready':''}" data-retry-id="${esc(id)}">
         <span><strong>${ready?'지금 복습':'재인출 대기'}</strong><small>${esc(retryMeta(r))}</small></span>
-        <span class="review-row-badge">${ready?'열기':'대기'}</span>
+        <span class="review-row-badge">${ready?'열기':`${left}개 답 후`}</span>
       </button>`;
     }).join(''):`<div class="review-empty">현재 예약된 지연 재인출이 없습니다.</div>`;
   }
@@ -845,7 +719,6 @@ function showMainTab(tab='study',save=true){
 }
 function syncScopeControlsFromState(){
   el.subject.value=state.ui.subject;
-  syncAreas(state.ui.area);
   el.area.value=state.ui.area;
   syncFamilies(state.ui.family);el.family.value=state.ui.family;
   syncStages(state.ui.stage);el.stage.value=state.ui.stage;
@@ -883,43 +756,75 @@ function updateRetryToggleUI(){
   if(el.retryState)el.retryState.textContent=on?'ON':'OFF';
 }
 
-function areaNavGroups(){
-  if(state.ui.area!=='all')return [];
-  const out=[],seen=new Set();
-  (engine.queue||[]).forEach((task,index)=>{
-    const c=taskContext(task);
-    if(!c||!c.area||c.area==='과목 공통')return;
-    const key=`${c.subject}|${c.area}`;
-    if(seen.has(key))return;
-    seen.add(key);out.push({key,subject:c.subject,area:c.area,index});
-  });
-  return out;
-}
-function currentAreaNavKey(task){
-  const c=task?taskContext(task):null;
-  return c&&c.area&&c.area!=='과목 공통'?`${c.subject}|${c.area}`:'';
+function areaNavState(task=currentTask()){
+  if(!task)return null;
+  if(state.ui.area==='all'){
+    const groups=[],seen=new Set();
+    (engine.queue||[]).forEach((queued,index)=>{
+      const c=taskContext(queued);
+      if(!c||!c.area||c.area==='과목 공통')return;
+      const key=`${c.subject}|${c.area}`;
+      if(seen.has(key))return;
+      seen.add(key);groups.push({key,subject:c.subject,area:c.area,index});
+    });
+    const c=taskContext(task),key=c&&c.area&&c.area!=='과목 공통'?`${c.subject}|${c.area}`:'',idx=groups.findIndex(x=>x.key===key);
+    return idx>=0?{mode:'queue',groups,idx}:null;
+  }
+  const areas=(engine.areas||[]).filter(area=>engine.groupAvailable(state.ui.family,state.ui.subject,area));
+  const idx=areas.indexOf(state.ui.area);
+  const groups=areas.map(area=>({area}));
+  return idx>=0?{mode:'filter',groups,idx}:null;
 }
 function renderAreaNavigator(task){
   if(!el.areaNav)return;
-  const groups=areaNavGroups(),key=currentAreaNavKey(task),idx=groups.findIndex(x=>x.key===key);
-  const show=state.ui.area==='all'&&groups.length>1&&idx>=0;
+  const nav=areaNavState(task),show=!!(nav&&nav.groups.length>1);
   el.areaNav.hidden=!show;
   if(!show)return;
-  const g=groups[idx];
-  el.currentArea.textContent=state.ui.subject==='all'?`${g.subject} · ${g.area}`:g.area;
+  const {groups,idx}=nav,g=groups[idx];
+  el.currentArea.textContent=nav.mode==='queue'&&state.ui.subject==='all'?`${g.subject} · ${g.area}`:g.area;
   el.prevArea.disabled=idx<=0;el.nextArea.disabled=idx>=groups.length-1;
   el.prevArea.title=idx>0?`이전 영역: ${groups[idx-1].area}`:'첫 영역';
   el.nextArea.title=idx<groups.length-1?`다음 영역: ${groups[idx+1].area}`:'마지막 영역';
 }
-function jumpArea(delta){
-  const groups=areaNavGroups(),key=currentAreaNavKey(currentTask()),idx=groups.findIndex(x=>x.key===key);
-  if(idx<0)return;
-  const target=groups[idx+delta];if(!target)return;
-  const viewport={x:window.scrollX||0,y:window.scrollY||0};
-  engine.goTo(target.index);revealed=false;render();
-  requestAnimationFrame(()=>window.scrollTo({left:viewport.x,top:viewport.y,behavior:'auto'}));
+function cancelPracticalAutoAdvance(){
+  if(practicalAdvanceTimer){clearTimeout(practicalAdvanceTimer);practicalAdvanceTimer=null;}
 }
-function setMode(m){state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));revealed=false;render();persist();}
+function currentAnswerFieldsAllCorrect(){
+  const fields=answerFields();
+  return !!fields.length&&fields.every(field=>{
+    const key=field.dataset.fieldKey||'';
+    const saved=key?CL.storage.getFieldGrade(state,key):null;
+    return field.classList.contains('correct')||saved?.status==='correct';
+  });
+}
+function schedulePracticalAutoAdvance(){
+  const task=currentTask();
+  if(!task||state.ui.stage!=='practical'||!['cloze','typing'].includes(state.ui.mode)||revealed||!currentAnswerFieldsAllCorrect())return false;
+  cancelPracticalAutoAdvance();
+  const taskId=engine.taskId(task),round=Number(state.round||1),st=engine.stats(),roundEnds=st.total>0&&st.cursor===st.total;
+  el.feedback.textContent=roundEnds?'전체 정답 · 다음 회차로 넘어갑니다…':'전체 정답 · 다음 항목으로 넘어갑니다…';
+  el.feedback.className='feedback good';
+  practicalAdvanceTimer=setTimeout(()=>{
+    practicalAdvanceTimer=null;
+    const now=currentTask();
+    if(!now||engine.taskId(now)!==taskId||Number(state.round||1)!==round||state.ui.stage!=='practical')return;
+    engine.next();revealed=false;render();
+    document.getElementById('studyCard')?.scrollIntoView({block:'start',behavior:'smooth'});
+  },PRACTICAL_AUTO_ADVANCE_DELAY_MS);
+  return true;
+}
+function jumpArea(delta){
+  cancelPracticalAutoAdvance();
+  const nav=areaNavState();if(!nav)return;
+  const target=nav.groups[nav.idx+delta];if(!target)return;
+  if(nav.mode==='queue'){
+    engine.goTo(target.index);revealed=false;render();
+  }else{
+    changeScope(()=>{state.ui.area=target.area;el.area.value=target.area;});
+  }
+  document.getElementById('studyCard')?.scrollIntoView({block:'start',behavior:'smooth'});
+}
+function setMode(m){cancelPracticalAutoAdvance();state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));updateMobileControlSummary();revealed=false;render();persist();}
 function currentTask(){return engine.current();}
 function isGroupTask(t){return t&&['content-system','content-standards','whole-group'].includes(t.type);}
 function isKITask(t){return t&&t.type==='ki';}
@@ -930,7 +835,7 @@ function taskContext(task){
 }
 function render(){
   const task=currentTask(),st=engine.stats();el.feedback.textContent='';el.feedback.className='feedback';
-  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.provenance)el.provenance.textContent='';return;}
+  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.areaNav)el.areaNav.hidden=true;if(el.provenance)el.provenance.textContent='';return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;renderAreaNavigator(task);
   if(task.type==='content-system')renderContentSystem(task);
   else if(task.type==='content-standards')renderContentStandards(task);
@@ -1139,9 +1044,9 @@ function gradeSetFields(fields,items,save=true){
     applyFieldGrade(f,r,r.expected,save);
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
     recordMatchedItem(items,r);
+    if(r.status==='correct')cancelFieldRetry(f);else scheduleFieldRetry(f,r.status,r,r.answerIndex!=null?items[r.answerIndex]:null);
     noteAnswerAttempt();
   });
-  scheduleSetRetryFailures(fields,items,grade);
   const failureStatus=grade.results.some(r=>['wrong','duplicate'].includes(r.status))?'wrong':'unknown';
   items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
   return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
@@ -1166,18 +1071,14 @@ function gradeFixedField(field,expected,save=true){
   const detail=CL.grading.classifyDetailed(field.value,expected);applyFieldGrade(field,detail,expected,save);
   const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
   if(field.dataset.lineId&&!recognitionCue)CL.storage.recordItem(state,field.dataset.lineId,detail.status);
-  if(detail.status!=='correct')scheduleFieldRetry(field,detail.status,{...detail,expected},null);
+  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,{...detail,expected},null);
   noteAnswerAttempt();
   return detail;
 }
 function gradeUnorderedField(field,task,save=true){
   const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
   applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
-  if(detail.status!=='correct'){
-    const norm=CL.grading.norm;
-    const item=detail.answerIndex!=null?items[detail.answerIndex]:items.find(x=>norm(x.text)===norm(detail.expected))||items[0];
-    if(item)scheduleFieldRetry(field,detail.status,{...detail,expected:item.text},item,{forceSingle:true,itemKey:item.lineId});
-  }
+  if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
   return detail;
 }
 function check(){
@@ -1197,7 +1098,7 @@ function check(){
     });
     const failureStatus=r.results.some(x=>['wrong','duplicate'].includes(x.status))?'wrong':'unknown';
     items.forEach((it,i)=>{if(!matched.has(i))CL.storage.recordItem(state,it.lineId,failureStatus);});
-    if(status!=='correct')scheduleSetRetryFailures(Array(r.results.length).fill(field),items,r);
+    if(status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,status,detail,null);
     noteAnswerAttempt();
     statuses.push(status);
   }else{
@@ -1214,13 +1115,11 @@ function check(){
   const parts=[counts.correct?`정확 ${counts.correct}`:'',counts.near?`확인 ${counts.near}`:'',counts.unknown?`모름 ${counts.unknown}`:'',(counts.wrong+counts.duplicate)?`오답 ${counts.wrong+counts.duplicate}`:''].filter(Boolean);
   el.feedback.textContent=status==='correct'?'전체 정답':parts.join(' · ');el.feedback.className='feedback '+statusClass(status);
   CL.storage.record(state,engine.taskId(task),status);persist();
-  promoteTailRetries({requireFullyGraded:true});
+  if(status==='correct')schedulePracticalAutoAdvance();
 }
 function reveal(){
-  const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;
-  taskLineIds(task).forEach(lineId=>CL.storage.ensureReviewItem(state,lineId,'near'));
-  persist();
-  let html='';
+  cancelPracticalAutoAdvance();
+  const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;let html='';
   if(isGroupTask(task))html=groupSections(task).map(s=>`<strong>${esc(s.family)}</strong><br>${s.items.map((x,i)=>`${i+1}. ${esc(x.text)}`).join('<br>')}`).join('<br><br>');
   else if(isKITask(task))html=task.group.items.map((x,i)=>`${i+1}. ${esc(x.text)}`).join('<br>');else html=esc(task.line.sourceText);
   el.content.insertAdjacentHTML('beforeend',`<div class="answer-box">${html}</div>`);
@@ -1246,7 +1145,7 @@ function renderProvenance(task){
 }
 function answerField(target){return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;}
 function answerFields(){return [...el.content.querySelectorAll('.inline-input,.group-input,.ki-input,#typingInput')].filter(x=>!x.disabled);}
-function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';return [taskId,state.ui.stage,state.ui.mode,index,`round:${Math.max(1,Number(state.round||1))}`].join('|');}
+function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';return [taskId,state.ui.stage,state.ui.mode,index].join('|');}
 
 function resizeAnswerField(field){
   if(!field)return;
@@ -1289,56 +1188,67 @@ function focusAnswerField(field,smooth=true){if(!field)return;try{field.focus({p
 function nextAnswerField(field){const fields=answerFields(),i=fields.indexOf(field);for(let n=i+1;n<fields.length;n++){const g=CL.storage.getFieldGrade(state,fields[n].dataset.fieldKey);if(!g||g.status!=='correct')return fields[n];}return fields[i+1]||null;}
 function clearFieldState(field){resetFieldVisual(field);if(field.dataset.fieldKey)CL.storage.clearFieldGrade(state,field.dataset.fieldKey);}
 
-function retryIdForField(field,itemKey=''){
+function retryIdForField(field){
   const task=currentTask(),section=field.dataset.section||'';
-  if(itemKey)return `${field.dataset.fieldKey||engine.taskId(task)}|ITEM:${itemKey}|round:${state.round||1}`;
   const unordered=field.classList.contains('ki-input')||(field.id==='typingInput'&&task?.type==='ki')||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
   if(unordered)return `${engine.taskId(task)}|SET:${section||'지식·이해'}|round:${state.round||1}`;
   return `${field.dataset.fieldKey||''}|round:${state.round||1}`;
 }
-function retryTargetForLine(line,fallback){
-  const source=String(line?.sourceText||'').trim(),full=String(fallback||'').trim();
-  if(!line||!source||!full)return {answer:full,contextText:source||full,sourceExpected:full};
-  const norm=CL.grading?.norm||((x)=>String(x||'').replace(/\s+/g,''));
-  if(line.family==='지식·이해'||norm(source)!==norm(full))return {answer:full,contextText:source,sourceExpected:full};
-  const presentation=(line.presentation?.units||[]).filter(u=>u?.text&&norm(u.text)!==norm(source)&&[...String(u.text).trim()].length>=2&&[...String(u.text).trim()].length<=22);
-  if(presentation.length){
-    const pick=presentation.slice().sort((a,b)=>[...String(b.text)].length-[...String(a.text)].length||Number(a.start||0)-Number(b.start||0))[0];
-    return {answer:String(pick.text).trim(),contextText:source,sourceExpected:full};
-  }
-  const candidates=(line.keywords||[]).filter(k=>{
-    if(!k||!k.text||k.active)return false;
-    const grades=Array.isArray(k.stage3RGrades)?k.stage3RGrades:[];
-    if(grades.includes('X'))return false;
-    if(!Number.isInteger(k.start)||!Number.isInteger(k.end)||k.end<=k.start)return false;
-    const t=String(k.text).trim();
-    return t&&norm(t)!==norm(source)&&[...t].length>=2&&[...t].length<=18;
-  }).sort((a,b)=>{
-    const ag=(a.stage3RGrades||[]).includes('S')?4:(a.stage3RGrades||[]).includes('A')?3:(a.stage3RGrades||[]).includes('B')?2:1;
-    const bg=(b.stage3RGrades||[]).includes('S')?4:(b.stage3RGrades||[]).includes('A')?3:(b.stage3RGrades||[]).includes('B')?2:1;
-    return bg-ag||[...String(b.text)].length-[...String(a.text)].length||a.start-b.start;
+function cancelFieldRetry(field){
+  if(!field?.dataset?.fieldKey)return;
+  state.fieldRetries=state.fieldRetries||{};
+  Object.entries(state.fieldRetries).forEach(([id,r])=>{
+    if(r?.kind==='set'&&Array.isArray(r.sourceFieldKeys)&&r.sourceFieldKeys.includes(field.dataset.fieldKey)){
+      const allCorrect=r.sourceFieldKeys.every(key=>CL.storage.getFieldGrade(state,key)?.status==='correct');
+      if(allCorrect)delete state.fieldRetries[id];
+    }else if(r?.fieldKey===field.dataset.fieldKey)delete state.fieldRetries[id];
   });
-  const pick=candidates[0];
-  return pick?{answer:String(pick.text).trim(),contextText:source,sourceExpected:full}:{answer:full,contextText:source,sourceExpected:full};
 }
-function scheduleFieldRetry(field,status,detail=null,matchedItem=null,options={}){
-  // Once a miss creates a retry record, later correction in the main study field does not erase it.
-  // Only grading the retry card itself as correct (or an explicit reset/OFF purge) resolves the card.
+function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   if(!state.ui.retry||!field?.dataset?.fieldKey||status==='correct')return;
   state.fieldRetries=state.fieldRetries||{};
   state.fieldRetryCounts=state.fieldRetryCounts||{};
-  const task=currentTask(),ctx=taskContext(task);
-  const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
-  const line=lineId?engine.lineMap.get(lineId):null;
-  const section=field.dataset.section||line?.family||ctx.family||'빈칸';
-  const originalExpected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
-  const target=options.forceSingle?retryTargetForLine(line,originalExpected):{answer:originalExpected,contextText:line?.sourceText||ctx.family||'',sourceExpected:originalExpected};
-  const itemKey=options.itemKey||matchedItem?.lineId||'';
-  const id=retryIdForField(field,itemKey);
+  const task=currentTask(),id=retryIdForField(field);
   const count=Number(state.fieldRetryCounts[id]||0);
+  if(count>=CL.config.maxRetriesPerTaskPerRound&&!state.fieldRetries[id])return;
   if(!state.fieldRetries[id])state.fieldRetryCounts[id]=count+1;
 
+  const ctx=taskContext(task),section=field.dataset.section||ctx.family||'빈칸';
+  const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
+  const line=lineId?engine.lineMap.get(lineId):null;
   const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
+  const expected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
+  const kiTyping=field.id==='typingInput'&&task?.type==='ki';
+  const unordered=field.classList.contains('ki-input')||kiTyping||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
+
+  if(unordered){
+    const fields=answerFields().filter(x=>{
+      if(kiTyping)return x===field;
+      if(field.classList.contains('ki-input'))return x.classList.contains('ki-input');
+      return x.classList.contains('group-input')&&!x.dataset.answer&&x.dataset.section===section;
+    });
+    const items=expectedItemsForField(field,task);
+    const existing=state.fieldRetries[id]||{};
+    state.fieldRetries[id]={
+      ...existing,
+      kind:'set',
+      sourceMode:kiTyping?'single-multiline':'multi-field',
+      fieldKey:field.dataset.fieldKey,
+      sourceFieldKeys:fields.map(x=>x.dataset.fieldKey),
+      fieldIndex:answerFields().indexOf(field),
+      lineIds:items.map(x=>x.lineId).filter(Boolean),
+      setAnswers:items.map(x=>x.text),
+      section,
+      contextText:`${ctx.area} 영역의 ${section} 내용 요소`,
+      taskId:engine.taskId(task),
+      round:Number(state.round||1),
+      dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay||3)),
+      status,
+      scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
+    };
+    return;
+  }
+
   const existing=state.fieldRetries[id]||{};
   state.fieldRetries[id]={
     ...existing,
@@ -1348,74 +1258,14 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null,options={}
     fieldIndex:answerFields().indexOf(field),
     lineId,
     section,
-    correctAnswer:target.answer,
-    sourceExpected:target.sourceExpected||originalExpected,
-    contextText:target.contextText||line?.sourceText||ctx.family||'',
+    correctAnswer:expected,
+    contextText:line?.sourceText||ctx.family||'',
     taskId:engine.taskId(task),
     round:Number(state.round||1),
     dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay||3)),
     status,
     scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
   };
-}
-function scheduleSetRetryFailures(fields,items,grade){
-  if(!state.ui.retry||!grade?.results?.length||!items?.length)return;
-  const matched=new Set(grade.results.filter(r=>['correct','near'].includes(r.status)&&r.answerIndex!=null).map(r=>r.answerIndex));
-  const missing=items.map((_,i)=>i).filter(i=>!matched.has(i));
-  let missCursor=0;
-  grade.results.forEach((r,i)=>{
-    if(r.status==='correct')return;
-    let answerIndex=(r.status==='near'&&r.answerIndex!=null)?r.answerIndex:null;
-    if(answerIndex==null||r.status==='duplicate')answerIndex=missing[missCursor++] ?? r.answerIndex ?? 0;
-    const item=items[answerIndex]||items[0];
-    if(!item)return;
-    const field=fields[i]||fields[0];
-    if(!field)return;
-    scheduleFieldRetry(field,r.status,{...r,expected:item.text},item,{forceSingle:true,itemKey:item.lineId||String(answerIndex)});
-  });
-  while(missCursor<missing.length){
-    const answerIndex=missing[missCursor++],item=items[answerIndex],field=fields[0];
-    if(!item||!field)continue;
-    scheduleFieldRetry(field,'unknown',{status:'unknown',reason:'empty',expected:item.text},item,{forceSingle:true,itemKey:item.lineId||String(answerIndex)});
-  }
-}
-function roundScopedFieldKey(key,round){
-  const value=String(key||'');if(!value)return value;
-  return /\|round:\d+$/.test(value)?value:`${value}|round:${Math.max(1,Number(round||1))}`;
-}
-function migrateRetryFieldKeys(){
-  let changed=false;
-  for(const r of Object.values(state.fieldRetries||{})){
-    if(!r)continue;
-    const next=roundScopedFieldKey(r.fieldKey,r.round);
-    if(next!==r.fieldKey){r.fieldKey=next;changed=true;}
-    if(Array.isArray(r.sourceFieldKeys)){
-      const keys=r.sourceFieldKeys.map(k=>roundScopedFieldKey(k,r.round));
-      if(keys.some((k,i)=>k!==r.sourceFieldKeys[i])){r.sourceFieldKeys=keys;changed=true;}
-    }
-  }
-  if(changed)CL.storage.save(state);
-}
-function migrateLegacySetRetries(){
-  state.fieldRetries=state.fieldRetries||{};
-  let changed=false;
-  for(const [id,r] of Object.entries({...state.fieldRetries})){
-    if(r?.kind!=='set'||!Array.isArray(r.setAnswers)||!r.setAnswers.length)continue;
-    delete state.fieldRetries[id];changed=true;
-    r.setAnswers.forEach((answer,i)=>{
-      const lineId=(r.lineIds||[])[i]||'';
-      const line=lineId?engine.lineMap.get(lineId):null;
-      const target=retryTargetForLine(line,answer);
-      const childId=`${id}|ITEM:${lineId||i}`;
-      state.fieldRetries[childId]={
-        kind:'single',fieldKey:(r.sourceFieldKeys||[])[i]||r.fieldKey||'',fieldIndex:r.fieldIndex||0,lineId,
-        section:line?.family||r.section||'해당 항목',correctAnswer:target.answer,sourceExpected:target.sourceExpected||answer,
-        contextText:target.contextText||line?.sourceText||String(answer),taskId:r.taskId,round:r.round,dueAt:r.dueAt,status:r.status,
-        scope:r.scope||{}
-      };
-    });
-  }
-  if(changed)CL.storage.save(state);
 }
 function dueRetryForCurrentTask(){
   state.fieldRetries=state.fieldRetries||{};
@@ -1431,6 +1281,11 @@ function activateDueFieldRetry(){
   const [id,retry]=due;
   const field=answerFields().find(x=>x.dataset.fieldKey===retry.fieldKey);
   if(!field)return false;
+  const saved=CL.storage.getFieldGrade(state,field.dataset.fieldKey);
+  if(saved?.status==='correct'){
+    delete state.fieldRetries[id];
+    return false;
+  }
   field.value='';
   CL.storage.setDraft(state,field.dataset.fieldKey,'');
   CL.storage.clearFieldGrade(state,field.dataset.fieldKey);
@@ -1480,16 +1335,8 @@ function gradeSingleAnswerField(field){
   }
 
   noteAnswerAttempt();
-  if(detail.status!=='correct'){
-    if(setGrade&&task.type==='ki')scheduleSetRetryFailures(Array(setGrade.results.length).fill(field),task.group.items,setGrade);
-    else if(matchedItem)scheduleFieldRetry(field,detail.status,{...detail,expected:matchedItem.text},matchedItem,{forceSingle:true,itemKey:matchedItem.lineId});
-    else{
-      const items=expectedItemsForField(field,task),norm=CL.grading.norm;
-      const item=items.find(x=>norm(x.text)===norm(detail.expected))||items[0]||null;
-      if(item)scheduleFieldRetry(field,detail.status,{...detail,expected:item.text},item,{forceSingle:true,itemKey:item.lineId});
-      else scheduleFieldRetry(field,detail.status,detail,matchedItem,{forceSingle:true});
-    }
-  }
+  if(detail.status==='correct')cancelFieldRetry(field);
+  else scheduleFieldRetry(field,detail.status,detail,matchedItem);
 
   // 개별 Enter 채점은 입력칸 근처 피드백만 사용한다.
   // 전역 feedback은 전체 '채점' 버튼 결과 요약용으로 남긴다.
@@ -1497,10 +1344,10 @@ function gradeSingleAnswerField(field){
   el.feedback.className='feedback';
   persist();
   renderRetryDock();
-  promoteTailRetries({requireFullyGraded:true});
   if(detail.status==='correct'){
     const next=nextAnswerField(field);
     if(next)setTimeout(()=>focusAnswerField(next,true),60);
+    else schedulePracticalAutoAdvance();
   }
   return detail;
 }
@@ -1534,17 +1381,11 @@ function clearFilledAnswers(){
 function resetReviewData(){
   const ok=window.confirm('복습 데이터를 초기화할까요?\n오늘의 복습 일정, 취약 통계, 지연 재인출 카드가 모두 삭제됩니다.\n빈칸 입력값과 학습 범위/바퀴는 유지됩니다.');
   if(!ok)return;
-  if(dailyReviewAdvanceTimer){clearTimeout(dailyReviewAdvanceTimer);dailyReviewAdvanceTimer=null;}
-  dailyReviewPending=null;activeDailyReviewId='';
-  activeRetryCardId='';retryGradePending.clear();retryResultTimers.forEach(t=>clearTimeout(t));retryResultTimers.clear();CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
+  activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
 }
-function changeScope(mutator,{subjectChanged=false}={}){saveAreaMemoNow();persist();mutator();if(subjectChanged)syncAreas(state.ui.area);syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();}
-function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;},{subjectChanged:kind==='subject'});}
-initSelectors();updateRetryToggleUI();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));migrateRetryFieldKeys();migrateLegacySetRetries();render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();
-if(recoveryNotice){
-  el.feedback.textContent='저장 데이터 손상을 감지해 안전한 새 상태로 복구했습니다. 손상된 원본은 브라우저 저장소에 백업했습니다.';
-  el.feedback.className='feedback near';
-}
+function changeScope(mutator){cancelPracticalAutoAdvance();saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();updateMobileControlSummary();}
+function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
+initSelectors();initMobileControlCollapse();updateRetryToggleUI();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
 el.prevArea?.addEventListener('click',()=>jumpArea(-1));
@@ -1565,8 +1406,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&areaMemoOpen&&!e.isComposing)setAreaMemoOpen(false);
 });
 el.retryDock.addEventListener('click',e=>{
-  const grade=e.target.closest('[data-retry-grade]');if(grade){const id=grade.dataset.retryGrade;retryGradePending.has(id)?acknowledgeRetryCard(id,false):gradeRetryCard(id);return;}
-  const later=e.target.closest('[data-retry-later]');if(later){const id=later.dataset.retryLater;retryGradePending.has(id)?acknowledgeRetryCard(id,true):deferRetryCard(id);return;}
+  const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
+  const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
   const collapse=e.target.closest('[data-retry-collapse]');if(collapse){collapseRetryCard(collapse.dataset.retryCollapse);return;}
   const open=e.target.closest('[data-retry-open]');if(open){openRetryCard(open.dataset.retryOpen);}
 });
@@ -1576,12 +1417,11 @@ el.retryDock.addEventListener('keydown',e=>{
   const panel=input.closest('[data-retry-panel]');if(!panel)return;
   const fields=[...panel.querySelectorAll('.retry-card-input')],i=fields.indexOf(input);
   if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}
-  e.preventDefault();const id=panel.dataset.retryPanel;retryGradePending.has(id)?acknowledgeRetryCard(id,false):gradeRetryCard(id);
+  e.preventDefault();gradeRetryCard(panel.dataset.retryPanel);
 });
 document.addEventListener('pointerdown',e=>{
   if(!activeRetryCardId||!el.retryDock)return;
   if(el.retryDock.contains(e.target))return;
-  if(retryGradePending.has(activeRetryCardId))return;
   activeRetryCardId='';
   renderRetryDock();
 },{capture:true});
@@ -1593,7 +1433,7 @@ document.addEventListener('pointerdown',e=>{
 el.reviewRetryList.addEventListener('click',e=>{const row=e.target.closest('[data-retry-id]');if(row){showMainTab('study');openRetryCard(row.dataset.retryId);}});
 el.reviewWeakList.addEventListener('click',e=>{const row=e.target.closest('[data-line-id]');if(row)openWeakItem(row.dataset.lineId);});
 el.dailyReviewList.addEventListener('click',e=>{const b=e.target.closest('[data-daily-grade]');if(b)gradeDailyReview(b.dataset.dailyGrade);});
-el.dailyReviewList.addEventListener('keydown',e=>{const f=e.target.closest('.daily-review-input');if(!f||e.isComposing||e.keyCode===229||e.key!=='Enter')return;const card=f.closest('[data-daily-review]');if(!card)return;e.preventDefault();gradeDailyReview(card.dataset.dailyReview);});
+el.dailyReviewList.addEventListener('keydown',e=>{const f=e.target.closest('.daily-review-input');if(!f||e.isComposing||e.keyCode===229||e.key!=='Enter')return;const card=f.closest('[data-daily-review]');if(!card)return;const fields=[...card.querySelectorAll('.daily-review-input')],i=fields.indexOf(f);if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}e.preventDefault();gradeDailyReview(card.dataset.dailyReview);});
 el.clearAnswers.onclick=clearFilledAnswers;
 el.resetReview.onclick=resetReviewData;
 el.subject.onchange=()=>filterChange('subject');
@@ -1604,7 +1444,6 @@ el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
   state.ui.retry=el.retry.checked;
   if(!state.ui.retry){
     activeRetryCardId='';
-    retryGradePending.clear();retryResultTimers.forEach(t=>clearTimeout(t));retryResultTimers.clear();
     state.fieldRetries={};
     state.fieldRetryCounts={};
   }
@@ -1615,31 +1454,16 @@ el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
 };
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 el.check.onclick=check;el.reveal.onclick=reveal;
-el.next.onclick=()=>{
-  if(promoteTailRetries({announce:true}))return;
-  engine.next();revealed=false;render();
-};
-el.prev.onclick=()=>{engine.prev();revealed=false;render();};
-el.round.onclick=()=>{engine.nextRound();revealed=false;render();};
+el.next.onclick=()=>{cancelPracticalAutoAdvance();engine.next();revealed=false;render();};
+el.prev.onclick=()=>{cancelPracticalAutoAdvance();engine.prev();revealed=false;render();};
+el.round.onclick=()=>{cancelPracticalAutoAdvance();engine.nextRound();revealed=false;render();};
 el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
 window.addEventListener('pagehide',saveAreaMemoNow);
-let staleReloadScheduled=false;
-function reloadForExternalState(){
-  if(staleReloadScheduled)return;
-  staleReloadScheduled=true;
-  setTimeout(()=>location.reload(),40);
-}
-window.addEventListener('storage',e=>{if(e.key===CL.config.storageKey)reloadForExternalState();});
-window.addEventListener('curriloop:stale-state',reloadForExternalState);
 if(location.protocol!=='file:')window.addEventListener('load',async()=>{
   try{
     if('serviceWorker' in navigator){
       const regs=await navigator.serviceWorker.getRegistrations();
-      const legacyScript=new URL('service-worker.js',location.href).href;
-      await Promise.all(regs.filter(r=>{
-        const worker=r.active||r.waiting||r.installing;
-        return worker?.scriptURL===legacyScript;
-      }).map(r=>r.unregister()));
+      await Promise.all(regs.map(r=>r.unregister()));
     }
     if('caches' in window){
       const keys=await caches.keys();

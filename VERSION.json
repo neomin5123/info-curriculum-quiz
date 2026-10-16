@@ -1,21 +1,20 @@
 {
-  "version": "9.0.54-study-rc.1",
-  "dataVersion": "v9.0.53-final-qa",
+  "version": "9.0.41-study-rc.1",
+  "dataVersion": "v9.0.38-granularity-reaudit",
   "status": "STUDY_RC",
   "scope": [
     "middle-info",
-    "high-info",
-    "ai-basics"
+    "high-info"
   ],
-  "officialLines": 374,
+  "officialLines": 270,
   "uxFeatures": [
     "전체 영역",
     "내용체계 전체",
     "지식·이해 영역별 회상",
     "지식·이해 전체 영역 통회상",
-    "오늘의 복습 단일 카드",
-    "재인출·장기복습 공통 문맥 모델",
-    "인공지능 기초 4개 영역"
+    "모바일 상단 설정 접기",
+    "실전 조합 정답 후 자연 전환",
+    "하단 이전/다음 영역 이동"
   ],
-  "freezeGate": "AI_BASICS_STAGE_3_4"
+  "freezeGate": "PRACTICAL_AUTO_FLOW_AREA_NAV_QA"
 }

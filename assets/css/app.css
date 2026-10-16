@@ -181,10 +181,6 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .retry-card-input.wrong{border-color:var(--bad);background:var(--bad-bg)}
 .retry-card-grade,.retry-card-later{padding:9px 11px;border-radius:8px}
 .retry-card-grade.primary{background:var(--brand);border-color:var(--brand);color:#fff}
-.practical-retry-answer{margin-top:8px;color:var(--ink);font-size:12px;font-weight:800;line-height:1.45}
-.practical-retry-answer.near{color:var(--near)}
-.practical-retry-answer.unknown{color:var(--unknown)}
-.practical-retry-answer.bad{color:var(--bad)}
 .practical-retry-feedback{min-height:20px;margin-top:7px;color:var(--muted);font-size:12px;line-height:1.45}
 .practical-retry-feedback.good{color:var(--good);font-weight:750}
 .practical-retry-feedback.near{color:var(--near);font-weight:750}
@@ -1028,49 +1024,145 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .page-jump-dock button{padding:5px 9px;border:0;border-radius:999px;background:transparent;color:#53645a;font-size:10.5px}.page-jump-dock button:hover{background:#eef4f0;color:#2e5742}
 @media(max-width:760px){.area-navigator strong{max-width:180px;font-size:10.5px}.area-navigator button{width:25px;height:25px}.trace-copy-stack,.trace-answer-textarea,.standard-typing-row .trace-copy-stack,.standard-typing-row .trace-answer-textarea{max-width:100%!important}.page-jump-dock{bottom:8px}.page-jump-dock button{padding:5px 7px;font-size:10px}}
 
-
-/* v9.0.43 — area navigation beside cloze mode + compact retry toggle */
-.mode-study-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
-.mode-study-group .area-navigator{flex:0 1 auto}
-.mode-study-group .area-navigator strong{max-width:220px}
+/* v9.0.40 — mobile collapsible study controls */
+.mobile-control-toggle{display:none}
 @media(max-width:760px){
-  .mode-study-group{width:100%;align-items:center}
-  .mode-study-group .area-navigator strong{max-width:160px}
-}
-
-
-/* v9.0.45 — fixed-width area navigator for repeat clicking */
-.mode-study-group .area-navigator{
-  width:212px;
-  min-width:212px;
-  max-width:212px;
-  box-sizing:border-box;
-  justify-content:space-between;
-  flex:0 0 212px;
-}
-.mode-study-group .area-navigator strong{
-  flex:1 1 auto;
-  min-width:0;
-  max-width:none;
-  text-align:center;
-}
-@media(max-width:760px){
-  .mode-study-group .area-navigator{
-    width:192px;
-    min-width:192px;
-    max-width:192px;
-    flex-basis:192px;
+  #studyPage > .control-card{
+    overflow:hidden;
+    padding:0!important;
+    transition:box-shadow .16s ease,border-radius .16s ease;
   }
-  .mode-study-group .area-navigator strong{max-width:none}
+  .mobile-control-toggle{
+    width:100%;
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 14px;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    text-align:left;
+  }
+  .mobile-control-toggle:hover,
+  .mobile-control-toggle:focus-visible{
+    border:0;
+    background:#f7faf8;
+    outline:2px solid rgba(49,94,72,.18);
+    outline-offset:-2px;
+  }
+  .mobile-control-toggle-copy{
+    min-width:0;
+    display:grid;
+    gap:2px;
+  }
+  .mobile-control-toggle-copy strong{
+    color:#2c4638;
+    font-size:14px;
+    line-height:1.2;
+  }
+  .mobile-control-toggle-copy small{
+    display:-webkit-box;
+    min-width:0;
+    overflow:hidden;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.35;
+    font-weight:650;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+  }
+  .mobile-control-chevron{
+    flex:0 0 auto;
+    width:28px;
+    height:28px;
+    display:grid;
+    place-items:center;
+    border:1px solid #d7e1da;
+    border-radius:999px;
+    background:#fff;
+    color:var(--brand);
+    font-size:16px;
+    line-height:1;
+    transition:transform .16s ease;
+  }
+  .control-card-body{
+    padding:2px 16px 16px;
+    border-top:1px solid #edf2ee;
+  }
+  #studyPage > .control-card.mobile-controls-collapsed .control-card-body{
+    display:none;
+  }
+  #studyPage > .control-card.mobile-controls-collapsed .mobile-control-chevron{
+    transform:rotate(180deg);
+  }
+  #studyPage > .control-card.mobile-controls-collapsed{
+    box-shadow:0 5px 16px rgba(26,48,35,.10);
+  }
+}
+@media(min-width:761px){
+  #studyPage > .control-card .control-card-body{display:block!important}
 }
 
-/* v9.0.51 — unified recall presentation */
-.daily-review-card.recall-card{padding:15px 16px}
-.daily-review-card.recall-card .daily-review-card-head{margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
-.daily-review-card.recall-card .daily-review-card-head small{font-weight:750;color:var(--ink)}
-.daily-review-card.recall-card .daily-review-prompt{margin-bottom:10px}
-.daily-review-answer[hidden]{display:none}
+/* v9.0.41 — practical auto-flow + bottom area navigation */
+.area-navigator.area-navigator-bottom{
+  margin-top:14px;
+  padding:14px 0 0;
+  border:0;
+  border-top:1px solid #edf1ee;
+  border-radius:0;
+  background:transparent;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+}
+.area-navigator.area-navigator-bottom[hidden]{display:none!important}
+.area-navigator.area-navigator-bottom button{
+  width:auto;
+  height:auto;
+  min-height:38px;
+  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.2;
+  color:#3f5e4d;
+  background:#fff;
+}
+.area-navigator.area-navigator-bottom #prevAreaButton{justify-self:start}
+.area-navigator.area-navigator-bottom #nextAreaButton{justify-self:end}
+.area-navigator.area-navigator-bottom strong{
+  max-width:320px;
+  padding:0 6px;
+  text-align:center;
+  color:#355f4b;
+  font-size:12px;
+  font-weight:800;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
 @media(max-width:760px){
-  .daily-review-card.recall-card{padding:13px 12px}
-  .daily-review-card.recall-card .daily-review-card-head{gap:6px}
+  .area-navigator.area-navigator-bottom{
+    grid-template-columns:1fr auto 1fr;
+    gap:7px;
+    margin-top:12px;
+    padding-top:12px;
+  }
+  .area-navigator.area-navigator-bottom button{
+    width:100%;
+    min-width:0;
+    min-height:40px;
+    padding:8px 9px;
+    font-size:11px;
+  }
+  .area-navigator.area-navigator-bottom strong{
+    max-width:112px;
+    padding:0 2px;
+    font-size:10.5px;
+  }
 }
