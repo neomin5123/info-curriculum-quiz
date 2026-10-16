@@ -1166,3 +1166,107 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
     font-size:10.5px;
   }
 }
+
+
+/* v9.0.42 — one-line bottom controls: task nav left, area nav center, reset tools right */
+.study-footer-controls{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  grid-template-areas:"task area tools";
+  align-items:center;
+  gap:12px;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #edf1ee;
+}
+.task-nav-group{
+  grid-area:task;
+  justify-self:start;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.footer-secondary-actions{
+  grid-area:tools;
+  justify-self:end!important;
+  display:flex!important;
+  align-items:center!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  gap:0!important;
+}
+.footer-secondary-actions .secondary-button-group{
+  flex-wrap:nowrap!important;
+  justify-content:flex-end!important;
+  gap:8px;
+}
+.study-footer-controls .area-navigator.area-navigator-bottom{
+  grid-area:area;
+  justify-self:center;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  width:auto;
+  min-width:0;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+}
+.study-footer-controls .area-navigator.area-navigator-bottom[hidden]{display:none!important}
+.study-footer-controls .area-navigator.area-navigator-bottom button{
+  width:auto;
+  min-width:0;
+  min-height:34px;
+  height:34px;
+  padding:6px 10px;
+  font-size:11.5px;
+  white-space:nowrap;
+}
+.study-footer-controls .area-navigator.area-navigator-bottom #prevAreaButton,
+.study-footer-controls .area-navigator.area-navigator-bottom #nextAreaButton{justify-self:auto}
+.study-footer-controls .area-navigator.area-navigator-bottom strong{
+  max-width:190px;
+  padding:0 5px;
+  font-size:11.5px;
+}
+.study-footer-controls .task-nav-group button{min-height:34px;padding:6px 12px}
+.study-footer-controls .text-button{padding:6px 4px;white-space:nowrap}
+
+@media(max-width:760px){
+  .study-footer-controls{
+    grid-template-columns:auto minmax(0,1fr) auto;
+    gap:7px;
+    margin-top:8px;
+    padding-top:8px;
+  }
+  .task-nav-group{gap:5px}
+  .study-footer-controls .task-nav-group button{min-height:32px;padding:5px 9px;font-size:11px}
+  .footer-secondary-actions .secondary-button-group{gap:4px}
+  .study-footer-controls .text-button{padding:5px 2px;font-size:10.5px}
+  .study-footer-controls .area-navigator.area-navigator-bottom{gap:4px}
+  .study-footer-controls .area-navigator.area-navigator-bottom button{
+    width:30px;
+    min-width:30px;
+    height:30px;
+    min-height:30px;
+    padding:0;
+    font-size:0;
+  }
+  .study-footer-controls .area-navigator.area-navigator-bottom #prevAreaButton::after{content:"←";font-size:15px}
+  .study-footer-controls .area-navigator.area-navigator-bottom #nextAreaButton::after{content:"→";font-size:15px}
+  .study-footer-controls .area-navigator.area-navigator-bottom strong{max-width:105px;padding:0 2px;font-size:10px}
+}
+@media(max-width:460px){
+  .study-footer-controls{
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "area area"
+      "task tools";
+    row-gap:6px;
+  }
+  .study-footer-controls .area-navigator.area-navigator-bottom{justify-self:center}
+  .footer-secondary-actions{justify-self:end!important}
+}

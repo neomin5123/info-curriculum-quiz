@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
   <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.41 Study RC</title>
+  <title>CurriLoop v9.0.42 Study RC</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.41-rc1">
+  <link rel="stylesheet" href="assets/css/app.css?v=9.0.42-rc1">
 </head>
-<body data-build="9.0.41-study-rc.1">
+<body data-build="9.0.42-study-rc.1">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.41 Study RC</div>
+      <div class="version">v9.0.42 Study RC</div>
     </div>
     <label class="zoom-control">화면 배율
       <select id="zoomSelect" aria-label="화면 배율">
@@ -70,19 +70,23 @@
       <div id="studyContent"></div>
       <div id="feedback" class="feedback" aria-live="polite"></div>
       <div class="study-actions">
-        <button id="prevButton">이전</button>
-        <button id="nextButton">다음</button>
         <button id="checkButton" class="primary">채점</button>
         <button id="revealButton">정답 보기</button>
       </div>
-      <div class="secondary-actions">
-        <div class="secondary-button-group"><button id="clearAnswersButton" class="text-button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button><button id="nextRoundButton" class="text-button">처음부터</button></div>
+      <div class="study-footer-controls" aria-label="학습 이동 및 초기화">
+        <div class="task-nav-group">
+          <button id="prevButton">이전</button>
+          <button id="nextButton">다음</button>
+        </div>
+        <div class="secondary-actions footer-secondary-actions">
+          <div class="secondary-button-group"><button id="clearAnswersButton" class="text-button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button><button id="nextRoundButton" class="text-button">처음부터</button></div>
+        </div>
+        <nav id="areaNavigator" class="area-navigator area-navigator-bottom" hidden aria-label="영역 이동">
+          <button id="prevAreaButton" type="button" aria-label="이전 영역">← 이전 영역</button>
+          <strong id="currentAreaLabel"></strong>
+          <button id="nextAreaButton" type="button" aria-label="다음 영역">다음 영역 →</button>
+        </nav>
       </div>
-      <nav id="areaNavigator" class="area-navigator area-navigator-bottom" hidden aria-label="영역 이동">
-        <button id="prevAreaButton" type="button" aria-label="이전 영역">← 이전 영역</button>
-        <strong id="currentAreaLabel"></strong>
-        <button id="nextAreaButton" type="button" aria-label="다음 영역">다음 영역 →</button>
-      </nav>
     </section>
 
     <footer class="provenance-footer" id="provenanceFooter" aria-label="현재 학습 출처"></footer>
@@ -148,11 +152,11 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.41-rc1"></script>
-  <script src="js/core/config.js?v=9.0.41-rc1"></script>
-  <script src="js/core/storage.js?v=9.0.41-rc1"></script>
-  <script src="js/core/grading.js?v=9.0.41-rc1"></script>
-  <script src="js/core/study-engine.js?v=9.0.41-rc1"></script>
-  <script src="js/app.js?v=9.0.41-rc1"></script>
+  <script src="data/generated/study-data.js?v=9.0.42-rc1"></script>
+  <script src="js/core/config.js?v=9.0.42-rc1"></script>
+  <script src="js/core/storage.js?v=9.0.42-rc1"></script>
+  <script src="js/core/grading.js?v=9.0.42-rc1"></script>
+  <script src="js/core/study-engine.js?v=9.0.42-rc1"></script>
+  <script src="js/app.js?v=9.0.42-rc1"></script>
 </body>
 </html>

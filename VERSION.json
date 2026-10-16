@@ -1,5 +1,5 @@
 {
-  "version": "9.0.41-study-rc.1",
+  "version": "9.0.42-study-rc.1",
   "dataVersion": "v9.0.38-granularity-reaudit",
   "status": "STUDY_RC",
   "scope": [
@@ -14,7 +14,8 @@
     "지식·이해 전체 영역 통회상",
     "모바일 상단 설정 접기",
     "실전 조합 정답 후 자연 전환",
-    "하단 이전/다음 영역 이동"
+    "하단 이전/다음 영역 이동",
+    "하단 조작 한 줄 정렬"
   ],
-  "freezeGate": "PRACTICAL_AUTO_FLOW_AREA_NAV_QA"
+  "freezeGate": "BOTTOM_CONTROLS_ONE_LINE_QA"
 }
