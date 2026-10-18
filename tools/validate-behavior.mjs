@@ -17,7 +17,7 @@ assert(e.queue.length===1&&e.queue[0].type==='content-system'&&e.queue[0].focus.
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','whole'));e.rebuild();
 assert(e.queue.length===1&&e.queue[0].type==='content-system'&&e.queue[0].focus.kind==='whole','whole content-system must be one full-table task');
 const sampleLine=e.lineMap.get('MI-01-CS-KI-01');
-assert(e.recallUnitsForLine(sampleLine,'whole').length===3,'whole recall should use the three semantic presentation units on the sample core idea');
+assert(e.recallUnitsForLine(sampleLine,'whole').length===3,'whole recall should blank every presentation unit on the sample core idea');
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','single'));e.rebuild();
 assert(e.recallUnitsForLine(e.lineMap.get('MI-01-CS-KI-01'),'single').length===1,'single recall should blank one presentation unit per non-KI line');
 e=make(data,state('middle-info','컴퓨팅 시스템','content-system','practical'));e.rebuild();
@@ -31,6 +31,6 @@ e=make(data,state('middle-info','컴퓨팅 시스템','explain-consider','whole'
 e=make(data,state('middle-info','all','character-goals','whole'));e.rebuild();assert(e.queue.length===1&&e.queue[0].group.area==='과목 공통','character+goals must be common');
 e=make(data,state('middle-info','all','teaching-eval','whole'));e.rebuild();assert(e.queue.length===1&&e.queue[0].group.sections.map(x=>x.family).join('|')==='교수·학습|평가','teaching+eval mismatch');
 e=make(data,state('middle-info','all','content-system','whole'));e.rebuild();assert(e.queue.length===5,'all-area content system should be 5 tasks');
-e=make(data,state('all','all','content-system','whole'));e.rebuild();assert(e.queue.length===14,'all-subject all-area content system should be 14 tasks');
+e=make(data,state('all','all','content-system','whole'));e.rebuild();assert(e.queue.length===10,'all-subject all-area content system should be 10 tasks');
 assert(e.familyGroupOrder.length===6,'family group count must be 6');assert(e.groupAvailable('standards','middle-info','컴퓨팅 시스템'),'standalone 성취기준 option must be available for a specific area');assert(e.groupAvailable('content-standards','middle-info','컴퓨팅 시스템'),'내용체계 + 성취기준 option must be available for a specific area');assert(!e.groupAvailable('character-goals','middle-info','컴퓨팅 시스템'),'common group must not appear for specific area');assert(e.groupAvailable('character-goals','middle-info','all'),'common group must appear for all area');assert(e.groupAvailable('content-system','middle-info','컴퓨팅 시스템'),'content group missing for specific area');
-console.log(JSON.stringify({status:'PASS',familyGroups:e.familyGroupOrder,specificAreaContentTasksPerStage:1,allAreaContentTasks:5,allSubjectContentTasks:14},null,2));
+console.log(JSON.stringify({status:'PASS',familyGroups:e.familyGroupOrder,specificAreaContentTasksPerStage:1,allAreaContentTasks:5,allSubjectContentTasks:10},null,2));
