@@ -1,2 +1,2 @@
-CurriLoop v9.0.42 Study RC
-BUILD 9.0.42-study-rc.1
+CurriLoop
+BUILD 2026.10.18-01

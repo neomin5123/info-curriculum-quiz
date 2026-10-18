@@ -1,0 +1,7 @@
+CurriLoop Build 2026.10.18-01 — old public version artifacts
+
+If you deploy by manually overwriting files on an existing v9.x site, delete these obsolete files from the server:
+- VERSION.json
+- docs/VERSIONING.md (if the docs directory is deployed)
+
+Leaving VERSION.json on the server does not affect runtime behavior because the app no longer references it, but deleting it completes the public-version-number removal.

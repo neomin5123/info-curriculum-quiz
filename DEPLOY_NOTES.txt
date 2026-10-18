@@ -1,0 +1,5 @@
+CurriLoop Build 2026.10.18-01
+
+Upload the files in this archive over the same paths on the existing site.
+This delta adds the Past Exams tab and removes public version display.
+Existing learning data remains compatible via curriloop:v9:study-state.

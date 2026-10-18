@@ -4,17 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#315e48">
-  <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상 학습">
-  <title>CurriLoop v9.0.42 Study RC</title>
+  <meta name="description" content="CurriLoop — 2022 개정 정보과 교육과정 회상·복습 및 정보·컴퓨터 기출 학습">
+  <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?v=9.0.42-rc1">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261018-01">
 </head>
-<body data-build="9.0.42-study-rc.1">
+<body data-build="2026.10.18-01">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
-      <div class="version">v9.0.42 Study RC</div>
     </div>
     <label class="zoom-control">화면 배율
       <select id="zoomSelect" aria-label="화면 배율">
@@ -27,6 +26,7 @@
     <nav class="main-tabs" role="tablist" aria-label="CurriLoop 주요 화면">
       <button id="studyMainTab" class="main-tab active" role="tab" aria-selected="true" aria-controls="studyPage">학습</button>
       <button id="reviewMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="reviewPage">복습</button>
+      <button id="examMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="examPage">기출문제</button>
     </nav>
 
     <section id="studyPage" role="tabpanel" aria-labelledby="studyMainTab">
@@ -117,6 +117,34 @@
         </section>
       </section>
     </section>
+
+    <section id="examPage" class="exam-page hidden" role="tabpanel" aria-labelledby="examMainTab">
+      <section class="exam-card">
+        <div class="exam-head">
+          <div>
+            <span class="review-kicker">기출문제</span>
+            <h2>정보·컴퓨터 전공 기출</h2>
+            <p id="examCoverage" class="exam-coverage"></p>
+          </div>
+          <div id="examSummary" class="exam-summary"></div>
+        </div>
+        <div class="exam-filters" aria-label="기출문제 필터">
+          <label>연도<select id="examYearSelect"></select></label>
+          <label>시험<select id="examPartSelect"><option value="all">전공 A·B 전체</option><option value="A">전공 A</option><option value="B">전공 B</option></select></label>
+          <label>과목<select id="examSubjectSelect"></select></label>
+          <label>주제<select id="examTopicSelect"></select></label>
+          <label>풀이<select id="examSolutionSelect"><option value="all">전체</option><option value="solved">풀이 있음</option><option value="pending">풀이 준비중</option></select></label>
+          <label class="exam-search-label">검색<input id="examSearchInput" type="search" placeholder="문제·태그 검색" autocomplete="off" spellcheck="false"></label>
+        </div>
+        <div class="exam-layout">
+          <aside class="exam-results-pane" aria-label="기출문제 목록">
+            <div class="exam-results-head"><strong id="examResultCount">0문항</strong><button id="examResetFilters" class="text-button" type="button">필터 초기화</button></div>
+            <div id="examQuestionList" class="exam-question-list"></div>
+          </aside>
+          <article id="examDetail" class="exam-detail" aria-live="polite"></article>
+        </div>
+      </section>
+    </section>
   </main>
 
 
@@ -152,11 +180,12 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?v=9.0.42-rc1"></script>
-  <script src="js/core/config.js?v=9.0.42-rc1"></script>
-  <script src="js/core/storage.js?v=9.0.42-rc1"></script>
-  <script src="js/core/grading.js?v=9.0.42-rc1"></script>
-  <script src="js/core/study-engine.js?v=9.0.42-rc1"></script>
-  <script src="js/app.js?v=9.0.42-rc1"></script>
+  <script src="data/generated/study-data.js?b=20261018-01"></script>
+  <script src="data/generated/exam-data.js?b=20261018-01"></script>
+  <script src="js/core/config.js?b=20261018-01"></script>
+  <script src="js/core/storage.js?b=20261018-01"></script>
+  <script src="js/core/grading.js?b=20261018-01"></script>
+  <script src="js/core/study-engine.js?b=20261018-01"></script>
+  <script src="js/app.js?b=20261018-01"></script>
 </body>
 </html>
