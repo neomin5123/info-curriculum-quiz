@@ -1,142 +1,82 @@
-## 9.0.54-study-rc.1
-- Aggressive red-team hardening release.
-- Short-horizon exam review: 1/3/7/10/14 days, capped at 14 days; old 21/30-day due dates are migrated inside the cap.
-- Multi-unit review now advances unit-by-unit and only raises a line stage after every unit at that stage is passed; failed units stay on the same cursor.
-- Round-scoped field keys prevent prior-round draft/grade contamination.
-- Retry cards no longer disappear after repeated failure; individual Enter grading cannot recreate set retries.
-- Action-verb conflicts are graded as wrong before typo tolerance.
-- Fixed grade-set underfill status, daily-review reset race, delay-count leakage, retry-counter pruning, scoped legacy SW cleanup, reveal scheduling, stale multi-tab writes, and corrupt-state backup.
-- Added deployment security headers.
-- Curriculum data unchanged: 374 official lines / 557 presentation units.
+## 2026-10-18 · Build 2026.10.18-03 — 기출 atlas 배포 구조
 
-## 9.0.53-study-rc.1
-- Stage 4 re-audit: AI Basics source structure and recall behavior rechecked.
-- Stage 5 final QA: official curriculum text cross-check and packaging.
-- Fixed one truncated recall target in AI-TE-MET-04: `활용에 대한 경험은 높` → `활용에 대한 경험은 높일 수 있도록`.
-- No changes to legacy middle/high source text or study-state semantics.
+- 기출 원문 337개 개별 WebP를 연도별 atlas WebP 12개로 통합했다.
+- 문항 데이터는 atlas 좌표를 저장하고 UI는 SVG viewBox로 해당 문항 영역만 잘라 표시한다.
+- 문항 원문 가독성과 검색용 추출 텍스트 구조는 유지한다.
+- 기출 데이터 schema를 3으로 올리고 atlas 좌표/경계/파일 수 검증을 추가했다.
+- 배포 변경 파일 수를 100개 미만으로 낮출 수 있는 구조로 전환했다.
+- 교육과정 270 lines, presentation 370 units, SRS/메모/오답 상태는 변경하지 않았다.
 
-## 9.0.52-study-rc.1
+## 2026-10-18 · Build 2026.10.18-02 — 2014 복원 + PDF 원문 이미지
 
-- 2022 개정 `인공지능 기초` 공식 교육과정 104개 line을 추가했습니다.
-  - 성격 2, 목표 5
-  - 핵심 아이디어 8, 지식·이해 11, 과정·기능 14, 가치·태도 9
-  - 성취기준 19, 해설 10, 적용 시 고려사항 10
-  - 교수·학습 9, 평가 7
-- `지식·이해`는 영역별 전체 항목 회상, `과정·기능`은 항목 전체 회상으로 구성했습니다.
-- 성취기준은 번호를 유지하고 핵심 명사·관계·행동동사를 회상하도록 구성했습니다.
-- 성취기준 해설의 전문용어·열거형(지도/비지도/강화학습, 분류/예측/군집, 컴퓨터 비전/음성 인식/자연어처리 등)을 강한 회상 대상으로 반영했습니다.
-- 과목별 영역 선택기를 동적으로 분리해 인공지능 기초 선택 시 4개 영역만 표시합니다.
-- 인공지능 기초용 영역 메모 기본 개요를 추가했습니다.
-- 기존 중·고 정보 270개 line의 source/policy hash를 고정 검증하여 기존 데이터가 변하지 않았음을 확인합니다.
+- 2014학년도 전공A 14문항·전공B 6문항을 추가하여 기출 범위를 2014–2026학년도로 확장. 2015학년도는 사용자 제공 PDF에 수록되어 있지 않아 미수록 상태를 명시.
+- 초기 Build 01에서 2014를 제외한 원인은 텍스트 추출본의 공백/인코딩 품질을 과도하게 보수적으로 판단했기 때문이며, PDF 렌더 원문은 판독 가능함을 재확인하여 복원.
+- 269문항 전체에 PDF 문항 단위 WebP 원문 이미지를 생성해 문제 상세의 기본 표시로 사용. 추출 텍스트는 검색·접근성 보조용으로 접어서 유지.
+- 과목 표시/필터 순서를 교교론 → 자구알고 → 논회컴구 → 디비 → 데통네트웤 → 운체 → 인지머러 → 프로그래밍 → 소공 → 이산수학으로 고정.
+- 정보보안/암호 문항은 현재 10과목 체계에 맞춰 데통네트웤으로, 소프트웨어 테스트/공학 문항은 소공으로 분류.
+- 제공 PDF는 문제지만 포함하고 공식 정답·해설이 없어, 검증된 6문항 외에는 `풀이 미수록`으로 명확히 표기.
 
-## 9.0.51-study-rc.1
+## 2026-10-18 · Build 2026.10.18-01 — Versionless + Past Exams Browser
 
-- 오답 재인출과 `오늘의 복습`이 동일한 `recallPromptModel`을 사용하도록 출력 문맥 생성을 통합했습니다.
-- 오늘의 복습은 여러 카드를 한꺼번에 펼치지 않고 **한 장씩** 표시합니다.
-- 장기 복습 카드에도 실제 `영역 · 범주 · n/m` 문맥을 표시하여 어느 항목인지 식별할 수 있습니다.
-- `지식·이해` 장기 복습은 영역 전체를 한 번에 다시 쓰게 하지 않고 예정된 공식 내용 요소를 **항목별**로 복습합니다.
-- 장기 복습 정답은 잠시 표시 후 자동 진행하고, 오답/유사/모름은 정답을 확인한 뒤 `Enter`로 넘어갑니다.
-- SRS 일정, 오답 재인출 일정, 일반 학습 진도는 서로 독립된 상태로 유지합니다.
-- 교육과정 데이터는 변경하지 않았습니다(270 lines / 370 presentation units).
+- 사용자 화면의 SemVer/Study RC 버전 표기를 제거하고 제품명을 `CurriLoop`로 단일화.
+- 내부 배포 추적은 날짜 기반 Build ID(`2026.10.18-01`)로 전환.
+- 과거 v9.x CHANGELOG는 개발 역사로 보존.
+- `기출문제` 탭 추가: 연도, 전공 A/B, 과목, 주제, 풀이 상태, 텍스트 검색.
+- 사용자 제공 `전공 기출_260921_105741.pdf`에서 2016~2026학년도 249문항을 1차 편입.
+- 문항별 원문, 배점, 과목/주제 태그, 정답·풀이 상태를 별도 exam schema로 저장.
+- 검증 가능한 6문항에 우선 정답·풀이 수록. 나머지는 `풀이 준비중`으로 명시하여 추정 답안을 노출하지 않음.
+- 기존 교육과정 270 line, Stage3R/presentation, SRS, 메모, `curriloop:v9:study-state` 저장 호환성은 유지.
 
-## 9.0.50-study-rc.1
+## 9.1.0-study-rc.1 — Curriculum Core Semantic Baseline
 
-- `전체 영역`에서 재인출하더라도 카드 메타에는 실제 출처 영역을 표시합니다.
-  - 예: `[9정04-05]` → `인공지능 · 성취기준`
-- 단일 항목은 `lineId`의 실제 영역을 우선 사용하고, 여러 항목이 섞인 경우에만 기존 범위 표기를 사용합니다.
-- v9.0.49의 정답/안내 줄 분리와 `표기 확인` 상태 문구 제거는 그대로 유지합니다.
-- 교육과정 데이터와 채점/재인출 스케줄 로직은 변경하지 않았습니다.
-
-## 9.0.49-study-rc.1
-
-- 재인출 오답/유사표현 피드백에서 `표기 확인` 상태 문구를 제거했습니다.
-- 재인출 정답은 입력란 아래 별도 줄에 `정답: …` 형식으로 표시합니다.
-- `확인 후 다시 묻습니다.` 안내는 정답 줄 아래로 분리했습니다.
-- 채점/재인출/자동 진행 로직과 교육과정 데이터는 변경하지 않았습니다.
-
-# Changelog
-
-## 9.0.48-study-rc.1
-
-- 재인출 카드 메타에 동일 범주 내 항목 순번을 `n/m`으로 표시합니다.
-  - 예: `전체 영역 · 지식·이해 2/3`
-  - 정답 단서나 시작 어절은 추가하지 않았습니다.
-- 기존 재인출/오답 처리 로직과 학습 데이터는 변경하지 않았습니다.
-
-## 9.0.48-study-rc.1
-- 재인출 카드에서 정답을 맞히면 `재인출 완료 ✓`를 잠시 보여 준 뒤 1초 후 자동으로 다음 카드로 진행
-- 정답 상태에서는 `Enter`/`나중에` 확인 버튼을 숨겨 추가 입력 없이 넘어가도록 복원
-- 오답/모름/표기 확인은 기존 v9.0.46 동작을 유지하여 정답을 확인한 뒤 `Enter` 또는 `나중에`로 닫음
-- 교육과정 데이터, SRS, 오답 예약/세션 말미 drain 로직은 변경하지 않음
-
-## 9.0.46-study-rc.1
-- 오답 카드 채점 후 `확인` 버튼 문구를 `Enter`로 변경
-- 채점 직후 `Enter` 버튼으로 포커스를 이동하여 키보드 Enter만 눌러도 카드를 확인하고 다음 단계로 진행
-- `나중에` 동작과 재인출 예약/SRS/교육과정 데이터는 변경하지 않음
-
-## 9.0.45-study-rc.1
-- 영역 이동 컨트롤을 데스크톱 212px, 모바일 192px 고정 폭으로 변경
-- 영역명 길이에 상관없이 이전/다음 화살표의 위치가 흔들리지 않도록 정렬
-- 중앙 영역명은 고정 폭 안에서 말줄임 처리
-- 교육과정 데이터/오답 카드/SRS 로직 변경 없음
-
-# Changelog
-
-## 9.0.44-study-rc.1
-- 오답 카드 메타를 과목 그룹명이 아닌 실제 교육과정 범주로 표시 (`데이터 · 과정·기능` 등)
-- 기존 묶음형 retry를 항목별 단일 카드로 분리하고, 저장된 legacy set retry도 시작 시 개별 카드로 마이그레이션
-- 긴 공식 문장 전체 재작성 요구를 제거하고 가능한 경우 정책 데이터의 하위 핵심 표현으로 재인출
-- 재인출 채점 후 자동 카드 전환 제거: 결과 토스트만 잠시 표시하고 `확인/나중에` 선택 후 닫힘
-- 성취기준 번호 표시 방식은 기존 본문 문맥을 유지
-- 교육과정 원문/270 line/370 presentation unit은 변경 없음
-
-
-## 9.0.43-study-rc.1
-- 전체 영역의 `‹ 현재 영역 ›` 단원 이동 컨트롤을 학습 카드 상단에서 제거하고 `빈칸 채우기` 버튼 바로 옆으로 이동
-- `오답 카드 ON/OFF` 토글의 보조 문구 `3개 뒤`를 제거하여 상단 도구 모음을 더 간결하게 정리
-- 오답 카드의 실제 3답 지연 재인출 정책, 세션 말미 drain, SRS 및 교육과정 데이터는 변경하지 않음
+- v9.0.5~v9.0.42의 누적 로그를 기능 축으로 재검토하고 현재 상태를 **교육과정 회상 코어 완성 기준선**으로 재버전함.
+- 제품 세대 의미를 명시:
+  - **v9** = 2022 개정 정보과 교육과정 회상/복습 중심 세대
+  - **v9.1** = 현재 교육과정 코어의 의미 있는 기준선
+  - **v10** = 연도별·과목/주제별 실제 기출문제와 풀이를 1급 모듈로 통합하는 다음 제품 세대
+- 이번 버전은 기능/교육과정 데이터/Stage3R/presentation/SRS를 변경하지 않는 **semantic re-versioning**임.
+- `dataVersion`은 실제 데이터가 바뀌지 않았으므로 `v9.0.38-granularity-reaudit`를 유지.
+- 기존 학습 진행을 보존하기 위해 localStorage `curriloop:v9:study-state` 키도 유지.
+- `docs/VERSIONING.md`에 Major/Minor/Patch 및 기출 추가 시 버전 규칙을 문서화.
 
 ## 9.0.42-study-rc.1
-- 전체 영역의 `‹ 현재 영역 ›` 이전/다음 단원 이동 시 학습 카드로 강제 `smooth scroll` 하던 동작 제거
-- 단원 전환 직전의 `scrollX/scrollY`를 보존하고 렌더 후 동일 viewport로 복원하여 페이지가 아래로 끌려 내려가는 현상 수정
-- 단원 내용, 빈칸 granularity, 오답 카드/SRS 정책은 변경하지 않음
+
+- 하단 조작 한 줄 정렬.
+
+# Changelog
 
 ## 9.0.41-study-rc.1
-- 회차 마지막 항목에서 아직 3개 간격을 채우지 못한 오답 카드를 즉시 재인출 대상으로 승격
-- 마지막 3~4개 항목의 오답이 복습 탭으로만 남는 tail starvation 제거
-- 회차 말미에는 남은 오답 카드를 모두 해소하기 전까지 `다음`이 새 회차로 넘어가지 않음
-- 회차 말미 재인출 실패/`나중에` 처리도 답변 횟수 증가를 기다리지 않고 즉시 재노출 가능
-- 메인 답안을 나중에 고쳐 맞혀도 오답 카드가 유지되는 v9.0.40 규칙 유지
-- 교육과정 데이터/빈칸 granularity 변경 없음
+- `실전 조합`에서 전체 정답 시 950ms 뒤 정상 `next()` 흐름으로 자동 이동
+  - 다음 task가 있으면 다음 항목으로 이동
+  - 마지막 task면 round가 증가하고 practical set이 여러 개인 항목은 다음 조합으로 순환
+  - 오답/모름/표기 확인은 자동 진행하지 않음
+  - 정답 보기, 수동 task 이동, 영역/범위 변경 시 예약 자동 이동 취소
+- 영역 이동 UI를 학습 카드 하단으로 이동·확장
+  - `← 이전 영역` / `다음 영역 →` 전체 라벨 표시
+  - 특정 영역에서는 실제 영역 필터 전환
+  - 전체 영역에서는 현재 queue 내 영역 단위 점프
+- 공식 sourceText, Stage3R 등급, v9.0.38 presentation granularity, v9.0.39 메모 정책은 변경하지 않음
 
 ## 9.0.40-study-rc.1
-- 오답 카드의 생성 기준을 **현재 최종 답안 상태**가 아니라 **오답 발생 이력**으로 다시 분리
-- 한 번 오답/모름/표기 확인으로 예약된 지연 재인출 카드는, 같은 메인 빈칸을 나중에 고쳐 정답 처리해도 취소하지 않음
-- 따라서 `오답 → 즉시 정답으로 덮어쓰기 → 다른 답 3개 채점` 순서에서도 우측 오답 카드가 정상 노출됨
-- 오답 카드는 카드 내부 재인출에서 정답을 맞혀 `재인출 완료 ✓`가 되었을 때만 정상 제거됨
-- 명시적 `오답 카드 OFF`와 `복습 데이터 초기화`는 기존처럼 예약 카드를 삭제함
-- 장기 SRS, 취약 기록, 교육과정 sourceText/presentation/Stage3R 정책은 변경하지 않음
+- 모바일(760px 이하)에서 상단 학습 설정 카드 전체를 접고 펼칠 수 있도록 추가
+  - 범위: 과목 → 영역 → 출제 항목 → 회상 방식 → 학습 모드 → 오답 카드 → 원문 출처
+  - 접었을 때는 `학습 설정` 요약 바만 남아 긴 내용체계/성취기준 화면을 넓게 사용
+  - 현재 과목·영역·출제 항목·회상 방식·학습 모드를 요약 바에 표시
+  - 접힘 상태를 localStorage에 저장하여 모바일 재접속 시 유지
+  - 데스크톱(761px 이상)은 기존과 동일하게 항상 펼쳐짐
+  - 접근성: `aria-expanded`, `aria-controls`, 명시적 접기/펼치기 라벨 적용
+- v9.0.38 granularity 정책과 v9.0.39 메모 outline/migration 정책을 현재 소스에 재적용하고 정적 QA 추가
+- 공식 sourceText와 Stage3R S/A/B/C/X 판정은 변경하지 않음
 
 ## 9.0.39-study-rc.1
-- 좌측 영역 메모의 자동 기본 개요를 긴 `A → B → C` 한 줄에서 번호형 outline으로 재구성
-- 중학교 5영역 + 고등학교 5영역 모두 `1. 단계` / `- 하위 개념` 구조로 변경
-- 특정 영역 메모에서는 영역명 반복을 제거하고, 전체 영역에서만 `[영역명]` 구획 표시
-- v9.0.33~v9.0.38에서 이미 자동 생성된 구형 기본문은 **저장값이 과거 기본문과 정확히 동일한 경우에만** 새 개요로 migration
-- 사용자가 한 글자라도 수정한 메모와 빈 문자열 메모는 migration에서 제외하여 그대로 보존
-- `개요로 초기화`는 새 번호형 개요를 복원
-- 공식 교육과정 sourceText, presentation granularity, Stage3R, SRS/재인출 정책은 변경하지 않음
+- 영역별 메모 기본 개요를 장문 `→` 흐름에서 번호형 outline으로 변경
+- 과거 자동 기본문과 저장값이 정확히 일치하는 경우에만 새 개요로 migration
+- 사용자가 수정한 메모와 의도적으로 비운 메모는 보존
 
 ## 9.0.38-study-rc.1
-- 전체 회상 presentation granularity 전수 재감사
-- B 의미 단위의 과분절을 강결합 표현 중심으로 병합하고, 단어 단위 빈칸을 의미 덩어리로 재구성
-- presentation unit 407개 → 370개
-- 활성 학습 atom의 presentation 누락 21개 → 0개
-- 정책 근거 atom 없이 전체 회상에 포함되던 presentation unit 15개 → 0개
-- S exact-production presentation unit 30개는 문구/매핑을 그대로 보존
-- A는 구조적 회상 원칙을 유지하고, 정책 근거가 없던 1개 unit을 제거하면서 해당 line의 구조 표현만 보정
-- 단일/실전/전체 set을 수정된 presentation unit 기준으로 재생성
-- v9.0.38 granularity QA 추가: 공식 sourceText hash, frozen keyword-policy hash, S exact signature, active atom coverage, policy-backed unit, overlap, 4+ blank 금지 검증
-- 공식 sourceText, legacy keyword/set, Stage3R S/A/B/C/X 정책은 변경하지 않음
+- 전체 회상 presentation granularity 재감사
+- B 과분절을 의미 덩어리 중심으로 병합하고 active production mapping 누락/무근거 unit 제거
+- S exact-production 단위는 보호
 
 ## 9.0.37-study-rc.1
 - `오답 카드`를 OFF로 바꾸면 현재 대기 중인 우측 지연 재인출 카드를 즉시 삭제

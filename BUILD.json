@@ -1,13 +1,13 @@
 {
-  "buildId": "2026.10.18-01",
+  "buildId": "2026.10.18-03",
   "builtOn": "2026-10-18",
   "publicVersion": null,
   "product": "CurriLoop",
   "releaseChannel": "study",
   "data": {
     "curriculum": "v9.0.38-granularity-reaudit",
-    "examSchema": 1,
-    "examCorpus": "major-exams-2016-2026"
+    "examSchema": 3,
+    "examCorpus": "major-exams-2014-2026"
   },
   "compatibility": {
     "studyStorageKey": "curriloop:v9:study-state",
@@ -17,6 +17,8 @@
     "curriculum-study",
     "review-srs",
     "area-memo",
-    "past-exams-browser"
+    "past-exams-browser",
+    "pdf-exam-originals",
+    "exam-year-atlas"
   ]
 }

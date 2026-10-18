@@ -3,12 +3,13 @@
 ```text
 index.html                 얇은 UI shell
 assets/css/app.css         화면 스타일
-js/core/config.js          버전/상수
+js/core/config.js          Build ID/상수
 js/core/storage.js         localStorage 전용
 js/core/grading.js         정규화/채점
 js/core/study-engine.js    task pool, KI grouping, round, retry
 js/app.js                  DOM/UI orchestration
 data/curriculum/*.json     canonical study data (수정 대상)
+data/exams/*.json          기출 canonical data
 data/generated/*.js       JSON의 생성 mirror (직접 수정 금지)
 data/audits/               해당 데이터 버전의 QA 기록
 tools/                     build/validation
@@ -19,7 +20,8 @@ tools/                     build/validation
 2. `지식·이해` presentation override는 데이터에 명시한다.
 3. generated 파일은 build 산출물이다.
 4. 학습 상태는 line/group ID를 key로 저장하여 UI 재구조화와 분리한다.
-5. 새 버전은 service worker cache 이름을 반드시 변경한다.
+5. 새 배포는 날짜 기반 Build ID와 HTML cache-buster를 함께 변경한다.
+6. 교육과정과 기출 데이터 스키마를 분리한다.
 
 
 ## Presentation layer (v9.0.6)

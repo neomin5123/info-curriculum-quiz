@@ -25,7 +25,7 @@
   function likelyTypo(a,b){const x=norm(a),y=norm(b);if(!x||!y||x===y)return false;const maxLen=Math.max([...x].length,[...y].length),charDistance=levenshtein(x,y);if(maxLen>=5&&charDistance<=1)return true;const jd=levenshtein(decomposeHangul(x),decomposeHangul(y));if(maxLen<=4&&jd<=1)return true;if(maxLen>=5&&(1-charDistance/maxLen)>=.88)return true;return false;}
   function strongPartialMatch(a,b){const x=norm(a),y=norm(b);if(!x||!y||x===y)return false;const short=x.length<=y.length?x:y,long=x.length<=y.length?y:x;if(short.length<2||!long.includes(short))return false;const coverage=short.length/long.length;if(short.length<=2&&coverage<.5)return false;return coverage>=.5;}
   function reasonLabel(reason){return ({particle:'조사 차이',synonym:'유사 표현',typo:'오타 가능',partial:'부분 일치',similar:'표기 유사',empty:'미입력',meaning:'의미 불일치',duplicate:'중복'})[reason]||'표기 확인';}
-  function compareNear(rawUser,candidate){const user=norm(rawUser),expected=norm(candidate);if(!user||!expected||user===expected)return null;if(particleEquivalent(rawUser,candidate))return {reason:'particle',confidence:.99};if(strictActionConflict(rawUser,candidate))return null;if(likelyTypo(rawUser,candidate))return {reason:'typo',confidence:.94};const su=semanticCanonical(rawUser),se=semanticCanonical(candidate);if(su&&su===se)return {reason:'synonym',confidence:.95};if(semanticParticleEquivalent(rawUser,candidate))return {reason:'synonym',confidence:.94};if(strongPartialMatch(su,se))return {reason:'partial',confidence:.86};const ml=Math.max(user.length,expected.length),sim=ml?1-levenshtein(user,expected)/ml:0;if(ml>=6&&sim>=.82)return {reason:'similar',confidence:sim};return null;}
+  function compareNear(rawUser,candidate){const user=norm(rawUser),expected=norm(candidate);if(!user||!expected||user===expected)return null;if(particleEquivalent(rawUser,candidate))return {reason:'particle',confidence:.99};if(likelyTypo(rawUser,candidate))return {reason:'typo',confidence:.94};if(strictActionConflict(rawUser,candidate))return null;const su=semanticCanonical(rawUser),se=semanticCanonical(candidate);if(su&&su===se)return {reason:'synonym',confidence:.95};if(semanticParticleEquivalent(rawUser,candidate))return {reason:'synonym',confidence:.94};if(strongPartialMatch(su,se))return {reason:'partial',confidence:.86};const ml=Math.max(user.length,expected.length),sim=ml?1-levenshtein(user,expected)/ml:0;if(ml>=6&&sim>=.82)return {reason:'similar',confidence:sim};return null;}
   function classifyDetailed(rawUser,expected,aliases=[]){const user=norm(rawUser);if(!user)return {status:'unknown',reason:'empty',confidence:1,matched:'',expected:String(expected||'')};const candidates=[expected,...(aliases||[])].filter(v=>String(v||'').trim());for(const c of candidates)if(norm(c)===user)return {status:'correct',reason:'exact',confidence:1,matched:c,expected:String(expected||'')};let best=null;for(const c of candidates){const near=compareNear(rawUser,c);if(!near)continue;const scored={...near,status:'near',matched:c,expected:String(expected||'')};if(!best||scored.confidence>best.confidence)best=scored;}return best||{status:'wrong',reason:'meaning',confidence:1,matched:'',expected:String(expected||'')};}
   function classify(rawUser,expected,aliases=[]){return classifyDetailed(rawUser,expected,aliases).status;}
   function severity(status){return ({correct:0,near:1,unknown:2,wrong:3,duplicate:3})[status]??3;}
@@ -48,10 +48,8 @@
       if((d.status==='correct'||d.status==='near')&&d.answerIndex!=null){claimed.add(norm(answers[d.answerIndex]));matchedCount++;}
       results.push({inputIndex,value,...d});
     });
-    const statuses=results.map(r=>r.status),complete=matchedCount===answers.length;
-    let status=aggregateStatus(statuses);
-    if(!complete&&status==='correct')status='unknown';
-    return {correct:complete&&statuses.every(s=>s==='correct'),matchedCount,total:answers.length,results,matchedKeys:[...claimed],status};
+    const statuses=results.map(r=>r.status);
+    return {correct:matchedCount===answers.length&&statuses.every(s=>s==='correct'),matchedCount,total:answers.length,results,matchedKeys:[...claimed],status:aggregateStatus(statuses)};
   }
   function gradeSet(inputs,answers){const g=gradeSetDetailed(inputs,answers);return {...g,results:g.results.map(r=>({...r,status:r.status==='unknown'?'empty':r.status}))};}
 

@@ -744,7 +744,9 @@ function syncExamTopicOptions(){
 function initExamBrowser(){
   if(!el.examPage)return;
   const years=[...new Set(EXAM_DATA.questions.map(q=>q.year))].sort((a,b)=>b-a);
-  const subjects=[...new Set(EXAM_DATA.questions.map(q=>q.subject))].sort((a,b)=>a.localeCompare(b,'ko'));
+  const presentSubjects=[...new Set(EXAM_DATA.questions.map(q=>q.subject))];
+  const subjectOrder=EXAM_DATA.metadata?.subjectOrder||[];
+  const subjects=[...subjectOrder.filter(x=>presentSubjects.includes(x)),...presentSubjects.filter(x=>!subjectOrder.includes(x)).sort((a,b)=>a.localeCompare(b,'ko'))];
   el.examYear.innerHTML=examOption('all','전체 연도',examUi.year)+years.map(y=>examOption(String(y),`${y}학년도`,examUi.year)).join('');
   el.examSubject.innerHTML=examOption('all','전체 과목',examUi.subject)+subjects.map(x=>examOption(x,x,examUi.subject)).join('');
   el.examPart.value=['A','B'].includes(examUi.part)?examUi.part:'all';
@@ -752,14 +754,17 @@ function initExamBrowser(){
   el.examSearch.value=examUi.search||'';
   syncExamTopicOptions();
   const coverage=EXAM_DATA.metadata?.coverage||{};
-  if(el.examCoverage)el.examCoverage.textContent=`${coverage.from||2016}–${coverage.to||2026}학년도 · ${coverage.questions||EXAM_DATA.questions.length}문항 · 사용자 제공 전공 기출 PDF 기반`;
+  if(el.examCoverage){
+    const missing=(coverage.missingYears||[]).length?` · 미수록 ${coverage.missingYears.join(', ')}학년도`:'';
+    el.examCoverage.textContent=`${coverage.from||2014}–${coverage.to||2026}학년도 · ${coverage.questions||EXAM_DATA.questions.length}문항${missing} · 사용자 제공 전공 기출 PDF 기반`;
+  }
 }
 function examQuestionButton(q){
   const selected=q.id===examUi.selectedId,solved=q.solutionStatus==='solved';
   const excerpt=String(q.title||q.text||'').replace(/\s+/g,' ').slice(0,116);
   const tags=(q.topics||[]).slice(0,3).map(t=>`<span>${esc(t)}</span>`).join('');
   return `<button class="exam-question-row${selected?' active':''}" type="button" data-exam-id="${esc(q.id)}">
-    <div class="exam-question-row-top"><strong>${q.year} · 전공 ${esc(q.part)} · ${q.question}번</strong><span>${q.points?`${q.points}점`:'배점 미상'}</span></div>
+    <div class="exam-question-row-top"><strong>${q.year} · 전공 ${esc(q.part)} · ${esc(q.questionLabel||`${q.question}번`)}</strong><span>${q.points?`${q.points}점`:'배점 미상'}</span></div>
     <div class="exam-question-row-subject">${esc(q.subject)}</div>
     <div class="exam-question-row-title">${esc(excerpt)}${excerpt.length>=116?'…':''}</div>
     <div class="exam-question-row-foot"><span class="exam-mini-tags">${tags}</span><em class="exam-solution-badge ${solved?'solved':'pending'}">${solved?'풀이 있음':'풀이 준비중'}</em></div>
@@ -770,15 +775,23 @@ function examDetailHtml(q,list){
   const idx=list.findIndex(x=>x.id===q.id),prev=idx>0?list[idx-1]:null,next=idx>=0&&idx<list.length-1?list[idx+1]:null;
   const tags=(q.topics||[]).map(t=>`<span>${esc(t)}</span>`).join('');
   const solved=q.solutionStatus==='solved';
-  const solution=solved?`<details class="exam-solution-box"><summary>정답·풀이 보기</summary><div class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></div><div class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></div></details>`:`<section class="exam-pending-box"><strong>풀이 준비중</strong><p>문제 원문과 분류는 편입되었고, 정답·풀이가 검증되는 순서대로 추가합니다.</p></section>`;
+  const solution=solved?`<details class="exam-solution-box"><summary>정답·풀이 보기</summary><div class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></div><div class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></div></details>`:`<section class="exam-pending-box"><strong>풀이 미수록</strong><p>제공된 PDF는 문제지라 공식 정답·해설이 포함되어 있지 않습니다. 답과 풀이를 별도로 검증한 문항부터 추가합니다.</p></section>`;
+  const imageList=(q.images||[]).map((img,i)=>{
+    const label=`${q.year}학년도 전공 ${q.part} ${q.questionLabel||`${q.question}번`} 원문${(q.images||[]).length>1?` ${i+1}`:''}`;
+    if(img.atlas){
+      return `<figure class="exam-problem-image exam-atlas-crop"><svg viewBox="${Number(img.x)||0} ${Number(img.y)||0} ${Number(img.width)||1} ${Number(img.height)||1}" role="img" aria-label="${esc(label)}" preserveAspectRatio="xMinYMin meet"><image href="${esc(img.atlas)}" x="0" y="0" width="${Number(img.atlasWidth)||1}" height="${Number(img.atlasHeight)||1}" /></svg><figcaption>${(q.images||[]).length>1?`${i+1}/${q.images.length} · `:''}PDF ${img.page}쪽</figcaption></figure>`;
+    }
+    return `<figure class="exam-problem-image"><img src="${esc(img.src)}" alt="${esc(label)}" loading="lazy" decoding="async">${(q.images||[]).length>1?`<figcaption>${i+1}/${q.images.length} · PDF ${img.page}쪽</figcaption>`:''}</figure>`;
+  }).join('');
+  const problem=imageList?`<section class="exam-problem"><div class="exam-section-label">문제 원문</div><div class="exam-problem-images">${imageList}</div><details class="exam-text-fallback"><summary>검색용 추출 텍스트 보기</summary><div class="exam-problem-text">${esc(q.text)}</div></details></section>`:`<section class="exam-problem"><div class="exam-section-label">문제</div><div class="exam-problem-text">${esc(q.text)}</div></section>`;
   return `<div class="exam-detail-head">
-      <div><span class="exam-kicker">${q.year}학년도 · 전공 ${esc(q.part)} · ${q.question}번${q.points?` · ${q.points}점`:''}</span><h3>${esc(q.subject)}</h3></div>
+      <div><span class="exam-kicker">${q.year}학년도 · 전공 ${esc(q.part)} · ${esc(q.questionLabel||`${q.question}번`)}${q.points?` · ${q.points}점`:''}</span><h3>${esc(q.subject)}</h3></div>
       <div class="exam-detail-nav"><button type="button" data-exam-nav="${prev?esc(prev.id):''}" ${prev?'':'disabled'}>← 이전</button><button type="button" data-exam-nav="${next?esc(next.id):''}" ${next?'':'disabled'}>다음 →</button></div>
     </div>
     <div class="exam-tags">${tags}</div>
-    <section class="exam-problem"><div class="exam-section-label">문제</div><div class="exam-problem-text">${esc(q.text)}</div></section>
+    ${problem}
     ${solution}
-    <footer class="exam-source-note">출처 · ${esc(q.source?.file||EXAM_DATA.metadata?.sourceFile||'전공 기출 PDF')} · 텍스트 추출본은 원 PDF의 표·그림 배치가 일부 단순화될 수 있습니다.</footer>`;
+    <footer class="exam-source-note">출처 · ${esc(q.source?.file||EXAM_DATA.metadata?.sourceFile||'전공 기출 PDF')} · PDF 원문을 문항 단위로 렌더한 화면입니다. 연도별 atlas에서 해당 문항 영역만 표시합니다.</footer>`;
 }
 function renderExamPage(){
   if(!el.examPage)return;
