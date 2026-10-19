@@ -4,13 +4,13 @@
   function localDateKey(date=new Date()){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');return `${y}-${m}-${d}`;}
   function addDays(key,days){const [y,m,d]=String(key||localDateKey()).split('-').map(Number),dt=new Date(y,m-1,d,12);dt.setDate(dt.getDate()+Number(days||0));return localDateKey(dt);}
   function earlierDate(a,b){if(!a)return b;if(!b)return a;return a<=b?a:b;}
-  function fresh(){return {version:CL.config.appVersion,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'single',mode:'cloze',retry:true,zoom:100,mainTab:'study'},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},draftDate:localDateKey(),scopeRounds:{},scopeTasks:{},answerSerial:0,fieldRetries:{},fieldRetryCounts:{},reviewSchedule:{},reviewHistory:{}};}
+  function fresh(){return {version:CL.config.appVersion,ui:{subject:'middle-info',area:'컴퓨팅 시스템',family:'content-system',stage:'whole',mode:'cloze',retry:true,zoom:100,mainTab:'study'},round:1,progress:{},itemProgress:{},drafts:{},fieldGrades:{},draftDate:localDateKey(),scopeRounds:{},scopeTasks:{},answerSerial:0,fieldRetries:{},fieldRetryCounts:{},reviewSchedule:{},reviewHistory:{}};}
   function migrateUi(ui){
     const out=Object.assign({},ui||{});
     const familyMap={'핵심 아이디어':'content-system','지식·이해':'content-system','과정·기능':'content-system','가치·태도':'content-system','성취기준':'standards','해설':'explain-consider','고려사항':'explain-consider','성격':'character-goals','목표':'character-goals','교수·학습':'teaching-eval','평가':'teaching-eval','all':'content-system'};
     if(familyMap[out.family])out.family=familyMap[out.family];
     if(['content-table','ki-area','ki-all'].includes(out.stage))out.stage='whole';
-    if(!['single','practical','whole'].includes(out.stage))out.stage='single';
+    out.stage='whole';
     if(out.area==='과목 공통')out.area='all';
     const z=Number(out.zoom);out.zoom=[85,90,100,110,125].includes(z)?z:100;
     out.mainTab=['study','review','exam'].includes(out.mainTab)?out.mainTab:'study';

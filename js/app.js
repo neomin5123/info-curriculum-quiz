@@ -1,6 +1,8 @@
 (function(){
 'use strict';
-const DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
+const BASE_DATA=window.CURRILOOP_STUDY_DATA,CL=window.CurriLoop;if(!BASE_DATA||!CL)throw new Error('CurriLoop data/core failed to load.');
+const AI_DATA=window.CURRILOOP_AI_BASIC_DATA;
+const DATA=AI_DATA?{...BASE_DATA,lines:[...BASE_DATA.lines,...AI_DATA.lines],knowledgeUnderstandingGroups:[...BASE_DATA.knowledgeUnderstandingGroups,...AI_DATA.knowledgeUnderstandingGroups]}:BASE_DATA;
 const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
 const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
@@ -287,7 +289,7 @@ function mobileModeLabel(){
 }
 function updateMobileControlSummary(){
   if(!el.controlSummary)return;
-  const parts=[currentSelectText(el.subject),currentSelectText(el.area),currentSelectText(el.family),currentSelectText(el.stage),mobileModeLabel()].filter(Boolean);
+  const parts=[currentSelectText(el.subject),currentSelectText(el.area),currentSelectText(el.family),mobileModeLabel()].filter(Boolean);
   el.controlSummary.textContent=parts.join(' · ');
 }
 function applyMobileControlsCollapsed(collapsed,{save=false}={}){
@@ -322,13 +324,20 @@ function option(v,t){const o=document.createElement('option');o.value=v;o.textCo
 function setOptions(select,items,preferred){select.innerHTML='';items.forEach(([v,t])=>select.append(option(v,t)));select.value=items.some(x=>x[0]===preferred)?preferred:items[0]?.[0]||'';return select.value;}
 function familyItems(){return engine.familyGroupOrder.filter(id=>engine.groupAvailable(id,el.subject.value,state.ui.area)).map(id=>[id,engine.groupLabel(id)]);}
 function syncFamilies(preferred=state.ui.family){state.ui.family=setOptions(el.family,familyItems(),preferred);}
-function syncStages(preferred=state.ui.stage){state.ui.stage=setOptions(el.stage,[['single','단일 회상'],['practical','실전 조합'],['whole','전체 회상']],preferred);}
+function syncStages(preferred=state.ui.stage){state.ui.stage=setOptions(el.stage,[['whole','전체 회상']], 'whole');}
+function syncAreaOptions(preferred=state.ui.area){
+  const subject=el.subject?.value||state.ui.subject||'middle-info';
+  const areas=engine.areasForSubject(subject);
+  el.area.innerHTML='';el.area.append(option('all','전체 영역'));
+  areas.forEach(a=>el.area.append(option(a,a)));
+  const value=[...el.area.options].some(o=>o.value===preferred)?preferred:(subject==='all'?'all':(areas[0]||'all'));
+  el.area.value=value;state.ui.area=value;
+}
 function initSelectors(){
   el.subject.append(option('all','중·고 정보 전체'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
-  el.area.append(option('all','전체 영역'));engine.areas.forEach(a=>el.area.append(option(a,a)));
   el.subject.value=[...el.subject.options].some(o=>o.value===state.ui.subject)?state.ui.subject:'middle-info';
-  el.area.value=[...el.area.options].some(o=>o.value===state.ui.area)?state.ui.area:'컴퓨팅 시스템';state.ui.area=el.area.value;
-  syncFamilies();syncStages();el.retry.checked=state.ui.retry;el.zoom.value=String(state.ui.zoom||100);applyZoom();
+  syncAreaOptions(state.ui.area);
+  syncFamilies();syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';el.retry.checked=state.ui.retry;el.zoom.value=String(state.ui.zoom||100);applyZoom();
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
 }
 function applyZoom(){const z=Number(el.zoom.value||100);state.ui.zoom=z;document.documentElement.style.setProperty('--ui-zoom',String(z/100));}
@@ -775,11 +784,14 @@ function examDetailHtml(q,list){
   const idx=list.findIndex(x=>x.id===q.id),prev=idx>0?list[idx-1]:null,next=idx>=0&&idx<list.length-1?list[idx+1]:null;
   const tags=(q.topics||[]).map(t=>`<span>${esc(t)}</span>`).join('');
   const solved=q.solutionStatus==='solved';
-  const solution=solved?`<details class="exam-solution-box"><summary>정답·풀이 보기</summary><div class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></div><div class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></div></details>`:`<section class="exam-pending-box"><strong>풀이 미수록</strong><p>제공된 PDF는 문제지라 공식 정답·해설이 포함되어 있지 않습니다. 답과 풀이를 별도로 검증한 문항부터 추가합니다.</p></section>`;
+  const answerNote=q.verification?.status==='derived'?'독립 풀이 · 공식 정답 검증 전':'기존 수록 풀이 · 공식 정답 대조 미확인';
+  const solution=solved?`<details class="exam-solution-box"><summary>정답·풀이 보기</summary><p class="exam-answer-provenance">${answerNote}</p><div class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></div><div class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></div></details>`:`<section class="exam-pending-box"><strong>풀이 미수록</strong><p>제공된 PDF는 문제지라 공식 정답·해설이 포함되어 있지 않습니다. 답과 풀이를 별도로 검증한 문항부터 추가합니다.</p></section>`;
   const imageList=(q.images||[]).map((img,i)=>{
+    const originalHeight=Number(img.height)||1;
+    const displayHeight=Math.min(originalHeight,Math.max(1,Number(window.CURRILOOP_EXAM_DISPLAY_BOUNDS?.[q.id]?.[i])||originalHeight));
     const label=`${q.year}학년도 전공 ${q.part} ${q.questionLabel||`${q.question}번`} 원문${(q.images||[]).length>1?` ${i+1}`:''}`;
     if(img.atlas){
-      return `<figure class="exam-problem-image exam-atlas-crop"><svg viewBox="${Number(img.x)||0} ${Number(img.y)||0} ${Number(img.width)||1} ${Number(img.height)||1}" role="img" aria-label="${esc(label)}" preserveAspectRatio="xMinYMin meet"><image href="${esc(img.atlas)}" x="0" y="0" width="${Number(img.atlasWidth)||1}" height="${Number(img.atlasHeight)||1}" /></svg><figcaption>${(q.images||[]).length>1?`${i+1}/${q.images.length} · `:''}PDF ${img.page}쪽</figcaption></figure>`;
+      return `<figure class="exam-problem-image exam-atlas-crop"><svg viewBox="${Number(img.x)||0} ${Number(img.y)||0} ${Number(img.width)||1} ${displayHeight}" role="img" aria-label="${esc(label)}" preserveAspectRatio="xMinYMin meet"><image href="${esc(img.atlas)}" x="0" y="0" width="${Number(img.atlasWidth)||1}" height="${Number(img.atlasHeight)||1}" /></svg><figcaption>${(q.images||[]).length>1?`${i+1}/${q.images.length} · `:''}PDF ${img.page}쪽</figcaption></figure>`;
     }
     return `<figure class="exam-problem-image"><img src="${esc(img.src)}" alt="${esc(label)}" loading="lazy" decoding="async">${(q.images||[]).length>1?`<figcaption>${i+1}/${q.images.length} · PDF ${img.page}쪽</figcaption>`:''}</figure>`;
   }).join('');
@@ -844,7 +856,7 @@ function syncScopeControlsFromState(){
   el.subject.value=state.ui.subject;
   el.area.value=state.ui.area;
   syncFamilies(state.ui.family);el.family.value=state.ui.family;
-  syncStages(state.ui.stage);el.stage.value=state.ui.stage;
+  syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
 }
 function openWeakItem(lineId){
@@ -853,7 +865,7 @@ function openWeakItem(lineId){
   state.ui.subject=line.subject;
   state.ui.area=line.area==='과목 공통'?'all':line.area;
   state.ui.family=familyGroupForLine(line);
-  state.ui.stage='single';
+  state.ui.stage='whole';
   state.ui.mode='cloze';
   state.ui.mainTab='study';
   syncScopeControlsFromState();
@@ -1506,9 +1518,9 @@ function resetReviewData(){
   if(!ok)return;
   activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
 }
-function changeScope(mutator){cancelPracticalAutoAdvance();saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages(state.ui.stage);state.ui.stage=el.stage.value;CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();updateMobileControlSummary();}
-function filterChange(kind){changeScope(()=>{if(kind==='subject')state.ui.subject=el.subject.value;if(kind==='area')state.ui.area=el.area.value;});}
-initSelectors();initMobileControlCollapse();initExamBrowser();updateRetryToggleUI();CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
+function changeScope(mutator){cancelPracticalAutoAdvance();saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();updateMobileControlSummary();}
+function filterChange(kind){changeScope(()=>{if(kind==='subject'){state.ui.subject=el.subject.value;syncAreaOptions(state.ui.area);}if(kind==='area')state.ui.area=el.area.value;});}
+initSelectors();initMobileControlCollapse();initExamBrowser();updateRetryToggleUI();state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
 el.examTab.onclick=()=>showMainTab('exam');
@@ -1572,7 +1584,7 @@ el.resetReview.onclick=resetReviewData;
 el.subject.onchange=()=>filterChange('subject');
 el.area.onchange=()=>filterChange('area');
 el.family.onchange=()=>changeScope(()=>{state.ui.family=el.family.value;});
-el.stage.onchange=()=>changeScope(()=>{state.ui.stage=el.stage.value;});
+if(el.stage)el.stage.onchange=()=>changeScope(()=>{state.ui.stage='whole';});
 el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
   state.ui.retry=el.retry.checked;
   if(!state.ui.retry){

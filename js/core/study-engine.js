@@ -27,6 +27,7 @@
     function groupDef(id){return familyGroups[id]||null;}
     function groupLabel(id){return groupDef(id)?.label||id;}
     function selectedSubjects(){return state.ui.subject==='all'?subjects:[state.ui.subject];}
+    function areasForSubject(subject){const lines=data.lines.filter(l=>subject==='all'||l.subject===subject);return [...new Set(lines.map(l=>l.area).filter(x=>x!=='과목 공통'))];}
     function selectedAreas(){return state.ui.area==='all'?contentAreas:[state.ui.area];}
     function groupAvailable(id,subjectSel=state.ui.subject,areaSel=state.ui.area){
       const def=groupDef(id);if(!def)return false;
@@ -151,7 +152,7 @@
     function goTo(index){if(!Number.isInteger(index)||index<0||index>=queue.length)return null;cursor=index;return current();}
     function nextRound(){state.round=(state.round||1)+1;rebuild();return current();}
     function stats(){return {cursor:queue.length?cursor+1:0,total:queue.length,round:state.round||1};}
-    return {data,state,lineMap,subjects,labels,areas:contentAreas,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,goTo,nextRound,stats,get queue(){return queue;}};
+    return {data,state,lineMap,subjects,labels,areas:contentAreas,areasForSubject,familyGroups,familyGroupOrder,groupDef,groupLabel,groupAvailable,buildContentSystemGroup,contentSystemRecallUnits,buildContentSystemTasks,buildWholeGroup,buildContentStandardsGroup,buildContentStandardsTasks,basePool,rebuild,current,taskId,selectedSet,keywordsForSet,recallUnitsForLine,scheduleRetry,next,prev,goTo,nextRound,stats,get queue(){return queue;}};
   }
   CL.study={makeEngine};
 })();

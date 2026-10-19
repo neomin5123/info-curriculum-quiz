@@ -1019,10 +1019,10 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .cloze-text .inline-input{width:clamp(7.5rem,calc(var(--answer-ch,14) * .76rem),32rem)!important;max-width:min(78vw,32rem)!important;min-height:2.1rem!important;padding:3px 7px!important}
 .cs-cloze-content .inline-input,.cs-cloze-content .cs-inline-input,.cs-cloze-content .standard-inline-input{width:clamp(7.5rem,calc(var(--answer-ch,14) * .76rem),31rem)!important;min-height:2.1rem!important;padding:3px 7px!important}
 .trace-answer-textarea,#typingInput,.group-input,.ki-input,.inline-input{text-decoration:none!important}
-.page-jump-dock{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:67;display:flex;gap:4px;padding:4px;border:1px solid rgba(205,216,209,.92);border-radius:999px;background:rgba(255,255,255,.91);box-shadow:0 7px 22px rgba(29,49,37,.11);backdrop-filter:blur(7px);opacity:.78;transition:opacity .15s,transform .15s}
-.page-jump-dock:hover,.page-jump-dock:focus-within{opacity:1;transform:translateX(-50%) translateY(-1px)}
-.page-jump-dock button{padding:5px 9px;border:0;border-radius:999px;background:transparent;color:#53645a;font-size:10.5px}.page-jump-dock button:hover{background:#eef4f0;color:#2e5742}
-@media(max-width:760px){.area-navigator strong{max-width:180px;font-size:10.5px}.area-navigator button{width:25px;height:25px}.trace-copy-stack,.trace-answer-textarea,.standard-typing-row .trace-copy-stack,.standard-typing-row .trace-answer-textarea{max-width:100%!important}.page-jump-dock{bottom:8px}.page-jump-dock button{padding:5px 7px;font-size:10px}}
+.page-jump-dock{position:fixed;right:12px;bottom:12px;left:auto;transform:none;z-index:67;display:flex;flex-direction:column;gap:4px;padding:4px;border:1px solid rgba(205,216,209,.92);border-radius:16px;background:rgba(255,255,255,.91);box-shadow:0 7px 22px rgba(29,49,37,.11);backdrop-filter:blur(7px);opacity:.84;transition:opacity .15s,transform .15s}
+.page-jump-dock:hover,.page-jump-dock:focus-within{opacity:1;transform:translateY(-1px)}
+.page-jump-dock button{padding:5px 9px;border:0;border-radius:999px;background:transparent;color:#53645a;font-size:10.5px;white-space:nowrap}.page-jump-dock button:hover{background:#eef4f0;color:#2e5742}
+@media(max-width:760px){.area-navigator strong{max-width:180px;font-size:10.5px}.area-navigator button{width:25px;height:25px}.trace-copy-stack,.trace-answer-textarea,.standard-typing-row .trace-copy-stack,.standard-typing-row .trace-answer-textarea{max-width:100%!important}.page-jump-dock{top:84px;right:8px;bottom:auto}.page-jump-dock button{padding:5px 7px;font-size:10px}}
 
 /* v9.0.40 — mobile collapsible study controls */
 .mobile-control-toggle{display:none}
@@ -1306,3 +1306,9 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 .exam-text-fallback summary{cursor:pointer;padding:8px 10px;color:var(--muted);font-size:10px;font-weight:740}
 .exam-text-fallback .exam-problem-text{border-radius:0;border-top:1px solid #edf1ee;background:#fff;font-size:11px;line-height:1.58}
 @media(max-width:760px){.exam-problem-image{width:100%}.exam-problem-images{gap:8px}.exam-text-fallback .exam-problem-text{font-size:10.5px}}
+
+/* 2026-10-19: 기출 답안의 검증 출처 상태 표시 (교육과정 UI 불변) */
+.exam-answer-provenance{font-size:.85rem;opacity:.78;margin:.45rem 0 .7rem;}
+
+/* Build 2026.10.19-10 — three visible scope selectors */
+@media(min-width:761px){.control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -1,13 +1,14 @@
 {
-  "buildId": "2026.10.18-03",
-  "builtOn": "2026-10-18",
+  "buildId": "2026.10.19-10",
+  "builtOn": "2026-10-19",
   "publicVersion": null,
   "product": "CurriLoop",
   "releaseChannel": "study",
   "data": {
     "curriculum": "v9.0.38-granularity-reaudit",
     "examSchema": 3,
-    "examCorpus": "major-exams-2014-2026"
+    "examCorpus": "major-exams-2014-2026",
+    "aiBasicSource": "[별책10] 인공지능 기초, 별도 원문 계층 110줄"
   },
   "compatibility": {
     "studyStorageKey": "curriloop:v9:study-state",
@@ -19,6 +20,8 @@
     "area-memo",
     "past-exams-browser",
     "pdf-exam-originals",
-    "exam-year-atlas"
+    "exam-year-atlas",
+    "ai-basic-curriculum",
+    "exam-display-whitespace-trimming"
   ]
 }
