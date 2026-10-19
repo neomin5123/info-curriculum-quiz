@@ -845,6 +845,7 @@ function resetExamFilters(){
 function showMainTab(tab='study',save=true){
   const review=tab==='review',exam=tab==='exam',study=!review&&!exam;
   state.ui.mainTab=exam?'exam':review?'review':'study';
+  document.body.classList.toggle('exam-wide',exam);
   el.studyPage?.classList.toggle('hidden',!study);
   el.reviewPage?.classList.toggle('hidden',!review);
   el.examPage?.classList.toggle('hidden',!exam);

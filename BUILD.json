@@ -1,5 +1,5 @@
 {
-  "buildId": "2026.10.19-14",
+  "buildId": "2026.10.19-15",
   "builtOn": "2026-10-19",
   "publicVersion": null,
   "product": "CurriLoop",
@@ -22,6 +22,7 @@
     "pdf-exam-originals",
     "exam-year-atlas",
     "ai-basic-curriculum",
-    "exam-display-whitespace-trimming"
+    "exam-display-whitespace-trimming",
+    "exam-full-width-layout"
   ]
 }

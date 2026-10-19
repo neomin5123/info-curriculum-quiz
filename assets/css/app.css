@@ -1312,3 +1312,18 @@ button,select,input,textarea{font:inherit;color:inherit}button,select,input,text
 
 /* Build 2026.10.19-10 — three visible scope selectors */
 @media(min-width:761px){.control-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* 2026.10.19 Build 15 — exam-only viewport-width layout.
+ * Study/review stay at the original readable 1100px max-width.
+ * Outer gutters prevent edge clipping and preserve browser zoom accessibility.
+ */
+body.exam-wide .app-header,
+body.exam-wide .app-shell{
+  width:100%;
+  max-width:none;
+  margin-left:0;
+  margin-right:0;
+  padding-left:clamp(12px, 1.25vw, 24px);
+  padding-right:clamp(12px, 1.25vw, 24px);
+}
+body.exam-wide .exam-card{min-width:0;}
