@@ -45,12 +45,14 @@ for(const y of [2016,2017,2018,2019])assert(counts[y]===22,`expected 22 question
 for(const y of [2020,2021,2022,2023,2024,2025,2026])assert(counts[y]===23,`expected 23 questions in ${y}, got ${counts[y]}`);
 assert(!counts[2015],'2015 must remain absent from provided corpus');
 const solved=src.questions.filter(q=>q.solutionStatus==='solved');
-assert(solved.length===6,`expected 6 curated solutions, got ${solved.length}`);
+assert(solved.length===src.metadata?.coverage?.solved,`solution count ${solved.length} does not match metadata ${src.metadata?.coverage?.solved}`);
+assert(solved.length===159,`expected 159 solutions in this build, got ${solved.length}`);
 const mirror=fs.readFileSync('data/generated/exam-data.js','utf8').trim();
 assert(mirror.startsWith('window.CURRILOOP_EXAM_DATA='),'exam JS mirror prefix missing');
 const mirrored=JSON.parse(mirror.slice('window.CURRILOOP_EXAM_DATA='.length,-1));
 assert(mirrored.metadata?.schemaVersion===3,'exam mirror schema mismatch');
 assert(mirrored.questions.length===src.questions.length,'exam mirror count mismatch');
+assert(JSON.stringify(mirrored)===JSON.stringify(src),'exam JS mirror differs from canonical JSON');
 const html=fs.readFileSync('index.html','utf8'),app=fs.readFileSync('js/app.js','utf8'),css=fs.readFileSync('assets/css/app.css','utf8');
 for(const token of ['examMainTab','examYearSelect','examSubjectSelect','examTopicSelect','examSearchInput','examQuestionList','examDetail'])assert(html.includes(token),`exam HTML missing ${token}`);
 for(const token of ['renderExamPage','examFilteredQuestions','selectExamQuestion','subjectOrder','exam-problem-images','exam-atlas-crop','CURRILOOP_EXAM_DATA'])assert(app.includes(token),`exam app missing ${token}`);

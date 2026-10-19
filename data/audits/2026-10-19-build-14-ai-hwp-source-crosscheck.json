@@ -1,0 +1,1139 @@
+{
+  "buildId": "2026.10.19-14",
+  "sourceFile": "[별책10] 2022_실과(기술가정)정보과 교육과정_정보과 발췌.hwp",
+  "sourceFileSHA256": "49183b90ab752dc30c1405555cef2c5db5071044c48656ae1706e374d05585b2",
+  "method": "Extract original HWP5 BodyText record tag 67; select AI-basic subject section; normalize all whitespace runs to one ASCII space, compare each of the 110 sourceText passages verbatim",
+  "beforeExactSourceMatches": 110,
+  "afterExactSourceMatches": 110,
+  "sourceTextCorrections": [
+    {
+      "lineId": "AI-22-GEN-TE-04",
+      "changeType": "REMOVE_NEXT_SECTION_HEADING_FROM_PRECEDING_BULLET",
+      "oldSourceText": "‘인공지능 기초’ 과목의 교수⋅학습은 인공지능의 원리에 대한 이해를 바탕으로 문제를 효율적으로 해결하는 역량을 향상하는 데 중점을 둔다. ‘인공지능 기초’ 과목 내의 내용 영역, 다른 교과 및 비교과 활동과의 융합을 통해 학생의 인공지능 소양이 다양한 분야에 전이될 수 있도록 한다. (2) 교수⋅학습 방법",
+      "correctedSourceText": "‘인공지능 기초’ 과목의 교수⋅학습은 인공지능의 원리에 대한 이해를 바탕으로 문제를 효율적으로 해결하는 역량을 향상하는 데 중점을 둔다. ‘인공지능 기초’ 과목 내의 내용 영역, 다른 교과 및 비교과 활동과의 융합을 통해 학생의 인공지능 소양이 다양한 분야에 전이될 수 있도록 한다.",
+      "removedSuffix": " (2) 교수⋅학습 방법",
+      "hwpHeadingConfirmed": "(2) 교수⋅학습 방법",
+      "unitOffsetsUnchanged": true
+    },
+    {
+      "lineId": "AI-22-GEN-EV-04",
+      "changeType": "REMOVE_NEXT_SECTION_HEADING_FROM_PRECEDING_BULLET",
+      "oldSourceText": "인공지능 프로그램 구현에 프로그래밍 활동이 포함되나 프로그래밍 내용보다는 인공지능의 구현과 활용, 인공지능 활용에 대한 인식에 초점을 맞추어 평가한다. (2) 평가 방법",
+      "correctedSourceText": "인공지능 프로그램 구현에 프로그래밍 활동이 포함되나 프로그래밍 내용보다는 인공지능의 구현과 활용, 인공지능 활용에 대한 인식에 초점을 맞추어 평가한다.",
+      "removedSuffix": " (2) 평가 방법",
+      "hwpHeadingConfirmed": "(2) 평가 방법",
+      "unitOffsetsUnchanged": true
+    }
+  ],
+  "confirmedNotAnError": {
+    "lineId": "AI-22-PJ-ST-01",
+    "phrase": "지속가능발전목표를 해결하기 위해",
+    "preservedAsOfficialSource": true
+  },
+  "sourceLineTotal": 110,
+  "unchangedSemanticUnits": 276,
+  "wholeKnowledgeItems": 11,
+  "sourceMatches": [
+    {
+      "index": 0,
+      "lineId": "AI-22-GEN-CH-01",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 1,
+      "lineId": "AI-22-GEN-CH-02",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 2,
+      "lineId": "AI-22-GEN-CH-03",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 3,
+      "lineId": "AI-22-GEN-CH-04",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 7
+    },
+    {
+      "index": 4,
+      "lineId": "AI-22-GEN-CH-05",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 5,
+      "lineId": "AI-22-GEN-CH-06",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 6,
+      "lineId": "AI-22-GEN-CH-07",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 7,
+      "lineId": "AI-22-GEN-CH-08",
+      "family": "성격",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 8,
+      "lineId": "AI-22-GEN-GO-01",
+      "family": "목표",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 9,
+      "lineId": "AI-22-GEN-GO-02",
+      "family": "목표",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 10,
+      "lineId": "AI-22-GEN-GO-03",
+      "family": "목표",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 11,
+      "lineId": "AI-22-GEN-GO-04",
+      "family": "목표",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 12,
+      "lineId": "AI-22-GEN-GO-05",
+      "family": "목표",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 13,
+      "lineId": "AI-22-AI-CI-01",
+      "family": "핵심 아이디어",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 14,
+      "lineId": "AI-22-AI-CI-02",
+      "family": "핵심 아이디어",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 15,
+      "lineId": "AI-22-AI-KN-01",
+      "family": "지식·이해",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 3,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 16,
+      "lineId": "AI-22-AI-KN-02",
+      "family": "지식·이해",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 17,
+      "lineId": "AI-22-AI-KN-03",
+      "family": "지식·이해",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 18,
+      "lineId": "AI-22-AI-SK-01",
+      "family": "과정·기능",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 19,
+      "lineId": "AI-22-AI-SK-02",
+      "family": "과정·기능",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 20,
+      "lineId": "AI-22-AI-SK-03",
+      "family": "과정·기능",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 21,
+      "lineId": "AI-22-AI-AT-01",
+      "family": "가치·태도",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 22,
+      "lineId": "AI-22-AI-AT-02",
+      "family": "가치·태도",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 23,
+      "lineId": "AI-22-ML-CI-01",
+      "family": "핵심 아이디어",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 24,
+      "lineId": "AI-22-ML-CI-02",
+      "family": "핵심 아이디어",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 25,
+      "lineId": "AI-22-ML-KN-01",
+      "family": "지식·이해",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 26,
+      "lineId": "AI-22-ML-KN-02",
+      "family": "지식·이해",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 4,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 27,
+      "lineId": "AI-22-ML-KN-03",
+      "family": "지식·이해",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 2,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 28,
+      "lineId": "AI-22-ML-SK-01",
+      "family": "과정·기능",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 29,
+      "lineId": "AI-22-ML-SK-02",
+      "family": "과정·기능",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 30,
+      "lineId": "AI-22-ML-SK-03",
+      "family": "과정·기능",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 31,
+      "lineId": "AI-22-ML-SK-04",
+      "family": "과정·기능",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 32,
+      "lineId": "AI-22-ML-AT-01",
+      "family": "가치·태도",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 33,
+      "lineId": "AI-22-ML-AT-02",
+      "family": "가치·태도",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 34,
+      "lineId": "AI-22-SO-CI-01",
+      "family": "핵심 아이디어",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 35,
+      "lineId": "AI-22-SO-CI-02",
+      "family": "핵심 아이디어",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 36,
+      "lineId": "AI-22-SO-KN-01",
+      "family": "지식·이해",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 37,
+      "lineId": "AI-22-SO-KN-02",
+      "family": "지식·이해",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 38,
+      "lineId": "AI-22-SO-KN-03",
+      "family": "지식·이해",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 39,
+      "lineId": "AI-22-SO-SK-01",
+      "family": "과정·기능",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 40,
+      "lineId": "AI-22-SO-SK-02",
+      "family": "과정·기능",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 41,
+      "lineId": "AI-22-SO-SK-03",
+      "family": "과정·기능",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 42,
+      "lineId": "AI-22-SO-SK-04",
+      "family": "과정·기능",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 43,
+      "lineId": "AI-22-SO-AT-01",
+      "family": "가치·태도",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 44,
+      "lineId": "AI-22-SO-AT-02",
+      "family": "가치·태도",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 45,
+      "lineId": "AI-22-PJ-CI-01",
+      "family": "핵심 아이디어",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 46,
+      "lineId": "AI-22-PJ-CI-02",
+      "family": "핵심 아이디어",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 47,
+      "lineId": "AI-22-PJ-KN-01",
+      "family": "지식·이해",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 48,
+      "lineId": "AI-22-PJ-KN-02",
+      "family": "지식·이해",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 0
+    },
+    {
+      "index": 49,
+      "lineId": "AI-22-PJ-SK-01",
+      "family": "과정·기능",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 50,
+      "lineId": "AI-22-PJ-SK-02",
+      "family": "과정·기능",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 51,
+      "lineId": "AI-22-PJ-SK-03",
+      "family": "과정·기능",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 52,
+      "lineId": "AI-22-PJ-AT-01",
+      "family": "가치·태도",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 53,
+      "lineId": "AI-22-PJ-AT-02",
+      "family": "가치·태도",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 54,
+      "lineId": "AI-22-PJ-AT-03",
+      "family": "가치·태도",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 55,
+      "lineId": "AI-22-AI-ST-01",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 56,
+      "lineId": "AI-22-AI-ST-02",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 57,
+      "lineId": "AI-22-AI-ST-03",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 58,
+      "lineId": "AI-22-AI-ST-04",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 59,
+      "lineId": "AI-22-AI-ST-05",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 60,
+      "lineId": "AI-22-AI-EX-01",
+      "family": "해설",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 61,
+      "lineId": "AI-22-AI-EX-02",
+      "family": "해설",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 62,
+      "lineId": "AI-22-AI-CN-01",
+      "family": "고려사항",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 63,
+      "lineId": "AI-22-AI-CN-02",
+      "family": "고려사항",
+      "area": "인공지능의 이해",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 64,
+      "lineId": "AI-22-ML-ST-01",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 65,
+      "lineId": "AI-22-ML-ST-02",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 66,
+      "lineId": "AI-22-ML-ST-03",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 67,
+      "lineId": "AI-22-ML-ST-04",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 68,
+      "lineId": "AI-22-ML-ST-05",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 69,
+      "lineId": "AI-22-ML-ST-06",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 70,
+      "lineId": "AI-22-ML-EX-01",
+      "family": "해설",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 71,
+      "lineId": "AI-22-ML-EX-02",
+      "family": "해설",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 72,
+      "lineId": "AI-22-ML-EX-03",
+      "family": "해설",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 8
+    },
+    {
+      "index": 73,
+      "lineId": "AI-22-ML-EX-04",
+      "family": "해설",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 74,
+      "lineId": "AI-22-ML-CN-01",
+      "family": "고려사항",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 75,
+      "lineId": "AI-22-ML-CN-02",
+      "family": "고려사항",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 76,
+      "lineId": "AI-22-ML-CN-03",
+      "family": "고려사항",
+      "area": "인공지능과 학습",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 77,
+      "lineId": "AI-22-SO-ST-01",
+      "family": "성취기준",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 78,
+      "lineId": "AI-22-SO-ST-02",
+      "family": "성취기준",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 79,
+      "lineId": "AI-22-SO-ST-03",
+      "family": "성취기준",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 80,
+      "lineId": "AI-22-SO-ST-04",
+      "family": "성취기준",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 81,
+      "lineId": "AI-22-SO-EX-01",
+      "family": "해설",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 82,
+      "lineId": "AI-22-SO-EX-02",
+      "family": "해설",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 6
+    },
+    {
+      "index": 83,
+      "lineId": "AI-22-SO-CN-01",
+      "family": "고려사항",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 84,
+      "lineId": "AI-22-SO-CN-02",
+      "family": "고려사항",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 85,
+      "lineId": "AI-22-SO-CN-03",
+      "family": "고려사항",
+      "area": "인공지능의 사회적 영향",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 86,
+      "lineId": "AI-22-PJ-ST-01",
+      "family": "성취기준",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 87,
+      "lineId": "AI-22-PJ-ST-02",
+      "family": "성취기준",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 88,
+      "lineId": "AI-22-PJ-ST-03",
+      "family": "성취기준",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 89,
+      "lineId": "AI-22-PJ-ST-04",
+      "family": "성취기준",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 90,
+      "lineId": "AI-22-PJ-EX-01",
+      "family": "해설",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 91,
+      "lineId": "AI-22-PJ-EX-02",
+      "family": "해설",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 92,
+      "lineId": "AI-22-PJ-CN-01",
+      "family": "고려사항",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 93,
+      "lineId": "AI-22-PJ-CN-02",
+      "family": "고려사항",
+      "area": "인공지능 프로젝트",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 94,
+      "lineId": "AI-22-GEN-TE-01",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 95,
+      "lineId": "AI-22-GEN-TE-02",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 96,
+      "lineId": "AI-22-GEN-TE-03",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 97,
+      "lineId": "AI-22-GEN-TE-04",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": true,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 98,
+      "lineId": "AI-22-GEN-TE-05",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 6
+    },
+    {
+      "index": 99,
+      "lineId": "AI-22-GEN-TE-06",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 100,
+      "lineId": "AI-22-GEN-TE-07",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 5
+    },
+    {
+      "index": 101,
+      "lineId": "AI-22-GEN-TE-08",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 102,
+      "lineId": "AI-22-GEN-TE-09",
+      "family": "교수·학습",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 103,
+      "lineId": "AI-22-GEN-EV-01",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 1
+    },
+    {
+      "index": 104,
+      "lineId": "AI-22-GEN-EV-02",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 4
+    },
+    {
+      "index": 105,
+      "lineId": "AI-22-GEN-EV-03",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 106,
+      "lineId": "AI-22-GEN-EV-04",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": true,
+      "semanticUnitCount": 2
+    },
+    {
+      "index": 107,
+      "lineId": "AI-22-GEN-EV-05",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 8
+    },
+    {
+      "index": 108,
+      "lineId": "AI-22-GEN-EV-06",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    },
+    {
+      "index": 109,
+      "lineId": "AI-22-GEN-EV-07",
+      "family": "평가",
+      "area": "과목 공통",
+      "exactNormalizedHWPMatch": true,
+      "matchOccurrenceCountInAISubsection": 1,
+      "correctedSectionHeading": false,
+      "semanticUnitCount": 3
+    }
+  ],
+  "officialAnswerKeyUsed": false
+}

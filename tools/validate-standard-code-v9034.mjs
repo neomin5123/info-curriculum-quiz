@@ -24,7 +24,8 @@ assert(unitPrefixOverlap===0,`presentation unit overlaps standard code: ${unitPr
 
 for(const token of [
   'function splitStandardText(text)',
-  'function standardBodyUnits(units,offset,bodyLength)',
+  'function standardBodyUnits(units,offset,body)',
+  'text:body.slice(start,end)',
   'data-answer="${esc(parts.body)}"',
   'class="standard-code"',
   'class="standard-body cs-cloze-content"'
