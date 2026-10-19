@@ -161,18 +161,26 @@ const AREA_MEMO_DEFAULTS={
   }
 };
 const AREA_MEMO_AREA_ORDER=['컴퓨팅 시스템','데이터','알고리즘과 프로그래밍','인공지능','디지털 문화'];
+const AI_AREA_MEMO_ORDER=['인공지능의 이해','인공지능과 학습','인공지능의 사회적 영향','인공지능 프로젝트'];
+AREA_MEMO_DEFAULTS['ai-basic']={
+  '인공지능의 이해':'1. 인공지능의 원리\n2. 인공지능과 탐색\n3. 지식의 표현과 추론',
+  '인공지능과 학습':'1. 기계학습과 데이터\n2. 기계학습 알고리즘\n3. 인공신경망과 딥러닝',
+  '인공지능의 사회적 영향':'1. 인공지능의 발전과 사회 변화\n2. 인공지능과 진로\n3. 인공지능과 윤리',
+  '인공지능 프로젝트':'1. 인공지능과 지속가능발전목표\n2. 인공지능 문제 해결 절차'
+};
 function areaMemoDefaultTextFor(subject,area,defaults=AREA_MEMO_DEFAULTS){
   const one=(s,a)=>defaults[s]?.[a]||'';
   if(subject==='all'&&area==='all'){
     const schoolBlock=(label,s)=>[`[${label}]`,...AREA_MEMO_AREA_ORDER.flatMap(x=>[`[${x}]`,one(s,x),''])].join('\n').trim();
-    return `${schoolBlock('중학교 정보','middle-info')}\n\n${schoolBlock('고등학교 정보','high-info')}`;
+    const aiBlock=['[인공지능 기초]',...AI_AREA_MEMO_ORDER.flatMap(x=>[`[${x}]`,one('ai-basic',x),''])].join('\n').trim();
+    return `${schoolBlock('중학교 정보','middle-info')}\n\n${schoolBlock('고등학교 정보','high-info')}\n\n${aiBlock}`;
   }
   if(subject==='all'){
-    const m=one('middle-info',area),h=one('high-info',area);
-    return [`[중학교]\n${m}`,`[고등학교]\n${h}`].filter(Boolean).join('\n\n');
+    const m=one('middle-info',area),h=one('high-info',area),ai=one('ai-basic',area);
+    return [[m,'중학교'],[h,'고등학교'],[ai,'인공지능 기초']].filter(([v])=>v).map(([v,label])=>`[${label}]\n${v}`).join('\n\n');
   }
   if(area==='all'){
-    return AREA_MEMO_AREA_ORDER.flatMap(x=>[`[${x}]`,one(subject,x),'']).join('\n').trim();
+    return (subject==='ai-basic'?AI_AREA_MEMO_ORDER:AREA_MEMO_AREA_ORDER).flatMap(x=>[`[${x}]`,one(subject,x),'']).join('\n').trim();
   }
   return one(subject,area);
 }
@@ -334,7 +342,7 @@ function syncAreaOptions(preferred=state.ui.area){
   el.area.value=value;state.ui.area=value;
 }
 function initSelectors(){
-  el.subject.append(option('all','중·고 정보 전체'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
+  el.subject.append(option('all','전체 과목'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
   el.subject.value=[...el.subject.options].some(o=>o.value===state.ui.subject)?state.ui.subject:'middle-info';
   syncAreaOptions(state.ui.area);
   syncFamilies();syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';el.retry.checked=state.ui.retry;el.zoom.value=String(state.ui.zoom||100);applyZoom();
@@ -854,7 +862,7 @@ function showMainTab(tab='study',save=true){
 }
 function syncScopeControlsFromState(){
   el.subject.value=state.ui.subject;
-  el.area.value=state.ui.area;
+  syncAreaOptions(state.ui.area);
   syncFamilies(state.ui.family);el.family.value=state.ui.family;
   syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
@@ -1063,10 +1071,15 @@ function splitStandardText(text){
   if(!m)return {code:'',body:source,offset:0};
   return {code:m[1],body:source.slice(m[0].length),offset:m[0].length};
 }
-function standardBodyUnits(units,offset,bodyLength){
+function standardBodyUnits(units,offset,body){
+  // 공식 성취기준 코드는 제시하되 빈칸은 본문에만 만든다.
+  // 원문 시작부터 이어지는 presentation phrase도 코드 뒤쪽을 잘라 누락 없이 회상한다.
   return (units||[])
-    .filter(k=>Number.isInteger(k.start)&&Number.isInteger(k.end)&&k.end>offset&&k.start>=offset)
-    .map(k=>({...k,start:k.start-offset,end:Math.min(bodyLength,k.end-offset)}))
+    .filter(k=>Number.isInteger(k.start)&&Number.isInteger(k.end)&&k.end>offset&&k.start<offset+body.length)
+    .map(k=>{
+      const start=Math.max(0,k.start-offset),end=Math.min(body.length,k.end-offset);
+      return {...k,start,end,text:body.slice(start,end)};
+    })
     .filter(k=>k.end>k.start);
 }
 function standardItemHtml(task,it,mode,itemIx){
@@ -1081,7 +1094,7 @@ function standardItemHtml(task,it,mode,itemIx){
 
   const line=engine.lineMap.get(it.lineId);
   const rawUnits=line?engine.recallUnitsForLine(line,task.focus?.kind||state.ui.stage):[];
-  const units=standardBodyUnits(rawUnits,parts.offset,parts.body.length);
+  const units=standardBodyUnits(rawUnits,parts.offset,parts.body);
 
   if(mode==='typing'){
     return `<label class="standard-row standard-typing-row">
@@ -1119,7 +1132,13 @@ function renderContentStandards(task){
   if(mode==='mask')bindMasks();
 }
 function renderWholeGroup(g){
-  const mode=state.ui.mode;el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)}</div>${inputRows(s.items,s.family,mode)}</section>`).join('')}</div>`;if(mode==='mask')bindMasks();
+  const mode=state.ui.mode;
+  // 인공지능 기초 성취기준은 코드와 본문을 분리하여 코드 자체를 묻지 않는다.
+  if(g.subject==='ai-basic'&&g.familyGroup==='standards'){
+    const task={type:'whole-group',group:g,focus:{kind:'whole',standardLineIds:g.items.map(it=>it.lineId)}};
+    el.content.innerHTML=`<div class="whole-wrap"><section class="whole-section standards-section"><div class="section-title">성취기준</div><div class="cs-items">${g.items.map((it,i)=>standardItemHtml(task,it,mode,i)).join('')}</div></section></div>`;
+  }else el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)}</div>${inputRows(s.items,s.family,mode)}</section>`).join('')}</div>`;
+  if(mode==='mask')bindMasks();
 }
 function renderLine(line){
   const mode=state.ui.mode;if(mode==='source'){el.content.innerHTML=`<div class="source-text">${esc(line.sourceText)}</div>`;return;}if(mode==='typing'){el.content.innerHTML=`<div class="typing-area trace-typing-area"><div class="trace-guide trace-guide-block">${esc(line.sourceText)}</div><textarea id="typingInput" placeholder="원문을 그대로 입력"></textarea></div>`;return;}
@@ -1280,7 +1299,7 @@ function renderProvenance(task){
 }
 function answerField(target){return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;}
 function answerFields(){return [...el.content.querySelectorAll('.inline-input,.group-input,.ki-input,#typingInput')].filter(x=>!x.disabled);}
-function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';return [taskId,state.ui.stage,state.ui.mode,index].join('|');}
+function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';const subject=task?.group?.subject||task?.line?.subject||'';return [taskId,state.ui.stage,state.ui.mode,index,...(subject==='ai-basic'?['semantic-v3']:[])].join('|');}
 
 function resizeAnswerField(field){
   if(!field)return;
