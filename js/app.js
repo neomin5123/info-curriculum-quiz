@@ -10,14 +10,14 @@ areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
 areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
-examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examDetail:$('examDetail')};
+examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
 const PRACTICAL_AUTO_ADVANCE_DELAY_MS=950;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 const EXAM_DATA=window.CURRILOOP_EXAM_DATA||{metadata:{coverage:{}},questions:[]};
 const EXAM_UI_STORAGE_KEY='curriloop-exam-ui-v1';
-let examUi=loadExamUi();
+let examUi=loadExamUi(),examRevealId='';
 function loadExamUi(){
   const base={year:'all',part:'all',subject:'all',topic:'all',solution:'all',search:'',selectedId:''};
   try{return Object.assign(base,JSON.parse(localStorage.getItem(EXAM_UI_STORAGE_KEY)||'{}'));}catch(e){return base;}
@@ -791,9 +791,17 @@ function examDetailHtml(q,list){
   if(!q)return `<div class="exam-empty-detail"><strong>조건에 맞는 기출문제가 없습니다.</strong><span>필터나 검색어를 바꿔 보세요.</span></div>`;
   const idx=list.findIndex(x=>x.id===q.id),prev=idx>0?list[idx-1]:null,next=idx>=0&&idx<list.length-1?list[idx+1]:null;
   const tags=(q.topics||[]).map(t=>`<span>${esc(t)}</span>`).join('');
-  const solved=q.solutionStatus==='solved';
+  const solved=q.solutionStatus==='solved',unlocked=examRevealId===q.id;
   const answerNote=q.verification?.status==='derived'?'독립 풀이 · 공식 정답 검증 전':'기존 수록 풀이 · 공식 정답 대조 미확인';
-  const solution=solved?`<details class="exam-solution-box"><summary>정답·풀이 보기</summary><p class="exam-answer-provenance">${answerNote}</p><div class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></div><div class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></div></details>`:`<section class="exam-pending-box"><strong>풀이 미수록</strong><p>제공된 PDF는 문제지라 공식 정답·해설이 포함되어 있지 않습니다. 답과 풀이를 별도로 검증한 문항부터 추가합니다.</p></section>`;
+  const solution=solved?`<aside class="exam-solution-panel${unlocked?' unlocked':''}" aria-label="정답과 풀이">
+     <div class="exam-solution-panel-head"><strong>정답 및 풀이</strong><button type="button" class="exam-solution-hide" data-exam-hide ${unlocked?'':'hidden'}>다시 가리기</button></div>
+     <div class="exam-solution-content" ${unlocked?'':'inert aria-hidden="true"'}>
+       <p class="exam-answer-provenance">${esc(answerNote)}</p>
+       <section class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></section>
+       <section class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></section>
+     </div>
+     <div class="exam-solution-overlay" ${unlocked?'hidden':''}><button class="exam-solution-unlock" type="button" data-exam-reveal aria-label="${q.year}학년도 전공 ${q.part} ${q.question}번 정답과 풀이 공개">정답·풀이 확인 <span aria-hidden="true">→</span></button></div>
+     </aside>`:`<aside class="exam-solution-panel exam-unsolved" aria-label="풀이 미수록"><div class="exam-solution-panel-head"><strong>정답 및 풀이</strong></div><div class="exam-solution-pending"><strong>풀이 준비중</strong><p>이 문항의 독립 풀이가 아직 입력되지 않았습니다. 제공된 PDF에는 공식 정답이 없습니다.</p></div></aside>`;
   const imageList=(q.images||[]).map((img,i)=>{
     const originalHeight=Number(img.height)||1;
     const displayHeight=Math.min(originalHeight,Math.max(1,Number(window.CURRILOOP_EXAM_DISPLAY_BOUNDS?.[q.id]?.[i])||originalHeight));
@@ -809,8 +817,7 @@ function examDetailHtml(q,list){
       <div class="exam-detail-nav"><button type="button" data-exam-nav="${prev?esc(prev.id):''}" ${prev?'':'disabled'}>← 이전</button><button type="button" data-exam-nav="${next?esc(next.id):''}" ${next?'':'disabled'}>다음 →</button></div>
     </div>
     <div class="exam-tags">${tags}</div>
-    ${problem}
-    ${solution}
+    <div class="exam-two-pane">${problem}${solution}</div>
     <footer class="exam-source-note">출처 · ${esc(q.source?.file||EXAM_DATA.metadata?.sourceFile||'전공 기출 PDF')} · PDF 원문을 문항 단위로 렌더한 화면입니다. 연도별 atlas에서 해당 문항 영역만 표시합니다.</footer>`;
 }
 function renderExamPage(){
@@ -822,26 +829,62 @@ function renderExamPage(){
   const solved=list.filter(q=>q.solutionStatus==='solved').length;
   if(el.examResultCount)el.examResultCount.textContent=`${list.length}문항`;
   if(el.examSummary)el.examSummary.textContent=`현재 결과 ${list.length}문항 · 풀이 ${solved}문항`;
-  if(el.examList)el.examList.innerHTML=list.length?list.map(examQuestionButton).join(''):`<div class="review-empty">조건에 맞는 문항이 없습니다.</div>`;
+  if(el.examQuestionSelect){el.examQuestionSelect.innerHTML=list.length?list.map(q=>examOption(q.id,`${q.year} · ${q.part} ${q.question}번 · ${String(q.title||q.subject).replace(/\s+/g,' ').slice(0,66)}`,examUi.selectedId)).join(''):'<option value="">조건에 맞는 문항 없음</option>';el.examQuestionSelect.disabled=!list.length;}
+  if(el.examList)el.examList.innerHTML='';
   if(el.examDetail)el.examDetail.innerHTML=examDetailHtml(selected,list);
   saveExamUi();
 }
 function setExamFilter(kind,value){
-  examUi[kind]=value;
+  examUi[kind]=value;examRevealId='';
   if(kind==='subject')examUi.topic='all';
   examUi.selectedId='';
   renderExamPage();
 }
 function selectExamQuestion(id,scrollDetail=false){
   if(!EXAM_DATA.questions.some(q=>q.id===id))return;
+  if(examUi.selectedId!==id)examRevealId='';
   examUi.selectedId=id;renderExamPage();
   if(scrollDetail)requestAnimationFrame(()=>el.examDetail?.scrollIntoView({block:'start',behavior:'smooth'}));
 }
 function resetExamFilters(){
-  examUi={year:'all',part:'all',subject:'all',topic:'all',solution:'all',search:'',selectedId:''};
+  examUi={year:'all',part:'all',subject:'all',topic:'all',solution:'all',search:'',selectedId:''};examRevealId='';
   initExamBrowser();renderExamPage();
 }
 
+function revealExamSolution(panel,reveal){
+  if(!panel)return;
+  const q=EXAM_DATA.questions.find(x=>x.id===examUi.selectedId);
+  if(!q||q.solutionStatus!=='solved')return;
+  examRevealId=reveal?q.id:'';
+  panel.classList.toggle('unlocked',reveal);
+  const content=panel.querySelector('.exam-solution-content');
+  if(content){content.toggleAttribute('inert',!reveal);if(reveal)content.removeAttribute('aria-hidden');else content.setAttribute('aria-hidden','true');}
+  const overlay=panel.querySelector('.exam-solution-overlay');
+  if(overlay)overlay.hidden=reveal;
+  const hide=panel.querySelector('[data-exam-hide]');
+  if(hide)hide.hidden=!reveal;
+  if(reveal){hide?.focus();}else{panel.querySelector('[data-exam-reveal]')?.focus();}
+}
+function openExamAnswerSheet(){
+  const q=EXAM_DATA.questions.find(x=>x.id===examUi.selectedId)||EXAM_DATA.questions[0];
+  if(!q||!el.examSheetDialog)return;
+  const years=[...new Set(EXAM_DATA.questions.map(x=>x.year))].sort((a,b)=>b-a);
+  el.examSheetYear.innerHTML=years.map(y=>examOption(String(y),`${y}학년도`,String(q.year))).join('');
+  el.examSheetPart.value=q.part;
+  renderExamAnswerSheet();
+  if(!el.examSheetDialog.open)el.examSheetDialog.showModal();
+}
+function renderExamAnswerSheet(){
+  if(!el.examSheetContent)return;
+  const year=Number(el.examSheetYear.value),part=el.examSheetPart.value;
+  const paper=EXAM_DATA.questions.filter(q=>q.year===year&&q.part===part).sort((a,b)=>a.question-b.question);
+  const solved=paper.filter(q=>q.solutionStatus==='solved').length;
+  el.examSheetCount.textContent=`${paper.length}문항 중 ${solved}문항 입력`;
+  el.examSheetContent.innerHTML=paper.length?paper.map(q=>{
+    const ready=q.solutionStatus==='solved';
+    return `<div class="exam-sheet-row"><div class="exam-sheet-no"><strong>${q.question}번</strong><span>${esc(q.subject)} · ${q.points||'?'}점</span></div><div class="exam-sheet-answer ${ready?'':'is-pending'}">${ready?`<div class="exam-sheet-answer-text">${esc(q.answer)}</div>`:'<em>정답 미입력</em>'}</div></div>`;
+  }).join(''):'<p>수록된 문제지가 없습니다.</p>';
+}
 function showMainTab(tab='study',save=true){
   const review=tab==='review',exam=tab==='exam',study=!review&&!exam;
   state.ui.mainTab=exam?'exam':review?'review':'study';
@@ -858,7 +901,7 @@ function showMainTab(tab='study',save=true){
   el.areaMemoDock?.classList.toggle('hidden',exam);
   el.retryDock?.classList.toggle('hidden',exam);
   if(review)renderReviewPage();
-  if(exam)renderExamPage();
+  if(exam)renderExamPage();else examRevealId='';
   if(save)persist();
 }
 function syncScopeControlsFromState(){
@@ -1551,8 +1594,12 @@ if(el.examTopic)el.examTopic.onchange=()=>setExamFilter('topic',el.examTopic.val
 if(el.examSolution)el.examSolution.onchange=()=>setExamFilter('solution',el.examSolution.value);
 if(el.examSearch)el.examSearch.oninput=()=>setExamFilter('search',el.examSearch.value);
 if(el.examReset)el.examReset.onclick=resetExamFilters;
-el.examList?.addEventListener('click',e=>{const row=e.target.closest('[data-exam-id]');if(row)selectExamQuestion(row.dataset.examId,true);});
-el.examDetail?.addEventListener('click',e=>{const nav=e.target.closest('[data-exam-nav]');if(nav?.dataset.examNav)selectExamQuestion(nav.dataset.examNav,true);});
+el.examQuestionSelect?.addEventListener('change',()=>selectExamQuestion(el.examQuestionSelect.value));
+el.examSheetButton?.addEventListener('click',openExamAnswerSheet);
+el.examSheetClose?.addEventListener('click',()=>el.examSheetDialog?.close());
+el.examSheetYear?.addEventListener('change',renderExamAnswerSheet);
+el.examSheetPart?.addEventListener('change',renderExamAnswerSheet);
+el.examDetail?.addEventListener('click',e=>{const nav=e.target.closest('[data-exam-nav]');if(nav?.dataset.examNav){selectExamQuestion(nav.dataset.examNav);return;}const panel=e.target.closest('.exam-solution-panel');if(e.target.closest('[data-exam-reveal]'))revealExamSolution(panel,true);else if(e.target.closest('[data-exam-hide]'))revealExamSolution(panel,false);});
 el.prevArea?.addEventListener('click',()=>jumpArea(-1));
 el.nextArea?.addEventListener('click',()=>jumpArea(1));
 el.scrollTop?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));

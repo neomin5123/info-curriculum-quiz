@@ -8,9 +8,9 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261019-15">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261019-16">
 </head>
-<body data-build="2026.10.19-15">
+<body data-build="2026.10.19-16">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
@@ -136,11 +136,16 @@
           <label>풀이<select id="examSolutionSelect"><option value="all">전체</option><option value="solved">풀이 있음</option><option value="pending">풀이 준비중</option></select></label>
           <label class="exam-search-label">검색<input id="examSearchInput" type="search" placeholder="문제·태그 검색" autocomplete="off" spellcheck="false"></label>
         </div>
+        <div class="exam-navigation-bar" aria-label="문항 이동">
+          <label class="exam-question-control">문항 선택
+            <select id="examQuestionSelect" aria-label="필터 결과에서 문항 선택"></select>
+          </label>
+          <span id="examResultCount" class="exam-result-count" aria-live="polite">0문항</span>
+          <button id="examAnswerSheetButton" type="button" class="exam-sheet-open">문제지별 정답표</button>
+          <button id="examResetFilters" class="text-button" type="button">필터 초기화</button>
+        </div>
         <div class="exam-layout">
-          <aside class="exam-results-pane" aria-label="기출문제 목록">
-            <div class="exam-results-head"><strong id="examResultCount">0문항</strong><button id="examResetFilters" class="text-button" type="button">필터 초기화</button></div>
-            <div id="examQuestionList" class="exam-question-list"></div>
-          </aside>
+          <aside class="exam-results-pane" hidden aria-hidden="true"><div id="examQuestionList" class="exam-question-list"></div></aside>
           <article id="examDetail" class="exam-detail" aria-live="polite"></article>
         </div>
       </section>
@@ -175,19 +180,33 @@
 
   <nav class="page-jump-dock" aria-label="페이지 빠른 이동"><button id="scrollTopButton" type="button" title="맨 위로">↑ 맨 위</button><button id="scrollBottomButton" type="button" title="맨 아래로">맨 아래 ↓</button></nav>
 
+  <dialog id="examAnswerSheetDialog" class="exam-sheet-dialog" aria-labelledby="examAnswerSheetTitle">
+    <div class="exam-sheet-head">
+      <div><span class="exam-sheet-kicker">기출 정답 모아보기</span><h2 id="examAnswerSheetTitle">문제지별 정답표</h2></div>
+      <button id="examAnswerSheetClose" type="button" aria-label="정답표 닫기">×</button>
+    </div>
+    <p class="exam-sheet-disclaimer">수록된 답은 독립 풀이이며 공식 정답지로 검증되지 않았습니다. 미입력 문항은 별도로 표시됩니다.</p>
+    <div class="exam-sheet-filters">
+      <label>학년도<select id="examSheetYear"></select></label>
+      <label>시험<select id="examSheetPart"><option value="A">전공 A</option><option value="B">전공 B</option></select></label>
+      <span id="examSheetCount" aria-live="polite"></span>
+    </div>
+    <div id="examSheetContent" class="exam-sheet-content"></div>
+  </dialog>
+
   <dialog id="sourceDialog">
     <div class="dialog-head"><strong>원문 출처</strong><button id="closeSource" aria-label="닫기">×</button></div>
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?b=20261019-15"></script>
-  <script src="data/generated/exam-data.js?b=20261019-15"></script>
-  <script src="data/generated/ai-basic-data.js?b=20261019-15"></script>
-  <script src="data/generated/exam-display-bounds.js?b=20261019-15"></script>
-  <script src="js/core/config.js?b=20261019-15"></script>
-  <script src="js/core/storage.js?b=20261019-15"></script>
-  <script src="js/core/grading.js?b=20261019-15"></script>
-  <script src="js/core/study-engine.js?b=20261019-15"></script>
-  <script src="js/app.js?b=20261019-15"></script>
+  <script src="data/generated/study-data.js?b=20261019-16"></script>
+  <script src="data/generated/exam-data.js?b=20261019-16"></script>
+  <script src="data/generated/ai-basic-data.js?b=20261019-16"></script>
+  <script src="data/generated/exam-display-bounds.js?b=20261019-16"></script>
+  <script src="js/core/config.js?b=20261019-16"></script>
+  <script src="js/core/storage.js?b=20261019-16"></script>
+  <script src="js/core/grading.js?b=20261019-16"></script>
+  <script src="js/core/study-engine.js?b=20261019-16"></script>
+  <script src="js/app.js?b=20261019-16"></script>
 </body>
 </html>
