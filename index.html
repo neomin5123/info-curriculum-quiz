@@ -8,9 +8,9 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261019-16">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261019-17">
 </head>
-<body data-build="2026.10.19-16">
+<body data-build="2026.10.19-17">
   <header class="app-header">
     <div class="brand-row">
       <h1>CurriLoop</h1>
@@ -136,13 +136,13 @@
           <label>풀이<select id="examSolutionSelect"><option value="all">전체</option><option value="solved">풀이 있음</option><option value="pending">풀이 준비중</option></select></label>
           <label class="exam-search-label">검색<input id="examSearchInput" type="search" placeholder="문제·태그 검색" autocomplete="off" spellcheck="false"></label>
         </div>
-        <div class="exam-navigation-bar" aria-label="문항 이동">
-          <label class="exam-question-control">문항 선택
-            <select id="examQuestionSelect" aria-label="필터 결과에서 문항 선택"></select>
+        <div id="examNavigationBar" class="exam-navigation-bar" aria-label="문항 이동">
+          <label class="exam-question-control"><span class="exam-control-visually-hidden">문항 선택</span>
+            <select id="examQuestionSelect" aria-label="문항 선택"></select>
           </label>
           <span id="examResultCount" class="exam-result-count" aria-live="polite">0문항</span>
-          <button id="examAnswerSheetButton" type="button" class="exam-sheet-open">문제지별 정답표</button>
-          <button id="examResetFilters" class="text-button" type="button">필터 초기화</button>
+          <button id="examAnswerSheetButton" type="button" class="exam-sheet-open" aria-label="문제지별 정답표 열기" title="문제지별 정답표">정답표</button>
+          <button id="examResetFilters" class="text-button" type="button" aria-label="기출문제 필터 초기화" title="기출문제 필터 초기화">초기화</button>
         </div>
         <div class="exam-layout">
           <aside class="exam-results-pane" hidden aria-hidden="true"><div id="examQuestionList" class="exam-question-list"></div></aside>
@@ -199,14 +199,14 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?b=20261019-16"></script>
-  <script src="data/generated/exam-data.js?b=20261019-16"></script>
-  <script src="data/generated/ai-basic-data.js?b=20261019-16"></script>
-  <script src="data/generated/exam-display-bounds.js?b=20261019-16"></script>
-  <script src="js/core/config.js?b=20261019-16"></script>
-  <script src="js/core/storage.js?b=20261019-16"></script>
-  <script src="js/core/grading.js?b=20261019-16"></script>
-  <script src="js/core/study-engine.js?b=20261019-16"></script>
-  <script src="js/app.js?b=20261019-16"></script>
+  <script src="data/generated/study-data.js?b=20261019-17"></script>
+  <script src="data/generated/exam-data.js?b=20261019-17"></script>
+  <script src="data/generated/ai-basic-data.js?b=20261019-17"></script>
+  <script src="data/generated/exam-display-bounds.js?b=20261019-17"></script>
+  <script src="js/core/config.js?b=20261019-17"></script>
+  <script src="js/core/storage.js?b=20261019-17"></script>
+  <script src="js/core/grading.js?b=20261019-17"></script>
+  <script src="js/core/study-engine.js?b=20261019-17"></script>
+  <script src="js/app.js?b=20261019-17"></script>
 </body>
 </html>

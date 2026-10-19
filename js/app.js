@@ -10,7 +10,7 @@ areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
 areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
-examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
+examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
 const PRACTICAL_AUTO_ADVANCE_DELAY_MS=950;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -788,9 +788,8 @@ function examQuestionButton(q){
   </button>`;
 }
 function examDetailHtml(q,list){
-  if(!q)return `<div class="exam-empty-detail"><strong>조건에 맞는 기출문제가 없습니다.</strong><span>필터나 검색어를 바꿔 보세요.</span></div>`;
+  if(!q)return `<div class="exam-no-result-layout"><div class="exam-side-navigation"></div><div class="exam-empty-detail"><strong>조건에 맞는 기출문제가 없습니다.</strong><span>필터나 검색어를 바꿔 보세요.</span></div></div>`;
   const idx=list.findIndex(x=>x.id===q.id),prev=idx>0?list[idx-1]:null,next=idx>=0&&idx<list.length-1?list[idx+1]:null;
-  const tags=(q.topics||[]).map(t=>`<span>${esc(t)}</span>`).join('');
   const solved=q.solutionStatus==='solved',unlocked=examRevealId===q.id;
   const answerNote=q.verification?.status==='derived'?'독립 풀이 · 공식 정답 검증 전':'기존 수록 풀이 · 공식 정답 대조 미확인';
   const solution=solved?`<aside class="exam-solution-panel${unlocked?' unlocked':''}" aria-label="정답과 풀이">
@@ -813,11 +812,10 @@ function examDetailHtml(q,list){
   }).join('');
   const problem=imageList?`<section class="exam-problem"><div class="exam-section-label">문제 원문</div><div class="exam-problem-images">${imageList}</div><details class="exam-text-fallback"><summary>검색용 추출 텍스트 보기</summary><div class="exam-problem-text">${esc(q.text)}</div></details></section>`:`<section class="exam-problem"><div class="exam-section-label">문제</div><div class="exam-problem-text">${esc(q.text)}</div></section>`;
   return `<div class="exam-detail-head">
-      <div><span class="exam-kicker">${q.year}학년도 · 전공 ${esc(q.part)} · ${esc(q.questionLabel||`${q.question}번`)}${q.points?` · ${q.points}점`:''}</span><h3>${esc(q.subject)}</h3></div>
+      <h3 class="exam-selected-title">${q.year}학년도 · 전공 ${esc(q.part)} · ${q.question}번</h3>
       <div class="exam-detail-nav"><button type="button" data-exam-nav="${prev?esc(prev.id):''}" ${prev?'':'disabled'}>← 이전</button><button type="button" data-exam-nav="${next?esc(next.id):''}" ${next?'':'disabled'}>다음 →</button></div>
     </div>
-    <div class="exam-tags">${tags}</div>
-    <div class="exam-two-pane">${problem}${solution}</div>
+    <div class="exam-two-pane">${problem}<div class="exam-right-column"><div class="exam-side-navigation"></div>${solution}</div></div>
     <footer class="exam-source-note">출처 · ${esc(q.source?.file||EXAM_DATA.metadata?.sourceFile||'전공 기출 PDF')} · PDF 원문을 문항 단위로 렌더한 화면입니다. 연도별 atlas에서 해당 문항 영역만 표시합니다.</footer>`;
 }
 function renderExamPage(){
@@ -829,9 +827,15 @@ function renderExamPage(){
   const solved=list.filter(q=>q.solutionStatus==='solved').length;
   if(el.examResultCount)el.examResultCount.textContent=`${list.length}문항`;
   if(el.examSummary)el.examSummary.textContent=`현재 결과 ${list.length}문항 · 풀이 ${solved}문항`;
-  if(el.examQuestionSelect){el.examQuestionSelect.innerHTML=list.length?list.map(q=>examOption(q.id,`${q.year} · ${q.part} ${q.question}번 · ${String(q.title||q.subject).replace(/\s+/g,' ').slice(0,66)}`,examUi.selectedId)).join(''):'<option value="">조건에 맞는 문항 없음</option>';el.examQuestionSelect.disabled=!list.length;}
+  if(el.examQuestionSelect){el.examQuestionSelect.innerHTML=list.length?list.map(q=>examOption(q.id,`${q.year}학년도 · 전공 ${q.part} · ${q.question}번`,examUi.selectedId)).join(''):'<option value="">조건에 맞는 문항 없음</option>';el.examQuestionSelect.disabled=!list.length;}
   if(el.examList)el.examList.innerHTML='';
-  if(el.examDetail)el.examDetail.innerHTML=examDetailHtml(selected,list);
+  if(el.examDetail){
+    el.examDetail.innerHTML=examDetailHtml(selected,list);
+    // Keep the original filter controls and event listeners; move their single row
+    // into the right-hand column, immediately above the answer/reveal panel.
+    const sideSlot=el.examDetail.querySelector('.exam-side-navigation');
+    if(sideSlot&&el.examNavBar)sideSlot.appendChild(el.examNavBar);
+  }
   saveExamUi();
 }
 function setExamFilter(kind,value){
