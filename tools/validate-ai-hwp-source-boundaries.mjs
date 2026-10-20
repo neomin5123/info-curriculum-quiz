@@ -30,6 +30,6 @@ for(let i=0;i<aiRows.length;i++){
 }
 const target=ai.lines.find(l=>l.lineId==='AI-22-PJ-ST-01');
 assert(target.sourceText.includes('지속가능발전목표를 해결하기 위해'),'original unusual official wording altered');
-assert(ai.lines.reduce((n,l)=>n+(l.presentation?.units?.length||0),0)===276,'AI keyword cardinality changed');
+assert(ai.lines.reduce((n,l)=>n+(l.presentation?.units?.length||0),0)===296,'AI keyword cardinality changed');
 console.log(JSON.stringify({status:'PASS',sourceLines:110,hwpVerifiedLines:110,
-  headingsCorrected:2,semanticUnitsPreserved:276,aiOriginalWordingPreserved:true},null,2));
+  headingsCorrected:2,semanticUnitsVerified:296,aiOriginalWordingPreserved:true},null,2));

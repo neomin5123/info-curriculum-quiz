@@ -9,3 +9,10 @@ ensure(app.includes("document.body.classList.toggle('exam-wide',exam)"),'tab-spe
 ensure(html.includes('id="studyPage"')&&html.includes('id="reviewPage"')&&html.includes('id="examPage"'),'tab structure changed');
 ensure(css.includes('.app-shell{max-width:1100px'),'normal app shell max width accidentally removed');
 console.log('exam-only wide layout PASS');
+
+// Build 17: toolbar must be relocated into the answer column, with no independent row.
+ensure(html.includes('id="examNavigationBar"')&&html.includes('id="examQuestionSelect"'),'question picker shell missing');
+ensure(app.includes('sideSlot.appendChild(el.examNavBar)')&&app.includes('class="exam-right-column"'),'question picker not in answer-side column');
+ensure(app.includes('class="exam-selected-title"')&&!app.includes('<h3>${esc(q.subject)}</h3>'),'question header still shows redundant subject title');
+ensure(css.includes('.exam-side-navigation .exam-navigation-bar')&&css.includes('.exam-two-pane>.exam-right-column'),'compact right-side selector layout missing');
+console.log('exam inline picker PASS');

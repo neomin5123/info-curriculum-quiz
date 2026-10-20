@@ -15,7 +15,7 @@ for(const [id,fragment] of [['AI-22-GEN-TE-04','(2) 교수⋅학습 방법'],['A
   assert(line&&!line.sourceText.includes(fragment),'next-section header leaked into AI learning item: '+id);
 }
 const presentation=ai.lines.flatMap(l=>l.presentation?.units||[]);
-assert(presentation.length===276,'new semantic unit count changed');
+assert(presentation.length===296,'new semantic unit count changed');
 assert(original.lines.length===270&&original.lines.reduce((n,l)=>n+(l.presentation?.units?.length||0),0)===370,'legacy official baseline changed');
 for(const line of ai.lines){
  const units=line.presentation?.units||[], keywords=line.keywords||[];
@@ -24,7 +24,7 @@ for(const line of ai.lines){
  for(const u of units){
   assert(Number.isInteger(u.start)&&Number.isInteger(u.end)&&u.start>=lastEnd&&u.end>u.start,'out-of-order/overlap unit '+line.lineId);
   assert(line.sourceText.slice(u.start,u.end)===u.text,'text offset mismatch '+line.lineId);
-  assert(u.stage3RGrades.length===0&&['AI_2022_MANUAL_SEMANTIC_CURATION','AI_2022_MANUAL_SEMANTIC_REVIEW_V3'].includes(u.presentationBasis),'ungrounded grade / policy '+line.lineId);
+  assert(u.stage3RGrades.length===1&&['S','A','B','C'].includes(u.stage3RGrades[0])&&['AI_2022_MANUAL_SEMANTIC_CURATION','AI_2022_MANUAL_SEMANTIC_REVIEW_V3','AI_2022_MANUAL_SEMANTIC_REVIEW_V4'].includes(u.presentationBasis),'unreviewed grade / semantic policy '+line.lineId);
   lastEnd=u.end;
  }
  if(line.family==='지식·이해')assert(units.length===0,'AI KI must be recalled as area list '+line.lineId);
@@ -39,12 +39,21 @@ for(const f of ['핵심 아이디어','성취기준']){
  famStats[f]={lines:lines.length,units:n,averageCoverage:cover};
 }
 const app=fs.readFileSync('js/app.js','utf8');
-assert(app.includes("subject==='ai-basic'?['semantic-v3']:[]"),'AI draft/grade input semantic revision missing');
+assert(app.includes("subject==='ai-basic'?['semantic-v4']:[]"),'AI draft/grade input semantic revision missing');
 assert(app.includes('standardBodyUnits(rawUnits,parts.offset,parts.body)'),'achievement-standard code handling lost');
 const audit=JSON.parse(fs.readFileSync('data/audits/2026-10-19-build-13-ai-110-full-semantic-review.json','utf8'));
 assert(audit.allLines.length===110&&audit.revisions.length===20,'AI editorial per-line audit missing');
+const second=JSON.parse(fs.readFileSync('data/audits/2026-10-19-build-18-ai-second-review.json','utf8'));
+assert(second.reviewed===110&&second.modified===16&&second.afterUnits===296,'AI second review missing');
+const changedIds=new Set(second.revisions.map(r=>r.lineId));
+assert(changedIds.size===16,'duplicate second-pass revisions');
 for(const row of audit.allLines){
  const match=ai.lines.find(l=>l.lineId===row.lineId);
- assert(match&&JSON.stringify((match.presentation?.units||[]).map(u=>u.text))===JSON.stringify(row.units),'audit-to-source mismatch '+row.lineId);
+ assert(match,'missing AI line '+row.lineId);
+ if(!changedIds.has(row.lineId))assert(JSON.stringify((match.presentation?.units||[]).map(u=>u.text))===JSON.stringify(row.units),'unmodified audit-to-source mismatch '+row.lineId);
 }
-console.log(JSON.stringify({status:'PASS',sourceLines:110,semanticUnits:276,kiWholeList:11,changedLines:20,perLineAudit:110,famStats},null,2));
+for(const row of second.revisions){
+ const match=ai.lines.find(l=>l.lineId===row.lineId);
+ assert(JSON.stringify((match.presentation?.units||[]).map(u=>u.text))===JSON.stringify(row.after),'2nd audit-to-source mismatch '+row.lineId);
+}
+console.log(JSON.stringify({status:'PASS',sourceLines:110,semanticUnits:296,kiWholeList:11,changedLines:16,perLineAudit:110,famStats},null,2));
