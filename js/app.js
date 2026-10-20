@@ -1347,7 +1347,7 @@ function renderProvenance(task){
 }
 function answerField(target){return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;}
 function answerFields(){return [...el.content.querySelectorAll('.inline-input,.group-input,.ki-input,#typingInput')].filter(x=>!x.disabled);}
-function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';const subject=task?.group?.subject||task?.line?.subject||'';return [taskId,state.ui.stage,state.ui.mode,index,...(subject==='ai-basic'?['semantic-v3']:[])].join('|');}
+function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';const subject=task?.group?.subject||task?.line?.subject||'';return [taskId,state.ui.stage,state.ui.mode,index,...(subject==='ai-basic'?['semantic-v4']:[])].join('|');}
 
 function resizeAnswerField(field){
   if(!field)return;

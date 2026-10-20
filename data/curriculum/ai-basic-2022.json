@@ -6,8 +6,8 @@
     "sourceFormat": "user-uploaded HWP5 extracted verbatim then whitespace-collapsed",
     "status": "new-additional-subject",
     "stage3RPolicy": "UNCLASSIFIED_NEW_SUBJECT; existing 270 unaffected",
-    "note": "110개 항목별 의미·문맥·열거형 목록·과잉 가림/누락 검수. Stage3R 근거 없는 신규 등급은 부여하지 않음.",
-    "presentationRevision": "2026.10.19-13: full-110-line-manual-semantic-review-v3",
+    "note": "2차 110개 항목 검수: 개념쌍·평가 유형·데이터 역할 구분 위주 16개 항목 수정. 원문·내용체계·성취기준 및 Stage3R 미부여 정책 유지.",
+    "presentationRevision": "2026.10.19-18: second-pass independently reviewed semantic units v4",
     "sourceVerification": "2026.10.19-14: all 110 HWP passages directly matched; 2 adjacent section headings detached",
     "sourceVerificationNote": "[12인기04-01] 지속가능발전목표를 해결하기 위해 ... is source-exact; no paraphrase"
   },
@@ -1455,9 +1455,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-AI-CI-02-K01",
-          "text": "탐색과 추론",
+          "text": "탐색",
           "start": 0,
-          "end": 6,
+          "end": 2,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -1465,6 +1465,16 @@
         },
         {
           "keywordId": "AI-22-AI-CI-02-K02",
+          "text": "추론",
+          "start": 4,
+          "end": 6,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-AI-CI-02-K03",
           "text": "다양한 학문 분야",
           "start": 32,
           "end": 41,
@@ -1481,33 +1491,46 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v3",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-AI-CI-02-PU-01",
-            "text": "탐색과 추론",
+            "text": "탐색",
             "start": 0,
-            "end": 6,
+            "end": 2,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-CI-02-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-AI-CI-02-PU-02",
-            "text": "다양한 학문 분야",
-            "start": 32,
-            "end": 41,
+            "text": "추론",
+            "start": 4,
+            "end": 6,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-CI-02-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-AI-CI-02-PU-03",
+            "text": "다양한 학문 분야",
+            "start": 32,
+            "end": 41,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-AI-CI-02-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -1949,9 +1972,9 @@
         },
         {
           "keywordId": "AI-22-ML-CI-02-K03",
-          "text": "복잡한 문제를 효과적으로 해결",
+          "text": "복잡한 문제",
           "start": 27,
-          "end": 43,
+          "end": 33,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -1965,7 +1988,7 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-CI-02-PU-01",
@@ -1978,7 +2001,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CI-02-PU-02",
@@ -1991,20 +2014,20 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CI-02-PU-03",
-            "text": "복잡한 문제를 효과적으로 해결",
+            "text": "복잡한 문제",
             "start": 27,
-            "end": 43,
+            "end": 33,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CI-02-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -2355,9 +2378,19 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-AT-02-K01",
-          "text": "효과성과 효율성 인식",
+          "text": "효과성",
           "start": 13,
-          "end": 24,
+          "end": 16,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-AT-02-K02",
+          "text": "효율성",
+          "start": 18,
+          "end": 21,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -2371,20 +2404,33 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-AT-02-PU-01",
-            "text": "효과성과 효율성 인식",
+            "text": "효과성",
             "start": 13,
-            "end": 24,
+            "end": 16,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-AT-02-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-AT-02-PU-02",
+            "text": "효율성",
+            "start": 18,
+            "end": 21,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-AT-02-K02"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -3612,9 +3658,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-AI-ST-03-K01",
-          "text": "맹목적 탐색과 정보 이용 탐색의 차이",
+          "text": "맹목적 탐색",
           "start": 12,
-          "end": 32,
+          "end": 18,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -3622,6 +3668,16 @@
         },
         {
           "keywordId": "AI-22-AI-ST-03-K02",
+          "text": "정보 이용 탐색",
+          "start": 20,
+          "end": 28,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-AI-ST-03-K03",
           "text": "지능적 탐색의 원리",
           "start": 39,
           "end": 49,
@@ -3638,33 +3694,46 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-AI-ST-03-PU-01",
-            "text": "맹목적 탐색과 정보 이용 탐색의 차이",
+            "text": "맹목적 탐색",
             "start": 12,
-            "end": 32,
+            "end": 18,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-ST-03-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-AI-ST-03-PU-02",
-            "text": "지능적 탐색의 원리",
-            "start": 39,
-            "end": 49,
+            "text": "정보 이용 탐색",
+            "start": 20,
+            "end": 28,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-ST-03-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-AI-ST-03-PU-03",
+            "text": "지능적 탐색의 원리",
+            "start": 39,
+            "end": 49,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-AI-ST-03-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -3754,9 +3823,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-AI-ST-05-K01",
-          "text": "규칙과 사실을 활용하여 지식을 표현",
+          "text": "규칙",
           "start": 12,
-          "end": 31,
+          "end": 14,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -3764,6 +3833,26 @@
         },
         {
           "keywordId": "AI-22-AI-ST-05-K02",
+          "text": "사실",
+          "start": 16,
+          "end": 18,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-AI-ST-05-K03",
+          "text": "지식을 표현",
+          "start": 25,
+          "end": 31,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-AI-ST-05-K04",
           "text": "새로운 지식을 추론하여 생성",
           "start": 35,
           "end": 50,
@@ -3780,33 +3869,59 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-AI-ST-05-PU-01",
-            "text": "규칙과 사실을 활용하여 지식을 표현",
+            "text": "규칙",
             "start": 12,
-            "end": 31,
+            "end": 14,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-ST-05-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-AI-ST-05-PU-02",
-            "text": "새로운 지식을 추론하여 생성",
-            "start": 35,
-            "end": 50,
+            "text": "사실",
+            "start": 16,
+            "end": 18,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-AI-ST-05-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-AI-ST-05-PU-03",
+            "text": "지식을 표현",
+            "start": 25,
+            "end": 31,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-AI-ST-05-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-AI-ST-05-PU-04",
+            "text": "새로운 지식을 추론하여 생성",
+            "start": 35,
+            "end": 50,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-AI-ST-05-K04"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -4412,8 +4527,18 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-ST-03-K01",
-          "text": "기계학습의 유형과 알고리즘을 선정",
+          "text": "기계학습의 유형",
           "start": 23,
+          "end": 31,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-ST-03-K02",
+          "text": "알고리즘을 선정",
+          "start": 33,
           "end": 41,
           "active": true,
           "importance": null,
@@ -4428,20 +4553,33 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-ST-03-PU-01",
-            "text": "기계학습의 유형과 알고리즘을 선정",
+            "text": "기계학습의 유형",
             "start": 23,
-            "end": 41,
+            "end": 31,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-03-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-ST-03-PU-02",
+            "text": "알고리즘을 선정",
+            "start": 33,
+            "end": 41,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-ST-03-K02"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -4460,9 +4598,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-ST-04-K01",
-          "text": "훈련 데이터를 이용하여 학습",
+          "text": "훈련 데이터",
           "start": 12,
-          "end": 27,
+          "end": 18,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -4470,8 +4608,28 @@
         },
         {
           "keywordId": "AI-22-ML-ST-04-K02",
-          "text": "테스트 데이터를 사용하여 성능을 평가",
+          "text": "학습을 진행",
+          "start": 25,
+          "end": 31,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-ST-04-K03",
+          "text": "테스트 데이터",
           "start": 35,
+          "end": 42,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-ST-04-K04",
+          "text": "성능을 평가",
+          "start": 49,
           "end": 55,
           "active": true,
           "importance": null,
@@ -4486,33 +4644,59 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-ST-04-PU-01",
-            "text": "훈련 데이터를 이용하여 학습",
+            "text": "훈련 데이터",
             "start": 12,
-            "end": 27,
+            "end": 18,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-04-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-ST-04-PU-02",
-            "text": "테스트 데이터를 사용하여 성능을 평가",
-            "start": 35,
-            "end": 55,
+            "text": "학습을 진행",
+            "start": 25,
+            "end": 31,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-04-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-ST-04-PU-03",
+            "text": "테스트 데이터",
+            "start": 35,
+            "end": 42,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-ST-04-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-ST-04-PU-04",
+            "text": "성능을 평가",
+            "start": 49,
+            "end": 55,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-ST-04-K04"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -4531,9 +4715,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-ST-05-K01",
-          "text": "인공신경망과 딥러닝의 특성",
+          "text": "인공신경망",
           "start": 12,
-          "end": 26,
+          "end": 17,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -4541,6 +4725,16 @@
         },
         {
           "keywordId": "AI-22-ML-ST-05-K02",
+          "text": "딥러닝의 특성",
+          "start": 19,
+          "end": 26,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-ST-05-K03",
           "text": "활용 분야를 탐색",
           "start": 40,
           "end": 49,
@@ -4557,33 +4751,46 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-ST-05-PU-01",
-            "text": "인공신경망과 딥러닝의 특성",
+            "text": "인공신경망",
             "start": 12,
-            "end": 26,
+            "end": 17,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-05-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-ST-05-PU-02",
-            "text": "활용 분야를 탐색",
-            "start": 40,
-            "end": 49,
+            "text": "딥러닝의 특성",
+            "start": 19,
+            "end": 26,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-05-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-ST-05-PU-03",
+            "text": "활용 분야를 탐색",
+            "start": 40,
+            "end": 49,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-ST-05-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -4696,9 +4903,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-EX-01-K01",
-          "text": "전통적 프로그래밍과 대비되는 기계학습의 특성",
+          "text": "전통적 프로그래밍",
           "start": 12,
-          "end": 36,
+          "end": 21,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -4706,6 +4913,16 @@
         },
         {
           "keywordId": "AI-22-ML-EX-01-K02",
+          "text": "기계학습의 특성",
+          "start": 28,
+          "end": 36,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-EX-01-K03",
           "text": "적합한 데이터를 수집",
           "start": 79,
           "end": 90,
@@ -4715,7 +4932,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-ML-EX-01-K03",
+          "keywordId": "AI-22-ML-EX-01-K04",
           "text": "데이터의 편향",
           "start": 118,
           "end": 125,
@@ -4725,7 +4942,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-ML-EX-01-K04",
+          "keywordId": "AI-22-ML-EX-01-K05",
           "text": "공정성을 추구",
           "start": 168,
           "end": 175,
@@ -4742,59 +4959,72 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-EX-01-PU-01",
-            "text": "전통적 프로그래밍과 대비되는 기계학습의 특성",
+            "text": "전통적 프로그래밍",
             "start": 12,
-            "end": 36,
+            "end": 21,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-EX-01-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-EX-01-PU-02",
-            "text": "적합한 데이터를 수집",
-            "start": 79,
-            "end": 90,
+            "text": "기계학습의 특성",
+            "start": 28,
+            "end": 36,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-EX-01-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-EX-01-PU-03",
-            "text": "데이터의 편향",
-            "start": 118,
-            "end": 125,
+            "text": "적합한 데이터를 수집",
+            "start": 79,
+            "end": 90,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-EX-01-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-EX-01-PU-04",
-            "text": "공정성을 추구",
-            "start": 168,
-            "end": 175,
+            "text": "데이터의 편향",
+            "start": 118,
+            "end": 125,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-EX-01-K04"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-EX-01-PU-05",
+            "text": "공정성을 추구",
+            "start": 168,
+            "end": 175,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-EX-01-K05"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -5490,9 +5720,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-ML-CN-03-K01",
-          "text": "데이터와 기계학습 유형, 기계학습 알고리즘",
+          "text": "데이터",
           "start": 11,
-          "end": 34,
+          "end": 14,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -5500,6 +5730,26 @@
         },
         {
           "keywordId": "AI-22-ML-CN-03-K02",
+          "text": "기계학습 유형",
+          "start": 16,
+          "end": 23,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-CN-03-K03",
+          "text": "기계학습 알고리즘",
+          "start": 25,
+          "end": 34,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-ML-CN-03-K04",
           "text": "문제의 특성에 비추어 적합한지",
           "start": 45,
           "end": 61,
@@ -5509,7 +5759,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-ML-CN-03-K03",
+          "keywordId": "AI-22-ML-CN-03-K05",
           "text": "개발되어 있는 딥러닝 프로그램 코드",
           "start": 76,
           "end": 95,
@@ -5519,7 +5769,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-ML-CN-03-K04",
+          "keywordId": "AI-22-ML-CN-03-K06",
           "text": "학습 과정과 창의적인 아이디어",
           "start": 163,
           "end": 179,
@@ -5529,7 +5779,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-ML-CN-03-K05",
+          "keywordId": "AI-22-ML-CN-03-K07",
           "text": "평가 루브릭",
           "start": 186,
           "end": 192,
@@ -5546,72 +5796,98 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-ML-CN-03-PU-01",
-            "text": "데이터와 기계학습 유형, 기계학습 알고리즘",
+            "text": "데이터",
             "start": 11,
-            "end": 34,
+            "end": 14,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CN-03-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CN-03-PU-02",
-            "text": "문제의 특성에 비추어 적합한지",
-            "start": 45,
-            "end": 61,
+            "text": "기계학습 유형",
+            "start": 16,
+            "end": 23,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CN-03-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CN-03-PU-03",
-            "text": "개발되어 있는 딥러닝 프로그램 코드",
-            "start": 76,
-            "end": 95,
+            "text": "기계학습 알고리즘",
+            "start": 25,
+            "end": 34,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CN-03-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CN-03-PU-04",
-            "text": "학습 과정과 창의적인 아이디어",
-            "start": 163,
-            "end": 179,
+            "text": "문제의 특성에 비추어 적합한지",
+            "start": 45,
+            "end": 61,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CN-03-K04"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-ML-CN-03-PU-05",
-            "text": "평가 루브릭",
-            "start": 186,
-            "end": 192,
+            "text": "개발되어 있는 딥러닝 프로그램 코드",
+            "start": 76,
+            "end": 95,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-CN-03-K05"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-CN-03-PU-06",
+            "text": "학습 과정과 창의적인 아이디어",
+            "start": 163,
+            "end": 179,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-CN-03-K06"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-ML-CN-03-PU-07",
+            "text": "평가 루브릭",
+            "start": 186,
+            "end": 192,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-ML-CN-03-K07"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -5843,9 +6119,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-SO-ST-04-K01",
-          "text": "활용사례와 윤리적 딜레마 상황",
+          "text": "활용사례",
           "start": 18,
-          "end": 34,
+          "end": 22,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -5853,6 +6129,16 @@
         },
         {
           "keywordId": "AI-22-SO-ST-04-K02",
+          "text": "윤리적 딜레마 상황",
+          "start": 24,
+          "end": 34,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-SO-ST-04-K03",
           "text": "인공지능 윤리 관점에서 분석",
           "start": 36,
           "end": 51,
@@ -5869,33 +6155,46 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-SO-ST-04-PU-01",
-            "text": "활용사례와 윤리적 딜레마 상황",
+            "text": "활용사례",
             "start": 18,
-            "end": 34,
+            "end": 22,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-SO-ST-04-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-ST-04-PU-02",
-            "text": "인공지능 윤리 관점에서 분석",
-            "start": 36,
-            "end": 51,
+            "text": "윤리적 딜레마 상황",
+            "start": 24,
+            "end": 34,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-SO-ST-04-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-SO-ST-04-PU-03",
+            "text": "인공지능 윤리 관점에서 분석",
+            "start": 36,
+            "end": 51,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-SO-ST-04-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -6081,8 +6380,18 @@
         },
         {
           "keywordId": "AI-22-SO-EX-02-K06",
-          "text": "사회적 책임과 공정성",
+          "text": "사회적 책임",
           "start": 214,
+          "end": 220,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-SO-EX-02-K07",
+          "text": "공정성",
+          "start": 222,
           "end": 225,
           "active": true,
           "importance": null,
@@ -6097,7 +6406,7 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v3",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-SO-EX-02-PU-01",
@@ -6110,7 +6419,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-EX-02-PU-02",
@@ -6123,7 +6432,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-EX-02-PU-03",
@@ -6136,7 +6445,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-EX-02-PU-04",
@@ -6149,7 +6458,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-EX-02-PU-05",
@@ -6162,20 +6471,33 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-SO-EX-02-PU-06",
-            "text": "사회적 책임과 공정성",
+            "text": "사회적 책임",
             "start": 214,
-            "end": 225,
+            "end": 220,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-SO-EX-02-K06"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-SO-EX-02-PU-07",
+            "text": "공정성",
+            "start": 222,
+            "end": 225,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-SO-EX-02-K07"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -7386,8 +7708,28 @@
         },
         {
           "keywordId": "AI-22-GEN-TE-01-K03",
-          "text": "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양",
+          "text": "컴퓨팅 사고력",
           "start": 75,
+          "end": 82,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-TE-01-K04",
+          "text": "디지털 문화 소양",
+          "start": 84,
+          "end": 93,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-TE-01-K05",
+          "text": "인공지능 소양",
+          "start": 95,
           "end": 102,
           "active": true,
           "importance": null,
@@ -7402,7 +7744,7 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v3",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-GEN-TE-01-PU-01",
@@ -7415,7 +7757,7 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-TE-01-PU-02",
@@ -7428,20 +7770,46 @@
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-TE-01-PU-03",
-            "text": "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양",
+            "text": "컴퓨팅 사고력",
             "start": 75,
-            "end": 102,
+            "end": 82,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-TE-01-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V3"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-TE-01-PU-04",
+            "text": "디지털 문화 소양",
+            "start": 84,
+            "end": 93,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-TE-01-K04"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-TE-01-PU-05",
+            "text": "인공지능 소양",
+            "start": 95,
+            "end": 102,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-TE-01-K05"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -7577,9 +7945,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-GEN-TE-03-K01",
-          "text": "민주시민교육, 생태전환 교육",
+          "text": "민주시민교육",
           "start": 31,
-          "end": 46,
+          "end": 37,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -7587,6 +7955,16 @@
         },
         {
           "keywordId": "AI-22-GEN-TE-03-K02",
+          "text": "생태전환 교육",
+          "start": 39,
+          "end": 46,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-TE-03-K03",
           "text": "지속가능발전 등의 범교과 주제",
           "start": 72,
           "end": 88,
@@ -7596,7 +7974,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-GEN-TE-03-K03",
+          "keywordId": "AI-22-GEN-TE-03-K04",
           "text": "주도성 있는 문제 해결 경험",
           "start": 105,
           "end": 120,
@@ -7613,46 +7991,59 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-GEN-TE-03-PU-01",
-            "text": "민주시민교육, 생태전환 교육",
+            "text": "민주시민교육",
             "start": 31,
-            "end": 46,
+            "end": 37,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-TE-03-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-TE-03-PU-02",
-            "text": "지속가능발전 등의 범교과 주제",
-            "start": 72,
-            "end": 88,
+            "text": "생태전환 교육",
+            "start": 39,
+            "end": 46,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-TE-03-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-TE-03-PU-03",
-            "text": "주도성 있는 문제 해결 경험",
-            "start": 105,
-            "end": 120,
+            "text": "지속가능발전 등의 범교과 주제",
+            "start": 72,
+            "end": 88,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-TE-03-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-TE-03-PU-04",
+            "text": "주도성 있는 문제 해결 경험",
+            "start": 105,
+            "end": 120,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-TE-03-K04"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -8373,8 +8764,28 @@
       "keywords": [
         {
           "keywordId": "AI-22-GEN-EV-01-K01",
-          "text": "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양",
+          "text": "컴퓨팅 사고력",
           "start": 7,
+          "end": 14,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-EV-01-K02",
+          "text": "디지털 문화 소양",
+          "start": 16,
+          "end": 25,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-EV-01-K03",
+          "text": "인공지능 소양",
+          "start": 27,
           "end": 34,
           "active": true,
           "importance": null,
@@ -8389,20 +8800,46 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-GEN-EV-01-PU-01",
-            "text": "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양",
+            "text": "컴퓨팅 사고력",
             "start": 7,
-            "end": 34,
+            "end": 14,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-EV-01-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-EV-01-PU-02",
+            "text": "디지털 문화 소양",
+            "start": 16,
+            "end": 25,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-EV-01-K02"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-EV-01-PU-03",
+            "text": "인공지능 소양",
+            "start": 27,
+            "end": 34,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-EV-01-K03"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
@@ -9006,9 +9443,9 @@
       "keywords": [
         {
           "keywordId": "AI-22-GEN-EV-07-K01",
-          "text": "정량적 평가와 정성적 평가",
+          "text": "정량적 평가",
           "start": 34,
-          "end": 48,
+          "end": 40,
           "active": true,
           "importance": null,
           "stage3RGrades": [],
@@ -9016,6 +9453,16 @@
         },
         {
           "keywordId": "AI-22-GEN-EV-07-K02",
+          "text": "정성적 평가",
+          "start": 42,
+          "end": 48,
+          "active": true,
+          "importance": null,
+          "stage3RGrades": [],
+          "policy": "AI_SEMANTIC_WHOLE_RECALL"
+        },
+        {
+          "keywordId": "AI-22-GEN-EV-07-K03",
           "text": "즉시 피드백",
           "start": 113,
           "end": 119,
@@ -9025,7 +9472,7 @@
           "policy": "AI_SEMANTIC_WHOLE_RECALL"
         },
         {
-          "keywordId": "AI-22-GEN-EV-07-K03",
+          "keywordId": "AI-22-GEN-EV-07-K04",
           "text": "결과물의 개선",
           "start": 122,
           "end": 129,
@@ -9042,46 +9489,59 @@
       "sourceVerified": true,
       "policyStatus": "UNCLASSIFIED_NEW_SUBJECT",
       "presentation": {
-        "version": "ai-2022-manual-semantic-v2",
+        "version": "ai-2022-manual-semantic-v4",
         "units": [
           {
             "unitId": "AI-22-GEN-EV-07-PU-01",
-            "text": "정량적 평가와 정성적 평가",
+            "text": "정량적 평가",
             "start": 34,
-            "end": 48,
+            "end": 40,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-EV-07-K01"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-EV-07-PU-02",
-            "text": "즉시 피드백",
-            "start": 113,
-            "end": 119,
+            "text": "정성적 평가",
+            "start": 42,
+            "end": 48,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-EV-07-K02"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           },
           {
             "unitId": "AI-22-GEN-EV-07-PU-03",
-            "text": "결과물의 개선",
-            "start": 122,
-            "end": 129,
+            "text": "즉시 피드백",
+            "start": 113,
+            "end": 119,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-GEN-EV-07-K03"
             ],
             "stage3RGrades": [],
             "sourceFaithful": true,
-            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_CURATION"
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
+          },
+          {
+            "unitId": "AI-22-GEN-EV-07-PU-04",
+            "text": "결과물의 개선",
+            "start": 122,
+            "end": 129,
+            "unitType": "semantic-phrase",
+            "sourceKeywordIds": [
+              "AI-22-GEN-EV-07-K04"
+            ],
+            "stage3RGrades": [],
+            "sourceFaithful": true,
+            "presentationBasis": "AI_2022_MANUAL_SEMANTIC_REVIEW_V4"
           }
         ],
         "coreSets": [],
