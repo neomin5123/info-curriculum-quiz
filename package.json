@@ -7,7 +7,7 @@
     "build:data": "node tools/build-data.mjs",
     "validate:data": "node tools/validate-data.mjs",
     "validate:package": "node tools/validate-package.mjs",
-    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo && npm run validate:trace-guide && npm run validate:memo-visual && npm run validate:memo-defaults && npm run validate:answer-visibility && npm run validate:standard-code && npm run validate:ux-v9035 && npm run validate:ux-v9036 && npm run validate:retry-off && npm run validate:granularity-v9038 && npm run validate:memo-outline-v9039 && npm run validate:mobile-controls-v9040 && npm run validate:flow-area-v9041 && npm run validate:bottom-controls && npm run validate:exams && npm run validate:exam-answers && npm run validate:build && npm run validate:ai-crops && npm run validate:ai-study && npm run validate:ai-semantic-v2 && npm run validate:ai-hwp-source && npm run validate:exam-wide-layout",
+    "test": "npm run validate:data && npm run validate:package && npm run validate:behavior && npm run validate:ux && npm run validate:retry && npm run validate:layout && npm run validate:hittest && npm run validate:typing-layout && npm run validate:memo && npm run validate:trace-guide && npm run validate:memo-visual && npm run validate:memo-defaults && npm run validate:answer-visibility && npm run validate:standard-code && npm run validate:ux-v9035 && npm run validate:ux-v9036 && npm run validate:retry-off && npm run validate:granularity-v9038 && npm run validate:memo-outline-v9039 && npm run validate:mobile-controls-v9040 && npm run validate:flow-area-v9041 && npm run validate:bottom-controls && npm run validate:exams && npm run validate:exam-answers && npm run validate:build && npm run validate:ai-crops && npm run validate:ai-study && npm run validate:ai-semantic-v2 && npm run validate:ai-hwp-source && npm run validate:exam-wide-layout && npm run validate:ai-priority && npm run validate:os-answers && npm run validate:ai-program-answers && npm run validate:exam-second-pass",
     "validate:behavior": "node tools/validate-behavior.mjs",
     "validate:ux": "node tools/validate-ux.mjs",
     "validate:retry": "node tools/validate-retry-card.mjs",
@@ -36,6 +36,10 @@
     "validate:exam-answers": "node tools/validate-exam-answers.mjs",
     "validate:ai-semantic-v2": "node tools/validate-ai-semantic-v2.mjs",
     "validate:ai-hwp-source": "node tools/validate-ai-hwp-source-boundaries.mjs",
-    "validate:exam-wide-layout": "node tools/validate-exam-wide-layout.mjs"
+    "validate:exam-wide-layout": "node tools/validate-exam-wide-layout.mjs",
+    "validate:ai-priority": "node tools/validate-ai-priority-v1.mjs",
+    "validate:os-answers": "node tools/validate-os-exam-answers.mjs",
+    "validate:ai-program-answers": "node tools/validate-ai-program-exam-answers.mjs",
+    "validate:exam-second-pass": "node tools/validate-second-pass-exam-review.mjs"
   }
 }
