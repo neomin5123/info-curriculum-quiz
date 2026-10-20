@@ -1,6 +1,6 @@
 {
-  "buildId": "2026.10.19-18",
-  "builtOn": "2026-10-19",
+  "buildId": "2026.10.20-01",
+  "builtOn": "2026-10-20",
   "publicVersion": null,
   "product": "CurriLoop",
   "releaseChannel": "study",
@@ -9,7 +9,8 @@
     "examSchema": 3,
     "examCorpus": "major-exams-2014-2026",
     "aiBasicSource": "[별책10] 인공지능 기초, 별도 원문 계층 110줄",
-    "aiBasicPresentation": "semantic-v4, 296 units, source unchanged"
+    "aiBasicPresentation": "semantic-v4, 296 units, source unchanged",
+    "aiBasicPriority": "priority-v1-evidence-crosswalk: S direct answer, A/B/C editorial"
   },
   "compatibility": {
     "studyStorageKey": "curriloop:v9:study-state",
