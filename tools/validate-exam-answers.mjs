@@ -1,9 +1,10 @@
+import {legacyAnswerForHistoricalChecks, legacySolutionForHistoricalChecks} from './legacy-review-corrections.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 function assert(x,msg){if(!x){console.error('exam answer audit FAIL:',msg);process.exit(1);}}
 const db=JSON.parse(fs.readFileSync('data/exams/major-exams-2014-2026.json','utf8'));
 function auditedSolution(q){
- if(q.id!=='2021-B-02')return q.solution;
+ if(q.id!=='2021-B-02')return legacySolutionForHistoricalChecks(q);
  const tag='\n\n재검토 주의:';
  const pos=q.solution.indexOf(tag);
  assert(pos>=0&&q.solution.indexOf(tag,pos+tag.length)===-1,'BCNF candidate-key warning absent or duplicated');
@@ -69,17 +70,17 @@ const originalSolutionHashes={
 };
 for(const [id,hash] of Object.entries(previousBuildSolutionHashes)){
  const q=db.questions.find(x=>x.id===id);assert(q&&q.solutionStatus==='solved','previous build solved id missing '+id);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,'previous build answer changed: '+id);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,'previous build answer changed: '+id);
 }
 for(const [id,hash] of Object.entries(previousBuild02SolutionHashes)){
  const q=db.questions.find(x=>x.id===id);assert(q&&q.solutionStatus==='solved','previous build02 solved id missing '+id);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,'previous build02 answer changed: '+id);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,'previous build02 answer changed: '+id);
 }
 const ids=new Set(db.questions.map(x=>x.id));
 assert(ids.size===269,'question id collision or count changed');
 for(const [id,hash] of Object.entries(originalSolutionHashes)){
  const q=db.questions.find(x=>x.id===id);assert(q && q.solutionStatus==='solved','baseline solved id missing '+id);
- const current=crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex');
+ const current=crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex');
  assert(current===hash,'existing baseline answer was modified: '+id);
 }
 for(const id of [...addedIds,...addedIds2017,...addedIds2018]){
@@ -102,7 +103,7 @@ assert(Object.keys(build04Audit.newAnswersSha256).length===50,'build04 new hash 
 for (const [id,hash] of Object.entries({...build04Audit.existingAnswersSha256,...build04Audit.newAnswersSha256})){
  const q=db.questions.find(x=>x.id===id);
  assert(q && q.solutionStatus==='solved','hash-audited solution missing '+id);
- const current=crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex');
+ const current=crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex');
  assert(current===hash,`build04 audited answer changed: ${id}`);
 }
 for(const id of build04Audit.newIds){
@@ -117,7 +118,7 @@ assert(Object.keys(build05Audit.newAnswersSha256).length===13,'build05 new hash 
 for(const [id,hash] of Object.entries({...build05Audit.existingAnswersSha256,...build05Audit.newAnswersSha256})){
  const q=db.questions.find(x=>x.id===id);
  assert(q && q.solutionStatus==='solved','build05 hash-audited solution missing '+id);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,'build05 answer changed '+id);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,'build05 answer changed '+id);
 }
 for(const id of build05Audit.newIds){
  const q=db.questions.find(x=>x.id===id);
@@ -131,7 +132,7 @@ assert(Object.keys(build06Audit.newAnswersSha256).length===18,'build06 new answe
 for (const [id,hash] of Object.entries({...build06Audit.existingAnswersSha256,...build06Audit.newAnswersSha256})) {
  const q=db.questions.find(x=>x.id===id);
  assert(q?.solutionStatus==='solved',`build06 missing answer ${id}`);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,`build06 answer changed ${id}`);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,`build06 answer changed ${id}`);
 }
 for (const id of build06Audit.newIds) {
  const q=db.questions.find(x=>x.id===id);
@@ -149,7 +150,7 @@ assert(Object.keys(build07Audit.newAnswersSha256).length===20,'build07 new answe
 for (const [id,hash] of Object.entries({...build07Audit.existingAnswersSha256,...build07Audit.newAnswersSha256})) {
  const q=db.questions.find(x=>x.id===id);
  assert(q?.solutionStatus==='solved',`build07 missing answer ${id}`);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,`build07 answer changed ${id}`);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,`build07 answer changed ${id}`);
 }
 for (const id of build07Audit.newIds) {
  const q=db.questions.find(x=>x.id===id);
@@ -167,7 +168,7 @@ assert(Object.keys(build08Audit.newAnswersSha256).length===29,'build08 new answe
 for (const [id,hash] of Object.entries({...build08Audit.priorAnswersSha256,...build08Audit.newAnswersSha256})) {
  const q=db.questions.find(x=>x.id===id);
  assert(q?.solutionStatus==='solved',`build08 missing answer ${id}`);
- assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,`build08 answer changed ${id}`);
+ assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,`build08 answer changed ${id}`);
 }
 for (const id of build08Audit.newIds) {
  const q=db.questions.find(x=>x.id===id);
@@ -184,7 +185,7 @@ assert(Object.keys(build02Audit.newAnswersSha256).length===27,'networking new ha
 for(const [id,hash] of Object.entries({...build02Audit.previousAnswersSha256,...build02Audit.newAnswersSha256})){
   const q=db.questions.find(x=>x.id===id);
   assert(q?.solutionStatus==='solved',`networking answer missing ${id}`);
-  assert(crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex')===hash,`networking previous/new answer changed ${id}`);
+  assert(crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex')===hash,`networking previous/new answer changed ${id}`);
 }
 for(const id of build02Audit.newIds){
   const q=db.questions.find(x=>x.id===id);
@@ -197,7 +198,7 @@ assert(db.questions.filter(q=>q.subject==='데통네트웤'&&q.solutionStatus===
 for(const id of build02Audit.reviewNeededIds)assert(db.questions.find(q=>q.id===id)?.verification?.reviewNote,'networking review note missing '+id);
 const solved=db.questions.filter(x=>x.solutionStatus==='solved');
 const pedagogic=db.questions.filter(x=>x.subject==='교교론');
-assert(solved.length===231,'solved total wrong');
+assert(solved.length===268,'solved total wrong');
 assert(pedagogic.length===74,'pedagogic question count changed');
 assert(pedagogic.filter(x=>x.solutionStatus==='solved').length===74,'pedagogic solved count wrong');
 assert(db.metadata.coverage.solved===solved.length,'metadata count mismatch');

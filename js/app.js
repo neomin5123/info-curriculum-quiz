@@ -798,6 +798,7 @@ function examDetailHtml(q,list){
        <p class="exam-answer-provenance">${esc(answerNote)}</p>
        <section class="exam-answer"><strong>정답</strong><p>${esc(q.answer)}</p></section>
        <section class="exam-explanation"><strong>풀이</strong><p>${esc(q.solution)}</p></section>
+       ${window.CURRILOOP_THIRD_PASS_EXPLANATIONS?.[q.id]?`<section class="exam-explanation exam-third-pass"><strong>3차 검증 상세 풀이 (독립 초안)</strong><p>${esc(window.CURRILOOP_THIRD_PASS_EXPLANATIONS[q.id].explanation)}</p><p class="exam-answer-provenance">공식 채점기준 미대조 · 기존 정답/해설 보존</p></section>`:''}
      </div>
      <div class="exam-solution-overlay" ${unlocked?'hidden':''}><button class="exam-solution-unlock" type="button" data-exam-reveal aria-label="${q.year}학년도 전공 ${q.part} ${q.question}번 정답과 풀이 공개">정답·풀이 확인 <span aria-hidden="true">→</span></button></div>
      </aside>`:`<aside class="exam-solution-panel exam-unsolved" aria-label="풀이 미수록"><div class="exam-solution-panel-head"><strong>정답 및 풀이</strong></div><div class="exam-solution-pending"><strong>풀이 준비중</strong><p>이 문항의 독립 풀이가 아직 입력되지 않았습니다. 제공된 PDF에는 공식 정답이 없습니다.</p></div></aside>`;
