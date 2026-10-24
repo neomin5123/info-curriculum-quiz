@@ -1450,3 +1450,5 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   .exam-side-navigation .exam-sheet-open{padding:6px 7px;font-size:10px}
   .exam-side-navigation .exam-navigation-bar>.text-button{padding:5px 4px;font-size:10px}
 }
+
+.exam-third-pass{border-top:1px solid #dfe9e2;margin-top:7px}.exam-third-pass .exam-answer-provenance{margin-top:10px;font-size:11px;color:#786e58}

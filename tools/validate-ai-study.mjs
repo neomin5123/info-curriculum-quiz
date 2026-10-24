@@ -15,7 +15,7 @@ assert(base.lines.length===270,'existing official lines changed');
 assert(base.lines.reduce((n,l)=>n+(l.presentation?.units?.length||0),0)===370,'existing presentation changed');
 assert(ai.lines.length===110,'AI official line mismatch');
 assert(new Set(data.lines.map(l=>l.lineId)).size===380,'line IDs not distinct');
-assert(q.questions.length===269&&q.questions.filter(x=>x.solutionStatus==='solved').length===231,'exam data changed');
+assert(q.questions.length===269&&q.questions.filter(x=>x.solutionStatus==='solved').length===268,'exam data changed');
 let e=make(data,state('ai-basic','all','content-system'));
 assert(e.subjects.length===3&&e.labels['ai-basic']==='인공지능 기초','AI subject unavailable');
 assert(JSON.stringify(e.areasForSubject('ai-basic'))===JSON.stringify(areas),'AI area choices mismatch');
