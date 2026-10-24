@@ -1,0 +1,391 @@
+{
+  "buildId": "2026.10.21-01",
+  "baseline": "2026.10.20-11",
+  "coverage": {
+    "reviewed": 21,
+    "aiMachineLearning": 6,
+    "programming": 15,
+    "unchanged": 21,
+    "corrected": 0,
+    "solvedAll": 231,
+    "totalQuestions": 269
+  },
+  "source": "사용자 제공 전공 기출 PDF와 2022 개정 교육과정 보존 자료",
+  "officialAnswerKeyObtained": false,
+  "reviewScope": "Original prompt independent reasoning, compared to existing solution; executable checks supplemented not substituted for official grading.",
+  "entries": [
+    {
+      "id": "2014-A-07",
+      "subject": "프로그래밍",
+      "year": 2014,
+      "points": 2,
+      "pdfPages": [
+        3
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "값 전달 호출은 원래 상태를 변경하지 않으므로 합계 6. 참조 전달 첫 호출에서 val=1, list[0]=2가 되고 두 번째 호출은 list[0] 및 list[1]에 결합하여 최종 val=1,list=[3,6,3]이므로 합계는 13이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "a5bb0c622a20b12b236e2a12f6ec8a3258e5d0892978c7976b7ccdf756ce1b54",
+      "solutionSha256": "836e27b3793308659ca08e5778ffd3a569cecc7366ad52b5cc23595a5cd41f2d",
+      "cautions": [
+        "시험이 C 유사언어의 참조 전달을 특별히 규정함. 표준 C의 일반 int 매개변수와 혼동하지 않는다."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2014-A-09",
+      "subject": "프로그래밍",
+      "year": 2014,
+      "points": 2,
+      "pdfPages": [
+        4
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "재귀는 7→3→1→0까지 내려가며 0에서 1을 반환한다. 되돌아오는 시점마다 s=2, 5, 12를 출력하므로 출력 순서는 2 5 12이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "57f8d5ac03b9836fa68b4c9b70802091af7069c1af5bd97d1d7391b45ab99643",
+      "solutionSha256": "e28aef9c9b4092a9a2529fd363790d6278b6ee93028a41b400e71e9131cc05d4",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-A-03",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 2,
+      "pdfPages": [
+        10
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "static s는 호출마다 초기화되지 않는다. 1~5의 홀수는 3개, 다음 1~4의 홀수는 2개이므로 첫 출력 3, 이어서 누적 출력 5다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "38f98a4853316a8811ac4918754966ed253d55cf7779ccb9dd75f7c7cc711447",
+      "solutionSha256": "c6d53553ddd1210811593b464b49ca447900c1d466e683e217a0736938ed87a5",
+      "cautions": [
+        "초기 수록 답안은 검토 메타데이터가 없지만 이번 독립 실행 결과 일치."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-A-07",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 2,
+      "pdfPages": [
+        12
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "main.c는 func()의 선언과 외부 호출만 있으므로 func 심벌이 외부 참조다. main.c에 정의된 aaa는 func.c의 extern 선언 때문에 함수 파일에서 참조되므로 ㉠=func, ㉡=aaa다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "e9c08ced04b25b265ec6bacb2f4c8c0a9eb1041a17b6d80fb6d41ee9dde51c24",
+      "solutionSha256": "963fa6f9d95b9f9396bf3962e65e8e8673ba0445cd09e20eb3239845d07cbb05",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-A-12",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 4,
+      "pdfPages": [
+        15
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "새 노드 ptr의 next에 기존 top을 연결하고 top 자체를 ptr로 옮겨야 새 노드가 연결 스택의 머리가 된다. 따라서 ㉠=ptr->next=top, ㉡=top=ptr 순서가 필요하다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "9579b49e244f50919b3cc3cb7723aaf904f0cdbf354c175bacef5adfedc2e701",
+      "solutionSha256": "89a50a72c1fe44f7173ddcce066100c86c51a994084223eed9c69a2aa5814993",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-A-13",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 4,
+      "pdfPages": [
+        15
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "원 함수는 k부터 1까지의 정수 합이다. k≤1의 종료 반환 1과 k+func2(k−1)의 재귀식을 넣으면 모든 양의 k에 원 함수와 동일한 값을 얻는다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "e3861eb0dbe145f1036673df803f4d90343650e6797afd0b4832f018a64b9a2b",
+      "solutionSha256": "d363fabd22405f16f4cf9d1e6db834274171de701a3af79775ce4073cd34e92b",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-B-03",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 4,
+      "pdfPages": [
+        18
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "지시 문자열 *2(+34)를 가장 왼쪽 비단말부터 유도한다. E→T→*TF→*FF→*2F→*2(E)→*2(+ET)→*2(+TT)→*2(+FT)→*2(+3T)→*2(+3F)→*2(+34)의 규칙 번호를 추적했다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "b685bb124748220f154b92edb131dac6db4dfff21952388d8f19070182d294d4",
+      "solutionSha256": "1e0c78bfc90de4b1477d4d8b7ecbe45efb57ece2f46a077fc03c2c971b93f723",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2016-B-07",
+      "subject": "프로그래밍",
+      "year": 2016,
+      "points": 5,
+      "pdfPages": [
+        20
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "초기 A[1..8]=2,18,9,87,26,51,72,91이고 t=12를 A[9]에 둔다. 첫 ㉠은 A[9]←87 직후이므로 끝값 87; 다음 18이 A[4]로 이동한 뒤 마지막으로 A[2]←12가 입력되어 ㉡에 최종 배열이 출력된다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "3c37799a689eacb9f158a157db0ab5dd4eccb8062f7950028e65bed442d6aaa6",
+      "solutionSha256": "39fe822f9faa59bb78eb7c92c921af6bfb306378d32711c24a0be024422fee97",
+      "cautions": [
+        "문제는 ㉠의 두 번째 출력이 아니라 첫 번째 실행 순간의 배열을 요구함."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2017-A-08",
+      "subject": "프로그래밍",
+      "year": 2017,
+      "points": 2,
+      "pdfPages": [
+        25
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "sub1의 블록 지역 x는 3을 출력한다. sub2의 static x는 4,5를 출력하고 외부 y를 두 번 증가시켜 8이 된다. sub3(8)의 재귀 복귀 순서는 이진수 1000이어서 1 0 0 0을 출력한다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "ea680300e1dcd3a260cbf9e7b209830daeb1fe804d0921efdc5268a21f744537",
+      "solutionSha256": "b354187646d4a6d01129fed7c49865939ef7312b32fcaeb302b19d9c9b8d2186",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2017-B-02",
+      "subject": "프로그래밍",
+      "year": 2017,
+      "points": 4,
+      "pdfPages": [
+        30
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "블록 탈출 시 소멸하는 자동 기억장소는 small과 함수 매개변수 login이다. 다른 번역 단위의 extern 선언으로 참조할 수 있는 외부 연결 식별자는 파일 범위 count와 함수 busy이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "375f195a426e7cdc38520295e19a53622fb158ae9160dae1f314817d5c60e6e1",
+      "solutionSha256": "4f7305dc3fa3079db9d036a28437217fa3f76100db6c428d8343420e6981877b",
+      "cautions": [
+        "register 변수 i는 자동 저장기간이어도 선언 시 register 예약어를 생략하는 ㉠ 사례로 적지 않는다."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2017-B-07",
+      "subject": "프로그래밍",
+      "year": 2017,
+      "points": 5,
+      "pdfPages": [
+        32
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "선택정렬 첫 패스에 1을 앞으로, 두 번째 패스에 2를 두 번째 위치로 옮겨 i=1 출력은 1 2 7 3 8이다. 교환은 i=0,1,2에서 3회; 내림차순은 비교기호 <를 >로 교체한다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "6cb6a8be473cf9a0447f3913461dd5d96df7396a53e9f3475cef145f5c10f78d",
+      "solutionSha256": "59f55401d575435e98a1b7efc75406371cfec4cc0df3d491a6ef52cd60c77027",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2018-A-02",
+      "subject": "프로그래밍",
+      "year": 2018,
+      "points": 2,
+      "pdfPages": [
+        34
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "주소를 20으로 정수 나눗셈하면 61→3,127→6,21→1이다. table의 값 5,3,7을 group으로 다시 인덱싱해도 5,3,7이 출력된다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "9f9c1b7c747c3cca4d669ed3c0f628160bfa3d13a6360436e89448e67b1eb146",
+      "solutionSha256": "7dabd08621d2bbd9c126a9af41e0a9992ecb94a6666ab32311d3ec9fb6126edb",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2018-A-03",
+      "subject": "프로그래밍",
+      "year": 2018,
+      "points": 2,
+      "pdfPages": [
+        35
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "전역 a는 main에서 11이 된다. for 각 반복의 지역 a는 매번 5로 초기화되고 6을 출력하며, sub는 전역 a를 각각 12,13으로 증가시킨다. 출력은 6 12 6 13이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "9f63daad818ead04f2d2b167dbd0f3090732958f9c8ee9290d877bf55539e8e1",
+      "solutionSha256": "c592c3a9f72b3de440fc3354468854c9906e6c91d5221d58d558caeab0dc9242",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2018-A-06",
+      "subject": "프로그래밍",
+      "year": 2018,
+      "points": 2,
+      "pdfPages": [
+        35
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "양끝 a[s],a[d]를 교환한 뒤에 아직 역순 처리가 필요한 내부 구간은 s+1부터 d−1까지다. 다음 호출의 인덱스는 s+1,d−1이 된다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "b13f3777792788bccf9f6a6b035333992d901f477c6c3125e9a71d1e113df9bf",
+      "solutionSha256": "c6a162aad4b5b2a4a18d5eb5657026bd085eb0052f947685f7e61e93bc4f74c2",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2022-B-01",
+      "subject": "인지머러",
+      "year": 2022,
+      "points": 2,
+      "pdfPages": [
+        95
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "교과 명칭 정보 통일은 2007, 계산적 사고와 3단계 통합은 2009, 정보문화소양·협력적 문제해결력은 2015, 인공지능 기초 선택 과목은 2020 고시이므로 나→라→가→다. 하위 요소는 정보보호능력이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "47a91cfbf0569f8038217efb6c208464fb173d597d4f2de771ad1e49c82eb32c",
+      "solutionSha256": "d4527e3431efe5505c0a27385475f25f770e08a6083ee8fca0020cbc5c2016b2",
+      "cautions": [
+        "역사적 교육과정 용어가 당시 고시 문서의 표현임을 전제로 함."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "original-question-and-curriculum-interpretation"
+    },
+    {
+      "id": "2023-A-09",
+      "subject": "인지머러",
+      "year": 2023,
+      "points": 4,
+      "pdfPages": [
+        106
+      ],
+      "atlasSegments": 2,
+      "independentReasoning": "2×2 퍼즐 시작 [2,1;3,□]에서 [2,1;□,3]을 거쳐 n=[□,1;2,3]에 두 번의 이동으로 도달한다. n에서 제자리 아닌 조각은 1 하나라 h=1이고, 1을 왼쪽으로 움직이면 세 번째 이동에서 목표 [1,□;2,3]가 된다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "dd7053e3f8fa3cbf345fa531a4d0ddf4a018c014406c62ed24dfc2d6720e46b6",
+      "solutionSha256": "dacaf656bfa4aa9d4107d14c0a07c229ee9a99c5e8662ad613637c1316212be2",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2025-A-07",
+      "subject": "인지머러",
+      "year": 2025,
+      "points": 4,
+      "pdfPages": [
+        132
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "과정·기능의 세부 동사와 데이터 처리 맥락을 비교해 ⓐ 중학교 정보, ⓑ 소프트웨어와 생활, ⓒ 데이터 과학, ⓓ 정보과학으로 연결한다. 첫 두 칸은 데이터 문해력과 인공지능 소양이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "0d77841c8fce0ffd0d701deea07e6f84d62517c0504bdb87c3bb865ea3a9a664",
+      "solutionSha256": "c7674e5450d18a46af55314a12a9a4597fc5d1cdfe3d312e6e4be916c0fa587b",
+      "cautions": [
+        "선택과목 교과서·고시문과의 별도 제3자 교차 대조는 수행하지 않았다. 복수 출처 확인 시 재검토 권장."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "original-question-and-curriculum-interpretation"
+    },
+    {
+      "id": "2025-B-07",
+      "subject": "인지머러",
+      "year": 2025,
+      "points": 4,
+      "pdfPages": [
+        141
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "R2: (거리<50m)→(조향)를 ‘조향하지 않음’으로 부정논법 처리하면 거리≥50m. R5: (동물 또는 사람)→(반대 방향으로 회피)와 입력된 (반대 방향 회피)→(충돌 없음)을 삼단논법으로 결합한다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "279ded9b33d0ba3c738e900a0127aa661a68fd721742b50fe022c48886e9fcac",
+      "solutionSha256": "eb54ec43484506f43d52562f9de0b9ab364eb79643036c6412905de729e829d0",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2026-A-03",
+      "subject": "인지머러",
+      "year": 2026,
+      "points": 2,
+      "pdfPages": [
+        145
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "ReLU(5)=5다. 두 은닉 노드는 입력 (0,1),(1,0)에서 각각 입력합 0.8, 1.2로 계단함수 결과가 (1,1)이며 출력층 2+2−2.8=1.2이므로 모두 1을 출력한다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "9c66e23342656a26812b485b126ef0714a45ea819848d9f5a9319172c8cfcc32",
+      "solutionSha256": "08042d5df615decfffab953a64a2d2c298e413b67e6cf0803cef8c8500a07a76",
+      "cautions": [],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2026-A-06",
+      "subject": "프로그래밍",
+      "year": 2026,
+      "points": 4,
+      "pdfPages": [
+        146
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "불리언 행렬곱은 OR 누적을 위해 각 des[i][j]를 0으로 초기화하고 arr1[i][k] && arr2[k][j]를 합성해야 한다. AB와 BA의 지정된 (0,0),(0,2)를 계산하면 모두 0 1이다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "5e952cb09b5868f539695e16d28b263433827a917dc958d9fc0e70bad264d9b4",
+      "solutionSha256": "825fac709ea3abe6b1dae8e25b9301ae1737931bf33ddb0d5634a5533e50c8ec",
+      "cautions": [
+        "초기 수록 답안은 검토 메타데이터가 없지만 이번 독립 행렬 계산 결과 일치."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    },
+    {
+      "id": "2026-B-01",
+      "subject": "인지머러",
+      "year": 2026,
+      "points": 2,
+      "pdfPages": [
+        151
+      ],
+      "atlasSegments": 1,
+      "independentReasoning": "중학교 목표에는 데이터 수집·분석을 명시한 ㉤이 대응하며 영역은 데이터다. 고등학교의 컴퓨팅 시스템 간 연결과 시스템 제어 능력은 ㉣에 해당하며 영역은 컴퓨팅 시스템이다. 해당 목표 문구는 현재 보존된 2022 개정 교육과정 원문과 일치한다.",
+      "recheckOutcome": "core-answer-matched",
+      "answerSha256": "18370a4dd5a7c9a4f619b4f35d67e948114ff7c63cb8d85f04a1b0ff29777e29",
+      "solutionSha256": "700135d8e7245d88e84fbb566705ce6d3f9364d9669c8964f84dd14a52da0a51",
+      "cautions": [
+        "문항의 두 학교급 상자에는 다른 학교급의 목표가 섞여 있으므로 상자 제목만으로 답하지 않는다."
+      ],
+      "officialAnswerVerified": false,
+      "calculationModel": "tools/validate-ai-program-independent-calculations.mjs"
+    }
+  ]
+}

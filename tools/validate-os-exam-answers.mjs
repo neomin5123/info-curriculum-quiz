@@ -1,17 +1,18 @@
+import {legacyAnswerForHistoricalChecks, legacySolutionForHistoricalChecks} from './legacy-review-corrections.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 const db=JSON.parse(fs.readFileSync('data/exams/major-exams-2014-2026.json','utf8'));
 const audit=JSON.parse(fs.readFileSync('data/audits/2026-10-20-build-03-os-exam-answer-hashes.json','utf8'));
 function assert(condition,message){if(!condition)throw new Error(`OS answer audit: ${message}`);}
 function auditedSolution(q){
- if(q.id!=='2021-B-02')return q.solution;
+ if(q.id!=='2021-B-02')return legacySolutionForHistoricalChecks(q);
  const tag='\n\n재검토 주의:';
  const pos=q.solution.indexOf(tag);
  assert(pos>=0&&q.solution.indexOf(tag,pos+tag.length)===-1,'BCNF candidate-key warning absent or duplicated');
  assert(q.solution.slice(pos).includes('(A,E)')&&q.solution.slice(pos).includes('AC→E'),'candidate-key contradiction text incomplete');
  return q.solution.slice(0,pos);
 }
-function hash(q){return crypto.createHash('sha256').update(`${q.answer}\0${auditedSolution(q)}`).digest('hex');}
+function hash(q){return crypto.createHash('sha256').update(`${legacyAnswerForHistoricalChecks(q)}\0${auditedSolution(q)}`).digest('hex');}
 const lookup=new Map(db.questions.map(q=>[q.id,q]));
 assert(Object.keys(audit.previousAnswersSha256).length===186,'previous answer count');
 assert(audit.newIds.length===26 && Object.keys(audit.newAnswersSha256).length===26,'new answer count');
@@ -30,8 +31,8 @@ for(const id of audit.newIds){
 for(const id of audit.reviewNeededIds)assert(lookup.get(id).verification.reviewNote,'uncertainty note missing '+id);
 assert(db.questions.filter(q=>q.subject==='운체').length===27,'OS total wrong');
 assert(db.questions.filter(q=>q.subject==='운체'&&q.solutionStatus==='solved').length===27,'OS solved incomplete');
-assert(db.questions.filter(q=>q.solutionStatus==='solved').length===231,'total solved wrong');
-assert(db.metadata.coverage.solved===231,'metadata solved wrong');
+assert(db.questions.filter(q=>q.solutionStatus==='solved').length===268,'total solved wrong');
+assert(db.metadata.coverage.solved===268,'metadata solved wrong');
 assert(lookup.get('2018-B-05').answer.includes('24')&&lookup.get('2018-B-05').answer.includes('0'),'race condition bound regressed');
 assert(lookup.get('2022-A-12').answer.includes('5회'),'PFF regression');
 assert(lookup.get('2024-B-06').answer.includes('[4,0,51]'),'second chance state regression');

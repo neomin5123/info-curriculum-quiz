@@ -46,7 +46,7 @@ for(const y of [2020,2021,2022,2023,2024,2025,2026])assert(counts[y]===23,`expec
 assert(!counts[2015],'2015 must remain absent from provided corpus');
 const solved=src.questions.filter(q=>q.solutionStatus==='solved');
 assert(solved.length===src.metadata?.coverage?.solved,`solution count ${solved.length} does not match metadata ${src.metadata?.coverage?.solved}`);
-assert(solved.length===231,`expected 231 solutions in this build, got ${solved.length}`);
+assert(solved.length===268,`expected 268 solutions in this build, got ${solved.length}`);
 const mirror=fs.readFileSync('data/generated/exam-data.js','utf8').trim();
 assert(mirror.startsWith('window.CURRILOOP_EXAM_DATA='),'exam JS mirror prefix missing');
 const mirrored=JSON.parse(mirror.slice('window.CURRILOOP_EXAM_DATA='.length,-1));

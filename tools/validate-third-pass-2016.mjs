@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+const d=JSON.parse(fs.readFileSync('data/exams/major-exams-2014-2026.json','utf8'));
+const audit=JSON.parse(fs.readFileSync('data/audits/2026-10-22-build-01-third-pass-2016-pedagogy.json','utf8'));
+const ids=['2016-A-01','2016-A-09','2016-A-10','2016-B-01','2016-B-08'];
+assert.equal(audit.metadata.buildId,'2026.10.22-01');
+assert.equal(d.questions.length,269);
+assert.equal(d.questions.filter(q=>q.solutionStatus==='solved').length,268);
+assert.equal(d.questions.filter(q=>q.solutionStatus==='pending').length,1);
+assert.deepEqual(audit.entries.map(x=>x.id),ids);
+assert.equal(Object.keys(audit.baselineAnswerSha256).length,268);
+for(const q of d.questions.filter(q=>q.solutionStatus==='solved'))assert.equal(sha(q.answer),audit.baselineAnswerSha256[q.id],'stored answer changed: '+q.id);
+for(const e of audit.entries){
+ const q=d.questions.find(q=>q.id===e.id);
+ assert(q && q.subject==='교교론');
+ assert.equal(sha(q.answer),e.storedAnswerSha256);
+ assert.equal(sha(q.solution),e.storedSolutionSha256);
+ assert.equal(e.officialAnswerConfirmed,false);
+ assert.equal(e.answerEdited,false);
+ assert.equal(e.appSolutionEdited,false);
+ assert.deepEqual(e.sourcePages,q.source.pages);
+ assert.equal(e.questionImageCount,q.images.length);
+ assert(e.workedExplanation.length>200 && e.limitations.length>25);
+ for(const s of e.externalSources) assert(s.url.startsWith('https://') && s.class && s.supports);
+}
+assert.equal(audit.entries.reduce((n,e)=>n+e.points,0),24);
+const trace=audit.independentExecutableChecks['2016-B-01'];
+assert.deepEqual(trace.originalOutputs,[9,18,27,36,45,54,63,72,81]);
+assert.equal(trace.fixedCount,72);
+assert.deepEqual(trace.fixedFirstNine,[2,4,6,8,10,12,14,16,18]);
+assert.equal(audit.metadata.officialAnswerConfirmed,0);
+assert.equal(audit.metadata.independentExactExamAnswerCompared,0);
+console.log(JSON.stringify({status:'PASS',examCount:269,unchangedStoredAnswers:268,thirdPass2016:5,points:24,officialKeyCompared:0,correctedTraceOutputs:72}));
