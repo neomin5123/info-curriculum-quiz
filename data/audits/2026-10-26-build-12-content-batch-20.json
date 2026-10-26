@@ -1,0 +1,230 @@
+{
+  "build": "2026.10.26-12",
+  "baselineBuild": "2026.10.26-11",
+  "scope": "2014+2016 content questions first 20 ordered",
+  "count": 20,
+  "officialRubricCompared": 0,
+  "records": [
+    {
+      "id": "2014-A-04",
+      "subject": "데통네트웤",
+      "title": "정보보안의 목표",
+      "answerPreserved": true,
+      "answer": "㉠ 기밀성(confidentiality), ㉡ 무결성(integrity).",
+      "auditTier": "텍스트 직접 검증",
+      "method": "정의 재대조",
+      "independentReason": "인가자만 공개: 기밀성; 비인가 변경 차단: 무결성",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-05",
+      "subject": "논회컴구",
+      "title": "조합논리회로 간소화",
+      "answerPreserved": true,
+      "answer": "회로의 논리식 F = W(W+X)+(X+Y)(Y+Z). 간소화식 F = W+Y+XZ.",
+      "auditTier": "그림 구조 조건부",
+      "method": "불 대수 검산",
+      "independentReason": "W(W+X)=W; (X+Y)(Y+Z)=Y+XZ. 회로 연결 그림은 별도 확인 대상",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-06",
+      "subject": "자구알고",
+      "title": "이진트리 순회",
+      "answerPreserved": true,
+      "answer": "전위 순회: F A C D E H B G",
+      "auditTier": "그림 구조 조건부",
+      "method": "순회 교차 검산",
+      "independentReason": "제시된 전위순회의 후위 결과가 D,E,C,A,G,B,H,F인지 확인. 트리 도형 원본 대조 필요",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-07",
+      "subject": "프로그래밍",
+      "title": "매개변수 전달 방식 C 유사언어",
+      "answerPreserved": true,
+      "answer": "출력: 6 13",
+      "auditTier": "독립 계산 일치",
+      "method": "참조/값 전달 추적",
+      "independentReason": "값 전달 후 합 6, 참조 전달 첫 호출 후 val=1,list[0]=2; 두 번째 호출 후 list[0]=3,list[1]=4, 합 13",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-08",
+      "subject": "디비",
+      "title": "온라인 쇼핑몰 SQL",
+      "answerPreserved": true,
+      "answer": "WHERE 고객.고객번호 = 주문.고객번호 AND 고객.주소 = '서울'",
+      "auditTier": "텍스트 직접 검증",
+      "method": "고객/주문 조인",
+      "independentReason": "고객번호 이름 충돌을 피하는 테이블 수식어와 고객.주소 필터 확인; 원문 SQL GROUP BY 사용",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-09",
+      "subject": "프로그래밍",
+      "title": "C 재귀 프로그램",
+      "answerPreserved": true,
+      "answer": "출력: 2 5 12 (각 수 뒤 공백 포함)",
+      "auditTier": "독립 계산 일치",
+      "method": "재귀 출력 순서",
+      "independentReason": "recur(0)=1; recur(1)=2; recur(3)=5; recur(7)=12, 반환 후 출력 2 5 12",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-10",
+      "subject": "데통네트웤",
+      "title": "RIP 라우팅 테이블 갱신",
+      "answerPreserved": true,
+      "answer": "㉠ B, ㉡ 3(홉).",
+      "auditTier": "독립 계산 일치",
+      "method": "RIP 홉수 검산",
+      "independentReason": "B 경유 z=1+2=3; 기존 5보다 작으므로 next hop B",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-13",
+      "subject": "운체",
+      "title": "CPU 스케줄링",
+      "answerPreserved": true,
+      "answer": "라운드 로빈 평균 대기시간 8.4 ms, 비선점 우선순위 평균 대기시간 6.6 ms. 무한 시간 할당량의 라운드 로빈(FCFS) 평균 반환시간 11.4 ms. 기아 방지: 에이징(aging).",
+      "auditTier": "독립 계산 일치",
+      "method": "스케줄링 재계산",
+      "independentReason": "RR q5 평균 대기 8.4, 비선점 우선 6.6, FCFS 평균 반환 11.4",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-A-14",
+      "subject": "데통네트웤",
+      "title": "IPv4 서브넷과 주소 고갈",
+      "answerPreserved": true,
+      "answer": "(1) 64개 주소. (2) 첫 주소 18.14.74.192/27, 마지막 주소 18.14.74.223/27. (3) IPv6 도입(또는 NAT 활용).",
+      "auditTier": "독립 계산 일치",
+      "method": "VLSM 경계값 검산",
+      "independentReason": "A /25, B /26, C /27 순 배정 시 192~223, 64주소·32주소 확인",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-B-01",
+      "subject": "소공",
+      "title": "소프트웨어 개발 프로젝트 임계 경로",
+      "answerPreserved": true,
+      "answer": "임계경로 A → C → E → F → G, 최소 소요기간 50일. 임계경로는 여유시간이 0인 작업의 연쇄로, 어느 작업이 지연되어도 프로젝트의 최종 완료일이 늦어지므로 일정 관리에서 우선 통제해야 한다.",
+      "auditTier": "독립 계산 일치",
+      "method": "CPM 선후 관계 재계산",
+      "independentReason": "A7 C17 E23 F38 G50; H는 D/E 이후 10일로 F-G보다 짧다",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-B-02",
+      "subject": "디비",
+      "title": "정규화와 BCNF 무손실 조인",
+      "answerPreserved": true,
+      "answer": "2NF: R1(B,D,E,F), R2(A,B,C). 3NF: R1(B,D,F), R2(D,E), R3(A,B,C). BCNF: R1(B,D,F), R2(D,E), R4(A,B), R5(A,C).",
+      "auditTier": "독립 논리 일치",
+      "method": "함수종속·무손실 검증",
+      "independentReason": "B→DF, D→E, BC→A, A→C 사용. R(ABC)의 A→C 위반에 의해 AB/AC로 분해; AC 교집합 A가 AC 키",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-B-03",
+      "subject": "자구알고",
+      "title": "단일 연결리스트 insertNode",
+      "answerPreserved": true,
+      "answer": "㉠ `ptr = ptr->next`  ㉡ `elm->next = ptr`  ㉢ `prevptr->next = elm`. 장점: 삽입 위치의 앞 노드를 알고 있으면 노드들의 물리적 이동 없이 링크 변경만으로 중간 삽입이 가능하여 배열보다 삽입 자체가 빠르다.",
+      "auditTier": "텍스트 직접 검증",
+      "method": "연결리스트 삽입 지점",
+      "independentReason": "반복 중 ptr 이동, 새 노드 next=ptr, 이전 노드 next=elm 검토",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-B-04",
+      "subject": "논회컴구",
+      "title": "집합-연관 사상 캐시",
+      "answerPreserved": true,
+      "answer": "집합00: [11, DA], [빈 칸], 참조0. 집합01: [10, CB], [01, BB], 참조0. 집합10: [01, BC], [빈 칸], 참조0. 집합11: [10, CD], [01, BD], 참조1.",
+      "auditTier": "독립 계산 일치",
+      "method": "캐시 태그/인덱스 추적",
+      "independentReason": "0110 집합10 적중; 0111 집합11 우측 삽입; 1001 집합01에서 이전 LRU 왼쪽을 CB로 교체",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2014-B-06",
+      "subject": "자구알고",
+      "title": "지도 색칠하기와 백트래킹",
+      "answerPreserved": true,
+      "answer": "1단계: 무방향 그래프 V={a,b,c,d,e}, E={(a,b),(a,c),(a,d),(b,c),(c,d),(c,e),(d,e)}. 2단계: 빨강→파랑→노랑 순으로, 정점 a→b→c→d→e의 첫 해는 (a=빨강,b=파랑,c=노랑,d=파랑,e=빨강)이다. 상태 공간 트리의 유효 경로는 ∅→a빨강→b파랑→c노랑→d파랑→e빨강(해); 각 단계에서 이미 색칠한 인접 지역과 같은 색은 가지치기한다. 3단계: DFS는 경로에 대한 스택만 필요하여 BFS보다 일반적으로 메모리 사용이 적지만, 최단 깊이 해를 보장하지 않고 깊은 분기에서 오래 걸릴 수 있다. 4단계: 미색칠 인접 지역이 많은 정점(제약 차수 최대)을 먼저 방문하면 이후 분기의 불가능한 선택을 일찍 제거하여 탐색량을 줄일 수 있다.",
+      "auditTier": "그림 구조 조건부",
+      "method": "지도색칠 유효성",
+      "independentReason": "제시된 첫 색 배치는 저장된 E의 각 간선마다 다른 색. 도형 간선의 원본 대조는 별도",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-02",
+      "subject": "데통네트웤",
+      "title": "다음은 공개키 암호화 알고리즘을 이용하여 A가 B에게 문서를 보내는 과정을 나타낸 것이다.",
+      "answerPreserved": true,
+      "answer": "암호화, 개인키",
+      "auditTier": "텍스트 직접 검증",
+      "method": "공개키 암호화",
+      "independentReason": "수신자 공개키 암호화 및 개인키 복호화: 암호화, 개인키",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-03",
+      "subject": "프로그래밍",
+      "title": "다음은 정적 변수를 이용하는 C 언어 프로그램이다.",
+      "answerPreserved": true,
+      "answer": "3 5",
+      "auditTier": "독립 계산 일치",
+      "method": "정적 변수 누적",
+      "independentReason": "5 이하 홀수 3개, 4 이하 홀수 2개 추가해 3 5",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-04",
+      "subject": "소공",
+      "title": "다음 <작업 내용>이 폭포수 모델의 소프트웨어 개발 생명주기 (software development life-cycle)에서 어느 단계에 해당하는지 쓰시오. 그리고 이 단계에서 생산되는 산출물인 주요 형상관리 항목 중 …",
+      "answerPreserved": true,
+      "answer": "요구사항 분석(요구 분석) 단계. 주요 형상관리 산출물의 예: 소프트웨어 요구사항 명세서(SRS).",
+      "auditTier": "텍스트 직접 검증",
+      "method": "폭포수 단계 정의",
+      "independentReason": "개발할 무엇을 정하는 요구사항 분석; SRS 산출물",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-05",
+      "subject": "데통네트웤",
+      "title": "(가)와 (나)는 <조건>에 따라 구성된 네트워크에 존재하는 라우터 R1과 R2의 라우팅 테이블(routing table)이다.",
+      "answerPreserved": true,
+      "answer": "㉠ 224.249.0.0/16, ㉡ 224.253.0.0/16.",
+      "auditTier": "독립 계산 일치",
+      "method": "CIDR 요약",
+      "independentReason": "224.249.0.0/17,224.249.128.0/17 통합 /16; 224.253.0.0/16 독립",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-06",
+      "subject": "논회컴구",
+      "title": "단일 CPU에서 <조건>에 따라 명령어 A, B, C를 모두 처리하는 데 걸리는 최소 시간을 <작성 방법>에 따라 쓰시오. ",
+      "answerPreserved": true,
+      "answer": "(1) 단일 사이클 480. (2) 5단계 파이프라인 280.",
+      "auditTier": "독립 계산 일치",
+      "method": "파이프라인 시간",
+      "independentReason": "단일 사이클 3*160=480; 파이프라인 (5+3-1)*40=280",
+      "officialRubricMatched": false
+    },
+    {
+      "id": "2016-A-07",
+      "subject": "프로그래밍",
+      "title": "다음과 같은 두 개의 C 프로그램을 함께 실행하려면 외부 참조를 해결해야 한다.",
+      "answerPreserved": true,
+      "answer": "㉠ func, ㉡ aaa.",
+      "auditTier": "텍스트 직접 검증",
+      "method": "링커 심벌",
+      "independentReason": "main.c 외부참조 func, func.c 외부참조 aaa; 심벌 표의 빈칸 위치 확인",
+      "officialRubricMatched": false
+    }
+  ],
+  "limitation": "원본 도형이 필요한 3건은 조건부. 공식 채점기준 미확인; 2026-B 정답표 화면 버그 미재현."
+}

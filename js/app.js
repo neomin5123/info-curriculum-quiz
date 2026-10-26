@@ -500,7 +500,7 @@ function collapseRetryCard(id=''){
 }
 function deferRetryCard(id){
   const r=state.fieldRetries?.[id];if(!r)return;
-  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
+  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
   activeRetryCardId='';
   persist();
   renderRetryDock();
@@ -538,7 +538,7 @@ function rescheduleRetryRecord(id,r,status){
     delete state.fieldRetries[id];
     return false;
   }
-  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay||3);
+  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
   return true;
 }
 
@@ -603,9 +603,11 @@ function gradeRetryCard(id){
   }
 
   if(status==='correct'){
-    showRetryResult(id,'correct','재인출 완료 ✓');
-    setRetryFeedback(id,'모두 정확했습니다.','good');
-    completeRetryRecord(id,r);
+    showRetryResult(id,'correct','정답 ✓ · 오답카드 유지');
+    setRetryFeedback(id,'정답입니다. 이 카드는 자동으로 삭제되지 않습니다.','good');
+    // 정답을 맞혀도 오답카드는 삭제하지 않는다. 반복 확인할 수 있도록 유지.
+    r.status='correct';
+    r.dueAt=Number(state.answerSerial||0);
     CL.storage.save(state);renderReviewPage();
     advanceRetryCardAfter(id,orderBefore,1000);
     return;
@@ -1398,14 +1400,8 @@ function retryIdForField(field){
   return `${field.dataset.fieldKey||''}|round:${state.round||1}`;
 }
 function cancelFieldRetry(field){
-  if(!field?.dataset?.fieldKey)return;
-  state.fieldRetries=state.fieldRetries||{};
-  Object.entries(state.fieldRetries).forEach(([id,r])=>{
-    if(r?.kind==='set'&&Array.isArray(r.sourceFieldKeys)&&r.sourceFieldKeys.includes(field.dataset.fieldKey)){
-      const allCorrect=r.sourceFieldKeys.every(key=>CL.storage.getFieldGrade(state,key)?.status==='correct');
-      if(allCorrect)delete state.fieldRetries[id];
-    }else if(r?.fieldKey===field.dataset.fieldKey)delete state.fieldRetries[id];
-  });
+  // 정답으로 변경되어도 기존 오답카드는 보존한다. 자동 해제 금지.
+  return;
 }
 function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   if(!state.ui.retry||!field?.dataset?.fieldKey||status==='correct')return;
@@ -1415,6 +1411,8 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   const count=Number(state.fieldRetryCounts[id]||0);
   if(count>=CL.config.maxRetriesPerTaskPerRound&&!state.fieldRetries[id])return;
   if(!state.fieldRetries[id])state.fieldRetryCounts[id]=count+1;
+  // 오답은 현재 답안 직후 카드가 펼쳐지도록 예약한다.
+  activeRetryCardId=id;
 
   const ctx=taskContext(task),section=field.dataset.section||ctx.family||'빈칸';
   const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';
@@ -1445,7 +1443,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
       contextText:`${ctx.area} 영역의 ${section} 내용 요소`,
       taskId:engine.taskId(task),
       round:Number(state.round||1),
-      dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay||3)),
+      dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay??0)),
       status,
       scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
     };
@@ -1465,7 +1463,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
     contextText:line?.sourceText||ctx.family||'',
     taskId:engine.taskId(task),
     round:Number(state.round||1),
-    dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay||3)),
+    dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay??0)),
     status,
     scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
   };
@@ -1486,7 +1484,6 @@ function activateDueFieldRetry(){
   if(!field)return false;
   const saved=CL.storage.getFieldGrade(state,field.dataset.fieldKey);
   if(saved?.status==='correct'){
-    delete state.fieldRetries[id];
     return false;
   }
   field.value='';

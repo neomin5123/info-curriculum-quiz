@@ -1,0 +1,312 @@
+{
+  "build": "2026.10.26-20",
+  "focus": "Build 18 backlog; text-grounded independent checks without changing stored answers",
+  "totalReviewed": 30,
+  "independentChecked": 8,
+  "pending": 22,
+  "previousThirdPassRecorded": 154,
+  "storedExplanations": 196,
+  "officialRubricCompared": 0,
+  "records": [
+    {
+      "id": "2021-B-09",
+      "subject": "디비",
+      "storedAnswer": "(1) ㉠ ALL. (2) DELETE D2 후 COUNT(*)=7. (3) UPDATE D3→D4는 거부되며, 두 번째 COUNT(*)=0.",
+      "status": "independent-checked",
+      "method": "독립 관계 대수·참조무결성 대조",
+      "evidence": "표에 있는 D2 가입 4행을 11행에서 제거하면 7행. 가입연도 <= ALL(2018,2019,2020)은 2018 이하. D3를 참조하는 가입행이 있어 NO ACTION 갱신은 거부됨.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2021-B-10",
+      "subject": "운체",
+      "storedAnswer": "⑤~⑬ 페이지 폴트 총 6회. ⑫ 직전 적재 페이지: 0, 3, 6, 8. ⑥ 가상 주소 1324의 물리 주소 2348, ⑧ 직전 물리 주소 5200에 해당하는 가상 주소 4176.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2021-B-11",
+      "subject": "자구알고",
+      "storedAnswer": "㉠ 출력: S, B, A, C, D, G. 이 중 출력 시점의 평가함수 값이 가장 큰 지점은 G이며 f(G)=15이다.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-02",
+      "subject": "프로그래밍",
+      "storedAnswer": "㉠ XY=01: a b c d = 0 0 1 1 / XY=10: 1 1 0 0 / 최소 SOP: a=X+Y̅, b=X+Y̅, c=X̅, d=X̅+Y",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-03",
+      "subject": "데통네트웤",
+      "storedAnswer": "d4, c3.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-04",
+      "subject": "운체",
+      "storedAnswer": "㉢ 4, ㉣ 3.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-08",
+      "subject": "디비",
+      "storedAnswer": "㉠ CHECK(평점 BETWEEN 1 AND 5), ㉡ LIKE '%데이터%', ㉢ AVG(B.평점), ㉣ GROUP BY A.출판사코드, A.출판사명 HAVING AVG(B.평점) >= 4.0",
+      "status": "independent-checked",
+      "method": "독립 SQL 집계",
+      "evidence": "A2는 (5+3)/2=4.0, A4는 (5+4)/2=4.5, C1은 1.0. 평점 제약 CHECK BETWEEN 1 AND 5; 제목 부분 문자열은 LIKE %데이터%; 평균 필터는 GROUP BY/HAVING.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-09",
+      "subject": "프로그래밍",
+      "storedAnswer": "㉠ students / ㉡ 10 / ㉢ 4 (회문 문자열 개수)",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-10",
+      "subject": "프로그래밍",
+      "storedAnswer": "일반 지역변수: 2 12 2 42 / static으로 변경: 2 12 4 44",
+      "status": "independent-checked",
+      "method": "독립 C 상태 추적",
+      "evidence": "일반 지역변수는 f1 호출마다 a=0, s=0: 첫 호출 2,12; main에서 *t=30으로 만든 뒤 두번째 호출 2,42. static a이면 두번째 a=4여서 4,44.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-11",
+      "subject": "자구알고",
+      "storedAnswer": "㉠ <=, ㉡ >= / ㉣의 최솟값 3 / ㉢ 이외의 가지치기: 알파 가지치기로 H, R, I, S, T 제외",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-A-12",
+      "subject": "운체",
+      "storedAnswer": "첫 페이지 폴트: 페이지 6. 참조 비트 0 페이지의 최초 회수를 일으키는 페이지 폴트: 페이지 4, 당시 회수되는 페이지 7·8. 전체 페이지 폴트 5회.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-01",
+      "subject": "인지머러",
+      "storedAnswer": "㉠ 정보보호능력. 교육과정 고시 순서: (나) → (라) → (가) → (다).",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-02",
+      "subject": "디비",
+      "storedAnswer": "함수 종속 예: D → C. 가장 높은 정규형: 제2정규형(2NF).",
+      "status": "independent-checked",
+      "method": "독립 관계 함수 종속 검산",
+      "evidence": "데이터에서 D=지중해인 행은 모두 C=유럽, D=태평양인 행은 모두 C=아시아, D=대서양도 모두 C=아시아이므로 D→C. A 단일 속성 키이므로 부분 종속이 존재하지 않아 2NF 충족. 비키 속성 D의 C 결정으로 3NF 위반.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-04",
+      "subject": "자구알고",
+      "storedAnswer": "㉢ 구체적 사고, ㉣ 형식적(추상적) 사고 / ㉥ 짝 프로그래밍(pair programming). 드라이버: 실제 코드를 작성·입력하고 실행하며 구현을 담당한다. 내비게이터: 구현 흐름과 설계를 점검하고 오류를 검토하며 개선 방향을 조언한다.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-06",
+      "subject": "데통네트웤",
+      "storedAnswer": "㉠ 301, ㉡ 301. ⓒ 타임아웃 후 순서번호 301~400 세그먼트를 재전송.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-07",
+      "subject": "자구알고",
+      "storedAnswer": "읽기 후 캐시: (라인 00, 태그 1, 데이터 A0E1), (01, 0, A0B1), (10, 0, A0C1), (11, 0, A0D1). 변경된 필드 구성의 캐시 용량: 4바이트. 직접 사상에서 LRU 불필요: 메모리 블록마다 대응하는 캐시 라인이 단 하나로 고정되어 교체 후보를 고를 필요가 없다.",
+      "status": "independent-checked",
+      "method": "독립 비트 분해·사상 검산",
+      "evidence": "0010은 태그0·라인01·단어0이므로 라인01에 A0B1을 적재. 캐시 라인수 2^1=2, 라인당 블록 2B라서 4B. 직접 사상은 교체 후보가 고정되어 LRU 불필요.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-08",
+      "subject": "디비",
+      "storedAnswer": "부서 릴레이션의 차수: 4. 지점(지점코드 PK, 지점명); 지점위치(지점코드*·위치 복합 PK); 직원(직원코드 PK, 이름, 연봉, 부서코드 FK, 발령일, 관리자직원코드 FK→직원.직원코드).",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-09",
+      "subject": "자구알고",
+      "storedAnswer": "㉠ head = rear = a; ㉡ head = rear = b; ㉢ if (rear == NULL) head = b; else rear->next = b; ㉣ if (rear == NULL) head = a; else rear->next = a;",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-10",
+      "subject": "자구알고",
+      "storedAnswer": "최소 신장 트리 비용 합 26 / ㉠ 3번째 추가 간선 (4, 1) / ㉡ 3번째 modifynear(4)로 값이 변경되는 정점: 5, 9",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2022-B-11",
+      "subject": "운체",
+      "storedAnswer": "SJF 두 번째 F, 세 번째 H. F 이후 SSTF 세 번째 서비스 트랙 380, 종료 시점 870.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-02",
+      "subject": "논회컴구",
+      "storedAnswer": "㉠ C, ㉡ 0.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-03",
+      "subject": "디비",
+      "storedAnswer": "undo 대상: T1, T3. 회복 후 B=2100.",
+      "status": "independent-checked",
+      "method": "독립 로그 분석",
+      "evidence": "T1, T3는 크래시 당시 커밋도 abort도 없으므로 undo. T0는 commit했고 B를 1500에서 2100으로 변경했으므로 회복 후 B=2100.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-04",
+      "subject": "논회컴구",
+      "storedAnswer": "비트맵 크기 262,144비트. 1비트에 대응시키는 최소 클러스터 크기: 4블록.",
+      "status": "independent-checked",
+      "method": "독립 단위·정수 계산",
+      "evidence": "2GB/8KB=(2×2^30)/(8×2^10)=2^18=262144개 블록. 비트맵 1개 블록은 8KB×8=65536비트이므로 클러스터당 262144/65536=4블록.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-08",
+      "subject": "자구알고",
+      "storedAnswer": "R4=945 / 위치를 바꿔도 되는 명령어: ②와 ③ / ㉠ ADD, ㉡ MUL, ㉢ MUL",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-09",
+      "subject": "인지머러",
+      "storedAnswer": "노드 n: g(n)=2, h(n)=1. 목표노드: h(목표)=0, f(목표)=3.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-10",
+      "subject": "디비",
+      "storedAnswer": "㉠ 동아리(동아리명 키, 가입비) 개체와 학생–동아리 N:M 가입 관계(가입일 관계 속성). ㉡ 학생(강한 개체)–보호자(약한 개체) 1:N 식별 관계; 보호자 속성 보호자이름(부분키), 연락처. 학생 릴레이션 차수: 4.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-11",
+      "subject": "프로그래밍",
+      "storedAnswer": "gap: 4 → 2 → 1 → 0 / gap=4일 때 break 2회 / data[0]=12, data[6]=26",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-A-12",
+      "subject": "소공",
+      "storedAnswer": "㉠ end, ㉡ (start+end)/2, ㉢ (start+end)/2+1, test( ) 호출 횟수 13회.",
+      "status": "independent-checked",
+      "method": "독립 재귀 호출 트리 검산",
+      "evidence": "64=2^6개 샘플, 양성 경로 깊이 6. 각 깊이에서 양쪽 하위구간을 테스트하며, 루트 테스트 1회와 6단계×2회로 총 13회. 분할 경계 mid=floor((start+end)/2).",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-B-02",
+      "subject": "데통네트웤",
+      "storedAnswer": "올바른 순서 ⓑ → ⓒ → ⓐ. ㉠ 4001.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    },
+    {
+      "id": "2023-B-06",
+      "subject": "데통네트웤",
+      "storedAnswer": "(1) A → R1 → R2 → B. (2) R3이 더 낮은 비용: R2의 N1~N5 비용 합 26, R3의 합 25(각 동일 트래픽). (3) R3의 N4 경로: 다음 라우터 R1, 비용 12.",
+      "status": "pending-independent-verification",
+      "method": "원본 도형·전체 소문항 추가 재풀이 필요",
+      "evidence": "기존 Build 18 해설을 보존했으며 이번 회차에서 독립 정답을 확정하지 않음.",
+      "officialRubricChecked": false,
+      "answerChanged": false
+    }
+  ]
+}
