@@ -1,0 +1,460 @@
+{
+  "build": "2026.10.26-29",
+  "method": "30 sampled for evidence completeness; 5 partial checks (four substantial, one arithmetic only). Not complete-question answer confirmations.",
+  "target_count": 30,
+  "new_complete_verified": 0,
+  "existing_answers_modified": 0,
+  "official_rubric_compared": 0,
+  "records": [
+    {
+      "id": "2024-A-01",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 2,
+      "source_pages": [
+        116
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-02",
+      "year": 2024,
+      "subject": "자구알고",
+      "points": 2,
+      "source_pages": [
+        116
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-03",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 2,
+      "source_pages": [
+        117
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-04",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 2,
+      "source_pages": [
+        117
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-05",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        118
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-06",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        119
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-07",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        119
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-08",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 4,
+      "source_pages": [
+        120
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "partial_independent",
+      "independent_evidence": "기저값 1,2,4 및 n=6 재귀 점화식을 독립 계산. n=37의 결과는 signed int 범위를 초과하며 C 표준상 출력은 미정의 동작.",
+      "computed_check": "robot(6)=24; robot(37)=3831006429 > 2147483647",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-09",
+      "year": 2024,
+      "subject": "디비",
+      "points": 4,
+      "source_pages": [
+        120
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-10",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 4,
+      "source_pages": [
+        121
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "partial_independent",
+      "independent_evidence": "110011 XOR (011001) = 101010. 그레이 100101을 누적 XOR로 역변환하면 111001.",
+      "computed_check": "101010 / 111001",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-11",
+      "year": 2024,
+      "subject": "자구알고",
+      "points": 4,
+      "source_pages": [
+        121
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-12",
+      "year": 2024,
+      "subject": "운체",
+      "points": 4,
+      "source_pages": [
+        122
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-01",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 2,
+      "source_pages": [
+        123
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-02",
+      "year": 2024,
+      "subject": "논회컴구",
+      "points": 2,
+      "source_pages": [
+        123
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-03",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        124
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-04",
+      "year": 2024,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        124
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-05",
+      "year": 2024,
+      "subject": "자구알고",
+      "points": 4,
+      "source_pages": [
+        125
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-06",
+      "year": 2024,
+      "subject": "운체",
+      "points": 4,
+      "source_pages": [
+        126
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-07",
+      "year": 2024,
+      "subject": "디비",
+      "points": 4,
+      "source_pages": [
+        127
+      ],
+      "answer_present": false,
+      "base_solution_present": false,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-08",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 4,
+      "source_pages": [
+        127
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-09",
+      "year": 2024,
+      "subject": "프로그래밍",
+      "points": 4,
+      "source_pages": [
+        128
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-10",
+      "year": 2024,
+      "subject": "데통네트웤",
+      "points": 4,
+      "source_pages": [
+        128
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "partial_independent",
+      "independent_evidence": "기존 저장 답안의 단편 길이 500+340=840의 산술만 독립 확인. 헤더 필드·offset·MF 원본 재검증은 미완료.",
+      "computed_check": "500+340=840",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-11",
+      "year": 2024,
+      "subject": "자구알고",
+      "points": 4,
+      "source_pages": [
+        129
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-01",
+      "year": 2025,
+      "subject": "교교론",
+      "points": 2,
+      "source_pages": [
+        130
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-02",
+      "year": 2025,
+      "subject": "논회컴구",
+      "points": 2,
+      "source_pages": [
+        130
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-03",
+      "year": 2025,
+      "subject": "프로그래밍",
+      "points": 2,
+      "source_pages": [
+        131
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-04",
+      "year": 2025,
+      "subject": "프로그래밍",
+      "points": 2,
+      "source_pages": [
+        131
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "partial_independent",
+      "independent_evidence": "1부터 20까지 3의 배수는 6개. 입력 12에서 4개가 되어 빈칸 0이라는 기준과 부합.",
+      "computed_check": "20//3=6",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-05",
+      "year": 2025,
+      "subject": "자구알고",
+      "points": 4,
+      "source_pages": [
+        131
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "partial_independent",
+      "independent_evidence": "2^15=32768; 반복 곱셈이 15회, 제곱 분할의 곱셈이 8회라는 이전 기록은 알고리즘 원본 줄단위 재현 없이는 독립 확정 불가.",
+      "computed_check": "2**15=32768; count unverified",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-06",
+      "year": 2025,
+      "subject": "교교론",
+      "points": 4,
+      "source_pages": [
+        132
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-07",
+      "year": 2025,
+      "subject": "인지머러",
+      "points": 4,
+      "source_pages": [
+        132
+      ],
+      "answer_present": true,
+      "base_solution_present": true,
+      "level": "not_independently_rechecked",
+      "independent_evidence": "해당 문항의 전체 조건·도형·소문항을 이번 차수에 독립 재풀이하지 않음. 기존 답안과 해설은 보존.",
+      "computed_check": "",
+      "official_rubric_compared": false
+    }
+  ]
+}
