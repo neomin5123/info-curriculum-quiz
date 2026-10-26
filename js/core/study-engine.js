@@ -133,14 +133,88 @@
       if(line.presentation){let sets=stage==='practical'&&line.presentation.practicalSets.length?line.presentation.practicalSets:line.presentation.coreSets;if(!sets.length)sets=line.presentation.practicalSets;if(!sets.length)return null;return sets[(Math.max(1,state.round||1)-1)%sets.length];}
       let sets=stage==='practical'&&line.practicalSets.length?line.practicalSets:line.coreSets;if(!sets.length)sets=line.practicalSets;if(!sets.length)return null;return sets[(Math.max(1,state.round||1)-1)%sets.length];
     }
+    // Presentation-only cloze boundary repair: never rewrite curriculum text or policy grades.
+    // Long phrases are rendered as shorter, source-exact concept spans when reliable
+    // keyword offsets are available. The persisted source data stays untouched.
+    function conciseClozeUnits(line,units,maxUnits=Infinity){
+      const result=[];
+      for(const u of units){
+        // Curated source-exact repairs for malformed or low-information long blanks.
+        // Only the rendered answer spans change; source text and stored units remain intact.
+        const approved={
+          'MI-01-AC-ST-03-PU-01':['피지컬 컴퓨팅'],
+          'MI-01-AC-EX-02-PU-05':['피지컬 컴퓨팅 시스템'],
+          'MI-02-CS-PF-02-PU-01':['수집','분류','저장'],
+          'MI-02-CS-PF-03-PU-01':['구조화','의미 해석'],
+          'MI-02-AC-EX-02-PU-03':['데이터의 종류','공통점'],
+          'MI-03-CS-PF-01-PU-01':['초기 상태','현재 상태','목표 상태'],
+          'MI-03-AC-EX-03-PU-03':['순차적으로 저장할 수 있는 구조'],
+          'MI-04-CS-KI-02-PU-02':['윤리적 편향성'],
+          'MI-04-AC-EX-03-PU-05':['장단점','결론'],
+          'HI-03-AC-EX-03-PU-01':['객체 지향','필요성'],
+          'HI-04-CS-KI-02-PU-02':['데이터','기계학습 모델'],
+          'MI-01-CS-PF-01-PU-01':["구성요소"],
+          'MI-01-AC-EX-01-PU-02':["시스템으로 확장"],
+          'MI-02-AC-EX-02-PU-04':["구분하여 저장", "활용"],
+          'MI-03-CS-KI-02-PU-04':["생활을 더욱 편리하게"],
+          'MI-03-AC-ST-05-PU-01':["순차적으로 저장할 수 있는 구조"],
+          'MI-04-CS-KI-02-PU-01':["데이터"],
+          'MI-04-AC-EX-03-PU-03':["법적", "사회적", "윤리적"],
+          'MI-05-CS-PF-01-PU-01':["직업의 변화"],
+          'MI-05-CS-PF-03-PU-01':["다른 사람을 보호하는 방법"],
+          'MI-05-AC-ST-02-PU-01':["안전한 생활을 위한 규칙"],
+          'MI-05-AC-EX-01-PU-04':["스마트폰 중독", "인터넷 중독", "게임 과몰입"],
+          'MI-TE-DIR-06-PU-01':["사회문제"],
+          'MI-TE-MET-03-PU-01':["프로그래밍", "문제 해결"],
+          'HI-02-CS-PF-03-PU-01':["빅데이터", "분석", "시각화"],
+          'HI-02-AC-ST-02-PU-02':["안전하게 관리하는 사례"],
+          'HI-02-AC-EX-02-PU-02':["암호화", "복호화"],
+          'HI-03-CS-PF-02-PU-01':["수행 과정", "효율성"],
+          'HI-03-CS-PF-04-PU-01':["제어 구조", "다차원 데이터 구조"],
+          'HI-03-CS-PF-05-PU-01':["클래스"],
+          'HI-03-AC-ST-02-PU-01':["알고리즘의 특징", "효율"],
+          'HI-TE-DIR-04-PU-01':["사회문제"]
+        };
+        const phrases=approved[u.unitId];
+        if(phrases){
+          let cursor=u.start, spans=[];
+          for(const phrase of phrases){
+            const pos=line.sourceText.indexOf(phrase,cursor);
+            if(pos<0||pos+phrase.length>u.end){spans=[];break;}
+            spans.push({start:pos,end:pos+phrase.length,text:phrase});cursor=pos+phrase.length;
+          }
+          if(spans.length===phrases.length){
+            for(const k of spans)result.push({...u,...k,unitId:`${u.unitId}:curated:${k.start}`});
+            continue;
+          }
+        }
+        if(String(u.text||'').length<=16){result.push(u);continue;}
+        const keys=(line.keywords||[]).filter(k=>
+          Number.isInteger(k.start)&&Number.isInteger(k.end)&&
+          k.start>=u.start&&k.end<=u.end&&
+          k.end>k.start&&k.text===line.sourceText.slice(k.start,k.end)&&
+          (k.text.trim().length>=4||k.text==='통신')&&k.text.trim().length<=12
+        ).sort((a,b)=>(b.end-b.start)-(a.end-a.start)||a.start-b.start);
+        const chosen=[];
+        for(const k of keys){
+          if(chosen.every(x=>k.end<=x.start||k.start>=x.end))chosen.push(k);
+          if(chosen.length>=2)break;
+        }
+        if(!chosen.length){result.push(u);continue;}
+        for(const k of chosen.sort((a,b)=>a.start-b.start)){
+          result.push({...u,text:k.text,start:k.start,end:k.end,unitId:`${u.unitId}:short:${k.keywordId}`,sourceKeywordIds:[k.keywordId]});
+        }
+      }
+      return result.sort((a,b)=>a.start-b.start).slice(0,maxUnits);
+    }
     function keywordsForSet(line,set){
       if(!set)return[];
-      if(line.presentation&&set.unitIds){const map=new Map(line.presentation.units.map(u=>[u.unitId,u]));return set.unitIds.map(id=>map.get(id)).filter(Boolean).sort((a,b)=>a.start-b.start);}
+      if(line.presentation&&set.unitIds){const map=new Map(line.presentation.units.map(u=>[u.unitId,u]));return conciseClozeUnits(line,set.unitIds.map(id=>map.get(id)).filter(Boolean),3);}
       const map=new Map(line.keywords.map(k=>[k.keywordId,k]));return set.keywordIds.map(id=>map.get(id)).filter(Boolean).sort((a,b)=>a.start-b.start);
     }
     function recallUnitsForLine(line,stage=state.ui.stage){
       if(stage==='whole'){
-        if(line.presentation?.units?.length)return line.presentation.units.slice().sort((a,b)=>a.start-b.start);
+        if(line.presentation?.units?.length)return conciseClozeUnits(line,line.presentation.units.slice());
         return line.keywords.filter(k=>k.active).slice().sort((a,b)=>a.start-b.start);
       }
       const set=selectedSet(line);
