@@ -1,6 +1,6 @@
 {
-  "buildId": "2026.10.24-04",
-  "builtOn": "2026-10-22",
+  "buildId": "2026.10.26-28",
+  "builtOn": "2026-10-26",
   "publicVersion": null,
   "product": "CurriLoop",
   "releaseChannel": "study",
@@ -25,6 +25,8 @@
     "exam-year-atlas",
     "ai-basic-curriculum",
     "exam-display-whitespace-trimming",
-    "exam-full-width-layout"
+    "exam-full-width-layout",
+    "concise-source-faithful-cloze-targets",
+    "immediate-wrong-answer-retry-cards"
   ]
 }
