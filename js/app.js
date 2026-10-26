@@ -1056,13 +1056,362 @@ function renderKI(g){
   }
   el.content.innerHTML=`<div class="ki-grid">${g.items.map((_,i)=>`<label class="ki-row"><span>${i+1}</span><input class="ki-input" autocomplete="off" aria-label="${i+1}번 내용 요소"><span class="ki-mark"></span></label>`).join('')}</div>`;
 }
+const explanationFallbackPhrases={
+  "MI-02-AC-CO-01": [
+    "운영 체제",
+    "파일 시스템",
+    "전이"
+  ],
+  "MI-02-AC-CO-02": [
+    "스프레드시트",
+    "단계적으로"
+  ],
+  "MI-02-AC-CO-03": [
+    "프로젝트 기반",
+    "문제기반 학습"
+  ],
+  "MI-04-AC-CO-02": [
+    "의견을 최대한 존중",
+    "근거",
+    "논리적으로"
+  ],
+  "MI-05-AC-CO-01": [
+    "진로 연계 교육"
+  ],
+  "MI-05-AC-CO-02": [
+    "민주시민 교육",
+    "다른 사람의 의견을 존중"
+  ],
+  "HI-01-AC-CO-02": [
+    "사물인터넷 장치",
+    "유⋅무선 네트워크"
+  ],
+  "HI-02-AC-CO-03": [
+    "데이터 압축",
+    "암호화",
+    "탄소중립"
+  ],
+  "HI-02-AC-CO-04": [
+    "데이터에 기반하여",
+    "토의⋅토론"
+  ],
+  "HI-03-AC-CO-02": [
+    "대규모 데이터",
+    "정렬하고 탐색"
+  ],
+  "HI-04-AC-CO-02": [
+    "인공지능 플랫폼",
+    "기계학습 라이브러리",
+    "실생활의 문제 해결"
+  ],
+  "HI-04-AC-CO-03": [
+    "지속가능발전목표",
+    "사회 문제 해결"
+  ],
+  "HI-05-AC-CO-03": [
+    "민주적인 방식",
+    "규칙"
+  ]
+};
+const curatedExplanationClozePhrases = {
+  "MI-01-AC-EX-01": [
+    "컴퓨팅 시스템",
+    "운영 체제",
+    "소프트웨어"
+  ],
+  "MI-01-AC-EX-02": [
+    "고유한 역할",
+    "물리적인 장치와 소프트웨어",
+    "피지컬 컴퓨팅 시스템"
+  ],
+  "MI-01-AC-CO-01": [
+    "구체적인 컴퓨팅 시스템의 예시",
+    "사회에 주는 영향력",
+    "구체적인 과제"
+  ],
+  "MI-01-AC-CO-02": [
+    "초등학교 실과",
+    "미리 구성되어 있는 피지컬 컴퓨팅 시스템",
+    "하드웨어와 소프트웨어가 통합적으로 동작"
+  ],
+  "MI-01-AC-CO-03": [
+    "탐구 중심의 활동",
+    "프로젝트 형태의 수업"
+  ],
+  "MI-01-AC-CO-04": [
+    "기초적인 프로그래밍 역량",
+    "물리적인 도구"
+  ],
+  "MI-02-AC-EX-01": [
+    "디지털 형태",
+    "문자, 이미지, 소리, 동영상"
+  ],
+  "MI-02-AC-EX-02": [
+    "수집하고 분류",
+    "의미나 형식"
+  ],
+  "MI-02-AC-EX-03": [
+    "분석하기 용이한 형태",
+    "소프트웨어나 프로그래밍",
+    "논리적으로 설명"
+  ],
+  "MI-02-AC-CO-01": [
+    "실습 환경에 비교적 독립적인 소프트웨어",
+    "여러 기기로 전이"
+  ],
+  "MI-02-AC-CO-02": [
+    "스프레드시트",
+    "데이터의 의미를 분석"
+  ],
+  "MI-02-AC-CO-03": [
+    "프로젝트 기반의 문제 해결 활동",
+    "문제기반 학습"
+  ],
+  "MI-03-AC-EX-01": [
+    "알고리즘",
+    "장단점",
+    "비교⋅분석"
+  ],
+  "MI-03-AC-EX-02": [
+    "문제 해결 전략",
+    "적절한 전략"
+  ],
+  "MI-03-AC-EX-03": [
+    "입력된 데이터를 처리",
+    "배열이나 리스트"
+  ],
+  "MI-03-AC-CO-01": [
+    "문제 발견",
+    "상태 정의",
+    "핵심요소 추출",
+    "보고서나 포트폴리오"
+  ],
+  "MI-03-AC-CO-02": [
+    "학생의 수준",
+    "순차적으로 저장하는 구조",
+    "중첩 제어 구조"
+  ],
+  "MI-03-AC-CO-03": [
+    "실생활의 문제",
+    "소프트웨어를 개발",
+    "피지컬 컴퓨팅 시스템"
+  ],
+  "MI-03-AC-CO-04": [
+    "시간, 에너지, 컴퓨팅 시스템 자원",
+    "절약"
+  ],
+  "MI-04-AC-EX-01": [
+    "모델, 학습, 데이터",
+    "인공지능 시스템"
+  ],
+  "MI-04-AC-EX-02": [
+    "이미지, 소리, 글자",
+    "학습시키고",
+    "문제를 해결"
+  ],
+  "MI-04-AC-EX-03": [
+    "법적, 사회적, 윤리적으로",
+    "장단점",
+    "사회적 역할과 가치"
+  ],
+  "MI-04-AC-CO-01": [
+    "익숙하게 활용할 수 있는 프로그래밍 언어",
+    "인지적 부하"
+  ],
+  "MI-04-AC-CO-02": [
+    "서로 다른 주장",
+    "의견을 최대한 존중",
+    "근거"
+  ],
+  "MI-04-AC-CO-03": [
+    "여러 사례",
+    "내면화"
+  ],
+  "MI-05-AC-EX-01": [
+    "정보 윤리",
+    "사이버 폭력 및 범죄 예방",
+    "실천 방안"
+  ],
+  "MI-05-AC-CO-01": [
+    "자신의 진로 계획",
+    "진로 연계 교육"
+  ],
+  "MI-05-AC-CO-02": [
+    "민주시민 교육",
+    "다른 사람의 의견을 존중"
+  ],
+  "HI-01-AC-EX-01": [
+    "네트워크",
+    "구성요소",
+    "유⋅무선 통신"
+  ],
+  "HI-01-AC-CO-01": [
+    "학습자의 수준과 학습 환경",
+    "교육과정을 재구성"
+  ],
+  "HI-01-AC-CO-02": [
+    "개념적인 내용보다는",
+    "사물인터넷 장치를 이해하고 구성"
+  ],
+  "HI-01-AC-CO-03": [
+    "네트워크를 통한 데이터의 이동",
+    "창의적인 아이디어",
+    "누적한 후 평가"
+  ],
+  "HI-02-AC-EX-01": [
+    "압축 원리",
+    "품질 및 용량 분석",
+    "효율성"
+  ],
+  "HI-02-AC-EX-02": [
+    "치환형, 전치형",
+    "암호화, 복호화",
+    "중요성과 필요성"
+  ],
+  "HI-02-AC-CO-01": [
+    "미리 작성된 코드",
+    "출력되는 결과를 분석",
+    "최소 성취수준"
+  ],
+  "HI-02-AC-CO-02": [
+    "센서 데이터 수집",
+    "공공 데이터나 민간 데이터",
+    "프로젝트 방식"
+  ],
+  "HI-02-AC-CO-03": [
+    "컴퓨팅 자원 절약",
+    "탄소중립"
+  ],
+  "HI-02-AC-CO-04": [
+    "다른 사람의 의견을 존중",
+    "데이터에 기반하여",
+    "토의⋅토론"
+  ],
+  "HI-03-AC-EX-01": [
+    "작은 문제로 분해",
+    "모델링",
+    "오류가 없는지"
+  ],
+  "HI-03-AC-EX-02": [
+    "정렬, 탐색 알고리즘",
+    "수행 과정",
+    "효율성"
+  ],
+  "HI-03-AC-EX-03": [
+    "객체 지향",
+    "클래스와 객체"
+  ],
+  "HI-03-AC-CO-01": [
+    "문제 분해, 모델링, 알고리즘 설계",
+    "프로그램 작성, 실행 결과 평가, 오류 수정",
+    "나선형"
+  ],
+  "HI-03-AC-CO-02": [
+    "대규모 데이터",
+    "정렬하고 탐색"
+  ],
+  "HI-03-AC-CO-03": [
+    "2차원 혹은 그 이상의 배열이나 리스트",
+    "실제로 사용되는 데이터의 예시"
+  ],
+  "HI-03-AC-CO-04": [
+    "미리 제작된 코드",
+    "여러 라이브러리",
+    "추가적인 교육 내용"
+  ],
+  "HI-04-AC-EX-01": [
+    "에이전트와 지능 에이전트",
+    "인식, 학습, 추론, 행동"
+  ],
+  "HI-04-AC-EX-02": [
+    "회귀, 분류, 군집",
+    "실생활 및 사회문제"
+  ],
+  "HI-04-AC-CO-01": [
+    "자동화하기 어려웠던 문제",
+    "인공지능"
+  ],
+  "HI-04-AC-CO-02": [
+    "인공지능 플랫폼",
+    "기계학습 라이브러리",
+    "실생활의 문제 해결 사례"
+  ],
+  "HI-04-AC-CO-03": [
+    "지속가능발전목표",
+    "사회 문제 해결"
+  ],
+  "HI-05-AC-EX-01": [
+    "정보 보호와 정보공개",
+    "타인의 정보",
+    "정보 보호 방법"
+  ],
+  "HI-05-AC-CO-01": [
+    "자신의 진로와의 연관성",
+    "진로설계"
+  ],
+  "HI-05-AC-CO-02": [
+    "공급자 측면과 사용자 측면",
+    "기기 및 클라우드 접근제어",
+    "서⋅논술형"
+  ],
+  "HI-05-AC-CO-03": [
+    "다양한 견해",
+    "규칙을 민주적인 방식으로 함께 수립"
+  ]
+};
+function explanationClozeUnits(item){
+  const line=engine.lineMap.get(item.lineId);
+  if(!line)return [];
+  const text=String(item.text||'');
+  // The authoritative curriculum wording is never rewritten. Only positions in it are hidden.
+  // The same curated recall units used by content-system cloze are reused here.
+  // Reviewed per-source-line: prioritize education-focused teaching/assessment cues
+  // rather than generic repeated terms. Source text remains byte-for-byte unchanged.
+  if(curatedExplanationClozePhrases[item.lineId]){
+    const selected=[];
+    for(const phrase of curatedExplanationClozePhrases[item.lineId]){
+      const start=text.indexOf(phrase);
+      if(start<0)continue;
+      const end=start+phrase.length;
+      if(selected.some(u=>start<u.end&&end>u.start))continue;
+      selected.push({text:phrase,start,end});
+    }
+    return selected.sort((a,b)=>a.start-b.start);
+  }
+  const candidates=(engine.recallUnitsForLine(line,'whole')||[]).slice();
+  if(!candidates.length){
+    for(const phrase of explanationFallbackPhrases[item.lineId]||[]){
+      const start=text.indexOf(phrase);
+      if(start>=0)candidates.push({text:phrase,start,end:start+phrase.length});
+    }
+  }
+  const safe=[];
+  for(const u of candidates){
+    if(!Number.isInteger(u.start)||!Number.isInteger(u.end)||u.end<=u.start)continue;
+    if(u.start<0||u.end>text.length||text.slice(u.start,u.end)!==u.text)continue;
+    if(u.end-u.start>16||u.start===0&&u.end===text.length)continue;
+    if(safe.some(v=>u.start<v.end&&u.end>v.start))continue;
+    safe.push(u);
+  }
+  return safe.sort((a,b)=>a.start-b.start).slice(0,4);
+}
 function inputRows(items,prefix,mode){
-  if(mode==='source')return sourceItems(items,false);if(mode==='mask')return sourceItems(items,true);
+  if(mode==='source')return sourceItems(items,false);
+  const semantic=['해설','고려사항','적용 시 고려 사항'].includes(prefix);
+  if(semantic&&['mask','cloze'].includes(mode)){
+    return `<div class="group-inputs semantic-cloze-list">${items.map((it,i)=>{
+      const units=explanationClozeUnits(it);
+      const content=units.length?renderWithSpans(it.text,units,(u,j)=>mode==='mask'
+        ?`<span class="mask" data-reveal>${esc(u.text)}</span>`
+        :`<input class="inline-input semantic-inline-input" data-line-id="${esc(it.lineId)}" data-answer="${esc(u.text)}" aria-label="${esc(prefix)} ${i+1}번 핵심 표현 ${j+1}" autocomplete="off">`):esc(it.text);
+      return `<div class="cs-source-item semantic-cloze-row"><span class="cs-num">${i+1}</span><div class="cs-cloze-content">${content}</div></div>`;
+    }).join('')}</div>`;
+  }
+  if(mode==='mask')return sourceItems(items,true);
   return `<div class="group-inputs">${items.map((it,i)=>mode==='typing'
     ? `<label class="group-input-row copy-mode trace-copy-row"><span class="num">${i+1}</span><span class="trace-copy-stack"><small class="trace-guide">${esc(it.text)}</small><textarea class="group-input trace-answer-textarea" rows="1" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" data-answer="${esc(it.text)}" autocomplete="off"></textarea></span><span class="group-mark"></span></label>`
     : `<label class="group-input-row"><span class="num">${i+1}</span><input class="group-input" data-section="${esc(prefix)}" data-line-id="${esc(it.lineId)}" autocomplete="off"><span class="group-mark"></span></label>`).join('')}</div>`;
 }
-
 function valueAttitudeWholeCue(line){
   if(!line||line.family!=='가치·태도')return null;
   const source=String(line.sourceText||'');

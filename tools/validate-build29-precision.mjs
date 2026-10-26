@@ -1,0 +1,13 @@
+import fs from 'node:fs'; import assert from 'node:assert/strict';
+const base=JSON.parse(fs.readFileSync('data/exams/major-exams-2014-2026.json','utf8'));
+const a=JSON.parse(fs.readFileSync('data/audits/2026-10-26-build-29-precision-review.json','utf8'));
+assert.equal(base.questions.length,269);assert.equal(a.records.length,30);
+assert.deepEqual(base.questions.filter(q=>!q.answer?.trim()).map(q=>q.id),['2024-B-07']);
+assert.equal(a.records.filter(r=>r.level==='partial_independent').length,5);
+assert.equal(a.records.filter(r=>r.level==='not_independently_rechecked').length,25);
+let count=[0,1,2,4];for(let i=4;i<=37;i++)count[i]=count[i-1]+count[i-2]+count[i-3];
+assert.equal(count[6],24);assert.equal(count[37],3831006429);
+const gray=n=>n^(n>>1);assert.equal(gray(0b110011),0b101010);
+let binary=0, g=0b100101;for(;g;g>>=1)binary^=g;assert.equal(binary,0b111001);
+assert.equal(Math.floor(20/3),6);
+console.log('Build 29 precision audit: PASS');
