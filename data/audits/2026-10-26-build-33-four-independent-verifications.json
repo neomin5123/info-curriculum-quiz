@@ -1,0 +1,98 @@
+{
+  "build": "2026.10.26-33",
+  "method": "Independent recomputation of all requested outputs from user-provided examination PDF transcript; automated executable tests",
+  "officialMarkingSchemeCompared": false,
+  "browserE2E": false,
+  "questions": [
+    {
+      "id": "2025-A-03",
+      "page": 131,
+      "grade": "A_procedural",
+      "subparts": [
+        {
+          "task": "㉠",
+          "derivation": "for i=0..dim-1, dot product sum(w[i]*input_v[i])",
+          "answer": "w[i] * input_v[i]"
+        },
+        {
+          "task": "㉡",
+          "derivation": "C array-to-pointer conversion in function call, passing array name",
+          "answer": "input_v"
+        }
+      ],
+      "limitations": "Original input omitted some implementation details; requested blanks fully determined by provided conditions."
+    },
+    {
+      "id": "2026-A-06",
+      "page": 146,
+      "grade": "A_procedural",
+      "subparts": [
+        {
+          "task": "㉠",
+          "answer": "des[i][j] = 0;"
+        },
+        {
+          "task": "㉡",
+          "answer": "arr1[i][k] && arr2[k][j]"
+        },
+        {
+          "task": "ⓐ",
+          "answer": "0 1"
+        },
+        {
+          "task": "ⓑ",
+          "answer": "0 1"
+        }
+      ],
+      "independentMethod": "Boolean matrix multiplication evaluated independently for both matrix orderings and exact printed coordinates"
+    },
+    {
+      "id": "2026-A-10",
+      "page": 149,
+      "grade": "A_procedural",
+      "subparts": [
+        {
+          "task": "max frequency",
+          "answer": "1000 Hz",
+          "derivation": "24000bits / (6 bits/sample *2 sec)=2000 samples/sec; Nyquist half=1000 Hz"
+        },
+        {
+          "task": "Network 2 mask",
+          "answer": "255.255.255.192 (/26)",
+          "derivation": "50 hosts +2 reserved=52 <= 64 addresses; 26 network bits"
+        },
+        {
+          "task": "misconfigured host and destination",
+          "answer": "PC1, 200.10.1.64/26",
+          "derivation": "Network3 200.10.1.128-191, PC1 .126 belongs to Network2 64-127"
+        }
+      ]
+    },
+    {
+      "id": "2026-A-11",
+      "page": 149,
+      "grade": "A_procedural",
+      "subparts": [
+        {
+          "task": "reverse-linear collisions and location for 25",
+          "answer": "2 collisions, bucket 10"
+        },
+        {
+          "task": "quadratic collision count",
+          "answer": "10 total"
+        },
+        {
+          "task": "quadratic bucket 3 code",
+          "answer": "25"
+        }
+      ],
+      "independentMethod": "Simulate all 13 insertions with each probing sequence; verify collision count, code and full table"
+    }
+  ],
+  "gradingDefinition": "A_procedural is fulfilled independent derivation including every requested subpart, not official marking approval or calibrated probability",
+  "unchanged": [
+    "major exams JSON",
+    "explanation JS",
+    "2024-B-07 pending"
+  ]
+}

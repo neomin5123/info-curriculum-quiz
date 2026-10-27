@@ -1,0 +1,91 @@
+{
+  "build": "2026.10.26-39",
+  "basis": "source PDF p.137, p.155 (actual PDF page numbers); user-provided exam",
+  "prior_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11",
+    "2026-A-12",
+    "2026-B-02",
+    "2026-B-03",
+    "2026-B-04"
+  ],
+  "new_A_ids": [
+    "2025-B-02",
+    "2026-B-08"
+  ],
+  "all_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2025-B-02",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11",
+    "2026-A-12",
+    "2026-B-02",
+    "2026-B-03",
+    "2026-B-04",
+    "2026-B-08"
+  ],
+  "A_count": 23,
+  "classification": "procedural full-subpart independent verification, not official rubric agreement",
+  "verifications": [
+    {
+      "id": "2025-B-02",
+      "source_page": 137,
+      "scope": "both written subparts",
+      "derivation": {
+        "A1": "101001",
+        "A2": "100011",
+        "A3": "001110",
+        "PA": "101001 XOR 100011 XOR 001110 = 000100",
+        "C2": "000001 XOR 110001 XOR 010111 = 100111"
+      },
+      "stored_answer_match": true
+    },
+    {
+      "id": "2026-B-08",
+      "source_page": 155,
+      "scope": "three written subparts",
+      "derivation": {
+        "MUX1_SELA": "R1 index=01",
+        "decoder_SELC": "R3 index=11",
+        "R3": "0110 + 0100 = (1)010; retained 4 bits = 1010",
+        "signed_overflow": "6+4=10 outside signed 4-bit range -8..7; C3=1 C4=0 => V=C3 XOR C4=1"
+      },
+      "stored_answer_match": true
+    }
+  ],
+  "limitations": [
+    "Official marking schemes not inspected",
+    "Browser E2E not conducted",
+    "Previously recorded A IDs retain historical evidentiary status; not independently reaudited in this build",
+    "Remaining 246 questions not granted an A grade by this batch"
+  ]
+}

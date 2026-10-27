@@ -1,0 +1,135 @@
+{
+  "build": "2026.10.26-35",
+  "level": "A_procedural_only",
+  "prior_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11"
+  ],
+  "new_A_ids": [
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04"
+  ],
+  "all_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11"
+  ],
+  "cumulative_A_count": 17,
+  "new_checks": [
+    {
+      "id": "2026-A-02",
+      "original_pdf_page": 144,
+      "subparts": {
+        "effective_address": 2200,
+        "micro_operation_order": [
+          "②",
+          "①",
+          "③"
+        ]
+      },
+      "proof": "EA=base+displacement=1000+1200; saved PC→BR before SP→AR and PC→sub then BR→M[AR], SP←SP−1; note BR in this question is buffer register, not base register for address calc."
+    },
+    {
+      "id": "2026-A-03",
+      "original_pdf_page": 145,
+      "subparts": {
+        "relu_output": 5,
+        "step_network_outputs": [
+          1,
+          1
+        ]
+      },
+      "proof": "Diagram: top z=-2x1−2x2+2.8, bottom z=2x1+2x2−0.8, output z=2h1+2h2−2.8. Both (0,1),(1,0) produce (h1,h2)=(1,1), hence output 1. Original diagram visually checked."
+    },
+    {
+      "id": "2026-A-04",
+      "original_pdf_page": 145,
+      "subparts": {
+        "P2_second_job_first_start_ms": 55,
+        "P2_second_job_finish_ms": 95
+      },
+      "proof": "Independently simulated preemptive absolute-deadline EDF with P1=(period 30, WCET 15), P2=(50,25); validated complete two jobs in first 100ms",
+      "trace": [
+        {
+          "start": 0,
+          "end": 15,
+          "task": "P1",
+          "job": 1,
+          "deadline": 30
+        },
+        {
+          "start": 15,
+          "end": 40,
+          "task": "P2",
+          "job": 1,
+          "deadline": 50
+        },
+        {
+          "start": 40,
+          "end": 55,
+          "task": "P1",
+          "job": 2,
+          "deadline": 60
+        },
+        {
+          "start": 55,
+          "end": 60,
+          "task": "P2",
+          "job": 2,
+          "deadline": 100
+        },
+        {
+          "start": 60,
+          "end": 75,
+          "task": "P1",
+          "job": 3,
+          "deadline": 90
+        },
+        {
+          "start": 75,
+          "end": 95,
+          "task": "P2",
+          "job": 2,
+          "deadline": 100
+        },
+        {
+          "start": 95,
+          "end": 101,
+          "task": "P1",
+          "job": 4,
+          "deadline": 120
+        }
+      ]
+    }
+  ],
+  "original_answers_unchanged": true,
+  "official_marking_guide_compared": false,
+  "browser_e2e_performed": false
+}

@@ -1,0 +1,417 @@
+{
+  "build": "2026.10.26-42",
+  "date": "2026-10-26",
+  "newA": 2,
+  "previousProceduralAMinimum": 27,
+  "cumulativeProceduralAMinimum": 29,
+  "officialRubricCompared": false,
+  "originalAnswersPreserved": true,
+  "items": [
+    {
+      "id": "2024-B-06",
+      "grade": "A",
+      "sourcePdfPage": 126,
+      "answers": {
+        "firstReplacementFrame": 1,
+        "frame65ReplaceCount": 2,
+        "finalFrames": [
+          [
+            0,
+            0,
+            23
+          ],
+          [
+            1,
+            1,
+            89
+          ],
+          [
+            2,
+            0,
+            17
+          ],
+          [
+            3,
+            0,
+            25
+          ],
+          [
+            4,
+            0,
+            51
+          ]
+        ]
+      },
+      "trace": [
+        {
+          "ref": 73,
+          "hit": false,
+          "scanned": [
+            3,
+            4,
+            0
+          ],
+          "replacedFrame": 1,
+          "pointer": 1,
+          "pages": [
+            23,
+            73,
+            17,
+            33,
+            51
+          ],
+          "bits": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "ref": 17,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            73,
+            17,
+            33,
+            51
+          ],
+          "bits": [
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "ref": 51,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            73,
+            17,
+            33,
+            51
+          ],
+          "bits": [
+            0,
+            1,
+            1,
+            0,
+            1
+          ],
+          "replacementCounts": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "ref": 25,
+          "hit": false,
+          "scanned": [
+            1,
+            2
+          ],
+          "replacedFrame": 3,
+          "pointer": 3,
+          "pages": [
+            23,
+            73,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ],
+          "replacementCounts": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 23,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 3,
+          "pages": [
+            23,
+            73,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            1,
+            0,
+            0,
+            1,
+            1
+          ],
+          "replacementCounts": [
+            0,
+            1,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 65,
+          "hit": false,
+          "scanned": [
+            3,
+            4,
+            0
+          ],
+          "replacedFrame": 1,
+          "pointer": 1,
+          "pages": [
+            23,
+            65,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 23,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            65,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 25,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            65,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 51,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            65,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            1,
+            1,
+            0,
+            1,
+            1
+          ],
+          "replacementCounts": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 17,
+          "hit": true,
+          "scanned": [],
+          "replacedFrame": null,
+          "pointer": 1,
+          "pages": [
+            23,
+            65,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "replacementCounts": [
+            0,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "ref": 89,
+          "hit": false,
+          "scanned": [
+            1,
+            2,
+            3,
+            4,
+            0
+          ],
+          "replacedFrame": 1,
+          "pointer": 1,
+          "pages": [
+            23,
+            89,
+            17,
+            25,
+            51
+          ],
+          "bits": [
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "replacementCounts": [
+            0,
+            3,
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "method": "원본 상태도와 2차 기회 코드 그대로 독립 시뮬레이션; 교체 성공 후 포인터를 해당 프레임에 유지"
+    },
+    {
+      "id": "2020-A-08",
+      "grade": "A",
+      "sourcePdfPage": 64,
+      "answers": {
+        "blank": "k / 2",
+        "output": "8 7 6 2 3",
+        "labels": [
+          8,
+          3
+        ]
+      },
+      "trace": [
+        [
+          3
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          3,
+          6
+        ],
+        [
+          7,
+          3,
+          6,
+          2
+        ],
+        [
+          8,
+          7,
+          6,
+          2,
+          3
+        ]
+      ],
+      "method": "최대 힙 삽입 알고리즘을 기존 답안 없이 1-기반 배열로 실행"
+    }
+  ],
+  "BTreeStatus": "원본 데이터에서 B-트리 문제 본문 식별되지 않아 추가 A등급으로 집계하지 않음"
+}

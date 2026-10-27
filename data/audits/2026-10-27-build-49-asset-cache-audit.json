@@ -1,0 +1,8 @@
+{
+  "build": "2026.10.27-49",
+  "finding": "stale asset query parameters in index.html",
+  "change": "normalize local CSS JS study data asset URLs to same build-specific revision",
+  "browser_e2e": "not performed",
+  "scope": "cache invalidation contract; does not prove user had cache-related incident",
+  "preservation": "educational content and exam answers unchanged"
+}

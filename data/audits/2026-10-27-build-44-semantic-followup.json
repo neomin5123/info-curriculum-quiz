@@ -1,0 +1,117 @@
+{
+  "reviewed": 11,
+  "changes": [
+    {
+      "lineId": "MI-02-CS-KI-03",
+      "source": "수집된 데이터 간의 관계를 파악하고, 구조화하는 것은 데이터를 통해 새로운 지식을 찾는 데 도움을 준다.",
+      "newBlanks": [
+        "관계를 파악하고",
+        "구조화"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-02-CS-PF-03",
+      "source": "데이터를 구조화하고 의미 해석하기",
+      "newBlanks": [
+        "구조화하고",
+        "의미 해석하기"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-02-AC-EX-02",
+      "source": "[9정02-02] 여러 가지 문제 상황을 해결하는 데 활용 가능한 데이터를 다양한 방식으로 수집하고 분류하여 활용도를 높일 수 있어야 한다. 데이터의 종류, 데이터의 의미, 공통점 등 데이터가 가지고 있는 의미나 형식에 따라 데이터를 구분하여 저장하고 활용할 수 있어야 한다.",
+      "newBlanks": [
+        "데이터를 구분하여",
+        "저장하고 활용"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-03-CS-PF-02",
+      "source": "문제 해결을 위한 다양한 알고리즘을 설계하고 적용하기",
+      "newBlanks": [
+        "알고리즘을 설계하고",
+        "적용하기"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-04-CS-PF-04",
+      "source": "인공지능 시스템을 선택하여 문제 해결하기",
+      "newBlanks": [
+        "인공지능 시스템을 선택하여",
+        "문제 해결하기"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-04-AC-EX-03",
+      "source": "[9정04-05] 인공지능 학습에 필요한 데이터의 수집과 활용에서 나타날 수 있는 여러 가지 현실적인 문제들에 대해 법적, 사회적, 윤리적으로 타당성을 가지는 해결 방안을 제시할 수 있어야 한다. 하나의 문제를 바라보는 여러 측면에 대해 고려하고 각각의 해결 방안이 가지는 장단점을 정리한 후 결론을 도출하는 과정을 경험하면서 인공지능의 사회적 역할과 가치를 판단할 수 있어야 한다.",
+      "newBlanks": [
+        "법적, 사회적, 윤리적으로",
+        "해결 방안을 제시"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "MI-05-AC-ST-02",
+      "source": "[9정05-02] 디지털 사회의 구성원으로서 편리하고 안전한 생활을 위한 규칙에 대해 민주적으로 논의하고 실천 방안을 수립한다.",
+      "newBlanks": [
+        "민주적으로 논의하고",
+        "실천 방안을 수립"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "HI-02-CS-KI-02",
+      "source": "수집된 데이터 간의 관계를 파악하여 구조화하는 것은 데이터를 통해 새로운 지식을 찾는 데 도움을 준다.",
+      "newBlanks": [
+        "관계를 파악하여",
+        "구조화"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "HI-02-CS-PF-03",
+      "source": "빅데이터 기술을 활용하여 데이터를 분석하고 시각화하기",
+      "newBlanks": [
+        "빅데이터 기술",
+        "분석하고 시각화하기"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "HI-02-AC-EX-02",
+      "source": "[12정02-02] 비교적 간단한 치환형, 전치형 등의 암호 기법을 활용하여 암호화, 복호화의 과정을 이해하고, 데이터 암호화를 활용하는 사례 분석을 통해 개인과 사회를 보호하기 위한 수단으로 암호화의 중요성과 필요성을 설명할 수 있어야 한다.",
+      "newBlanks": [
+        "암호화, 복호화",
+        "암호화의 중요성과 필요성"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    },
+    {
+      "lineId": "HI-03-CS-PF-04",
+      "source": "복잡한 문제를 해결하기 위해 제어 구조와 다차원 데이터 구조를 복합적으로 활용하기",
+      "newBlanks": [
+        "제어 구조",
+        "다차원 데이터 구조"
+      ],
+      "oldStatus": "review-needed",
+      "decision": "split_or_retarget"
+    }
+  ],
+  "sourceDataChanged": false,
+  "remainingItemsNeedHumanReview": true
+}

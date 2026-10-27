@@ -1,0 +1,116 @@
+{
+  "build": "2026.10.26-38",
+  "prior_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11",
+    "2026-A-12"
+  ],
+  "new_A_ids": [
+    "2026-B-02",
+    "2026-B-03",
+    "2026-B-04"
+  ],
+  "all_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11",
+    "2026-A-12",
+    "2026-B-02",
+    "2026-B-03",
+    "2026-B-04"
+  ],
+  "A_count": 21,
+  "new_verifications": [
+    {
+      "id": "2026-B-02",
+      "source_pdf_page": 153,
+      "grade": "A_procedural",
+      "subparts": {
+        "reverse_index": "n - i - 1",
+        "mismatch_early_return": "return 0"
+      },
+      "independent_check": "Reverse indexes of len=5: 4,3,2,1,0; on mismatch isSame returns 0, otherwise returns 1; REFER is palindrome."
+    },
+    {
+      "id": "2026-B-03",
+      "source_pdf_page": 153,
+      "grade": "A_procedural",
+      "subparts": {
+        "pixel_type": "unsigned char",
+        "update": "y[i] += x[i+j-1]*f[j]",
+        "output": [
+          0,
+          0,
+          0,
+          220,
+          220,
+          0,
+          0,
+          0
+        ],
+        "edge_indices": [
+          3,
+          4
+        ]
+      },
+      "independent_check": "Mask [1,0,-1], i=1..6; 225-5=220 at i=3,4. y[0] and y[7] remain 0."
+    },
+    {
+      "id": "2026-B-04",
+      "source_pdf_page": 154,
+      "grade": "A_procedural",
+      "subparts": {
+        "link_type": "struct Node *",
+        "advance": "p = p->rlink",
+        "left_insert": "phead->llink->rlink = newnode",
+        "print": [
+          20,
+          30,
+          15,
+          10,
+          5
+        ]
+      },
+      "independent_check": "Simulated circular doubly linked head insertions at right (10,15,30,20) then left (5); head->rlink walk yields 20,30,15,10,5; left insertion reconnects old tail rlink."
+    }
+  ],
+  "pending_B_ids": [
+    "2026-A-05",
+    "2026-A-07",
+    "2026-A-08",
+    "2026-A-09"
+  ],
+  "unresolved_id": "2024-B-07",
+  "official_rubric_compared": false,
+  "original_answers_changed": false,
+  "curriculum_HWP_verification": "unavailable: soffice source file could not be loaded"
+}
