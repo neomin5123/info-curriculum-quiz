@@ -1,3 +1,26 @@
+# Build 50 — 정답표 상태 정합성 점검
+
+원본과 생성된 기출 데이터의 정답 상태 대조, 배포 자료 불일치 경고, 회귀 테스트 추가. 특정 화면 오류 원인 미확정.
+
+## Build 47 · 학습 화면 회귀 검사
+
+- 마스킹·빈칸 채우기 렌더러의 데이터 계약 검사 추가.
+- Playwright 실제 페이지 진입은 실행 환경의 관리자 정책 차단으로 수행 불가.
+- 교육과정/기출 데이터 보존.
+
+Build 45: 교과 개념보다 일반 표현을 암기시키는 5개 빈칸 재선정. 전체 감사 및 검증 자료 추가.
+
+Build 38: 2026-B-02/03/04 전체 독립 검산, 절차상 A 누적 21문항.
+
+## Build 37 — 2026-10-26
+원문 직접 대조가 부족한 4개 복합 문항을 B등급 부분 검증으로 기록. 기존 A=18 유지. 전체 해설/정답 수정 없음.
+
+Build 36: 2026-A-12 전체 독립 검증(A), 2026-A-05 부분 검증(B); 누적 A 최소 18문항.
+
+Build 35: 2026-A-02/A-03/A-04 세 문항 전체 독립 검증; 누적 A 최소 17문항.
+
+Build 34: 3문항 전체 독립 검산 및 중복 제거된 검증 이력 (절차상 A 최소 14개).
+
 Build 31 (2026-10-26): 원본 PDF 소문항 전체 독립 검증 7문항; 검증 기록만 추가, 정답과 상세 해설 불변.
 
 Build 29 (2026-10-26): 30문항 근거 범위 재정리. 전체 독립 검증 신규 완료 0; 기존 데이터 변경 없음. data/audits/2026-10-26-build-29-precision-review.md 참조.
@@ -322,3 +345,18 @@ Build 24: 30문항 원본 페이지 추적, 2025-A-04/A-05 독립 실행 검산.
 
 
 Build 31: 해설 21개·고려사항 33개에 문장 전체 빈칸 대신 핵심 개념 빈칸 적용.
+
+
+Build 39 audit: `data/audits/2026-10-26-build-39-two-full-checks.md`. Procedural A=23 (not a statistical correctness estimate).
+
+
+Build 40 evidence: `data/audits/2026-10-26-build-40-os-heap-independent.md`. Procedural A=24, not statistically calibrated accuracy.
+
+
+Build 41: 메모리·AVL 3문항 독립 검증, 절차상 A 누적 최소 27문항. 공식 채점기준 대조 미실시.
+
+
+Build 42: 페이지 2차 기회·최대 힙 2문항 독립 검산 완료; 절차상 A 최소 29문항.
+
+
+Build 49: `index.html` static resource cache-busting revisions synchronized; `npm test` validates local resource version contract.

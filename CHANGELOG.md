@@ -1,3 +1,58 @@
+# Build 50 — 정답표 상태 정합성 점검
+
+원본과 생성된 기출 데이터의 정답 상태 대조, 배포 자료 불일치 경고, 회귀 테스트 추가. 특정 화면 오류 원인 미확정.
+
+## Build 49 (2026-10-27)
+- Prevent stale browser assets by aligning CSS/JS/generated data URL revisions with deployment build ID.
+- Add executable asset version contract and deployment audit.
+- Exam and curriculum source data unchanged.
+
+## Build 48 (2026-10-27)
+- Added executable render-to-grade regression on 54 source-anchored curriculum explanation/consideration lines (136 answers), including correct, blank, invalid answers, mask and typing modes.
+- Chromium browser E2E remains blocked by environment administrator for both local HTTP and file URLs; not reported as passed.
+- No curriculum source, exam, grade, or recall units changed.
+
+## Build 47 · 학습 화면 회귀 검사
+
+- 마스킹·빈칸 채우기 렌더러의 데이터 계약 검사 추가.
+- Playwright 실제 페이지 진입은 실행 환경의 관리자 정책 차단으로 수행 불가.
+- 교육과정/기출 데이터 보존.
+
+## Build 46 — 2026-10-27
+- 자동 탐지 후보의 원문 기반 의미 검토와 10개 문장 화면 빈칸 교정.
+- 원문·기출 정답 보존, 검증 범위 명시.
+
+## Build 45 — 2026-10-27
+교육과정 빈칸 학습 가치 집중 검토: 5개 문장 재선정, 전체 빈칸 감사 CSV 및 회귀 검사. 원문 보존.
+
+## Build 44 (2026-10-27)
+- Replaced 11 previously flagged semantic cloze overlays with 22 shorter source-grounded concept and action spans; no curriculum source text changes.
+- Added reproducible semantic overlay test; educational review remains incomplete.
+
+## Build 43 (2026-10-27)
+
+- Source-exact curriculum cloze repairs, full granular audit and outstanding review flags.
+- Original 370-unit baseline dataset and exam answers unchanged; UI-only corrected overlays.
+
+## Build 40 — 2026-10-26
+- Independently verified 2026-B-10 (min-heap sort): A; 2026-B-06 (process status): B, no unsupported promotion.
+- Procedural A IDs: 24. Added repeatable heap trace and executable test.
+
+## Build 39 — 2026-10-26
+- Two full independent verifications: 2025-B-02, 2026-B-08. Cumulative procedural A: 23.
+- Added executable bit-level tests and audit evidence. No answer content changes.
+
+Build 38: 2026-B-02/03/04 전체 독립 검산, 절차상 A 누적 21문항.
+
+## Build 37 — 2026-10-26
+원문 직접 대조가 부족한 4개 복합 문항을 B등급 부분 검증으로 기록. 기존 A=18 유지. 전체 해설/정답 수정 없음.
+
+Build 36: 2026-A-12 전체 독립 검증(A), 2026-A-05 부분 검증(B); 누적 A 최소 18문항.
+
+Build 35: 2026-A-02/A-03/A-04 세 문항 전체 독립 검증; 누적 A 최소 17문항.
+
+Build 34: 3문항 전체 독립 검산 및 중복 제거된 검증 이력 (절차상 A 최소 14개).
+
 Build 31 (2026-10-26): 원본 PDF 소문항 전체 독립 검증 7문항; 검증 기록만 추가, 정답과 상세 해설 불변.
 
 Build 29 (2026-10-26): 30문항 근거 범위 재정리. 전체 독립 검증 신규 완료 0; 기존 데이터 변경 없음. data/audits/2026-10-26-build-29-precision-review.md 참조.
@@ -824,3 +879,16 @@ Build 17 — 30문항 해설 초안 추가, 10문항 원본 그림 조건부, �
 Build 2026.10.26-18: 2021~2023 내용학 30문항 상세 해설 초안 추가, 3문항 일부 독립 검산. 전체 문항 검증 수 154 유지.
 
 Build 2026.10.26-24: 원본 PDF 30문항 페이지 확인; 2문항 재귀·거듭제곱 독립 실행 검산, 28문항 보류. 기존 답안과 해설 보존.
+
+## Build 33 — 2026-10-26
+- 2025-A-03, 2026-A-06, 2026-A-10, 2026-A-11: all requested subparts independently recomputed; retained existing answers.
+- executable regression assertions included, original exam/curriculum data unchanged.
+
+
+## Build 41 — 메모리·트리 상태 추적 검증
+- 2016-A-14(LRU), 2018-B-04(페이지 테이블), 2017-A-11(AVL) 전체 소문항 상태 추적. 신규 절차상 A +3, 누적 최소 27.
+- 원본 PDF 페이지를 이미지로 직접 점검, 독립 시뮬레이션 및 회귀 테스트 추가. 기존 정답·해설 보존.
+
+
+## Build 42
+- 2024-B-06 2차 기회, 2020-A-08 최대 힙 전체 소문항 독립 검산. 신규 A +2, 누적 최소 29.
