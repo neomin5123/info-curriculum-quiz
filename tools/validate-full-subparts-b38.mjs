@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const v=JSON.parse(fs.readFileSync('data/audits/2026-10-26-build-38-three-independent-verifications.json','utf8'));
+assert.equal(v.A_count,21);assert.equal(new Set(v.all_A_ids).size,21);assert.equal(v.new_A_ids.length,3);
+const s=['R','E','F','E','R'];let d=[];for(let i=0;i<s.length;i++)d.push(s[s.length-i-1]);assert.deepEqual(s,d);
+const a=[225,225,225,225,5,5,5,5],f=[1,0,-1],y=Array(8).fill(0);for(let i=1;i<7;i++)for(let j=0;j<3;j++)y[i]+=a[i+j-1]*f[j];assert.deepEqual(y,[0,0,0,220,220,0,0,0]);assert.deepEqual(y.flatMap((x,i)=>x>100?[i]:[]),[3,4]);
+const head={};head.llink=head;head.rlink=head;
+const right=data=>{const n={data,llink:head,rlink:head.rlink};head.rlink.llink=n;head.rlink=n;};
+const left=data=>{const n={data,rlink:head,llink:head.llink};head.llink.rlink=n;head.llink=n;};
+for(const x of [10,15,30,20])right(x);left(5);let p=head.rlink,seq=[];while(p!==head){seq.push(p.data);p=p.rlink;assert.ok(seq.length<=5);}assert.deepEqual(seq,[20,30,15,10,5]);
+const q=JSON.parse(fs.readFileSync('data/exams/major-exams-2014-2026.json','utf8')).questions;let x=Object.fromEntries(q.map(v=>[v.id,v.answer]));assert.match(x['2026-B-02'],/n - i - 1/);assert.match(x['2026-B-03'],/220 220/);assert.match(x['2026-B-04'],/20 30 15 10 5/);
+console.log('Build 38 three independent subparts PASS');
