@@ -1,0 +1,19 @@
+{
+  "build": "2026.10.27-50",
+  "issue": "Reports of answer sheet displaying unentered for 2026-B-02, B-03, B-05",
+  "findings": {
+    "canonical_status": "solved for all three",
+    "deployed_generated_payload": "solved with identical nonempty answers",
+    "renderer": "uses solutionStatus === solved",
+    "reproduced_in_build49_files": false,
+    "cause": "not established; stale/mixed deployments are plausible, not proven"
+  },
+  "changes": [
+    "Added stale-data warning in answer sheet for known 2026 B entries",
+    "Regression test compares canonical and generated payload and answer-sheet branch"
+  ],
+  "limitations": [
+    "No real deployed URL or user browser reproduction",
+    "No browser E2E performed"
+  ]
+}

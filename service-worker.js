@@ -1,4 +1,4 @@
-const BUILD='2026.10.26-32';
+const BUILD='2026.10.27-50';
 self.addEventListener('install',event=>{self.skipWaiting();});
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
