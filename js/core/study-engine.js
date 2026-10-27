@@ -26,17 +26,20 @@
     }
     function groupDef(id){return familyGroups[id]||null;}
     function groupLabel(id){return groupDef(id)?.label||id;}
-    function selectedSubjects(){return state.ui.subject==='all'?subjects:[state.ui.subject];}
+    // An all-subject area option is a subject/area pair, not just an area name.
+    function areaScope(value){const m=/^subject-area:([^:]+):(.+)$/.exec(String(value||''));return m?{subject:m[1],area:m[2]}:null;}
+    function selectedSubjects(){const selected=areaScope(state.ui.area);return selected?[selected.subject]:(state.ui.subject==='all'?subjects:[state.ui.subject]);}
     function areasForSubject(subject){const lines=data.lines.filter(l=>subject==='all'||l.subject===subject);return [...new Set(lines.map(l=>l.area).filter(x=>x!=='과목 공통'))];}
-    function selectedAreas(){return state.ui.area==='all'?contentAreas:[state.ui.area];}
+    function selectedAreas(){const selected=areaScope(state.ui.area);return selected?[selected.area]:(state.ui.area==='all'?contentAreas:[state.ui.area]);}
     function groupAvailable(id,subjectSel=state.ui.subject,areaSel=state.ui.area){
       const def=groupDef(id);if(!def)return false;
-      const subs=subjectSel==='all'?subjects:[subjectSel];
+      const selected=areaScope(areaSel);
+      const subs=selected?[selected.subject]:(subjectSel==='all'?subjects:[subjectSel]);
       if(def.scope==='common'){
         if(areaSel!=='all')return false;
         return data.lines.some(l=>subs.includes(l.subject)&&l.area==='과목 공통'&&def.families.includes(l.family));
       }
-      const ars=areaSel==='all'?contentAreas:[areaSel];
+      const ars=selected?[selected.area]:(areaSel==='all'?contentAreas:[areaSel]);
       return data.lines.some(l=>subs.includes(l.subject)&&ars.includes(l.area)&&def.families.includes(l.family));
     }
     function lineMatchesGroup(line,id){const def=groupDef(id);return !!def&&def.families.includes(line.family);}
@@ -97,12 +100,13 @@
     function buildLineTasks(){
       const u=state.ui,def=groupDef(u.family),out=[],consumedKI=new Set();if(!def)return out;
       data.lines.forEach(line=>{
-        if(u.subject!=='all'&&line.subject!==u.subject)return;
+        const selected=areaScope(u.area);
+        if(selected ? line.subject!==selected.subject : u.subject!=='all'&&line.subject!==u.subject)return;
         if(def.scope==='common'){
           if(u.area!=='all'||line.area!=='과목 공통')return;
         }else{
           if(line.area==='과목 공통')return;
-          if(u.area!=='all'&&line.area!==u.area)return;
+          if(u.area!=='all'&&line.area!==(selected?.area||u.area))return;
         }
         if(!lineMatchesGroup(line,u.family))return;
         if(line.family==='지식·이해'){

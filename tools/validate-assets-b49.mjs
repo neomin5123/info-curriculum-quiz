@@ -3,8 +3,8 @@ import fs from 'node:fs';
 const build=fs.readFileSync('BUILD_ID.txt','utf8').trim();
 const html=fs.readFileSync('index.html','utf8');
 const tag=build.replaceAll('.','').replace(/-(\d+)$/,(_,n)=>`-${n}`);
-const expected='20261027-50';
-assert.equal(build,'2026.10.27-50');
+const expected='20261027-53';
+assert.equal(build,'2026.10.27-53');
 const refs=[...html.matchAll(/<(?:script|link)\b[^>]*?(?:src|href)="([^"?#]+)(?:\?b=([^"#]+))?"/g)].map(x=>({path:x[1],version:x[2]}));
 let count=0;
 for(const x of refs){

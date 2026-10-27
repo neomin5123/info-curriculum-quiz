@@ -1,7 +1,7 @@
 (function(){
   window.CurriLoop=window.CurriLoop||{};
   window.CurriLoop.config={
-    appVersion:'2026.10.27-50',
+    appVersion:'2026.10.27-53',
     storageKey:'curriloop:v9:study-state',
     retryDelay:0,
     maxRetriesPerTaskPerRound:2,
