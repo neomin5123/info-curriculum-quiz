@@ -459,13 +459,14 @@ function retryDockVisibleEntries(due){
 function renderRetryDock(){
   if(!el.retryDock)return;
   const due=retryEntries({dueOnly:true});
-  if(!state.ui.retry||!due.length){
+  // Record wrong answers silently. The floating retry panel is opt-in from the review tab.
+  // Never render a side card just because an answer was graded wrong.
+  if(!state.ui.retry||!activeRetryCardId||!due.some(([id])=>id===activeRetryCardId)){
     el.retryDock.innerHTML='';
     el.retryDock.classList.remove('has-cards');
     activeRetryCardId='';
     return;
   }
-  if(activeRetryCardId&&!due.some(([id])=>id===activeRetryCardId))activeRetryCardId='';
   const visible=retryDockVisibleEntries(due);
   el.retryDock.classList.add('has-cards');
   el.retryDock.innerHTML=visible.map(([id,r],i)=>{
@@ -1779,8 +1780,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   const count=Number(state.fieldRetryCounts[id]||0);
   if(count>=CL.config.maxRetriesPerTaskPerRound&&!state.fieldRetries[id])return;
   if(!state.fieldRetries[id])state.fieldRetryCounts[id]=count+1;
-  // 오답은 현재 답안 직후 카드가 펼쳐지도록 예약한다.
-  activeRetryCardId=id;
+  // Do not activate the floating card on a wrong answer. The review tab opens it on demand.
 
   const ctx=taskContext(task),section=field.dataset.section||ctx.family||'빈칸';
   const lineId=matchedItem?.lineId||field.dataset.lineId||task?.line?.lineId||'';

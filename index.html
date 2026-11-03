@@ -53,11 +53,11 @@
             <button data-mode="cloze" role="tab" class="active">빈칸 채우기</button>
           </div>
           <div class="mode-tools">
-            <label class="retry-pill" title="ON: 오답·모름·표기 확인을 틀린 직후 카드로 다시 묻습니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
+            <label class="retry-pill" title="ON: 오답·모름·표기 확인을 복습 목록에 기록합니다. 카드는 복습 탭에서 직접 선택할 때만 열립니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
               <input type="checkbox" id="retryToggle" checked>
-              <span class="retry-pill-label">오답 카드</span>
+              <span class="retry-pill-label">오답 기록</span>
               <strong id="retryToggleState">ON</strong>
-              <small>즉시</small>
+              <small>복습 탭</small>
             </label>
             <button class="source-button" id="sourceButton">원문 출처</button>
           </div>
@@ -100,7 +100,7 @@
         </div>
         <div class="review-stats">
           <div class="review-stat"><span>오늘의 복습</span><strong id="reviewTodayCount">0</strong><small>1·3·7·14·21·30일 간격</small></div>
-          <div class="review-stat"><span>즉시 재인출</span><strong id="reviewRetryCount">0</strong><small>오답·모름·표기 확인</small></div>
+          <div class="review-stat"><span>오답 복습</span><strong id="reviewRetryCount">0</strong><small>오답·모름·표기 확인</small></div>
           <div class="review-stat"><span>취약 항목</span><strong id="reviewWeakCount">0</strong><small>누적 실패 기록이 있는 원문</small></div>
         </div>
         <section class="review-section">
@@ -108,7 +108,7 @@
           <div id="dailyReviewList" class="daily-review-list"></div>
         </section>
         <section class="review-section">
-          <div class="review-section-head"><h3>즉시 재인출</h3><small>카드를 눌러 원래 문맥에서 다시 답합니다.</small></div>
+          <div class="review-section-head"><h3>오답 복습</h3><small>카드를 눌러 원래 문맥에서 다시 답합니다.</small></div>
           <div id="reviewRetryList" class="review-list"></div>
         </section>
         <section class="review-section">
@@ -208,6 +208,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261027-53"></script>
+  <script src="js/app.js?b=20261104-retry-manual-1"></script>
 </body>
 </html>
