@@ -459,14 +459,14 @@ function retryDockVisibleEntries(due){
 function renderRetryDock(){
   if(!el.retryDock)return;
   const due=retryEntries({dueOnly:true});
-  // Record wrong answers silently. The floating retry panel is opt-in from the review tab.
-  // Never render a side card just because an answer was graded wrong.
-  if(!state.ui.retry||!activeRetryCardId||!due.some(([id])=>id===activeRetryCardId)){
+  // Wrong answers create collapsed cards; opening the answer panel requires a click.
+  if(!state.ui.retry||!due.length){
     el.retryDock.innerHTML='';
     el.retryDock.classList.remove('has-cards');
     activeRetryCardId='';
     return;
   }
+  if(activeRetryCardId&&!due.some(([id])=>id===activeRetryCardId))activeRetryCardId='';
   const visible=retryDockVisibleEntries(due);
   el.retryDock.classList.add('has-cards');
   el.retryDock.innerHTML=visible.map(([id,r],i)=>{

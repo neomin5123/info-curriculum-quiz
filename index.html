@@ -53,11 +53,11 @@
             <button data-mode="cloze" role="tab" class="active">빈칸 채우기</button>
           </div>
           <div class="mode-tools">
-            <label class="retry-pill" title="ON: 오답·모름·표기 확인을 복습 목록에 기록합니다. 카드는 복습 탭에서 직접 선택할 때만 열립니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
+            <label class="retry-pill" title="ON: 틀린 답을 오른쪽의 접힌 카드로 모읍니다. 카드를 누를 때만 재풀이 입력창이 열립니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
               <input type="checkbox" id="retryToggle" checked>
-              <span class="retry-pill-label">오답 기록</span>
+              <span class="retry-pill-label">오답 카드</span>
               <strong id="retryToggleState">ON</strong>
-              <small>복습 탭</small>
+              <small>접어두기</small>
             </label>
             <button class="source-button" id="sourceButton">원문 출처</button>
           </div>
@@ -208,6 +208,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261104-retry-manual-1"></script>
+  <script src="js/app.js?b=20261104-retry-collapsed-2"></script>
 </body>
 </html>
