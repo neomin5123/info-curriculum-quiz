@@ -383,7 +383,9 @@ function retryEntries({dueOnly=false}={}){
   const serial=Number(state.answerSerial||0);
   return Object.entries(state.fieldRetries||{})
     .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
-    .sort((a,b)=>Number(a[1].dueAt)-Number(b[1].dueAt));
+    // 가장 최근에 틀린 항목을 먼저 보여준다. 오래된 오답은 복습 목록에 보존한다.
+    .sort((a,b)=>Number(b[1].lastWrongSerial??-1)-Number(a[1].lastWrongSerial??-1)
+      || Number(a[1].dueAt)-Number(b[1].dueAt));
 }
 function retryAnswerList(r){
   if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
@@ -1778,7 +1780,8 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   state.fieldRetryCounts=state.fieldRetryCounts||{};
   const task=currentTask(),id=retryIdForField(field);
   const count=Number(state.fieldRetryCounts[id]||0);
-  if(count>=CL.config.maxRetriesPerTaskPerRound&&!state.fieldRetries[id])return;
+  // 재인출 횟수 제한은 재인출 실패 처리에만 적용한다.
+  // 여기서 새 오답 생성을 막으면 동일 빈칸을 다시 틀렸을 때 카드가 영구히 사라진다.
   if(!state.fieldRetries[id])state.fieldRetryCounts[id]=count+1;
   // Do not activate the floating card on a wrong answer. The review tab opens it on demand.
 
@@ -1813,6 +1816,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
       round:Number(state.round||1),
       dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay??0)),
       status,
+      lastWrongSerial:Number(state.answerSerial||0)+1,
       scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
     };
     return;
@@ -1833,6 +1837,7 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
     round:Number(state.round||1),
     dueAt:Math.min(Number(existing.dueAt||Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay??0)),
     status,
+    lastWrongSerial:Number(state.answerSerial||0)+1,
     scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
   };
 }
