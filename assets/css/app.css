@@ -1521,3 +1521,27 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
     max-height:min(65dvh, 550px, calc(100dvh - 118px));
   }
 }
+
+/* QA 2026-11-05: keep retry grade result in normal card flow instead of
+   overlaying the confirmation button, expected answer, or bottom controls. */
+.retry-result-overlay {
+  display: none !important;
+  position: static !important;
+  inset: auto !important;
+  width: fit-content;
+  max-width: 100%;
+  margin: 9px 0 0;
+  padding: 6px 11px !important;
+  transform: none !important;
+  opacity: 1;
+  visibility: visible;
+  box-shadow: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 12px !important;
+  line-height: 1.45;
+}
+.retry-result-overlay.show {
+  display: block !important;
+  transform: none !important;
+}
