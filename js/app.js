@@ -620,6 +620,7 @@ function gradeRetryCard(id){
     status=grade.status;
     grade.results.forEach((g,i)=>{
       const f=fields[i];if(!f)return;
+      if(g.status==='correct'&&g.expected)f.value=g.expected;
       const visual=g.status==='duplicate'?'wrong':g.status;
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
       f.classList.add(visual);
@@ -634,6 +635,7 @@ function gradeRetryCard(id){
     const d=CL.grading.classifyDetailed(input.value,r.correctAnswer||'');
     status=d.status;
     expected=r.correctAnswer||d.expected||'';
+    if(status==='correct'&&expected)input.value=expected;
     const visual=status==='duplicate'?'wrong':status;
     ['correct','near','unknown','wrong'].forEach(c=>input.classList.remove(c));
     input.classList.add(visual);
@@ -724,11 +726,11 @@ function gradeDailyReview(id){
   if(group.kind==='ki'){
     const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
     status=grade.status;expected=group.answers.join(' / ');
-    grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(r.status==='duplicate'?'wrong':r.status);});
+    grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;if(r.status==='correct'&&r.expected)f.value=r.expected;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(r.status==='duplicate'?'wrong':r.status);});
   }else{
     const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
     status=d.status;expected=group.answer;
-    if(f){['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(status==='duplicate'?'wrong':status);}
+    if(f){if(status==='correct'&&expected)f.value=expected;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(status==='duplicate'?'wrong':status);}
   }
   const lineIds=group.kind==='ki'?group.lineIds:group.lineIds;
   lineIds.forEach(lineId=>{CL.storage.recordItem(state,lineId,status);CL.storage.completeDailyReview(state,lineId,status);});
@@ -1623,8 +1625,21 @@ function resetFieldVisual(field){
   const note=fieldNote(field);if(note){note.textContent='';note.className='field-note';}
   const mark=fieldMark(field);if(mark){mark.textContent='';mark.className=mark.classList.contains('ki-mark')?'ki-mark':'group-mark';}
 }
+// 정답을 맞힌 경우에만 사용자가 쓴 표기를 교육과정의 공식 정답 표기로 정리한다.
+// 정답 인정 기준은 기존 grading 모듈 그대로 유지한다. near/오답 답안은 건드리지 않는다.
+function formatCorrectInput(field,detail,expected,save=true){
+  if(!field||detail?.status!=='correct')return;
+  // 지식·이해 묶음 따라치기는 여러 행을 입력하므로 개별 정답을 아래에서 처리한다.
+  if(field.id==='typingInput'&&currentTask()?.type==='ki')return;
+  const official=String(expected||detail.expected||'').trim();
+  if(!official||field.value===official)return;
+  field.value=official;
+  if(save&&field.dataset.fieldKey)CL.storage.setDraft(state,field.dataset.fieldKey,official);
+  resizeAnswerField(field);
+}
 function applyFieldGrade(field,detail,expected='',save=true){
   if(!field||!detail)return;
+  formatCorrectInput(field,detail,expected,save);
   resetFieldVisual(field);
   const status=detail.status==='duplicate'?'wrong':detail.status;
   field.classList.add(status);
@@ -1696,6 +1711,12 @@ function check(){
     const field=$('typingInput'),items=task.group.items,values=String(field?.value||'').split(/\n+/).map(x=>x.trim()),r=CL.grading.gradeSetDetailed(values,items.map(x=>x.text));
     const status=r.status,detail={status,reason:status==='unknown'?'empty':'meaning',expected:items.map(x=>x.text).join(' / ')};
     applyFieldGrade(field,detail,detail.expected);
+    if(status==='correct'&&field){
+      // 한 입력칸에 여러 지식·이해 요소를 입력한 경우, 매칭된 순서대로 각 행을 공식 표기로 교정한다.
+      field.value=r.results.map(x=>x.expected||'').join('\n');
+      if(field.dataset.fieldKey)CL.storage.setDraft(state,field.dataset.fieldKey,field.value);
+      resizeAnswerField(field);
+    }
     const matched=new Set();
     r.results.forEach(result=>{
       if(result.answerIndex!=null){
@@ -1922,6 +1943,11 @@ function gradeSingleAnswerField(field){
   if(!detail)return null;
   const expected=detail.expected||fixedExpectedForField(field,task)||'';
   applyFieldGrade(field,detail,expected,true);
+  if(setGrade?.status==='correct'){
+    field.value=setGrade.results.map(x=>x.expected||'').join('\n');
+    if(field.dataset.fieldKey)CL.storage.setDraft(state,field.dataset.fieldKey,field.value);
+    resizeAnswerField(field);
+  }
   const recognitionCue=field.dataset.reviewPolicy==='recognition-cue';
   if(setGrade&&task.type==='ki'){
     const matched=new Set();
