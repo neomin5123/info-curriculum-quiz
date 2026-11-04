@@ -2,13 +2,223 @@
   "metadata": {
     "subject": "data-science",
     "subjectLabel": "데이터 과학",
-    "status": "INTEGRATION_PREVIEW_NOT_OFFICIAL_VERIFIED",
-    "sourceVerification": "공식 HWP 직접 대조 미완료. 잠정 전사 원문.",
-    "lines": 63,
+    "status": "OFFICIAL_63_ENTRIES_VERIFIED_PLUS_6_ARCHIVED_CHARACTER_GOALS_SOURCE_ONLY",
+    "sourceVerification": "기존 63개 원문 완전 일치 결과 보존; 성격 및 목표 6개 항목은 기존 공식 HWP 추출 보관본을 그대로 연결. 신규 6개는 이번 작업에서 HWP 재추출 미실시.",
+    "lines": 69,
     "activeBlankLines": 16,
-    "kiGroups": 4
+    "kiGroups": 4,
+    "verificationDate": "2026-11-04",
+    "exactMatchCount": 63,
+    "sourceAttachment": "[별책10] 2022_실과(기술가정)정보과 교육과정_정보과 발췌.hwp",
+    "verifiedOriginalEntries": 63,
+    "additionalCommonSourceEntries": 6,
+    "coverageLimit": "성취기준 해설·적용 시 고려 사항·교수학습·평가의 전체 원문은 앱에 미수록. 별도 개념문항 생성 없음."
   },
   "lines": [
+    {
+      "lineId": "DS-22-CHARACTER-01",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "성격",
+      "sectionTitle": "성격",
+      "sourceText": "‘데이터 과학’은 데이터와 데이터 처리에 대한 다양한 방법론을 기반으로 통계와 기계학습 등을 활용하여 다양한 학문 분야의 문제 해결과 의사 결정에서 통찰력을 제공하게 된다. 데이터 과학은 개인의 삶과 연관되어 일상과 향후의 직업에서 기술의 발전에 능동적으로 대처할 수 있도록 한다. 학생들은 데이터 과학의 기초적인 원리를 이해하고 데이터 문해력을 함양함으로써 급증하는 데이터를 비판적으로 분석할 수 있으며, 미래 사회와 환경변화 등에 대한 통찰력과 책임감 있는 자기주도성을 갖춘 디지털 민주시민으로 성장하게 된다. ‘데이터 과학’은 컴퓨팅 사고력을 바탕으로 실생활 및 다양한 분야의 문제를 창의적으로 해결하는 데 필요한 능력과 태도를 함양하며, 데이터 과학의 지식이 필요한 진로와 연계된 기초경험을 제공하도록 한다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
+    {
+      "lineId": "DS-22-GOALS-INTRO",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "sectionTitle": "목표",
+      "sourceText": "‘데이터 과학’은 컴퓨팅 사고력을 기반으로 디지털 사회에서 데이터의 역할 및 잠재적 가치와 데이터 과학에 기반한 문제 해결 과정의 중요성을 인식하며, 다양한 분야의 문제를 해결하고 합리적 의사 결정을 위한 통찰의 역량을 키우는 데 중점을 둔다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
+    {
+      "lineId": "DS-22-GOAL-01",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "sectionTitle": "목표",
+      "sourceText": "(1) 데이터 과학의 발전에 따른 사회의 특성과 데이터의 가치를 이해하고, 데이터에 기반한 합리적인 의사 결정을 실천하는 태도를 기른다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
+    {
+      "lineId": "DS-22-GOAL-02",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "sectionTitle": "목표",
+      "sourceText": "(2) 데이터 분석과 관련된 효과적인 방법을 이해하고, 문제상황에 따라 데이터의 관계를 파악하여 다양한 분석 방법을 적용할 수 있는 능력을 기른다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
+    {
+      "lineId": "DS-22-GOAL-03",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "sectionTitle": "목표",
+      "sourceText": "(3) 문제를 합리적으로 해결하기 위한 모델을 구성하고, 문제 해결 과정에서 발생할 수 있는 여러 쟁점을 비교하며, 분석된 결과의 의미를 찾아 비판적으로 해석하는 능력과 태도를 기른다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
+    {
+      "lineId": "DS-22-GOAL-04",
+      "subject": "data-science",
+      "subjectLabel": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "sectionTitle": "목표",
+      "sourceText": "(4) 데이터 과학을 기반으로 한 문제 해결이 합리적 의사 결정에 효과적임을 인식하고, 데이터 과학의 방법으로 문제를 해결하는 능력과 태도를 기른다.",
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
+      "keywords": [],
+      "coreSets": [],
+      "practicalSets": [],
+      "presentation": {
+        "version": "ds-common-source-only-v1",
+        "units": [],
+        "coreSets": [],
+        "practicalSets": []
+      },
+      "importanceReview": {
+        "grade": "UNASSESSED",
+        "basis": "SOURCE_ONLY_ARCHIVE",
+        "reason": "성격·목표 원문 보존. 빈칸은 추후 중요도/정답 명확성 검토 후 별도 활성화",
+        "officialAnswerConfirmed": false
+      },
+      "selection": "원문 보기",
+      "sourceKind": "성격·목표 원문",
+      "originType": "official_hwp_source_archive",
+      "sourceVerification": {
+        "source": "user-attached official HWP",
+        "basis": "previously extracted and archived character/goals original",
+        "scope": "not independently re-extracted in this build"
+      }
+    },
     {
       "lineId": "DS-22-DS-01-PF-01",
       "subject": "data-science",
@@ -17,8 +227,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "데이터 과학의 문제 해결 사례 탐색하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -36,7 +246,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 707,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-01-PF-02",
@@ -46,8 +262,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "데이터의 형태와 속성 파악하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -65,7 +281,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 708,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-01-PF-03",
@@ -75,8 +297,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "데이터 통합의 의미 파악하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -94,7 +316,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 709,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-01-VA-01",
@@ -104,8 +332,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터 기반 의사 결정의 중요성 인식",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-01-VA-01-K01",
@@ -165,7 +393,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 711,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-01-VA-02",
@@ -175,8 +409,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터의 잠재적 가치 내면화",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -194,7 +428,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 712,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-01-VA-03",
@@ -204,8 +444,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터 과학을 통한 진로설계 참여",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -223,7 +463,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 713,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-PF-01",
@@ -233,8 +479,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "데이터 시각화하고 분석하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -252,7 +498,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 726,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-PF-02",
@@ -262,8 +514,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "이상치와 결측치 처리하고 정규화 활용하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -281,7 +533,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 727,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-PF-03",
@@ -291,8 +549,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "데이터 속성 간의 관계를 파악하고 통합하여 탐색하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -310,7 +568,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 728,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-PF-04",
@@ -320,8 +584,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "서로 다른 데이터 분석 방법 비교하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -339,7 +603,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 729,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-VA-01",
@@ -349,8 +619,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터가 편향되지 않도록 수집하는 자세",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-02-VA-01-K01",
@@ -410,7 +680,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 731,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-02-VA-02",
@@ -420,8 +696,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터의 불확실성과 오류 가능성 인식",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-02-VA-02-K01",
@@ -481,7 +757,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 732,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-03-PF-01",
@@ -491,8 +773,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "분석을 위한 도구 탐색하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -510,7 +792,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 747,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-03-PF-02",
@@ -520,8 +808,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "분석 결과 평가하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -539,7 +827,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 748,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-03-PF-03",
@@ -549,8 +843,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "분석 결과에 대한 의미 해석하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-03-PF-03-K01",
@@ -610,7 +904,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 749,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-03-VA-01",
@@ -620,8 +920,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "데이터에 대한 다양한 해석을 수용하는 태도",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-03-VA-01-K01",
@@ -681,7 +981,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 751,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-03-VA-02",
@@ -691,8 +997,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "적절한 분석 방법을 선택하여 적용하는 자세",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -710,7 +1016,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 752,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-PF-01",
@@ -720,8 +1032,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "분야별 데이터 과학의 주제 조사하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -739,7 +1051,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 766,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-PF-02",
@@ -749,8 +1067,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "탐색적 데이터 분석으로 데이터 속 의미 파악하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-04-PF-02-K01",
@@ -810,7 +1128,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 767,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-PF-03",
@@ -820,8 +1144,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "기계학습 방법으로 분석하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-04-PF-03-K01",
@@ -881,7 +1205,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 768,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-PF-04",
@@ -891,8 +1221,8 @@
       "family": "과정·기능",
       "sectionTitle": "과정·기능",
       "sourceText": "결과를 활용하는 방법 탐색하기",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -910,7 +1240,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 769,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-VA-01",
@@ -920,8 +1256,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "문제를 해결하기 위한 창의적인 방법을 고민하는 자세",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -939,7 +1275,13 @@
       },
       "selection": "제외",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 771,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-VA-02",
@@ -949,8 +1291,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "복잡하고 어려운 문제를 끝까지 해결하기 위해 노력하는 태도",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -968,7 +1310,13 @@
       },
       "selection": "보류",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 772,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-DS-04-VA-03",
@@ -978,8 +1326,8 @@
       "family": "가치·태도",
       "sectionTitle": "가치·태도",
       "sourceText": "일반화 및 공유 과정에서 윤리 문제 등 사회적 영향 인식",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-DS-04-VA-03-K01",
@@ -1039,7 +1387,13 @@
       },
       "selection": "채택",
       "sourceKind": "내용 체계",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 773,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과01-01",
@@ -1049,8 +1403,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터 과학의 개념을 이해하고, 문제 해결 사례를 데이터 기반 의사 결정 상황에 적용한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1068,7 +1422,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 777,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과01-02",
@@ -1078,8 +1438,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "정형 데이터와 비정형 데이터를 구분하고, 데이터 속성에서 데이터의 잠재적 가치를 파악한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과01-02-K01",
@@ -1139,7 +1499,13 @@
       },
       "selection": "채택",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 778,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과01-03",
@@ -1149,8 +1515,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터셋의 집합인 데이터베이스를 이해하고, 서로 다른 데이터셋의 데이터를 분석이 가능한 형태로 통합하는 것의 의미를 파악한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과01-03-K01",
@@ -1215,7 +1581,13 @@
       },
       "selection": "추가 채택 후보",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 779,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과01-04",
@@ -1225,8 +1597,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터로 인한 사회 변화를 인식하고, 진로 및 직업과 관련한 데이터 기반 문제 해결 사례를 분석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1244,7 +1616,13 @@
       },
       "selection": "제외",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 780,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과02-01",
@@ -1254,8 +1632,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터를 편향되지 않도록 수집하고, 수집된 데이터의 특성을 분석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1273,7 +1651,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 790,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과02-02",
@@ -1283,8 +1667,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "이상치와 결측치 탐색 및 정규화를 통해 전처리하여 오류 가능성을 최소화하고, 데이터 분석을 위해 시각화한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과02-02-K01",
@@ -1344,7 +1728,13 @@
       },
       "selection": "채택",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 791,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과02-03",
@@ -1354,8 +1744,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터를 분석하기 위해 데이터 속성 간의 관계를 파악하고 통합한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1373,7 +1763,13 @@
       },
       "selection": "제외",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 792,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과02-04",
@@ -1383,8 +1779,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "동일한 데이터를 서로 다른 분석 방법을 적용하여 분석 결과를 비교한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1402,7 +1798,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 793,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-01",
@@ -1412,8 +1814,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터 모델 개념을 이해하고 데이터 분석에 활용할 수 있는 도구를 탐색한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1431,7 +1833,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 803,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-02",
@@ -1441,8 +1849,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "동일한 데이터를 통계적 회귀모델과 기계학습을 통한 회귀모델로 분석하여 결과 해석 내용을 비교한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과03-02-K01",
@@ -1571,7 +1979,13 @@
       },
       "selection": "채택",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 804,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-03",
@@ -1581,8 +1995,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터의 속성에 대한 유사성을 측정하고 분석하여 군집을 형성하고, 군집 분석 결과의 의미를 해석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과03-03-K01",
@@ -1711,7 +2125,13 @@
       },
       "selection": "추가 채택 후보",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 805,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-04",
@@ -1721,8 +2141,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터 간의 관계를 분석하고 상호 연관성을 파악하여 결과의 의미를 해석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과03-04-K01",
@@ -1787,7 +2207,13 @@
       },
       "selection": "추가 채택 후보",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 806,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-05",
@@ -1797,8 +2223,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터 분석 방법에 따른 데이터 모델의 분석 결과를 비교하고 평가한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1816,7 +2242,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 807,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과03-06",
@@ -1826,8 +2258,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "다양한 분석 방법을 비교하고 평가하여 분석 목적에 가장 적합한 분석 방법을 적용한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과03-06-K01",
@@ -1911,7 +2343,13 @@
       },
       "selection": "추가 채택 후보",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 808,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과04-01",
@@ -1921,8 +2359,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "분야별 데이터 과학의 적용 사례를 조사하여 분석하고, 데이터로 해결 가능한 주제를 찾아 적합성을 판단한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1940,7 +2378,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 819,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과04-02",
@@ -1950,8 +2394,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "수집된 데이터를 탐색적으로 분석하여 데이터 속 의미를 파악하고, 문제 해결을 위한 창의적인 방법을 구상한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -1969,7 +2413,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 820,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과04-03",
@@ -1979,8 +2429,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "데이터 분석을 진행할 때, 2개 이상의 방법을 사용하여 분석하고 결과를 비교한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [
         {
           "keywordId": "DS-22-12데과04-03-K01",
@@ -2040,7 +2490,13 @@
       },
       "selection": "채택",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 821,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과04-04",
@@ -2050,8 +2506,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "복잡하고 어려운 문제라도 끝까지 해결하기 위한 자세를 갖추고 분석하여, 분석 결과에 대한 의미를 해석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -2069,7 +2525,13 @@
       },
       "selection": "제외",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 822,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-12데과04-05",
@@ -2079,8 +2541,8 @@
       "family": "성취기준",
       "sectionTitle": "성취기준",
       "sourceText": "분석을 위한 목적부터 데이터 수집 및 분석에 이르는 전 과정을 성찰하고, 사회적 영향을 고려하여 분석 결과의 활용방안을 탐색한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "keywords": [],
       "coreSets": [],
       "practicalSets": [],
@@ -2098,7 +2560,13 @@
       },
       "selection": "보류",
       "sourceKind": "성취기준",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 823,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-01-KI-01",
@@ -2108,8 +2576,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "디지털 사회의 시민에게는 데이터에 기반한 합리적인 의사 결정이 필요하다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2137,7 +2605,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 697,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-01-KI-02",
@@ -2147,8 +2621,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 과학에 대한 이해는 데이터를 활용하여 복잡한 문제를 해결하는 데 도움을 준다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2170,7 +2644,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "동일 개념을 이미 묻는 문항과 최종 중복 조정 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 698,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-01-KU-01",
@@ -2180,8 +2660,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터 과학의 개념",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2203,7 +2683,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "독립 문항으로 출제 시 문맥 보강 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 703,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-01-KU-02",
@@ -2213,8 +2699,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터의 형태와 속성",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2236,7 +2722,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "독립 문항으로 출제 시 문맥 보강 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 704,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-01-KU-03",
@@ -2246,8 +2738,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터셋과 데이터베이스",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2275,7 +2767,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 705,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-02-KI-01",
@@ -2285,8 +2783,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 분석을 위해서는 데이터를 수집, 전처리하는 과정이 필요하다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2314,7 +2812,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 717,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-02-KI-02",
@@ -2324,8 +2828,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 처리는 데이터를 분석에 효과적인 형태로 변환하며, 지식을 추출하는 데 도움을 준다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2347,7 +2851,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "동일 개념을 이미 묻는 문항과 최종 중복 조정 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 718,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-02-KU-01",
@@ -2357,8 +2867,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터 전처리",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2386,7 +2896,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 723,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-02-KU-02",
@@ -2396,8 +2912,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터 분석 방법",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2419,7 +2935,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "독립 문항으로 출제 시 문맥 보강 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 724,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KI-01",
@@ -2429,8 +2951,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 모델은 문제를 합리적으로 해결할 수 있도록 도움을 준다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2452,7 +2974,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "동일 개념을 이미 묻는 문항과 최종 중복 조정 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 736,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KI-02",
@@ -2462,8 +2990,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 기반의 합리적 의사 결정을 위해 데이터를 분석해서 새로운 지식을 추출하고, 의미를 해석한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2491,7 +3019,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 737,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KU-01",
@@ -2501,8 +3035,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터 모델의 개념",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2530,7 +3064,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 742,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KU-02",
@@ -2540,8 +3080,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "회귀 분석",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2569,7 +3109,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 743,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KU-03",
@@ -2579,8 +3125,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "군집 분석",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2608,7 +3154,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 744,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-03-KU-04",
@@ -2618,8 +3170,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "연관 분석",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2647,7 +3199,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 745,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-04-KI-01",
@@ -2657,8 +3215,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 기반 문제 해결을 위해 데이터 과학의 기본 개념과 원리를 바탕으로 탐구 과정을 수행한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2680,7 +3238,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "동일 개념을 이미 묻는 문항과 최종 중복 조정 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 756,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-04-KI-02",
@@ -2690,8 +3254,8 @@
       "family": "핵심 아이디어",
       "sectionTitle": "핵심 아이디어",
       "sourceText": "데이터 과학으로 문제를 해결할 때, 통계적 방법이나 기계학습 등 다양한 방법을 활용한다.",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2719,7 +3283,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 757,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-04-KU-01",
@@ -2729,8 +3299,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "데이터 과학의 주제",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2752,7 +3322,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "독립 문항으로 출제 시 문맥 보강 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 762,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-04-KU-02",
@@ -2762,8 +3338,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "탐색적 데이터 분석",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2791,7 +3367,13 @@
         "preserveSource": true,
         "activateBlank": false
       },
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 763,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     },
     {
       "lineId": "DS-22-04-KU-03",
@@ -2801,8 +3383,8 @@
       "family": "지식·이해",
       "sectionTitle": "지식·이해",
       "sourceText": "결과의 의미 해석",
-      "sourceDoc": "교육과정 최종안 개발연구 기반 전사 — 공식 HWP 문자 단위 직접 대조 보류",
-      "sourceVerified": false,
+      "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
+      "sourceVerified": true,
       "verificationScope": "공개 최종안 연구보고서 PDF 인쇄 60~61쪽 대조; 첨부 공식 HWP 직접 대조 아님",
       "keywords": [],
       "coreSets": [],
@@ -2824,7 +3406,13 @@
       "proposedBlankText": null,
       "proposedAnswer": null,
       "proposalNote": "독립 문항으로 출제 시 문맥 보강 필요",
-      "originType": "curriculum_source_text_unverified_against_official_hwp"
+      "originType": "official_hwp_verified_curriculum_source",
+      "sourceVerification": {
+        "method": "strict-exact-substring",
+        "source": "user-attached official HWP",
+        "paragraph": 764,
+        "verifiedScope": "63 original curriculum entries only"
+      }
     }
   ],
   "knowledgeUnderstandingGroups": [

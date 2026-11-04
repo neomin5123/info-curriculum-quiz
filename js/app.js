@@ -1084,6 +1084,7 @@ function render(){
   else renderLine(task.line);
   const mode=state.ui.mode;let gradable=mode==='cloze';
   if(task.type==='line'&&mode==='cloze'){const set=engine.selectedSet(task.line);gradable=!!(set&&engine.keywordsForSet(task.line,set).length);}
+  if(task.type==='whole-group'&&task.group.subject==='data-science'&&task.group.familyGroup==='character-goals'&&mode==='cloze')gradable=false;
   el.check.disabled=!gradable;
   el.reveal.disabled=!gradable;
   el.check.hidden=!gradable;
@@ -1579,6 +1580,12 @@ function renderContentStandards(task){
 }
 function renderWholeGroup(g){
   const mode=state.ui.mode;
+  // 데이터 과학의 성격·목표는 현재 원문 보존 전용이다.
+  // 빈칸이 아직 선별되지 않은 상태에서 400자짜리 문단 전체를 무힌트로 입력시키지 않는다.
+  if(g.subject==='data-science'&&g.familyGroup==='character-goals'&&mode==='cloze'){
+    el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)} · 원문 보기</div>${sourceItems(s.items,false)}</section>`).join('')}</div>`;
+    return;
+  }
   // 인공지능 기초 성취기준은 코드와 본문을 분리하여 코드 자체를 묻지 않는다.
   if(g.subject==='ai-basic'&&g.familyGroup==='standards'){
     const task={type:'whole-group',group:g,focus:{kind:'whole',standardLineIds:g.items.map(it=>it.lineId)}};
