@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const app=fs.readFileSync('js/app.js','utf8');
+const cancel=app.slice(app.indexOf('function cancelFieldRetry('),app.indexOf('function scheduleFieldRetry('));
+const grade=app.slice(app.indexOf('function gradeRetryCard('),app.indexOf('function openRetryCard('));
+const activate=app.slice(app.indexOf('function activateDueFieldRetry('),app.indexOf('function noteAnswerAttempt('));
+assert.doesNotMatch(cancel,/delete state\.fieldRetries/,'main answer correct must not delete retry');
+assert.doesNotMatch(grade,/completeRetryRecord\(id,r\)/,'retry card correct must not clear retry');
+assert.match(grade,/r\.status='correct'/);
+assert.match(grade,/r\.dueAt=Number\(state\.answerSerial\|\|0\)/);
+assert.doesNotMatch(activate,/if\(saved\?\.status==='correct'\)\{\s*delete/);
+console.log('PASS retry card survives both correct-answer paths');
