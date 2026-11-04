@@ -1452,3 +1452,38 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 }
 
 .exam-third-pass{border-top:1px solid #dfe9e2;margin-top:7px}.exam-third-pass .exam-answer-provenance{margin-top:10px;font-size:11px;color:#786e58}
+
+/* Navigation directly below study filters, synced with existing footer navigator. */
+#studyPage > .area-navigator-near-study{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  align-items:center;
+  gap:12px;
+  width:100%;
+  margin:12px 0 16px;
+  padding:10px 14px;
+  border:1px solid #dce5df;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 3px 12px rgba(26,48,35,.035);
+}
+#studyPage > .area-navigator-near-study[hidden]{display:none!important}
+#studyPage > .area-navigator-near-study button{
+  width:auto;height:auto;min-height:39px;padding:8px 14px;
+  border:1px solid #d7e2da;border-radius:10px;
+  background:#fff;color:#355f4b;font-size:13px;line-height:1.2;
+  white-space:nowrap;display:flex;align-items:center;justify-content:center;
+}
+#studyPage > .area-navigator-near-study button:first-child{justify-self:start}
+#studyPage > .area-navigator-near-study button:last-child{justify-self:end}
+#studyPage > .area-navigator-near-study button:disabled{opacity:.35;cursor:default}
+#studyPage > .area-navigator-near-study strong{
+  max-width:320px;min-width:0;padding:0 5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  text-align:center;font-size:13px;color:#315e48;font-weight:750;
+}
+@media(max-width:760px){
+  #studyPage > .area-navigator-near-study{gap:6px;padding:8px;margin:10px 0 12px}
+  #studyPage > .area-navigator-near-study button{min-height:38px;padding:7px 8px;font-size:11px}
+  #studyPage > .area-navigator-near-study strong{max-width:120px;font-size:11px}
+}

@@ -18,7 +18,7 @@ const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
 areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
-areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
+areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),areaNavNear:$('areaNavigatorNearStudy'),prevAreaNear:$('prevAreaButtonNearStudy'),nextAreaNear:$('nextAreaButtonNearStudy'),currentAreaNear:$('currentAreaLabelNearStudy'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
 examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
@@ -992,15 +992,20 @@ function areaNavState(task=currentTask()){
   return idx>=0?{mode:'filter',groups,idx}:null;
 }
 function renderAreaNavigator(task){
-  if(!el.areaNav)return;
   const nav=areaNavState(task),show=!!(nav&&nav.groups.length>1);
-  el.areaNav.hidden=!show;
-  if(!show)return;
-  const {groups,idx}=nav,g=groups[idx];
-  el.currentArea.textContent=nav.mode==='queue'&&state.ui.subject==='all'?`${g.subject} · ${g.area}`:g.area;
-  el.prevArea.disabled=idx<=0;el.nextArea.disabled=idx>=groups.length-1;
-  el.prevArea.title=idx>0?`이전 영역: ${groups[idx-1].area}`:'첫 영역';
-  el.nextArea.title=idx<groups.length-1?`다음 영역: ${groups[idx+1].area}`:'마지막 영역';
+  for(const view of [
+    {root:el.areaNav,prev:el.prevArea,next:el.nextArea,label:el.currentArea},
+    {root:el.areaNavNear,prev:el.prevAreaNear,next:el.nextAreaNear,label:el.currentAreaNear}
+  ]){
+    if(!view.root)return;
+    view.root.hidden=!show;
+    if(!show)continue;
+    const {groups,idx}=nav,g=groups[idx];
+    view.label.textContent=nav.mode==='queue'&&state.ui.subject==='all'?`${g.subject} · ${g.area}`:g.area;
+    view.prev.disabled=idx<=0;view.next.disabled=idx>=groups.length-1;
+    view.prev.title=idx>0?`이전 영역: ${groups[idx-1].area}`:'첫 영역';
+    view.next.title=idx<groups.length-1?`다음 영역: ${groups[idx+1].area}`:'마지막 영역';
+  }
 }
 function cancelPracticalAutoAdvance(){
   if(practicalAdvanceTimer){clearTimeout(practicalAdvanceTimer);practicalAdvanceTimer=null;}
@@ -1051,7 +1056,7 @@ function taskContext(task){
 }
 function render(){
   const task=currentTask(),st=engine.stats();el.feedback.textContent='';el.feedback.className='feedback';
-  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.areaNav)el.areaNav.hidden=true;if(el.provenance)el.provenance.textContent='';return;}
+  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.areaNav)el.areaNav.hidden=true;if(el.areaNavNear)el.areaNavNear.hidden=true;if(el.provenance)el.provenance.textContent='';return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;renderAreaNavigator(task);
   if(task.type==='content-system')renderContentSystem(task);
   else if(task.type==='content-standards')renderContentStandards(task);
@@ -1977,6 +1982,8 @@ el.examSheetPart?.addEventListener('change',renderExamAnswerSheet);
 el.examDetail?.addEventListener('click',e=>{const nav=e.target.closest('[data-exam-nav]');if(nav?.dataset.examNav){selectExamQuestion(nav.dataset.examNav);return;}const panel=e.target.closest('.exam-solution-panel');if(e.target.closest('[data-exam-reveal]'))revealExamSolution(panel,true);else if(e.target.closest('[data-exam-hide]'))revealExamSolution(panel,false);});
 el.prevArea?.addEventListener('click',()=>jumpArea(-1));
 el.nextArea?.addEventListener('click',()=>jumpArea(1));
+el.prevAreaNear?.addEventListener('click',()=>jumpArea(-1));
+el.nextAreaNear?.addEventListener('click',()=>jumpArea(1));
 el.scrollTop?.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
 el.scrollBottom?.addEventListener('click',()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'}));
 

@@ -8,7 +8,7 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261027-53">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261104-nav-integrated-1">
 </head>
 <body data-build="2026.10.27-53">
   <header class="app-header">
@@ -64,6 +64,12 @@
         </div>
       </div>
     </section>
+
+    <nav id="areaNavigatorNearStudy" class="area-navigator area-navigator-near-study" hidden aria-label="학습 설정 아래 영역 이동">
+      <button id="prevAreaButtonNearStudy" type="button" aria-label="이전 영역">← 이전 영역</button>
+      <strong id="currentAreaLabelNearStudy" aria-live="polite"></strong>
+      <button id="nextAreaButtonNearStudy" type="button" aria-label="다음 영역">다음 영역 →</button>
+    </nav>
 
     <section class="study-card" id="studyCard">
       <div class="study-meta"><span id="taskMeta" class="task-meta-hidden" aria-hidden="true"></span><span id="progressMeta"></span></div>
@@ -208,6 +214,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261104-retry-newest-3"></script>
+  <script src="js/app.js?b=20261104-nav-integrated-1"></script>
 </body>
 </html>
