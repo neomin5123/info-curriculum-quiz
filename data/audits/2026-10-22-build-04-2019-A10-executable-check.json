@@ -1,0 +1,37 @@
+{
+  "feasibleCount": 30,
+  "minimumPrice": 2500,
+  "optimalCombinations": [
+    {
+      "counts": [
+        0,
+        1,
+        0,
+        2,
+        0
+      ],
+      "price": 2500
+    },
+    {
+      "counts": [
+        0,
+        3,
+        0,
+        1,
+        0
+      ],
+      "price": 2500
+    },
+    {
+      "counts": [
+        0,
+        5,
+        0,
+        0,
+        0
+      ],
+      "price": 2500
+    }
+  ],
+  "method": "exhaustive integer enumeration"
+}

@@ -1,0 +1,111 @@
+{
+  "build": "2026.10.26-30",
+  "basis": "Original exam PDF page images and source question text plus independent executable checks; no official marking scheme",
+  "reviewed_full": 7,
+  "full_checks": [
+    {
+      "id": "2024-A-04",
+      "pdf_page": 117,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "111100",
+      "existing_answer_excerpt": "6비트 검사합 111100 / 목적: 전송 중 발생한 비트 오류 검출",
+      "derivation": [
+        "원본 6비트 세 단위 100000,100000,000010을 분리한다.",
+        "1의 보수 덧셈: 32+32=64→하위 6비트 0과 캐리 1을 더해 1; 이어서 1+2=3(000011).",
+        "000011의 비트 반전은 111100. 수신자는 검사합을 이용해 전송 중 비트 오류를 검출한다."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-09",
+      "pdf_page": 120,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "0|01111111|01100000000000000000000 ; 0|10000000|01000000000000000000000 ; 0|10000000|10111000000000000000000",
+      "existing_answer_excerpt": "(1) 0 | 01111111 | 01100000000000000000000. (2) 0 | 10000000 | 01000000000000000000000. (3) 0 | 10000000 | 10111000000000000000000.",
+      "derivation": [
+        "(1.011)₂=1.375: 부호 0, 지수 127(01111111), fraction 011000…",
+        "(10.1)₂=2.5=(1.01)₂×2¹: 부호 0, 지수 128(10000000), fraction 010000…",
+        "곱 1.375×2.5=3.4375=(11.0111)₂=(1.10111)₂×2¹: 부호 0, 지수 128, fraction 1011100…",
+        "IEEE 754 단정밀도 비트 패턴: 0x3FB00000, 0x40200000, 0x405C0000를 struct로 독립 재검산했다."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-A-10",
+      "pdf_page": 121,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "101010 / 111001 / XOR",
+      "existing_answer_excerpt": "2진수 110011 → 그레이 코드 101010 / 그레이 100101 → 2진수 111001 / XOR 게이트",
+      "derivation": [
+        "인접 비트의 올림 없는 덧셈은 XOR. 110011 XOR 011001=101010.",
+        "100101의 첫 비트 1을 복사하고 이후 그레이 비트와 직전 이진 비트를 XOR하면 111001.",
+        "따라서 게이트는 XOR(배타적 논리합)이다."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-09",
+      "pdf_page": 128,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "rEDhAT / DhATrE / code2(enc,s,s-n) / code1(enc,s)",
+      "existing_answer_excerpt": "㉠ rEDhAT / ㉡ DhATrE / ㉢ code2(enc,s,s-n); ㉣ code1(enc,s);",
+      "derivation": [
+        "ASCII 대소문자 전환 code1 적용: RedHat→rEDhAT.",
+        "길이 6에서 code2(enc,6,2)는 왼쪽 2칸 회전: rEDhAT→DhATrE.",
+        "복원은 역회전 code2(enc,s,s-n) 후 code1(enc,s), 최종 RedHat."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2024-B-10",
+      "pdf_page": 128,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "2 fragments: (500,456,1,0), (340,456,0,60); sum 840B",
+      "existing_answer_excerpt": "2개 데이터그램. Total length 합 840바이트. 첫 단편 (Total length=500, Identification=456, MF=1, Fragment offset=0), 둘째 단편 (Total length=340, Identification=456, MF=0, Fragment offset=60).",
+      "derivation": [
+        "원본 payload=820-20=800B. MTU 500B이므로 첫 단편 payload 480B, 두 번째 payload 320B.",
+        "첫 단편 Total length 500, ID 456, MF=1, offset=0.",
+        "두 번째 단편 Total length 340, ID 456, MF=0, offset=480/8=60.",
+        "단편 수 2개, Total length 합 840B."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-04",
+      "pdf_page": 131,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "blank 0; output 6",
+      "existing_answer_excerpt": "㉠ 0 / 20 입력 출력 6",
+      "derivation": [
+        "n<=1일 때 0을 반환하므로 n이 3의 배수가 아니면 0을 더해야 한다.",
+        "2부터 20까지 3,6,9,12,15,18이 여섯 개이므로 출력은 6.",
+        "원문의 n=12일 때 4 출력 조건과도 일치."
+      ],
+      "official_rubric_compared": false
+    },
+    {
+      "id": "2025-A-05",
+      "pdf_page": 131,
+      "status": "complete_independent_source_check",
+      "answer_preserved": true,
+      "independent_result": "POW1 15, POW2 8; Θ(n), Θ(log n)",
+      "existing_answer_excerpt": "n=15: POW1 곱셈 15회, POW2 곱셈 8회 / POW1 Θ(n) / POW2 Θ(log n)",
+      "derivation": [
+        "POW1은 for 반복 15회마다 p=p*2를 실행하므로 곱셈 15회.",
+        "POW2는 n=15→7→3→1의 4회 반복. 매번 홀수라 p=p*d 4회, d=d*d 4회로 총 8회.",
+        "산출값은 둘 다 32768. POW1 Θ(n), POW2 Θ(log n)."
+      ],
+      "official_rubric_compared": false
+    }
+  ],
+  "remaining_2024_2025_batch23": "Not independently checked in this release; no status elevation",
+  "answer_changes": 0,
+  "explanation_changes": 0,
+  "confidence_90_percent_statistically_validated": 0
+}

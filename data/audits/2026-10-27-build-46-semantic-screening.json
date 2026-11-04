@@ -1,0 +1,470 @@
+{
+  "scope": {
+    "previousFlaggedUnits": 33,
+    "flaggedUniqueLines": 31,
+    "changedLines": 10,
+    "changedScreenUnits": 20
+  },
+  "decisions": [
+    {
+      "lineId": "MI-01-AC-ST-02",
+      "currentUnit": "컴퓨팅 시스템의 필요성과 가치",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정01-02] 피지컬 컴퓨팅의 개념을 이해하고, 생활 속에서 적용된 사례 조사를 통해 컴퓨팅 시스템의 필요성과 가치를 판단한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-01-AC-EX-02",
+      "currentUnit": "피지컬 컴퓨팅 시스템이 유용하게 사용",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정01-02] 다양한 구성요소가 컴퓨팅 시스템에서 고유한 역할을 담당하고 있음을 이해하고, 목적에 맞는 물리적인 장치와 소프트웨어를 결합하여 피지컬 컴퓨팅 시스템을 구현하는 과정을 통해 사회의 다양한 영역에서 피지컬 컴퓨팅 시스템이 유용하게 사용될 수 있음을 판단할 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-02-CS-PF-02",
+      "currentUnit": "데이터를 목적에 맞게 수집⋅분류⋅저장하기",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "데이터를 목적에 맞게 수집⋅분류⋅저장하기",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-03",
+      "currentUnit": "다양한 형태로 구조화",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정02-03] 실생활의 데이터를 표, 다이어그램 등 다양한 형태로 구조화한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-CS-KI-02",
+      "currentUnit": "생활을 더욱 편리하게 하는 데 활용",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "자동화를 고려해 설계된 알고리즘은 컴퓨터가 이해할 수 있는 언어로 구현되어 생활을 더욱 편리하게 하는 데 활용된다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-CS-PF-01",
+      "currentUnit": "초기 상태, 현재 상태, 목표 상태",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "문제의 초기 상태, 현재 상태, 목표 상태를 정의하고 해결 가능한 형태로 구조화하기",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-CS-PF-02",
+      "currentUnit": "적용하기",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "문제 해결을 위한 다양한 알고리즘을 설계하고 적용하기",
+      "replacement": [
+        "알고리즘을 설계",
+        "적용하기"
+      ]
+    },
+    {
+      "lineId": "MI-03-AC-ST-02",
+      "currentUnit": "추상화의 중요성",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[9정03-02] 문제 해결을 위한 추상화의 중요성을 이해하고, 핵심요소를 중심으로 알고리즘을 표현한다.",
+      "replacement": [
+        "추상화",
+        "핵심요소"
+      ]
+    },
+    {
+      "lineId": "MI-03-AC-ST-03",
+      "currentUnit": "알고리즘의 중요성",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[9정03-03] 알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교⋅분석한다.",
+      "replacement": [
+        "알고리즘의 중요성",
+        "비교⋅분석"
+      ]
+    },
+    {
+      "lineId": "MI-03-AC-ST-03",
+      "currentUnit": "다양한 알고리즘을 비교⋅분석",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[9정03-03] 알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교⋅분석한다.",
+      "replacement": [
+        "알고리즘의 중요성",
+        "비교⋅분석"
+      ]
+    },
+    {
+      "lineId": "MI-03-AC-ST-04",
+      "currentUnit": "문제 해결에 적합한 전략",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정03-04] 사례를 중심으로 문제 해결에 적합한 전략을 선택하여 알고리즘을 설계한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-05",
+      "currentUnit": "문제 해결 프로그램",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[9정03-05] 데이터를 순차적으로 저장할 수 있는 구조를 활용하여 문제 해결 프로그램을 작성한다.",
+      "replacement": [
+        "순차적으로 저장할 수 있는 구조",
+        "프로그램을 작성"
+      ]
+    },
+    {
+      "lineId": "MI-03-AC-ST-09",
+      "currentUnit": "다양한 학문 분야의 문제 해결",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정03-09] 다양한 학문 분야의 문제 해결을 위해 협력하여 소프트웨어를 개발한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-AC-EX-02",
+      "currentUnit": "문제 해결 전략",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "[9정03-04] 문제를 해결하기 위해 정보 분야에서 활용하는 문제 해결 전략을 이해하고, 문제 해결 과정에 적절한 전략을 활용하여 문제를 해결할 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-03-AC-EX-02",
+      "currentUnit": "문제 해결 과정에 적절한 전략",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[9정03-04] 문제를 해결하기 위해 정보 분야에서 활용하는 문제 해결 전략을 이해하고, 문제 해결 과정에 적절한 전략을 활용하여 문제를 해결할 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-02",
+      "currentUnit": "데이터의 중요성",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[9정04-02] 인공지능 학습에서 데이터의 중요성을 이해하고, 학습에 필요한 데이터를 수집하여 분류한다.",
+      "replacement": [
+        "인공지능 학습",
+        "데이터를 수집하여 분류"
+      ]
+    },
+    {
+      "lineId": "MI-05-CS-PF-01",
+      "currentUnit": "디지털 사회의 특성에 따른 직업의 변화",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "디지털 사회의 특성에 따른 직업의 변화 탐구하기",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-05-AC-EX-01",
+      "currentUnit": "스마트폰 중독, 인터넷 중독, 게임 과몰입",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "[9정05-02] 디지털 사회를 안전하고 편리하게 살아가는 데 필요한 정보 윤리, 사이버 폭력 및 범죄 예방에 대한 기본적인 소양을 갖추고 스마트폰 중독, 인터넷 중독, 게임 과몰입 등의 구체적인 사례를 분석할 수 있어야 한다. 분석 내용을 기반으로 개인과 사회가 각각 수행해야 하는 실천 방안을 도출하여 자신의 삶에 적용하려는 태도를 갖출 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-TE-DIR-06",
+      "currentUnit": "주도성 있는 문제 해결 경험",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "(다) 정보 과목의 지식⋅이해, 과정⋅기능을 활용하여 민주시민교육, 생태전환 교육 등 현 시대가 당면한 여러 사회문제와 더불어 지속가능발전 등의 범교과 주제를 교수⋅학습 과제로 제시하여 주도성 있는 문제 해결 경험을 제공한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "MI-TE-MET-03",
+      "currentUnit": "프로그래밍을 통한 문제 해결 과정",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "(라) 내용 영역별로 프로그래밍을 통한 문제 해결 과정을 포함하도록 하여 컴퓨팅 시스템을 문제 해결에 적용하는 충분한 경험을 하도록 교수⋅학습을 구성한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-02-CS-KI-01",
+      "currentUnit": "효율적으로 관리",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "데이터의 압축과 암호화는 데이터를 효율적으로 관리하고 보호하는 데 도움을 준다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-01",
+      "currentUnit": "압축의 개념과 필요성",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "[12정02-01] 디지털 데이터 압축의 개념과 필요성을 이해하고, 압축의 효율성을 분석하여 평가한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-03",
+      "currentUnit": "문제 해결에 적합한 데이터",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[12정02-03] 빅데이터의 개념과 특징에 대한 이해를 바탕으로, 문제 해결에 적합한 데이터를 수집한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-02-AC-EX-02",
+      "currentUnit": "암호화의 중요성과 필요성",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[12정02-02] 비교적 간단한 치환형, 전치형 등의 암호 기법을 활용하여 암호화, 복호화의 과정을 이해하고, 데이터 암호화를 활용하는 사례 분석을 통해 개인과 사회를 보호하기 위한 수단으로 암호화의 중요성과 필요성을 설명할 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-03-CS-KI-02",
+      "currentUnit": "문제 해결",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "데이터 모델링을 하기 위해 문제 해결에 필요한 데이터 간의 관계를 분석하고, 정의한다.",
+      "replacement": [
+        "데이터 간의 관계",
+        "분석하고, 정의"
+      ]
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "currentUnit": "탐색하는 다양한 알고리즘",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[12정03-03] 데이터를 탐색하는 다양한 알고리즘의 특징과 효율을 비교⋅분석한다.",
+      "replacement": [
+        "특징과 효율",
+        "비교⋅분석"
+      ]
+    },
+    {
+      "lineId": "HI-03-AC-ST-07",
+      "currentUnit": "다양한 제어 구조",
+      "flag": "generic_expression_possible",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[12정03-07] 다양한 제어 구조를 복합적으로 활용한 프로그램을 작성한다.",
+      "replacement": [
+        "제어 구조",
+        "복합적으로 활용"
+      ]
+    },
+    {
+      "lineId": "HI-03-AC-ST-09",
+      "currentUnit": "실생활 및 다양한 학문 분야",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "[12정03-09] 실생활 및 다양한 학문 분야의 문제 해결을 위한 프로그램을 협력적으로 설계⋅구현한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "currentUnit": "문제 해결에 적합한 데이터와 기계학습 모델",
+      "flag": "generic_expression_possible,long_phrase_review",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "기계학습 기반의 인공지능을 구현하기 위해서는 문제 해결에 적합한 데이터와 기계학습 모델을 활용한다.",
+      "replacement": [
+        "데이터",
+        "기계학습 모델"
+      ]
+    },
+    {
+      "lineId": "HI-04-AC-EX-01",
+      "currentUnit": "지능 에이전트를 인식, 학습, 추론, 행동",
+      "flag": "long_phrase_review",
+      "decision": "replace",
+      "reason": "교과 내용의 구별 가능한 핵심 개념/행동으로 분리하거나 교체",
+      "sourceText": "[12정04-01] 에이전트와 지능 에이전트를 인식, 학습, 추론, 행동 등 인공지능 관점에서 구분하고, 인공지능 발전 현황에 비추어 인간과 인공지능의 역할에 대해 탐색할 수 있어야 한다.",
+      "replacement": [
+        "인식, 학습, 추론, 행동",
+        "인간과 인공지능의 역할"
+      ]
+    },
+    {
+      "lineId": "HI-05-AC-ST-03",
+      "currentUnit": "정보보안의 필요성",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "[12정05-03] 정보보안의 필요성을 이해하고, 보안 기술을 활용하여 디지털 윤리를 실천한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-05-AC-EX-01",
+      "currentUnit": "개인 정보 보호, 오⋅남용 방지 대책",
+      "flag": "long_phrase_review",
+      "decision": "keep",
+      "reason": "교육과정에서 암기할 가치가 있는 특정 개념 묶음 또는 관계",
+      "sourceText": "[12정05-02] 정보 보호와 정보공개의 가치와 영향력을 인식할 수 있어야 하며, 자신뿐만 아니라 타인의 정보 역시 중요함을 이해하고, 개인 정보 보호, 오⋅남용 방지 대책 등 실사례를 탐색하며 개인 정보를 포함하여 정보 보호 방법을 실천할 수 있어야 한다.",
+      "replacement": null
+    },
+    {
+      "lineId": "HI-TE-DIR-04",
+      "currentUnit": "주도성 있는 문제 해결 경험",
+      "flag": "generic_expression_possible",
+      "decision": "keep",
+      "reason": "문맥에서 수행 활동·교과 용어를 식별하는 구절이며 자동 탐지 자체는 오류 증거가 아님",
+      "sourceText": "(다) 정보 과목의 지식⋅이해, 과정⋅기능을 활용하여 민주시민교육, 생태전환 교육 등 현 시대가 당면한 여러 사회문제와 더불어 지속가능발전 등의 범교과 주제를 교수⋅학습 과제로 제시하여 주도성 있는 문제 해결 경험을 제공한다.",
+      "replacement": null
+    }
+  ],
+  "changes": {
+    "MI-03-CS-PF-02": {
+      "original": "문제 해결을 위한 다양한 알고리즘을 설계하고 적용하기",
+      "before": [
+        "다양한 알고리즘을 설계하고 적용"
+      ],
+      "after": [
+        "알고리즘을 설계",
+        "적용하기"
+      ],
+      "decision": "replace"
+    },
+    "MI-03-AC-ST-05": {
+      "original": "[9정03-05] 데이터를 순차적으로 저장할 수 있는 구조를 활용하여 문제 해결 프로그램을 작성한다.",
+      "before": [
+        "순차적으로 저장할 수 있는 구조",
+        "문제 해결 프로그램"
+      ],
+      "after": [
+        "순차적으로 저장할 수 있는 구조",
+        "프로그램을 작성"
+      ],
+      "decision": "replace"
+    },
+    "MI-04-AC-ST-02": {
+      "original": "[9정04-02] 인공지능 학습에서 데이터의 중요성을 이해하고, 학습에 필요한 데이터를 수집하여 분류한다.",
+      "before": [
+        "데이터의 중요성",
+        "학습에 필요한 데이터",
+        "수집하여 분류"
+      ],
+      "after": [
+        "인공지능 학습",
+        "데이터를 수집하여 분류"
+      ],
+      "decision": "replace"
+    },
+    "HI-03-CS-KI-02": {
+      "original": "데이터 모델링을 하기 위해 문제 해결에 필요한 데이터 간의 관계를 분석하고, 정의한다.",
+      "before": [
+        "데이터 모델링",
+        "문제 해결",
+        "정의"
+      ],
+      "after": [
+        "데이터 간의 관계",
+        "분석하고, 정의"
+      ],
+      "decision": "replace"
+    },
+    "HI-03-AC-ST-03": {
+      "original": "[12정03-03] 데이터를 탐색하는 다양한 알고리즘의 특징과 효율을 비교⋅분석한다.",
+      "before": [
+        "탐색하는 다양한 알고리즘",
+        "특징과 효율",
+        "비교⋅분석"
+      ],
+      "after": [
+        "특징과 효율",
+        "비교⋅분석"
+      ],
+      "decision": "replace"
+    },
+    "HI-04-CS-KI-02": {
+      "original": "기계학습 기반의 인공지능을 구현하기 위해서는 문제 해결에 적합한 데이터와 기계학습 모델을 활용한다.",
+      "before": [
+        "기계학습",
+        "문제 해결에 적합한 데이터와 기계학습 모델"
+      ],
+      "after": [
+        "데이터",
+        "기계학습 모델"
+      ],
+      "decision": "replace"
+    },
+    "HI-04-AC-EX-01": {
+      "original": "[12정04-01] 에이전트와 지능 에이전트를 인식, 학습, 추론, 행동 등 인공지능 관점에서 구분하고, 인공지능 발전 현황에 비추어 인간과 인공지능의 역할에 대해 탐색할 수 있어야 한다.",
+      "before": [
+        "지능 에이전트를 인식, 학습, 추론, 행동",
+        "인간과 인공지능의 역할"
+      ],
+      "after": [
+        "인식, 학습, 추론, 행동",
+        "인간과 인공지능의 역할"
+      ],
+      "decision": "replace"
+    },
+    "MI-03-AC-ST-02": {
+      "original": "[9정03-02] 문제 해결을 위한 추상화의 중요성을 이해하고, 핵심요소를 중심으로 알고리즘을 표현한다.",
+      "before": [
+        "추상화의 중요성",
+        "핵심요소",
+        "알고리즘을 표현"
+      ],
+      "after": [
+        "추상화",
+        "핵심요소"
+      ],
+      "decision": "replace"
+    },
+    "MI-03-AC-ST-03": {
+      "original": "[9정03-03] 알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교⋅분석한다.",
+      "before": [
+        "알고리즘의 중요성",
+        "다양한 알고리즘을 비교⋅분석"
+      ],
+      "after": [
+        "알고리즘의 중요성",
+        "비교⋅분석"
+      ],
+      "decision": "replace"
+    },
+    "HI-03-AC-ST-07": {
+      "original": "[12정03-07] 다양한 제어 구조를 복합적으로 활용한 프로그램을 작성한다.",
+      "before": [
+        "다양한 제어 구조",
+        "복합적으로 활용",
+        "프로그램을 작성"
+      ],
+      "after": [
+        "제어 구조",
+        "복합적으로 활용"
+      ],
+      "decision": "replace"
+    }
+  },
+  "limitations": [
+    "검토 대상 외 자동 통과 단위에 대한 교육적 적절성 보증 아님",
+    "실제 브라우저 E2E 미실시"
+  ]
+}

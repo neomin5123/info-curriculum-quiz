@@ -1,0 +1,288 @@
+{
+  "build": "2026.10.26-27",
+  "new_explanations": 30,
+  "detailed_explanations_total": 264,
+  "explanations_missing": 5,
+  "independent_partial_checks": 5,
+  "independent_complete_checks": 0,
+  "official_marking_guides_compared": 0,
+  "questions": [
+    {
+      "id": "2024-B-09",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        128
+      ]
+    },
+    {
+      "id": "2024-B-10",
+      "level": "계산 일부 독립 대조 · 전체 소문항 검증 미완료",
+      "independent_partial": true,
+      "answer_unchanged": true,
+      "source_pages": [
+        128
+      ]
+    },
+    {
+      "id": "2024-B-11",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        129
+      ]
+    },
+    {
+      "id": "2025-A-02",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        130
+      ]
+    },
+    {
+      "id": "2025-A-03",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        131
+      ]
+    },
+    {
+      "id": "2025-A-07",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        132
+      ]
+    },
+    {
+      "id": "2025-A-09",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        134
+      ]
+    },
+    {
+      "id": "2025-A-10",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        134
+      ]
+    },
+    {
+      "id": "2025-A-11",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        135
+      ]
+    },
+    {
+      "id": "2025-A-12",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        136
+      ]
+    },
+    {
+      "id": "2025-B-01",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        137
+      ]
+    },
+    {
+      "id": "2025-B-02",
+      "level": "계산 일부 독립 대조 · 전체 소문항 검증 미완료",
+      "independent_partial": true,
+      "answer_unchanged": true,
+      "source_pages": [
+        137
+      ]
+    },
+    {
+      "id": "2025-B-06",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        140
+      ]
+    },
+    {
+      "id": "2025-B-07",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        141
+      ]
+    },
+    {
+      "id": "2025-B-08",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        141
+      ]
+    },
+    {
+      "id": "2025-B-09",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        142
+      ]
+    },
+    {
+      "id": "2025-B-10",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        143
+      ]
+    },
+    {
+      "id": "2025-B-11",
+      "level": "계산 일부 독립 대조 · 전체 소문항 검증 미완료",
+      "independent_partial": true,
+      "answer_unchanged": true,
+      "source_pages": [
+        143
+      ]
+    },
+    {
+      "id": "2026-A-02",
+      "level": "계산 일부 독립 대조 · 전체 소문항 검증 미완료",
+      "independent_partial": true,
+      "answer_unchanged": true,
+      "source_pages": [
+        144
+      ]
+    },
+    {
+      "id": "2026-A-03",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        145
+      ]
+    },
+    {
+      "id": "2026-A-04",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        145
+      ]
+    },
+    {
+      "id": "2026-A-06",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        146
+      ]
+    },
+    {
+      "id": "2026-A-08",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        147
+      ]
+    },
+    {
+      "id": "2026-A-10",
+      "level": "계산 일부 독립 대조 · 전체 소문항 검증 미완료",
+      "independent_partial": true,
+      "answer_unchanged": true,
+      "source_pages": [
+        149
+      ]
+    },
+    {
+      "id": "2026-A-11",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        149
+      ]
+    },
+    {
+      "id": "2026-A-12",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        150
+      ]
+    },
+    {
+      "id": "2026-B-01",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        151
+      ]
+    },
+    {
+      "id": "2026-B-03",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        152
+      ]
+    },
+    {
+      "id": "2026-B-04",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        153
+      ]
+    },
+    {
+      "id": "2026-B-05",
+      "level": "기초 해설 확장 초안 · 독립검증 미완료",
+      "independent_partial": false,
+      "answer_unchanged": true,
+      "source_pages": [
+        153
+      ]
+    }
+  ],
+  "remaining_ids": [
+    "2024-B-07",
+    "2026-B-06",
+    "2026-B-08",
+    "2026-B-10",
+    "2026-B-11"
+  ]
+}

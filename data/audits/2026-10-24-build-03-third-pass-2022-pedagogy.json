@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "buildId": "2026.10.24-03",
+    "year": 2022,
+    "addedReviewCount": 6,
+    "addedPoints": 22,
+    "cumulativeReviewCount": 47,
+    "totalCorpus": 269,
+    "officialAnswerKeyCompared": 0,
+    "references": [
+      "https://www.moe.go.kr/boardCnts/viewRenew.do?boardID=141&boardSeq=81884&lev=0&m=0404&opType=N&s=moe",
+      "https://www.goe.go.kr/resource/old/BBSMSTR_000000030127/BBS_202208231144247060.pdf"
+    ],
+    "imageNote": "2022-A-01 ㉡ is in PDF 88p teacher speech bubble, omitted from app extracted text"
+  },
+  "entries": [
+    {
+      "id": "2022-A-01",
+      "points": 2,
+      "title": "인공지능 학습 데이터의 편향과 사회적 영향",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          88
+        ]
+      },
+      "storedAnswerSha256": "b7ffa8936563237ca45a9a95773cd34c93f9b58069c8a9040c54ff2020cbf1f3",
+      "storedSolutionSha256": "55d2da1fdd9b7c8729016f6320276d4654e0886fcbc11e390fb3495360ec6fa1",
+      "storedAnswer": "㉠ 데이터 편향성, ㉡ 사회적 영향",
+      "independentDetailedExplanation": "① 채용 AI는 특정 성별 지원자가 과대표집된 과거 데이터를 학습한 결과 공정하지 않은 판단을 내렸다. 범죄위험 예측 시스템은 특정 집단에 관한 오분류율이 더 높았다. 이는 모델 학습에 사용되는 표본의 구성과 이전 사회의 차별적 패턴이 모델 출력에 영향을 준다는 데이터 편향성 사례다. 따라서 ㉠ 데이터 편향성. ② 원본 시험지 하단의 교사 말풍선은 이 수업자료가 인공지능 기초의 ‘인공지능의 (㉡)’ 영역에 속한다고 서술한다. 고시 제2020-236호의 해당 영역명은 ‘인공지능의 사회적 영향’이므로 ㉡ 사회적 영향. ③ 편향이 관찰되었다는 사실만으로 특정 집단 전체에 대한 속성이나 예측모형의 악의를 일반화하지 않는다. 원자료의 대표성·레이블·평가 지표를 검토해야 한다.",
+      "verificationMethod": "원본 PDF 88쪽의 말풍선(앱 추출 텍스트에서 누락된 ㉡ 맥락) 육안 확인; 2020-236호 교육과정 대조",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "CURRICULUM_EXAM_IMAGE",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    },
+    {
+      "id": "2022-A-05",
+      "points": 4,
+      "title": "순차·이진탐색 효율 비교와 상 수준 평가기준",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          89
+        ]
+      },
+      "storedAnswerSha256": "2013228ac6c7d2a758639e1757429ad47a77e5faaeac70fe0ae94b5320c72081",
+      "storedSolutionSha256": "f0f086b708fe390e261b652759ad245adc9a9d0386e741b4c28a93f134b62105",
+      "storedAnswer": "㉠ 알고리즘 분석, ㉡ 효율성. ㉢ 알고리즘의 연산 횟수를 계산·비교하고 효율성을 분석하여 설명할 수 있다.",
+      "independentDetailedExplanation": "① 중학교에서는 알고리즘의 이해·표현을 다루고 고등학교에서는 설계 및 분석으로 확장한다. 따라서 ㉠ 알고리즘 분석이다. ② 순차 탐색은 제시된 1~20 질문에서 20번째에 정답에 도달하고 이진탐색식 질문은 다섯 번째 질문에서 답을 알아낸다. 이 질문 횟수는 수행 연산량을 나타내는 사례이며 이를 비교하는 관점이 ㉡ 효율성이다. ③ 상 수준 평가기준은 ‘서로 다른 알고리즘에서 필요한 연산의 횟수를 비교하고, 그 결과를 바탕으로 효율성을 분석하여 설명할 수 있다.’처럼 비교하기와 분석·설명하기의 관찰 가능한 동사를 포함해야 한다. 단지 횟수만 세는 중 수준이나 연산 의미만 말하는 하 수준과 구분된다. ④ 한 사례에서 질문이 적다고 모든 입력에서 항상 낫다고 단정할 수 없다. 이진탐색은 대상이 정렬되어 있거나 범위 질의가 가능한 조건이 중요하다.",
+      "verificationMethod": "제시 사례 20회/5회 손계산 및 알고리즘 가정·반례 검토",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "CURRICULUM_INDEPENDENT_CALC",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    },
+    {
+      "id": "2022-A-06",
+      "points": 4,
+      "title": "추상화의 기법과 기계학습 분류모델 교수법",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          90
+        ]
+      },
+      "storedAnswerSha256": "0659f8879df51d547240b7d8de466d568a14cc842bbb5a8e7b03d36596170797",
+      "storedSolutionSha256": "979dfbedc28a24e28b435cd1b8db558b350ca6e2b250d8678bffa325228450d8",
+      "storedAnswer": "㉠ 추상화, ㉡ 문제 분해(또는 핵심 요소 추출 등 추상화 기법 중 하나), ㉢ 분류 모델. ㉤ 기계학습 알고리즘을 수식·코드 설명 위주로 깊게 다루지 말고 학습자의 수준에 적절한 교육용 도구를 활용해 데이터 선정, 분류 모델의 학습·평가·적용을 체험하는 실습 중심으로 지도한다.",
+      "independentDetailedExplanation": "① ㉠ 추상화: 문제 해결에 본질적이지 않은 속성을 제거하고 복잡한 문제를 다루기 쉬운 형태로 표현한다. ② 추상화 기법의 하나인 ㉡ 문제 분해는 전체 문제를 작은 문제로 나누어 분석·해결하는 방법이다. 핵심 요소 추출도 교육과정의 추상화 맥락에서 타당할 가능성이 있으나 공식 허용 표현은 미확인이다. ③ 인공지능 기초의 데이터와 기계학습 영역에 제시된 기계학습 모델 내용 요소는 ㉢ 분류 모델이다. 사전 정의된 범주로 데이터를 분류하는 모델을 학습하고 평가해 새 사례에 적용한다. ④ ㉤은 기계학습 알고리즘의 수학적 세부와 프로그래밍 문법에 지나치게 집중하기보다 학습자의 수준에 맞는 도구로 데이터 수집·전처리·학습·평가·적용을 직접 실습하도록 설계한다. ⑤ 자동화를 추상화와 동일한 개념으로 보지 않는다. 추상화에서 얻은 해결 과정을 기계가 수행할 수 있게 구현하는 후속 과정이 자동화다.",
+      "verificationMethod": "2020-236호 인공지능 기초 내용체계와 교수학습 유의사항 비교",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "CURRICULUM_THEORY",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    },
+    {
+      "id": "2022-A-07",
+      "points": 4,
+      "title": "피지컬 컴퓨팅 핵심개념과 역행설계, 평가 오개념",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          90
+        ]
+      },
+      "storedAnswerSha256": "9d716416227121d05ce6b7dde19380ff68d38fefb60e720f2a0df086c6c0c485",
+      "storedSolutionSha256": "bde294717e97b77e8d62a3d505872a38ef444ccb24b1115f45ff8f0ac2de6637",
+      "storedAnswer": "㉠에 해당하는 핵심 개념: 피지컬 컴퓨팅. ㉢ 역행 설계(백워드 설계, Wiggins와 McTighe). 잘못된 부분: ⓑ, ⓓ. ⓑ는 프로그래밍 문법·도구 기능 습득보다 실생활 문제 분석부터 설계·개발·수정·협력적 문제해결까지 수행 과정과 산출물을 종합적으로 평가해야 하므로 잘못됐다. ⓓ는 장치 조립 자체보다 센서 자료 처리, 동작 설계 및 프로그램 작성·제어 과정에 중점을 두어야 하므로 잘못됐다.",
+      "independentDetailedExplanation": "① 성취기준 [9정05-02]의 센서 입력, 자료처리, 동작제어 프로그램 구현은 컴퓨팅 시스템 영역의 ‘피지컬 컴퓨팅’ 핵심 개념이다. ② 목표와 평가증거를 먼저 정한 다음 수업경험을 구상하는 것은 위긴스·맥타이의 역행 설계이다. 목표→수용 가능한 증거→학습 경험 및 수업계획의 순서를 일반 설계 모형의 활동 선행과 구별한다. ③ ⓑ는 문법의 암기와 도구의 기능 숙달을 평가 중심에 둔다는 점에서 잘못이다. 문제분석, 알고리즘 설계, 코딩, 검증, 협력, 개선을 과정·산출물에 맞게 평가해야 한다. ④ ⓓ는 장치 조립 자체에 중심을 둔다는 점에서 잘못이다. 센서 데이터의 해석, 동작 설계 및 프로그램 작성과 제어를 강조해야 한다. ⑤ ⓐ 포트폴리오는 수행과정 평가 자료가 될 수 있고 ⓒ 센서 종류와 개수를 수업 수준에 맞추는 것도 적절하다.",
+      "verificationMethod": "원본 성취기준·학습 활동 대조 및 역행설계 개념적 독립 판단",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "CURRICULUM_THEORY",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    },
+    {
+      "id": "2022-B-03",
+      "points": 4,
+      "title": "ARCS 관련성과 모방·수정 실습 및 행동주의",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          96
+        ]
+      },
+      "storedAnswerSha256": "496b597952d0ccbfb68a614fb372d364ab53a35bf5d0a8181315cbf7f2a1bf0a",
+      "storedSolutionSha256": "f49bea933f20cc2ed470c4900b8566692df6defe8c209952cda7789c2215557a",
+      "storedAnswer": "㉠ 관련성(Relevance), ㉡ 모방, ㉢ 수정, ㉣ 행동주의(행동주의 학습이론).",
+      "independentDetailedExplanation": "① 도입부 POS 매출 합계와 실생활 사례는 학습자가 수업을 자기 생활 및 실제 사용 맥락과 연결하도록 돕는다. 켈러 ARCS의 ㉠ 관련성(Relevance)에 해당한다. 단순히 영상이 등장한다는 이유로 주의집중이라 판단하지 말고 동기유발의 기능을 살핀다. ② 처음에는 교사가 보여주는 코드의 구조를 직접 따라 작성하는 ㉡ 모방 활동, 이어서 주어진 코드를 변경하며 기능과 결과를 확인하는 ㉢ 수정 활동이 적절하다. ③ 반복연습과 교사의 피드백으로 학습 반응을 강화한다는 설명은 ㉣ 행동주의 학습이론의 기본 관점과 연결된다. ④ 수행이 가능해진 후에는 모방에만 머물지 말고 학생이 새로운 입력 사례를 설계하거나 오류를 분석하여 결과를 확인하게 한다.",
+      "verificationMethod": "시험지 교수학습 사례·켈러 ARCS 및 행동주의 개념 대조",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "THEORY_EXAM",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    },
+    {
+      "id": "2022-B-05",
+      "points": 4,
+      "title": "함수와 변수의 유효범위·반환형 오류",
+      "originalExamSource": {
+        "file": "전공 기출_260921_105741.pdf",
+        "pages": [
+          97
+        ]
+      },
+      "storedAnswerSha256": "7f213cbf61db57b71fe4b4599f6f9b2c6d742420765759e88253a640633d566b",
+      "storedSolutionSha256": "5e518ab17cce05db7e40c089c674d3e3fd44e993ad82667dce558cc426e9820c",
+      "storedAnswer": "㉠ 함수, ㉡ 참조 범위(유효 범위). 체크리스트 2번: 아니요. 체크리스트 3번: 아니요. 피드백: 학생의 step은 main 함수 안에 선언된 지역변수인데 add 함수에서 사용하므로 참조 범위 밖이다. 공통으로 사용할 값이라면 step을 전역변수로 정의하거나 함수 매개변수로 전달하라. 또 add가 void 반환형인데 y = add(x)로 반환값을 대입하려 한다. 반환형을 int로 바꾸고 return a;를 넣어 값을 돌려주도록 수정하라.",
+      "independentDetailedExplanation": "① 체크리스트 ㉠은 함수, ㉡은 참조 범위(유효 범위)이다. 학생 코드는 add를 void add(int a) 형태로 선언하고 함수 내에서 a = a + step을 사용한다. 그런데 step은 main 내부에서 선언된 지역 변수이므로 add 안에서는 이름을 참조할 수 없어 체크리스트 2는 ‘아니요’다. ② void 함수는 호출한 곳에 값을 반환하지 않는데 main에서 y = add(x)라고 사용하므로 체크리스트 3도 ‘아니요’다. ③ 피드백은 step을 add의 두 번째 인자로 전달하거나 유효한 전역변수로 옮기는 방법 중 하나를 구체적으로 안내하고, add 반환형을 int로 수정해 return a; 같은 반환문을 추가하게 하는 것이다. ④ 지역변수 문제와 반환형 문제는 서로 독립적이므로 하나만 고쳐서는 두 체크리스트를 동시에 충족하지 못한다. ⑤ 원본 PDF에는 학생 코드 이미지와 교사 예시 코드가 있으므로 앱 텍스트에 생략된 내용을 도형 자료로 교차 확인한다.",
+      "verificationMethod": "C 언어 정적 의미(식별자 범위 및 void 반환식)의 독립 검토, 학생 답안은 그대로 컴파일할 수 없는 구조",
+      "limitations": "공식 임용 채점표 및 외부 기출 exact 답안 미대조. 논술·서술형 대체표현의 채점 허용 여부는 확인되지 않음.",
+      "officialAnswerKey": "NOT_COMPARED",
+      "externalExactSolution": "NOT_COMPARED",
+      "verificationLevel": "CODE_SEMANTIC_EXAM",
+      "answerEdited": false,
+      "originalSolutionEdited": false
+    }
+  ],
+  "runtime": {
+    "codeSemanticVerified": true,
+    "examPdfPage88Viewed": true
+  }
+}

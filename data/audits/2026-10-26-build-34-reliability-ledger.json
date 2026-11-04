@@ -1,0 +1,82 @@
+{
+  "build": "2026.10.26-34",
+  "policy": "A_procedural requires all subparts independently recomputed against source; official rubric not compared",
+  "previously_reconstructable_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11"
+  ],
+  "new_A_ids": [
+    "2025-A-02",
+    "2025-A-10",
+    "2025-A-12"
+  ],
+  "cumulative_A_procedural_minimum": 14,
+  "unresolved": "2024-B-07",
+  "new_verifications": [
+    {
+      "id": "2025-A-02",
+      "page": 130,
+      "result": "I3; Y1=I3 OR I2",
+      "derivation": "Truth table 16 four-bit input combinations exhaustively enumerated; highest asserted bit defines binary priority and high bit. For all 16 combinations, high bit=I3∨I2; zero input V=0 (Y1 irrelevant)."
+    },
+    {
+      "id": "2025-A-10",
+      "page": 134,
+      "result": "UPDATE; 동영상.접속가능 = 'F'; DELETE FROM 동영상; DROP TABLE 동영상 CASCADE",
+      "derivation": "SQLite independently reproduced update of service IDs 1005 and 1006; DELETE FROM clears rows without removing table if referential constraints permit; DROP TABLE CASCADE removes table and dependent constraints in SQL dialects supporting CASCADE. SQLite is used only to test UPDATE/FK behavior, not DROP CASCADE syntax. FK may prevent unconditional DELETE; SQL requested as syntax under problem framing."
+    },
+    {
+      "id": "2025-A-12",
+      "page": 136,
+      "result": "X[i] == Y[j]; -1.0; sim(4,4)=1.8; 삭제→일치→일치→삽입→일치",
+      "derivation": "Dynamic programming 5×5 computed from sequences ACGG and CGCG, match +1 mismatch -1 insertion/deletion -0.6; backtracking recovers target optimal alignment.",
+      "dp_matrix": [
+        [
+          -0.0,
+          -0.6,
+          -1.2,
+          -1.8,
+          -2.4
+        ],
+        [
+          -0.6,
+          -1.0,
+          -1.6,
+          -2.2,
+          -2.8
+        ],
+        [
+          -1.2,
+          0.4,
+          -0.2,
+          -0.6,
+          -1.2
+        ],
+        [
+          -1.8,
+          -0.2,
+          1.4,
+          0.8,
+          0.4
+        ],
+        [
+          -2.4,
+          -0.8,
+          0.8,
+          0.4,
+          1.8
+        ]
+      ],
+      "optimal_alignment_count": 1
+    }
+  ]
+}

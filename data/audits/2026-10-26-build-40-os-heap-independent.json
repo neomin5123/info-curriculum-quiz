@@ -1,0 +1,208 @@
+{
+  "build": "2026.10.26-40",
+  "source": "전공 기출_260921_105741.pdf PDF p154, p156",
+  "prior_A_count": 23,
+  "new_A_ids": [
+    "2026-B-10"
+  ],
+  "all_A_ids": [
+    "2024-A-04",
+    "2024-A-09",
+    "2024-A-10",
+    "2024-B-09",
+    "2024-B-10",
+    "2025-A-02",
+    "2025-A-03",
+    "2025-A-04",
+    "2025-A-05",
+    "2025-A-10",
+    "2025-A-12",
+    "2025-B-02",
+    "2026-A-02",
+    "2026-A-03",
+    "2026-A-04",
+    "2026-A-06",
+    "2026-A-10",
+    "2026-A-11",
+    "2026-A-12",
+    "2026-B-02",
+    "2026-B-03",
+    "2026-B-04",
+    "2026-B-08",
+    "2026-B-10"
+  ],
+  "A_count": 24,
+  "partial_B_ids": [
+    "2026-B-06"
+  ],
+  "verification_details": {
+    "2026-B-10": {
+      "status": "A",
+      "scope": "both code completion + both outputs",
+      "completion": {
+        "㉠": "child < n && list[child] > list[child+1]",
+        "㉡": "makeHeap(list, i, 1)"
+      },
+      "outputs": {
+        "ⓐ": 40,
+        "ⓑ": 2
+      },
+      "build_heap_states": [
+        {
+          "after_root": 3,
+          "array": [
+            10,
+            30,
+            20,
+            40,
+            1,
+            50,
+            70
+          ]
+        },
+        {
+          "after_root": 2,
+          "array": [
+            10,
+            1,
+            20,
+            40,
+            30,
+            50,
+            70
+          ]
+        },
+        {
+          "after_root": 1,
+          "array": [
+            1,
+            10,
+            20,
+            40,
+            30,
+            50,
+            70
+          ]
+        }
+      ],
+      "heap_after_build": [
+        1,
+        10,
+        20,
+        40,
+        30,
+        50,
+        70
+      ],
+      "extraction_trace": [
+        {
+          "removed_root": 1,
+          "remaining_heap": [
+            10,
+            30,
+            20,
+            40,
+            70,
+            50
+          ],
+          "sorted_suffix": [
+            1
+          ]
+        },
+        {
+          "removed_root": 10,
+          "remaining_heap": [
+            20,
+            30,
+            50,
+            40,
+            70
+          ],
+          "sorted_suffix": [
+            10,
+            1
+          ]
+        },
+        {
+          "removed_root": 20,
+          "remaining_heap": [
+            30,
+            40,
+            50,
+            70
+          ],
+          "sorted_suffix": [
+            20,
+            10,
+            1
+          ]
+        },
+        {
+          "removed_root": 30,
+          "remaining_heap": [
+            40,
+            70,
+            50
+          ],
+          "sorted_suffix": [
+            30,
+            20,
+            10,
+            1
+          ]
+        },
+        {
+          "removed_root": 40,
+          "remaining_heap": [
+            50,
+            70
+          ],
+          "sorted_suffix": [
+            40,
+            30,
+            20,
+            10,
+            1
+          ]
+        },
+        {
+          "removed_root": 50,
+          "remaining_heap": [
+            70
+          ],
+          "sorted_suffix": [
+            50,
+            40,
+            30,
+            20,
+            10,
+            1
+          ]
+        }
+      ],
+      "final_descending": [
+        70,
+        50,
+        40,
+        30,
+        20,
+        10,
+        1
+      ],
+      "source_visual_inspected": true,
+      "official_rubric": false
+    },
+    "2026-B-06": {
+      "status": "B",
+      "finding": "Stored orphan and zombie schedules are logically possible under described scheduling; different last-executed line/state combinations may also be acceptable. Avoid claiming unique official answer.",
+      "source_visual_inspected": false,
+      "official_rubric": false
+    }
+  },
+  "limitations": [
+    "Original exam conditions inspected for B10 only; B06 based on question text, not full PDF figure",
+    "Prior A IDs inherited rather than reaudited",
+    "Official marking rubric not compared",
+    "Browser E2E not run"
+  ]
+}
