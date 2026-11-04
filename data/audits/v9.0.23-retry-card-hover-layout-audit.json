@@ -1,9 +1,0 @@
-{
-  "version": "v9.0.23-study-rc.1",
-  "status": "PASS — CSS REGRESSION FIX",
-  "rootCause": "legacy v9.0.20 retry-card grid-template-columns leaked into v9.0.21+ container",
-  "hoverSummaryFullyVisible": true,
-  "clickExpandsPanel": true,
-  "logicMutated": false,
-  "curriculumDataMutated": false
-}
