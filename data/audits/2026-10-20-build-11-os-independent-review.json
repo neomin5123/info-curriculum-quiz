@@ -1,0 +1,464 @@
+{
+  "buildId": "2026.10.20-11",
+  "baselineBuild": "2026.10.20-10",
+  "source": "사용자 제공 전공 기출 PDF 및 해당 연도별 atlas 원본",
+  "reviewType": "independent reconstruction and executable algorithmic tracing; no official answer key",
+  "counts": {
+    "examTotal": 269,
+    "solved": 231,
+    "osQuestions": 27,
+    "osIndependentlyReReviewed": 27,
+    "coreAnswerCorrections": 1,
+    "conditionalWarnings": 2
+  },
+  "changeAllowlist": {
+    "2019-B-05": {
+      "oldAnswer": "가장 빨리 종료 A, 가장 늦게 종료 B. CPU 총 유휴시간 0초, C의 CPU 대기시간 10초.",
+      "oldSolution": "SPN 비선점 CPU 시간선: A 0–6(이후 I/O 6–8), B 6–9(I/O 9–19), C 9–14(I/O 14–16), A 14–18(종료), C 18–19(종료), B 19–23(종료). CPU 유휴 구간은 없다. C는 처음 도착 1부터 CPU 시작 9까지 8초, I/O 완료 16부터 두 번째 CPU 시작18까지 2초 대기해 총 10초다.",
+      "newAnswerSha256": "01e23006899abfc8420e28dc25cc5d9ffd0e55c91957480fd5593f06d7b4c9e0",
+      "newSolutionSha256": "ba2eac561e02f87da32751b28bb2a710cf754778bbed12e49d39399b170e162b",
+      "reason": "기존 풀이에서 시점 9에 대기 중인 A의 CPU 4초와 C의 5초를 잘못 비교하여 C를 먼저 선택함."
+    }
+  },
+  "entries": [
+    {
+      "id": "2014-A-13",
+      "year": 2014,
+      "originalPdfPages": [
+        6
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "RR q=5 완료시각은 P1=17, P2=7, P3=8, P4=12, P5=15; 대기 합계 42/5=8.4ms. 비선점 우선순위 처리 P3→P1→P2→P4→P5는 대기합33/5=6.6ms. FCFS 평균 반환11.4ms.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "0c4aa6bf100eeb2d5b2228ca5d93b425f29beb67686aa722a7507cc26d12a3e7",
+      "currentAnswerSha256": "0c4aa6bf100eeb2d5b2228ca5d93b425f29beb67686aa722a7507cc26d12a3e7",
+      "oldSolutionSha256": "22ca49080a8ffaed149dd80c8f0f353d26b623a85586480427c7bf0e1d5a88aa",
+      "currentSolutionSha256": "22ca49080a8ffaed149dd80c8f0f353d26b623a85586480427c7bf0e1d5a88aa",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2016-A-14",
+      "year": 2016,
+      "originalPdfPages": [
+        16
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "페이지 참조열은 2,0,0,2,1,3,0,4. LRU 3프레임 재생으로 부재는 주소 212·36·128·365·24·400, 최종 0·3·4.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "6a3e9b2c9b2bad98131bd143d52e3a7bde1a95e02a00661441eff2e226e11337",
+      "currentAnswerSha256": "6a3e9b2c9b2bad98131bd143d52e3a7bde1a95e02a00661441eff2e226e11337",
+      "oldSolutionSha256": "5165672c95c983d44c141acf452ab00cc28460a85ed848f962cab6b077d0f4df",
+      "currentSolutionSha256": "5165672c95c983d44c141acf452ab00cc28460a85ed848f962cab6b077d0f4df",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2016-B-04",
+      "year": 2016,
+      "originalPdfPages": [
+        19
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "Need=Max−Allocation. 초기 Work=(1,1,1); 가능한 안전순서는 P0→P1→P3→P2→P4이며 잔여 자원을 각 종료에서 누적하여 확인.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "c55f4afbc12e88682a3ca28f8147688d219709080055fedc93d8bee442799d06",
+      "currentAnswerSha256": "c55f4afbc12e88682a3ca28f8147688d219709080055fedc93d8bee442799d06",
+      "oldSolutionSha256": "52910c88024578c0aaebc7cef58e7340662edbaecf5ae70dd2b52168694867e8",
+      "currentSolutionSha256": "52910c88024578c0aaebc7cef58e7340662edbaecf5ae70dd2b52168694867e8",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2017-A-07",
+      "year": 2017,
+      "originalPdfPages": [
+        25
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "상호배제·진행·한계대기의 세 조건 중 임계영역 중복 진입을 금지하는 것은 상호배제다.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "aadabf94247bfffd9b6b4bc85c09bb6778f78dc1654dab87fe25e116859e961a",
+      "currentAnswerSha256": "aadabf94247bfffd9b6b4bc85c09bb6778f78dc1654dab87fe25e116859e961a",
+      "oldSolutionSha256": "71af17edcac6d7864cb4b5ae5abf1f048f94aaa7a1bbc174d2097383305f5ed7",
+      "currentSolutionSha256": "71af17edcac6d7864cb4b5ae5abf1f048f94aaa7a1bbc174d2097383305f5ed7",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2017-A-14",
+      "year": 2017,
+      "originalPdfPages": [
+        28
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "Q1 0~8에 P1~P4 각각 2, Q2에서는 P1 8~12, P2 12~16 종료, P3 16~19 종료, P4 19~23. Q3는 P1→P4로 종료.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "aef6469de6c1af961421399c8ceda8470b02cdeb70930fea07e3f319da1c1a44",
+      "currentAnswerSha256": "aef6469de6c1af961421399c8ceda8470b02cdeb70930fea07e3f319da1c1a44",
+      "oldSolutionSha256": "e2a7db05ca3f6391cc26fe2b28cb0c7040dbb87edcbb3cb38b8b2c5bfaeafa7e",
+      "currentSolutionSha256": "e2a7db05ca3f6391cc26fe2b28cb0c7040dbb87edcbb3cb38b8b2c5bfaeafa7e",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2017-B-04",
+      "year": 2017,
+      "originalPdfPages": [
+        31
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "첫 그림은 큰 트랙 315→420→430 처리 후 다음 방향의 최솟값 20으로 순환하고 끝 트랙499를 밟지 않으므로 C-LOOK. 둘째는 현재 헤드에서 거리 최소인 256→315→420→430→128→94→64→20으로 SSTF.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "12b4169e7088be8e6c997051b1afef10370d20f54e8de2e1ea552c1486f1d209",
+      "currentAnswerSha256": "12b4169e7088be8e6c997051b1afef10370d20f54e8de2e1ea552c1486f1d209",
+      "oldSolutionSha256": "9b4b765247879bc5b2ef5e72464f36a3ff0724ad0727b585f5022d4b77d30757",
+      "currentSolutionSha256": "9b4b765247879bc5b2ef5e72464f36a3ff0724ad0727b585f5022d4b77d30757",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2018-A-04",
+      "year": 2018,
+      "originalPdfPages": [
+        35
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "사용자 모드에서 시스템 호출·트랩·인터럽트 시 커널 모드로 진입한다는 개념 정의를 확인.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "2b3d58b7216fabcd6ceee92a58b3045d8d6396e1548752857027178e662c4077",
+      "currentAnswerSha256": "2b3d58b7216fabcd6ceee92a58b3045d8d6396e1548752857027178e662c4077",
+      "oldSolutionSha256": "27b5e8f1708ca2868316b053db0ee2d6e7a6da49a928c4c543938dd6b6451860",
+      "currentSolutionSha256": "27b5e8f1708ca2868316b053db0ee2d6e7a6da49a928c4c543938dd6b6451860",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2018-B-04",
+      "year": 2018,
+      "originalPdfPages": [
+        42
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "5156=5×1024+36: 폴트로 4번 프레임에 적재하여 물리주소 4132. 4096=4×1024+0은 페이지4→프레임2 적중하여 2048.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "d658a2aaec38cd9fc93bec548b9d33688e390798c181c9060086e2c2a5d739b2",
+      "currentAnswerSha256": "d658a2aaec38cd9fc93bec548b9d33688e390798c181c9060086e2c2a5d739b2",
+      "oldSolutionSha256": "ab8472a282ce9280a68dbb546e0e42a9e343ec58687f1d6e994ad32699e97e41",
+      "currentSolutionSha256": "ab8472a282ce9280a68dbb546e0e42a9e343ec58687f1d6e994ad32699e97e41",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2018-B-05",
+      "year": 2018,
+      "originalPdfPages": [
+        43
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "A와 B의 각 3회 반복(읽기·연산·쓰기)을 총18단계로 나눠 두 작업 내 순서를 보존하는 48,620가지 합법 인터리빙을 재귀 열거함. 최종 최솟값 0·최댓값 24.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "91ef53b3b224916f0540c7a3c8ba0f499ee8a7eb89a859e5aab83bda5a5f2c57",
+      "currentAnswerSha256": "91ef53b3b224916f0540c7a3c8ba0f499ee8a7eb89a859e5aab83bda5a5f2c57",
+      "oldSolutionSha256": "ad324371f3ae6ff0eae37c694e00973d58d7188b4f13ef35c4b32b51f11b33cb",
+      "currentSolutionSha256": "ad324371f3ae6ff0eae37c694e00973d58d7188b4f13ef35c4b32b51f11b33cb",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2019-A-04",
+      "year": 2019,
+      "originalPdfPages": [
+        47
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "원문 시간선에서 A는 준비→실행→블록(I/O 요청)→준비(I/O 완료)→실행→준비(CPU 선정)로 모든 전이; B는 t2 전 최종 I/O 요청 후 완료 없이 블록.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "a9b277e9aa3348fec232c90186275dbdaa710dbf06e566a92187b08fe84ae930",
+      "currentAnswerSha256": "a9b277e9aa3348fec232c90186275dbdaa710dbf06e566a92187b08fe84ae930",
+      "oldSolutionSha256": "dc1d7dac3dbf94784c4d29575558696952cbddd054f0002472cc7710979ad3cc",
+      "currentSolutionSha256": "dc1d7dac3dbf94784c4d29575558696952cbddd054f0002472cc7710979ad3cc",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2019-B-05",
+      "year": 2019,
+      "originalPdfPages": [
+        56
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "정정: SPN 준비 큐의 CPU 버스트 비교. t=9에 A(두 번째 CPU 4초)와 C(첫 CPU 5초)가 준비됐으므로 A가 우선. 이후 C 13~18, idle 18~19, B 19~23, C 23~24. A 최초 종료, C 마지막 종료; CPU idle1초, C wait12+3=15초.",
+      "reviewOutcome": "corrected-answer",
+      "oldAnswerSha256": "11f599f20de6dea57ce29276f964bd3d5a98ce3631ff4786b390ddd783b5430b",
+      "currentAnswerSha256": "01e23006899abfc8420e28dc25cc5d9ffd0e55c91957480fd5593f06d7b4c9e0",
+      "oldSolutionSha256": "cb8682480cb973bea3d1d2fa06b1282c963a12f1af8dfa60a1f7e10d0308da00",
+      "currentSolutionSha256": "ba2eac561e02f87da32751b28bb2a710cf754778bbed12e49d39399b170e162b",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2020-A-04",
+      "year": 2020,
+      "originalPdfPages": [
+        61
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "5MiB/4KiB=1280 데이터 블록, 인덱스 한 장의 1023 데이터 주소 → ceil(1280/1023)=2 인덱스 블록.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "79a9965674821e29c087f28301ec4da6bea5864dedaa709a1ff1234e3dbcd37b",
+      "currentAnswerSha256": "79a9965674821e29c087f28301ec4da6bea5864dedaa709a1ff1234e3dbcd37b",
+      "oldSolutionSha256": "2fb05d06cee8b515a8ad0e843b99932c85d5f763ebb910e18f4e13f7c32f44c5",
+      "currentSolutionSha256": "2fb05d06cee8b515a8ad0e843b99932c85d5f763ebb910e18f4e13f7c32f44c5",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2020-A-10",
+      "year": 2020,
+      "originalPdfPages": [
+        65
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "Vrt=Rt×10/Pr: P2=200, P3=150, P4=100. P4가 Vrt 최솟값으로 선택되며 Pr 최고가 항상 다음 작업을 보장하지 않음.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "a56e3a7f8b078496e3567d81bb3cb4356882ba45ffb44549136de7418bcaeda8",
+      "currentAnswerSha256": "a56e3a7f8b078496e3567d81bb3cb4356882ba45ffb44549136de7418bcaeda8",
+      "oldSolutionSha256": "1b93067454ad5bfe6530c97561421c11230b174810e3a7fa408ca738799ac3eb",
+      "currentSolutionSha256": "1b93067454ad5bfe6530c97561421c11230b174810e3a7fa408ca738799ac3eb",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2020-B-08",
+      "year": 2020,
+      "originalPdfPages": [
+        71
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "초기 전체 LRU 적재 (a2:1,a3:2,b2:3,b3:4,b5:5). 이후 첫 a5는 a2를 교체; 시점6~13의 Pa 부재는6,7,8(3회), Pb 부재는9,10(2회).",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "a4abd751f32a641d3880994f40e393daa1af47ed2b2460cc54bacbd11fcf5e68",
+      "currentAnswerSha256": "a4abd751f32a641d3880994f40e393daa1af47ed2b2460cc54bacbd11fcf5e68",
+      "oldSolutionSha256": "69ef61eb1697ab32f9203a884887c7dc369b7d6175a20ec7e9a581dcbafa1537",
+      "currentSolutionSha256": "69ef61eb1697ab32f9203a884887c7dc369b7d6175a20ec7e9a581dcbafa1537",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2021-A-04",
+      "year": 2021,
+      "originalPdfPages": [
+        75
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "create(pathname) 성공은 0, 동일 파일 존재 시 -1. while(create()==-1) 대기, exitCS에서는 remove(pathname)으로 lock 파일 삭제.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "473cb64e76ea4c68998d6208d3e0b3513303782c142e2fcb06fdc0de5e00cf74",
+      "currentAnswerSha256": "473cb64e76ea4c68998d6208d3e0b3513303782c142e2fcb06fdc0de5e00cf74",
+      "oldSolutionSha256": "4a06694a6fbc95745414bf5987eb79d5e21e0e74fe8b03556ab6f382ad65bc31",
+      "currentSolutionSha256": "4a06694a6fbc95745414bf5987eb79d5e21e0e74fe8b03556ab6f382ad65bc31",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2021-A-09",
+      "year": 2021,
+      "originalPdfPages": [
+        78
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "요구행렬 C와 할당 A에서 Need=C-A 산출. 초기 가능한 안전순서 P2→P3→P4→P1→P5. 요청①은 불안전, ②도 처음엔 불안전. ③ 반환 후 ②가 먼저 안전하게 할당돼 Available=(2,0,1,1,1).",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "79b81af0ad7cdbd7d1f1d63b40f28525eb5df85e29b81bc16bc4d6dfb29dd985",
+      "currentAnswerSha256": "79b81af0ad7cdbd7d1f1d63b40f28525eb5df85e29b81bc16bc4d6dfb29dd985",
+      "oldSolutionSha256": "1be1630ac746fce873826a5e9a6b69e446f80c33a3d3e7e08f948f20c3ffcc4b",
+      "currentSolutionSha256": "1be1630ac746fce873826a5e9a6b69e446f80c33a3d3e7e08f948f20c3ffcc4b",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2021-B-10",
+      "year": 2021,
+      "originalPdfPages": [
+        86
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "조건부 수치: 초기 프레임 (페이지3→5,1→2,0→9,6→7) 및 처음 4회 참조 사실만으로 초기 참조비트·클록 핸드가 정해지지 않는다. 핸드를 첫 적재3부터 시작·비트 전부1로 가정하면 폴트6회, ⑫ 직전 {0,3,6,8}, ⑧ 직전 프레임5=페이지4 → 4176. 핸드를 세 번째 슬롯부터 시작하면 폴트4회가 되어 유일 정답이라 단정 불가. ⑥ 물리주소2348은 가정과 무관.",
+      "reviewOutcome": "consistent-with-qualification",
+      "oldAnswerSha256": "fa7e3c573f9f654041bad11c6f316bef915f4cddbf1600511df53d48153a8139",
+      "currentAnswerSha256": "fa7e3c573f9f654041bad11c6f316bef915f4cddbf1600511df53d48153a8139",
+      "oldSolutionSha256": "ba058cff1b896ac4b7db983fadd53b1b15aa8c6f01b88779acfb958ee4167507",
+      "currentSolutionSha256": "ba058cff1b896ac4b7db983fadd53b1b15aa8c6f01b88779acfb958ee4167507",
+      "warnings": [
+        "문제에서 초기 클록 핸드·참조 비트를 지정하지 않아 교체 궤적/폴트 횟수가 유일하지 않을 수 있음",
+        "현재 답은 보편적인 초기 상태를 가정한 조건부 풀이"
+      ],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2022-A-04",
+      "year": 2022,
+      "originalPdfPages": [
+        89
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "양쪽 증가 작업이 signal/wait 협약으로 모두 종료 후 share에 delta=2를 각각 더하여 4. 제거 시 첫 share 갱신을 delta=1에서 수행하면 3, 동기화 순서에 따라 4 가능.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "5ab9e5264cb642f3f7f3ddecba873cea725a66fdb2171cf1f8e649d4a9e851d9",
+      "currentAnswerSha256": "5ab9e5264cb642f3f7f3ddecba873cea725a66fdb2171cf1f8e649d4a9e851d9",
+      "oldSolutionSha256": "17815ea0cba3fd5d7d4a069af6b243e4bae7a2a8f359ded620374e8bbc10381a",
+      "currentSolutionSha256": "17815ea0cba3fd5d7d4a069af6b243e4bae7a2a8f359ded620374e8bbc10381a",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2022-A-12",
+      "year": 2022,
+      "originalPdfPages": [
+        94
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "PFF 참조열 직접 추적: 부재 페이지 순서 6,4,8,7,3 총5회. 4번 참조시 이전 폴트6 이후 경과5로 참조비트0 페이지 7·8을 최초 회수.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "1c39f8d5b1c9de84ee4b92afb391059f232c84d1eed25fbb6095f212030771a8",
+      "currentAnswerSha256": "1c39f8d5b1c9de84ee4b92afb391059f232c84d1eed25fbb6095f212030771a8",
+      "oldSolutionSha256": "b22e9168e8ad4bdc2bd3c90c098b8ca2b85bd58601fb7ebe8ff1f416915e524f",
+      "currentSolutionSha256": "b22e9168e8ad4bdc2bd3c90c098b8ca2b85bd58601fb7ebe8ff1f416915e524f",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2022-B-11",
+      "year": 2022,
+      "originalPdfPages": [
+        101
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "SSTF는 F(350) 종료 t50 뒤 H340(거리10) t270, E310(거리30) t530, D380(거리70) t870. CPU SJF B(0~300)→F(300~400)→H(400~900)로 2/3번째 F,H.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "67dc18766c270c90904f006a54d2dca390a365049126f3de84a2d7a77391d53d",
+      "currentAnswerSha256": "67dc18766c270c90904f006a54d2dca390a365049126f3de84a2d7a77391d53d",
+      "oldSolutionSha256": "8c67fa7460e5ad7e694887ae02bdf3ee1d83a19f8fb26c2cce30c1ecd8679dde",
+      "currentSolutionSha256": "8c67fa7460e5ad7e694887ae02bdf3ee1d83a19f8fb26c2cce30c1ecd8679dde",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2023-B-09",
+      "year": 2023,
+      "originalPdfPages": [
+        114
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "현 시점 t1=100에서 P5 남은 CPU5를 t=105까지 실행. FCFS P2 최조 생성 t0+5로 t=110 실행; SJF P7(15) 105~120, 이후 P3(30)를 선택해 t=125에 P3 실행.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "cc69f25007a776204799567773b23ea371d7c142ff96330c77f61d03b36b4d8b",
+      "currentAnswerSha256": "cc69f25007a776204799567773b23ea371d7c142ff96330c77f61d03b36b4d8b",
+      "oldSolutionSha256": "166e74002cba8302b0259679b7e466136caaadf68ab60e8116753b8ebcfd5e9e",
+      "currentSolutionSha256": "166e74002cba8302b0259679b7e466136caaadf68ab60e8116753b8ebcfd5e9e",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2023-B-10",
+      "year": 2023,
+      "originalPdfPages": [
+        114
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "페이지 번호 상위4비트/오프셋 하위4비트. 1010→프레임00100이므로 주소 001001101. TLB 적중=20+100=120ns, 미스=20+100+100=220ns. 시·공간 지역성.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "38464d7aadacbf11edbe7c56cddd9a343726914346266f32ea75ddb4a8245b7b",
+      "currentAnswerSha256": "38464d7aadacbf11edbe7c56cddd9a343726914346266f32ea75ddb4a8245b7b",
+      "oldSolutionSha256": "3fbb2891f7a18d70908e98ac022de4336b6a4b4f19e82c15f09f31dab4916ce9",
+      "currentSolutionSha256": "3fbb2891f7a18d70908e98ac022de4336b6a4b4f19e82c15f09f31dab4916ce9",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2024-A-12",
+      "year": 2024,
+      "originalPdfPages": [
+        122
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "0레벨 P6 0~15 종료, P5 15~35 처리 뒤 Q1, P4 35~55 종료. t45 Q1에는 P3,P2,P5. Q1 P3 55~75→Q2, P2 75~90 종료, P5 90~110 종료; Q2 P1 110~120, P3 120~160.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "09e70defb5be021c927487e4d0c5048f77877db199d73046ecc3330ec46d0bf3",
+      "currentAnswerSha256": "09e70defb5be021c927487e4d0c5048f77877db199d73046ecc3330ec46d0bf3",
+      "oldSolutionSha256": "19c64c02675d768d317a1e291ae0c5d05cb38c171cc15023eaa02e537520a0a6",
+      "currentSolutionSha256": "19c64c02675d768d317a1e291ae0c5d05cb38c171cc15023eaa02e537520a0a6",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2024-B-06",
+      "year": 2024,
+      "originalPdfPages": [
+        126
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "원본 함수는 참조비트0을 찾아 1로 바꾼 그 프레임을 반환하고 포인터가 해당 교체 프레임에 머문다. 첫 73은 1번 프레임, 65 적재 직후 1번 프레임 교체 누적2회. 전 참조 후 프레임 [0,0,23],[1,1,89],[2,0,17],[3,0,25],[4,0,51].",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "fddbeb67b15877bf103c1902c7fcd5642850aad00c91f99f674efc6949e4b5a6",
+      "currentAnswerSha256": "fddbeb67b15877bf103c1902c7fcd5642850aad00c91f99f674efc6949e4b5a6",
+      "oldSolutionSha256": "5b9408e86b8b2a4f12c658bf28b3ec11fa00ee0883c29cebc32feb975d8c6d5c",
+      "currentSolutionSha256": "5b9408e86b8b2a4f12c658bf28b3ec11fa00ee0883c29cebc32feb975d8c6d5c",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2025-B-11",
+      "year": 2025,
+      "originalPdfPages": [
+        143
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "32비트 주소·4KiB 페이지→VPN20비트, PTE4B×2^20=4MiB. 레벨2에서 페이지 디렉터리, 페이지 테이블, 실제 데이터 3접근. 하위 PT 한 개에 4MiB 매핑 → 600MB에150개, 30MB에8개.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "1c63ae47c7c2f66fcc5615afde9f33dab5fc9c0097cfa4e5a36f62472203026b",
+      "currentAnswerSha256": "1c63ae47c7c2f66fcc5615afde9f33dab5fc9c0097cfa4e5a36f62472203026b",
+      "oldSolutionSha256": "bfe426ff19508adda5c5102933ca480f1fdbf6553674a1111d1a2ac682f3d1dc",
+      "currentSolutionSha256": "bfe426ff19508adda5c5102933ca480f1fdbf6553674a1111d1a2ac682f3d1dc",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2026-A-04",
+      "year": 2026,
+      "originalPdfPages": [
+        145
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "EDF 주기/마감 P1=30ms·CPU15, P2=50ms·CPU25. 두 번째 P2는 최초 55~60 실행, P1(마감90)이 60~75 우선, P2는 75~95 재개 완료.",
+      "reviewOutcome": "core-answer-consistent",
+      "oldAnswerSha256": "eff01941740ef6d6f82d739e6d88276e3d94f2479275fe87a41d85650e0bcdd6",
+      "currentAnswerSha256": "eff01941740ef6d6f82d739e6d88276e3d94f2479275fe87a41d85650e0bcdd6",
+      "oldSolutionSha256": "c44ab65f3e4a2dac1f3207d2559ab58728f5024dec59c5224fd55775fb041ad8",
+      "currentSolutionSha256": "c44ab65f3e4a2dac1f3207d2559ab58728f5024dec59c5224fd55775fb041ad8",
+      "warnings": [],
+      "officialAnswerVerified": false
+    },
+    {
+      "id": "2026-B-06",
+      "year": 2026,
+      "originalPdfPages": [
+        154
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "원문 fork 이후 스케줄 가능한 상태 예시: 부모가 라인11 실행 후 종료, 자식은 라인5 실행 후 준비이면 고아. wait를 8번째 라인에 넣더라도 부모가 라인7 뒤 준비에 머물면 자식이 라인11 종료한 순간 좀비 가능. 이 예시는 유일한 스케줄이 아님.",
+      "reviewOutcome": "consistent-with-qualification",
+      "oldAnswerSha256": "84c74f5e4a03b4bceec6d8ac152364a199788c9daff45ee390901f4ef3e65da1",
+      "currentAnswerSha256": "84c74f5e4a03b4bceec6d8ac152364a199788c9daff45ee390901f4ef3e65da1",
+      "oldSolutionSha256": "3b8374f273b053bdd0ad9fecc5bb740d5f59b928a50051129b02b4e9eb0e5b43",
+      "currentSolutionSha256": "3b8374f273b053bdd0ad9fecc5bb740d5f59b928a50051129b02b4e9eb0e5b43",
+      "warnings": [
+        "fork 실행의 스케줄 순서에 따라 가능한 답의 조합이 여럿임",
+        "제시한 예시는 가능한 상태의 한 조합이며 유일성은 주장하지 않음"
+      ],
+      "officialAnswerVerified": false
+    }
+  ],
+  "officialAnswerKeyCompared": false
+}

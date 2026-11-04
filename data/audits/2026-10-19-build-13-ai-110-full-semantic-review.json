@@ -1,0 +1,2149 @@
+{
+  "summary": {
+    "build": "2026.10.19-13",
+    "baseBuild": "2026.10.19-12",
+    "scope": "AI-basic semantic recall units; source text and legacy data unchanged",
+    "sourceLines": 110,
+    "sourceUnchanged": true,
+    "manuallyReviewedLines": 110,
+    "modifiedLines": 20,
+    "previousSemanticUnits": 251,
+    "newSemanticUnits": 276,
+    "KIListItems": 11,
+    "gradeAssignment": "None: no inferred S/A/B/C/X or official source grades",
+    "planningTiers": {
+      "CORE": 68,
+      "SUPPORT": 32,
+      "CONTEXT": 10
+    },
+    "flaggedSourceBoundaryIndices": [
+      86,
+      97,
+      106
+    ],
+    "independentQAStatus": "independent nonofficial editorial review; not official grading validation"
+  },
+  "revisions": [
+    {
+      "id": "AI-22-GEN-CH-04",
+      "index": 3,
+      "old": [
+        "데이터 과학, 인공지능, 정보기술, 정보시스템, 소프트웨어 공학",
+        "정보학",
+        "미래 사회의 문제를 해결"
+      ],
+      "new": [
+        "데이터 과학",
+        "인공지능",
+        "정보기술",
+        "정보시스템",
+        "소프트웨어 공학",
+        "정보학",
+        "미래 사회의 문제를 해결"
+      ],
+      "reason": "학문 분야 목록을 분리하여 하나를 누락했을 때 전체 오답이 되지 않도록 변경"
+    },
+    {
+      "id": "AI-22-GEN-CH-06",
+      "index": 5,
+      "old": [
+        "컴퓨터과학, 데이터 과학, 정보시스템",
+        "인공지능에 대한 깊은 이해"
+      ],
+      "new": [
+        "컴퓨터과학",
+        "데이터 과학",
+        "정보시스템",
+        "인공지능에 대한 깊은 이해"
+      ],
+      "reason": "기반 학문 3종을 각각 회상하도록 변경"
+    },
+    {
+      "id": "AI-22-GEN-GO-03",
+      "index": 10,
+      "old": [
+        "기계학습을 활용하여 해결할 수 있는 문제를 정의",
+        "데이터와 모델을 활용",
+        "효과적으로 해결"
+      ],
+      "new": [
+        "기계학습을 활용하여 해결할 수 있는 문제를 정의",
+        "데이터와 모델"
+      ],
+      "reason": "내용상 구분력이 약한 `효과적으로 해결` 빈칸을 제거하고 문제 정의·데이터/모델에 집중"
+    },
+    {
+      "id": "AI-22-AI-CI-02",
+      "index": 14,
+      "old": [
+        "탐색과 추론으로 문제를 해결",
+        "다양한 학문 분야에 활용"
+      ],
+      "new": [
+        "탐색과 추론",
+        "다양한 학문 분야"
+      ],
+      "reason": "핵심 접근법 `탐색과 추론`에 집중하고 일반적인 `문제 해결`은 문맥으로 남김"
+    },
+    {
+      "id": "AI-22-ML-CI-01",
+      "index": 23,
+      "old": [
+        "문제 해결에 적합한 데이터",
+        "기계학습 모델을 활용"
+      ],
+      "new": [
+        "문제 해결에 적합한 데이터",
+        "기계학습 모델"
+      ],
+      "reason": "`기계학습 모델` 자체가 회상 대상이 되도록 과도한 동작 어구를 축소"
+    },
+    {
+      "id": "AI-22-SO-CI-01",
+      "index": 34,
+      "old": [
+        "현대 사회에 끼치는 영향력",
+        "직업의 변화 속도가 빨라지고"
+      ],
+      "new": [
+        "현대 사회에 끼치는 영향력",
+        "직업의 변화 속도"
+      ],
+      "reason": "직업 변화 속도 개념을 가리고 서술상의 `빨라지고`는 문맥으로 남김"
+    },
+    {
+      "id": "AI-22-SO-SK-01",
+      "index": 39,
+      "old": [
+        "사회적 문제"
+      ],
+      "new": [
+        "인공지능으로 해결할 수 있는 사회적 문제"
+      ],
+      "reason": "`인공지능으로 해결할 수 있는` 조건을 포함해 `사회적 문제`의 과도한 일반화 수정"
+    },
+    {
+      "id": "AI-22-PJ-SK-03",
+      "index": 51,
+      "old": [
+        "인공지능 소프트웨어 개발",
+        "평가 방법 설정하기"
+      ],
+      "new": [
+        "인공지능 소프트웨어 개발",
+        "평가 방법"
+      ],
+      "reason": "일반적 용언 `설정하기`가 아니라 `평가 방법` 자체를 회상"
+    },
+    {
+      "id": "AI-22-AI-EX-02",
+      "index": 61,
+      "old": [
+        "퍼즐이나 길찾기 문제",
+        "최상 우선, A* 등의 정보 이용 탐색 방법",
+        "인공지능 프로그램을 개발"
+      ],
+      "new": [
+        "퍼즐이나 길찾기 문제",
+        "최상 우선",
+        "A*",
+        "정보 이용 탐색 방법",
+        "인공지능 프로그램을 개발"
+      ],
+      "reason": "정보 이용 탐색의 두 예시 `최상 우선`·`A*`를 독립된 용어로 검사"
+    },
+    {
+      "id": "AI-22-AI-CN-01",
+      "index": 62,
+      "old": [
+        "다양한 사례를 탐색",
+        "탐색과 추론 방식",
+        "탐색 알고리즘을 적용한 프로그램을 개발"
+      ],
+      "new": [
+        "탐색과 추론 방식",
+        "탐색 알고리즘을 적용한 프로그램을 개발"
+      ],
+      "reason": "일반적인 `다양한 사례를 탐색` 대신 핵심 탐색·추론 및 프로그램 적용만 검사"
+    },
+    {
+      "id": "AI-22-ML-ST-06",
+      "index": 69,
+      "old": [
+        "딥러닝을 활용하여",
+        "문제를 해결",
+        "성능을 평가"
+      ],
+      "new": [
+        "딥러닝을 활용하여",
+        "실생활 및 다양한 학문 분야의 문제를 해결",
+        "성능을 평가"
+      ],
+      "reason": "문제 해결의 적용 범위를 함께 회상하도록 대상을 복원"
+    },
+    {
+      "id": "AI-22-ML-EX-03",
+      "index": 72,
+      "old": [
+        "지도학습과 비지도학습, 강화학습",
+        "문제의 특성을 고려",
+        "분류, 예측, 군집",
+        "적합한 알고리즘을 선정"
+      ],
+      "new": [
+        "지도학습",
+        "비지도학습",
+        "강화학습",
+        "문제의 특성을 고려",
+        "분류",
+        "예측",
+        "군집",
+        "적합한 알고리즘을 선정"
+      ],
+      "reason": "기계학습 3유형·3작업을 개별 항목으로 검사해 구성 요소 누락을 진단"
+    },
+    {
+      "id": "AI-22-ML-EX-04",
+      "index": 73,
+      "old": [
+        "컴퓨터 비전, 음성 인식, 자연어처리 기술",
+        "적합한 딥러닝 기술",
+        "다른 방법으로 문제를 해결한 경우의 차이점"
+      ],
+      "new": [
+        "컴퓨터 비전",
+        "음성 인식",
+        "자연어처리 기술",
+        "적합한 딥러닝 기술",
+        "다른 방법으로 문제를 해결한 경우의 차이점"
+      ],
+      "reason": "컴퓨터 비전·음성 인식·자연어처리를 별도 빈칸으로 검사"
+    },
+    {
+      "id": "AI-22-SO-ST-01",
+      "index": 77,
+      "old": [
+        "인공지능의 발전으로 인한 사회 변화",
+        "사회적 문제를 분석"
+      ],
+      "new": [
+        "인공지능의 발전으로 인한 사회 변화",
+        "인공지능으로 해결할 수 있는 사회적 문제를 분석"
+      ],
+      "reason": "단순 사회적 문제가 아니라 인공지능으로 해결 가능한 문제라는 조건을 반영"
+    },
+    {
+      "id": "AI-22-SO-EX-02",
+      "index": 82,
+      "old": [
+        "알고리즘과 데이터의 편향성",
+        "윤리적인 판단과 선택",
+        "개발자, 사용자, 운영⋅관리자 관점",
+        "사회적 책임과 공정성"
+      ],
+      "new": [
+        "알고리즘과 데이터의 편향성",
+        "윤리적인 판단과 선택",
+        "개발자",
+        "사용자",
+        "운영⋅관리자 관점",
+        "사회적 책임과 공정성"
+      ],
+      "reason": "개발자·사용자·운영관리자 각각의 책임 관점을 따로 검사"
+    },
+    {
+      "id": "AI-22-PJ-EX-01",
+      "index": 90,
+      "old": [
+        "총 17개의 주요 목표와 169개의 세부 목표",
+        "인류가 직면하고 있는 위기",
+        "인공지능 프로젝트 활동에 적합한 주제"
+      ],
+      "new": [
+        "17개의 주요 목표",
+        "169개의 세부 목표",
+        "인류가 직면하고 있는 위기",
+        "인공지능 프로젝트 활동에 적합한 주제"
+      ],
+      "reason": "SDG의 17개 주요 목표·169개 세부 목표 수치를 구분해 검사"
+    },
+    {
+      "id": "AI-22-GEN-TE-01",
+      "index": 94,
+      "old": [
+        "실제적인 삶의 맥락",
+        "학습 과제를 제시",
+        "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양"
+      ],
+      "new": [
+        "실제적인 삶의 맥락",
+        "컴퓨팅을 통해 문제를 해결",
+        "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양"
+      ],
+      "reason": "일반적 수업 활동 `학습 과제를 제시` 대신 `컴퓨팅으로 문제를 해결` 핵심 관계에 집중"
+    },
+    {
+      "id": "AI-22-GEN-TE-05",
+      "index": 98,
+      "old": [
+        "문제기반학습, 프로젝트 기반학습, 디자인기반학습, 짝 프로그래밍, 탐구학습",
+        "적절한 교수⋅학습 방법을 선택"
+      ],
+      "new": [
+        "문제기반학습",
+        "프로젝트 기반학습",
+        "디자인기반학습",
+        "짝 프로그래밍",
+        "탐구학습",
+        "적절한 교수⋅학습 방법을 선택"
+      ],
+      "reason": "교수법 5가지를 각자 회상하고 부분 정답을 구분하도록 분할"
+    },
+    {
+      "id": "AI-22-GEN-EV-05",
+      "index": 107,
+      "old": [
+        "지필평가 및 수행평가, 관찰 평가, 서⋅논술형 평가",
+        "종합적인 평가 포트폴리오",
+        "교사 평가, 자기 평가, 동료 평가"
+      ],
+      "new": [
+        "지필평가",
+        "수행평가",
+        "관찰 평가",
+        "서⋅논술형 평가",
+        "종합적인 평가 포트폴리오",
+        "교사 평가",
+        "자기 평가",
+        "동료 평가"
+      ],
+      "reason": "지필·수행·관찰·서논술, 교사·자기·동료 평가를 각각 회상하도록 분할"
+    },
+    {
+      "id": "AI-22-GEN-EV-06",
+      "index": 108,
+      "old": [
+        "프로그램 자동 평가시스템(online judge 등), 학습관리시스템(LMS) 등",
+        "평가의 불이익이 없도록"
+      ],
+      "new": [
+        "프로그램 자동 평가시스템(online judge 등)",
+        "학습관리시스템(LMS)",
+        "평가의 불이익이 없도록"
+      ],
+      "reason": "디지털 평가 도구 유형인 online judge와 LMS를 구분하여 출제"
+    }
+  ],
+  "sourceReviewFlags": {
+    "97": "원문 끝에 `(2) 교수⋅학습 방법`이 붙어 있어 HWP 항목 경계 추출 검토 필요. sourceText 변경하지 않음",
+    "106": "원문 끝에 `(2) 평가 방법`이 붙어 있어 HWP 항목 경계 추출 검토 필요. sourceText 변경하지 않음",
+    "86": "`지속가능발전목표를 해결하기 위해`라는 표현은 원문 전사와 HWP 대조 권고. 근거 없이 교정하지 않음"
+  },
+  "allLines": [
+    {
+      "index": 0,
+      "lineId": "AI-22-GEN-CH-01",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "디지털 세상의 변화를 인식",
+        "정보의 사회적 가치를 탐구",
+        "컴퓨팅 사고력",
+        "문제를 해결하는 능력과 태도"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 1,
+      "lineId": "AI-22-GEN-CH-02",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "디지털 대전환 시대",
+        "컴퓨팅을 활용한 문제 해결",
+        "필수 역량"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 2,
+      "lineId": "AI-22-GEN-CH-03",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "데이터와 정보의 원리",
+        "컴퓨팅 시스템을 설계하고 구현하는 기술과 방법",
+        "인간 사회에 대한 이해"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 3,
+      "lineId": "AI-22-GEN-CH-04",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 7,
+      "units": [
+        "데이터 과학",
+        "인공지능",
+        "정보기술",
+        "정보시스템",
+        "소프트웨어 공학",
+        "정보학",
+        "미래 사회의 문제를 해결"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "학문 분야 목록을 분리하여 하나를 누락했을 때 전체 오답이 되지 않도록 변경"
+    },
+    {
+      "index": 4,
+      "lineId": "AI-22-GEN-CH-05",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "소프트웨어와 인공지능에 대한 기본 소양",
+        "다양한 학문 분야",
+        "창의적으로 해결하는 인재 양성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 5,
+      "lineId": "AI-22-GEN-CH-06",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "컴퓨터과학",
+        "데이터 과학",
+        "정보시스템",
+        "인공지능에 대한 깊은 이해"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "기반 학문 3종을 각각 회상하도록 변경"
+    },
+    {
+      "index": 6,
+      "lineId": "AI-22-GEN-CH-07",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "진로와 직업의 변화에 능동적으로 대처",
+        "인간 중심으로 안전하고 책임 있게 사용하는 자기주도성",
+        "디지털 민주시민"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 7,
+      "lineId": "AI-22-GEN-CH-08",
+      "area": "과목 공통",
+      "family": "성격",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "프로젝트 기반의 프로그래밍을 통한 직접 구현",
+        "모델에 대한 평가",
+        "대학의 전공과 연계된 기초경험"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 8,
+      "lineId": "AI-22-GEN-GO-01",
+      "area": "과목 공통",
+      "family": "목표",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "인공지능의 발전에 따른 사회의 변화를 파악",
+        "인공지능의 원리에 대한 이해",
+        "창의적으로 해결하기 위한 핵심 도구로서 프로그래밍",
+        "윤리적 쟁점에 관한 올바른 가치관과 태도"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "목표 문장의 `... 해결하기 위한 핵심 도구로서 프로그래밍할 수` 표현은 장문 빈칸이지만 원문 관계 회상을 위해 유지"
+    },
+    {
+      "index": 9,
+      "lineId": "AI-22-GEN-GO-02",
+      "area": "과목 공통",
+      "family": "목표",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "인공지능의 관점에서 파악",
+        "지능적 판단",
+        "탐색과 추론 방식을 적용"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 10,
+      "lineId": "AI-22-GEN-GO-03",
+      "area": "과목 공통",
+      "family": "목표",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "기계학습을 활용하여 해결할 수 있는 문제를 정의",
+        "데이터와 모델"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "내용상 구분력이 약한 `효과적으로 해결` 빈칸을 제거하고 문제 정의·데이터/모델에 집중"
+    },
+    {
+      "index": 11,
+      "lineId": "AI-22-GEN-GO-04",
+      "area": "과목 공통",
+      "family": "목표",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "인간의 삶과 진로의 변화를 탐색",
+        "비판적인 자세",
+        "윤리적 문제에 대해 올바른 가치관"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 12,
+      "lineId": "AI-22-GEN-GO-05",
+      "area": "과목 공통",
+      "family": "목표",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "다양한 분야와 융합하여 새로운 가치를 창출",
+        "인류가 직면해 있는 문제",
+        "인공지능을 활용하여 해결"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 13,
+      "lineId": "AI-22-AI-CI-01",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인간의 지능적인 행동을 모방",
+        "실생활에 도움"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 14,
+      "lineId": "AI-22-AI-CI-02",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "탐색과 추론",
+        "다양한 학문 분야"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "핵심 접근법 `탐색과 추론`에 집중하고 일반적인 `문제 해결`은 문맥으로 남김"
+    },
+    {
+      "index": 15,
+      "lineId": "AI-22-AI-KN-01",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 16,
+      "lineId": "AI-22-AI-KN-02",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 17,
+      "lineId": "AI-22-AI-KN-03",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "context",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 18,
+      "lineId": "AI-22-AI-SK-01",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "인공지능 기반 문제 해결 사례"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 19,
+      "lineId": "AI-22-AI-SK-02",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "탐색 알고리즘"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 20,
+      "lineId": "AI-22-AI-SK-03",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "추론을 통해 새로운 지식을 생성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 21,
+      "lineId": "AI-22-AI-AT-01",
+      "area": "인공지능의 이해",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "필요성과 적용 가능성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 22,
+      "lineId": "AI-22-AI-AT-02",
+      "area": "인공지능의 이해",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "실생활 및 다양한 학문 분야의 문제",
+        "해결하는 자세"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 23,
+      "lineId": "AI-22-ML-CI-01",
+      "area": "인공지능과 학습",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "문제 해결에 적합한 데이터",
+        "기계학습 모델"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "`기계학습 모델` 자체가 회상 대상이 되도록 과도한 동작 어구를 축소"
+    },
+    {
+      "index": 24,
+      "lineId": "AI-22-ML-CI-02",
+      "area": "인공지능과 학습",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "다중의 은닉층",
+        "인공신경망",
+        "복잡한 문제를 효과적으로 해결"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 25,
+      "lineId": "AI-22-ML-KN-01",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 26,
+      "lineId": "AI-22-ML-KN-02",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 27,
+      "lineId": "AI-22-ML-KN-03",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 28,
+      "lineId": "AI-22-ML-SK-01",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "기계학습을 적용할 문제"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 29,
+      "lineId": "AI-22-ML-SK-02",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "문제에 적합한 데이터"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 30,
+      "lineId": "AI-22-ML-SK-03",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "기계학습 알고리즘을 선정",
+        "모델 구현하기"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 31,
+      "lineId": "AI-22-ML-SK-04",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "딥러닝을 활용한 문제 해결 방법"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 32,
+      "lineId": "AI-22-ML-AT-01",
+      "area": "인공지능과 학습",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "데이터의 중요성 판단"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 33,
+      "lineId": "AI-22-ML-AT-02",
+      "area": "인공지능과 학습",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "효과성과 효율성 인식"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 34,
+      "lineId": "AI-22-SO-CI-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "현대 사회에 끼치는 영향력",
+        "직업의 변화 속도"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "직업 변화 속도 개념을 가리고 서술상의 `빨라지고`는 문맥으로 남김"
+    },
+    {
+      "index": 35,
+      "lineId": "AI-22-SO-CI-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "올바르게 활용하기",
+        "윤리적 문제에 대한 이해"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 36,
+      "lineId": "AI-22-SO-KN-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 37,
+      "lineId": "AI-22-SO-KN-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 38,
+      "lineId": "AI-22-SO-KN-03",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 39,
+      "lineId": "AI-22-SO-SK-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "인공지능으로 해결할 수 있는 사회적 문제"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "`인공지능으로 해결할 수 있는` 조건을 포함해 `사회적 문제`의 과도한 일반화 수정"
+    },
+    {
+      "index": 40,
+      "lineId": "AI-22-SO-SK-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "인간의 삶과 직업의 양상"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 41,
+      "lineId": "AI-22-SO-SK-03",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "인공지능과 인간의 공존 방안"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 42,
+      "lineId": "AI-22-SO-SK-04",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "윤리적 딜레마 상황"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 43,
+      "lineId": "AI-22-SO-AT-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "진로 및 직업 관점",
+        "중요성 인식"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 44,
+      "lineId": "AI-22-SO-AT-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "비판적 자세와 윤리적 태도"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 45,
+      "lineId": "AI-22-PJ-CI-01",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "다양한 분야와 융합",
+        "새로운 가치를 창출"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 46,
+      "lineId": "AI-22-PJ-CI-02",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "지속가능발전목표",
+        "달성하는 데 도움"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 47,
+      "lineId": "AI-22-PJ-KN-01",
+      "area": "인공지능 프로젝트",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 48,
+      "lineId": "AI-22-PJ-KN-02",
+      "area": "인공지능 프로젝트",
+      "family": "지식·이해",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "영역 전체 목록 회상(개별 마스킹 금지)",
+      "unitCount": 0,
+      "units": [],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 49,
+      "lineId": "AI-22-PJ-SK-01",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "인공지능 프로젝트 주제"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 50,
+      "lineId": "AI-22-PJ-SK-02",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "프로젝트 수행 계획"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 51,
+      "lineId": "AI-22-PJ-SK-03",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인공지능 소프트웨어 개발",
+        "평가 방법"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "일반적 용언 `설정하기`가 아니라 `평가 방법` 자체를 회상"
+    },
+    {
+      "index": 52,
+      "lineId": "AI-22-PJ-AT-01",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "지속가능발전",
+        "중요성 및 가치"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 53,
+      "lineId": "AI-22-PJ-AT-02",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "협력적으로 문제를 해결하는 자세"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 54,
+      "lineId": "AI-22-PJ-AT-03",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "윤리 문제 등 사회적 영향"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 55,
+      "lineId": "AI-22-AI-ST-01",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "지능적 판단",
+        "실생활 및 다양한 학문 분야의 문제 해결 사례",
+        "비교⋅분석한다"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 56,
+      "lineId": "AI-22-AI-ST-02",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "탐색의 중요성",
+        "문제 해결을 위한 탐색 과정을 설계"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 57,
+      "lineId": "AI-22-AI-ST-03",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "맹목적 탐색과 정보 이용 탐색의 차이",
+        "지능적 탐색의 원리"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 58,
+      "lineId": "AI-22-AI-ST-04",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "지능적 탐색이 필요한 문제",
+        "정보 이용 탐색 알고리즘을 적용"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 59,
+      "lineId": "AI-22-AI-ST-05",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "규칙과 사실을 활용하여 지식을 표현",
+        "새로운 지식을 추론하여 생성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 60,
+      "lineId": "AI-22-AI-EX-01",
+      "area": "인공지능의 이해",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "튜링 테스트",
+        "인공지능의 지능적 판단",
+        "인공지능이 활용된 최신 사례",
+        "활용 범위와 중요성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 61,
+      "lineId": "AI-22-AI-EX-02",
+      "area": "인공지능의 이해",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "퍼즐이나 길찾기 문제",
+        "최상 우선",
+        "A*",
+        "정보 이용 탐색 방법",
+        "인공지능 프로그램을 개발"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "정보 이용 탐색의 두 예시 `최상 우선`·`A*`를 독립된 용어로 검사"
+    },
+    {
+      "index": 62,
+      "lineId": "AI-22-AI-CN-01",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "탐색과 추론 방식",
+        "탐색 알고리즘을 적용한 프로그램을 개발"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "일반적인 `다양한 사례를 탐색` 대신 핵심 탐색·추론 및 프로그램 적용만 검사"
+    },
+    {
+      "index": 63,
+      "lineId": "AI-22-AI-CN-02",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "인공지능의 개념을 정확하게 이해",
+        "인공지능의 중요성을 설명",
+        "적합한 탐색 알고리즘을 선택하여 적용",
+        "프로그램이 문제를 해결하는 데 효과적이었는지"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 64,
+      "lineId": "AI-22-ML-ST-01",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "기계학습을 적용할 문제를 정의",
+        "필요한 데이터를 선정하여 수집"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 65,
+      "lineId": "AI-22-ML-ST-02",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "데이터를 가공",
+        "핵심 속성을 추출"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 66,
+      "lineId": "AI-22-ML-ST-03",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "기계학습의 유형과 알고리즘을 선정"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 67,
+      "lineId": "AI-22-ML-ST-04",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "훈련 데이터를 이용하여 학습",
+        "테스트 데이터를 사용하여 성능을 평가"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 68,
+      "lineId": "AI-22-ML-ST-05",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인공신경망과 딥러닝의 특성",
+        "활용 분야를 탐색"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 69,
+      "lineId": "AI-22-ML-ST-06",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "딥러닝을 활용하여",
+        "실생활 및 다양한 학문 분야의 문제를 해결",
+        "성능을 평가"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "문제 해결의 적용 범위를 함께 회상하도록 대상을 복원"
+    },
+    {
+      "index": 70,
+      "lineId": "AI-22-ML-EX-01",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "전통적 프로그래밍과 대비되는 기계학습의 특성",
+        "적합한 데이터를 수집",
+        "데이터의 편향",
+        "공정성을 추구"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 71,
+      "lineId": "AI-22-ML-EX-02",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "결측치와 이상치",
+        "필요한 속성이 무엇인지 선별",
+        "전처리"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 72,
+      "lineId": "AI-22-ML-EX-03",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 8,
+      "units": [
+        "지도학습",
+        "비지도학습",
+        "강화학습",
+        "문제의 특성을 고려",
+        "분류",
+        "예측",
+        "군집",
+        "적합한 알고리즘을 선정"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "기계학습 3유형·3작업을 개별 항목으로 검사해 구성 요소 누락을 진단"
+    },
+    {
+      "index": 73,
+      "lineId": "AI-22-ML-EX-04",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "컴퓨터 비전",
+        "음성 인식",
+        "자연어처리 기술",
+        "적합한 딥러닝 기술",
+        "다른 방법으로 문제를 해결한 경우의 차이점"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "컴퓨터 비전·음성 인식·자연어처리를 별도 빈칸으로 검사"
+    },
+    {
+      "index": 74,
+      "lineId": "AI-22-ML-CN-01",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "기계학습의 사용이 적합한지를 판단",
+        "데이터의 중요성을 인식",
+        "데이터가 편향되지 않게"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 75,
+      "lineId": "AI-22-ML-CN-02",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "학습자의 수준에 따라 코드 작성의 방식을 달리",
+        "이미 작성된 코드를 실행시켜",
+        "코드 일부를 수정",
+        "코드를 스스로 완성하여 실행",
+        "다양한 라이브러리 활용 방법"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 76,
+      "lineId": "AI-22-ML-CN-03",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "데이터와 기계학습 유형, 기계학습 알고리즘",
+        "문제의 특성에 비추어 적합한지",
+        "개발되어 있는 딥러닝 프로그램 코드",
+        "학습 과정과 창의적인 아이디어",
+        "평가 루브릭"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 77,
+      "lineId": "AI-22-SO-ST-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인공지능의 발전으로 인한 사회 변화",
+        "인공지능으로 해결할 수 있는 사회적 문제를 분석"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "단순 사회적 문제가 아니라 인공지능으로 해결 가능한 문제라는 조건을 반영"
+    },
+    {
+      "index": 78,
+      "lineId": "AI-22-SO-ST-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인간의 삶과 직업의 양상",
+        "진로를 탐색"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 79,
+      "lineId": "AI-22-SO-ST-03",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "비판적 자세",
+        "인공지능과 인간의 공존 방안을 도출"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 80,
+      "lineId": "AI-22-SO-ST-04",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "활용사례와 윤리적 딜레마 상황",
+        "인공지능 윤리 관점에서 분석"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 81,
+      "lineId": "AI-22-SO-EX-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "일방적인 수용 또는 거부",
+        "비판적인 자세",
+        "인간과 공존해야 하는 존재",
+        "바람직한 공존 방식"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 82,
+      "lineId": "AI-22-SO-EX-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 6,
+      "units": [
+        "알고리즘과 데이터의 편향성",
+        "윤리적인 판단과 선택",
+        "개발자",
+        "사용자",
+        "운영⋅관리자 관점",
+        "사회적 책임과 공정성"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "개발자·사용자·운영관리자 각각의 책임 관점을 따로 검사"
+    },
+    {
+      "index": 83,
+      "lineId": "AI-22-SO-CN-01",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "윤리적 쟁점에 대한 충분한 사회적 논의 과정",
+        "인공지능 윤리의식과 가치 판단 능력",
+        "사회적 책임과 공정성을 실천"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 84,
+      "lineId": "AI-22-SO-CN-02",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "인공지능의 발전으로 인한 사회의 변화",
+        "미래 사회의 모습을 예측",
+        "자신의 진로를 구체적으로 설계"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 85,
+      "lineId": "AI-22-SO-CN-03",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "윤리적 쟁점 사례를 조사",
+        "토론 활동",
+        "인공지능 윤리의 중요성",
+        "근거를 바탕으로 자신의 주장을 펼치고",
+        "타인의 견해를 존중"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 86,
+      "lineId": "AI-22-PJ-ST-01",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "source-boundary-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "지속가능발전목표",
+        "인공지능을 적용할 수 있는 방안",
+        "프로젝트 활동에 적합한 주제를 도출"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "`지속가능발전목표를 해결하기 위해`라는 표현은 원문 전사와 HWP 대조 권고. 근거 없이 교정하지 않음"
+    },
+    {
+      "index": 87,
+      "lineId": "AI-22-PJ-ST-02",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "인공지능 문제 해결 과정",
+        "프로젝트 수행 계획을 구안"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 88,
+      "lineId": "AI-22-PJ-ST-03",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "협력적인 문제 해결 자세",
+        "인공지능 소프트웨어를 개발"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 89,
+      "lineId": "AI-22-PJ-ST-04",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "인공지능의 사회적 영향을 고려",
+        "인공지능 소프트웨어를 개발",
+        "평가 결과를 반영하여 성능을 개선"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 90,
+      "lineId": "AI-22-PJ-EX-01",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "17개의 주요 목표",
+        "169개의 세부 목표",
+        "인류가 직면하고 있는 위기",
+        "인공지능 프로젝트 활동에 적합한 주제"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "SDG의 17개 주요 목표·169개 세부 목표 수치를 구분해 검사"
+    },
+    {
+      "index": 91,
+      "lineId": "AI-22-PJ-EX-02",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "tierForStudyPlanningOnly": "core",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "문제 정의",
+        "데이터 수집 및 전처리",
+        "기계학습 유형과 알고리즘 선정",
+        "모델 생성",
+        "성능 평가 및 수정"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 92,
+      "lineId": "AI-22-PJ-CN-01",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "인류가 직면해 있는 다양한 위기",
+        "인공지능이 중요한 역할",
+        "학습자의 아이디어를 존중",
+        "다양한 생각이 발산될 수 있는 활동"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 93,
+      "lineId": "AI-22-PJ-CN-02",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "소프트웨어의 완성도",
+        "주제의 적절성",
+        "문제 해결 방식의 창의성",
+        "다른 사람과의 협업 능력",
+        "다각적인 측면을 골고루 반영"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 94,
+      "lineId": "AI-22-GEN-TE-01",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "실제적인 삶의 맥락",
+        "컴퓨팅을 통해 문제를 해결",
+        "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "일반적 수업 활동 `학습 과제를 제시` 대신 `컴퓨팅으로 문제를 해결` 핵심 관계에 집중"
+    },
+    {
+      "index": 95,
+      "lineId": "AI-22-GEN-TE-02",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "학습자의 흥미와 다양성",
+        "선택의 기회를 제공",
+        "학습자 맞춤형 교수⋅학습",
+        "깊이 있는 학습"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 96,
+      "lineId": "AI-22-GEN-TE-03",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "민주시민교육, 생태전환 교육",
+        "지속가능발전 등의 범교과 주제",
+        "주도성 있는 문제 해결 경험"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 97,
+      "lineId": "AI-22-GEN-TE-04",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "source-boundary-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "인공지능의 원리에 대한 이해",
+        "문제를 효율적으로 해결하는 역량",
+        "다른 교과 및 비교과 활동과의 융합",
+        "다양한 분야에 전이"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문 끝에 `(2) 교수⋅학습 방법`이 붙어 있어 HWP 항목 경계 추출 검토 필요. sourceText 변경하지 않음"
+    },
+    {
+      "index": 98,
+      "lineId": "AI-22-GEN-TE-05",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 6,
+      "units": [
+        "문제기반학습",
+        "프로젝트 기반학습",
+        "디자인기반학습",
+        "짝 프로그래밍",
+        "탐구학습",
+        "적절한 교수⋅학습 방법을 선택"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "교수법 5가지를 각자 회상하고 부분 정답을 구분하도록 분할"
+    },
+    {
+      "index": 99,
+      "lineId": "AI-22-GEN-TE-06",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "최소 성취수준을 보장",
+        "학습관리시스템(LMS)",
+        "학습 격차를 최소화"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 100,
+      "lineId": "AI-22-GEN-TE-07",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 5,
+      "units": [
+        "선제적으로 파악",
+        "현재 수준에 맞는 방식",
+        "인공지능 프로그램의 개발 활동",
+        "인공지능 관련 라이브러리",
+        "최소 성취수준을 보장"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 101,
+      "lineId": "AI-22-GEN-TE-08",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "온오프라인 연계 수업",
+        "다양한 디지털 도구의 활용",
+        "인지적 부담은 최소화",
+        "경험은 높일 수 있도록"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 102,
+      "lineId": "AI-22-GEN-TE-09",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "진로 및 직업을 안내",
+        "자신의 진로를 탐색"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 103,
+      "lineId": "AI-22-GEN-EV-01",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 1,
+      "units": [
+        "컴퓨팅 사고력, 디지털 문화 소양, 인공지능 소양"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 104,
+      "lineId": "AI-22-GEN-EV-02",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 4,
+      "units": [
+        "지식⋅이해",
+        "과정⋅기능",
+        "가치⋅태도",
+        "과정을 중시하는 평가"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 105,
+      "lineId": "AI-22-GEN-EV-03",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "평가 루브릭을 학생과 함께 구성",
+        "자신의 학습 수준을 파악",
+        "스스로 학습을 성찰"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    },
+    {
+      "index": 106,
+      "lineId": "AI-22-GEN-EV-04",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "source-boundary-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 2,
+      "units": [
+        "프로그래밍 내용보다는 인공지능의 구현과 활용",
+        "인공지능 활용에 대한 인식"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문 끝에 `(2) 평가 방법`이 붙어 있어 HWP 항목 경계 추출 검토 필요. sourceText 변경하지 않음"
+    },
+    {
+      "index": 107,
+      "lineId": "AI-22-GEN-EV-05",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 8,
+      "units": [
+        "지필평가",
+        "수행평가",
+        "관찰 평가",
+        "서⋅논술형 평가",
+        "종합적인 평가 포트폴리오",
+        "교사 평가",
+        "자기 평가",
+        "동료 평가"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "지필·수행·관찰·서논술, 교사·자기·동료 평가를 각각 회상하도록 분할"
+    },
+    {
+      "index": 108,
+      "lineId": "AI-22-GEN-EV-06",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "revised",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "프로그램 자동 평가시스템(online judge 등)",
+        "학습관리시스템(LMS)",
+        "평가의 불이익이 없도록"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "디지털 평가 도구 유형인 online judge와 LMS를 구분하여 출제"
+    },
+    {
+      "index": 109,
+      "lineId": "AI-22-GEN-EV-07",
+      "area": "과목 공통",
+      "family": "평가",
+      "tierForStudyPlanningOnly": "support",
+      "semanticStatus": "retained-after-review",
+      "wholeRecallPolicy": "정책 기반 핵심어구 전체 회상",
+      "unitCount": 3,
+      "units": [
+        "정량적 평가와 정성적 평가",
+        "즉시 피드백",
+        "결과물의 개선"
+      ],
+      "offsetsMatchSource": true,
+      "reviewNote": "원문·어구 경계·핵심 개념/행동/관계를 검토했고 현행 분절을 유지"
+    }
+  ]
+}

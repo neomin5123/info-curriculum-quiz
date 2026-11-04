@@ -1,0 +1,14 @@
+CurriLoop v9.0.40 -> v9.0.41 배포용 변경분
+
+기존 사이트의 동일 경로에 아래 파일만 덮어쓰면 됩니다.
+
+index.html
+assets/css/app.css
+js/app.js
+js/core/config.js
+service-worker.js
+VERSION.json
+BUILD_ID.txt
+
+README/CHANGELOG/테스트/감사 보고서/package.json/SHA256SUMS.txt 등은
+사이트 동작에 필요하지 않아 이 배포용 패키지에서 제외했습니다.

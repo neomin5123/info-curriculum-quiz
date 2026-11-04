@@ -1,0 +1,332 @@
+{
+  "buildId": "2026.10.20-08",
+  "baseline": "2026.10.20-07",
+  "subject": "논회컴구",
+  "examQuestions": 269,
+  "totalSolved": 231,
+  "subjectQuestions": 21,
+  "changedAnswers": 4,
+  "officialAnswerConfirmed": false,
+  "changeAllowlist": {
+    "2017-B-06": {
+      "oldAnswer": "(1) 디코더 2비트 입력 A9 A8에 대한 진리표: 00→CS0, 01→CS1, 10→CS2, 11→CS3(각 경우 해당 출력만 선택). (2) 0x30B. (3) 32비트.",
+      "oldSolution": "256×8비트=256바이트 RAM 네 개로 1024바이트를 구성하므로 상위 주소는 A9,A8의 2비트이며 하위 A7~A0은 내부 주소다. 입력11은 0x300~0x3FF 영역의 네 번째 RAM을 고르고 12번째 워드는 시작 오프셋0부터 세므로 0x300+11=0x30B. 4개 RAM의 8비트 출력을 병렬 연결하면 4×8=32비트이다.",
+      "newAnswer": "(1) 디코더 입력 A9A8, 출력 (CS0,CS1,CS2,CS3)의 진리표(1=선택): 00→(1,0,0,0), 01→(0,1,0,0), 10→(0,0,1,0), 11→(0,0,0,1). (2) 0x30B. (3) 32비트.",
+      "newSolution": "256×8비트=256바이트 RAM 네 개로 1024바이트를 구성하므로 상위 주소는 A9,A8의 2비트이며 하위 A7~A0은 내부 주소다. 입력11은 0x300~0x3FF 영역의 네 번째 RAM을 고르고 12번째 워드는 시작 오프셋0부터 세므로 0x300+11=0x30B. 4개 RAM의 8비트 출력을 병렬 연결하면 4×8=32비트이다. 진리표 출력은 각 입력 조합에서 해당 RAM의 선택선만 1인 원-핫 출력이다.",
+      "oldAnswerSha256": "eec479fae776bccc5564f783739195f00dbdb78e44fd4289c42f686462973f3c",
+      "oldSolutionSha256": "1ea513928c57f72edf25a92797ec3f2ab21801ae791d4880218840fd2f02cd58",
+      "newAnswerSha256": "c6f50c0d7402745a5767f461a5b942f1308f461a38d12aec70fb59ce45b3597d",
+      "newSolutionSha256": "c64e13f06b5c52e03488bac6664ec68270705289c5b05156798e6312c975944e",
+      "reason": "디코더 진리표를 개별 선택선과 4비트 원-핫 출력으로 명확히 적음. 기존 선택 관계와 수치 답은 유지."
+    },
+    "2019-B-03": {
+      "oldAnswer": "(1) ㉠ 11392, ㉡ 3200. (2) 물리 메모리 주소 6272.",
+      "oldSolution": "기준 레지스터 방식에서는 상대주소3200에 적재 시작주소8192를 더하여 유효 물리주소11392를 명령어 주소장에 기입한다. 페이징에서는 논리주소3200을 유지한다. 페이지1024워드이므로 3200은 페이지3, 오프셋128이고, 페이지3은 물리 프레임6이므로 6×1024+128=6272다.",
+      "newAnswer": "(1) ㉠ 11392, ㉡ 3200. (2) x가 포함된 가상 페이지 번호 3, 물리 메모리 주소 6272.",
+      "newSolution": "기준 레지스터 방식에서는 상대주소3200에 적재 시작주소8192를 더하여 유효 물리주소11392를 명령어 주소장에 기입한다. 페이징에서는 논리주소3200을 유지한다. 페이지1024워드이므로 3200은 페이지3, 오프셋128이고, 페이지3은 물리 프레임6이므로 6×1024+128=6272다.",
+      "oldAnswerSha256": "908a8eedc3fa4c31f8cd3878e3dc3a13b7f07383f1fca453b72c4341d87919aa",
+      "oldSolutionSha256": "ff64b4b7a48ae7e06e6638f62e8dde8c22d3ddbee04fcf7002b875cbcf8620b8",
+      "newAnswerSha256": "14756298e91942c71313d08281de45ef34b0468883888b12cdef2dad960567bd",
+      "newSolutionSha256": "ff64b4b7a48ae7e06e6638f62e8dde8c22d3ddbee04fcf7002b875cbcf8620b8",
+      "reason": "작성 방법 (2)의 필수 답안인 가상 페이지 번호 3이 기존 짧은 정답 문자열에서 누락됨."
+    },
+    "2021-A-08": {
+      "oldAnswer": "(1) ㉠ STORE, 1, 1004 직후 AC=2001, 유효 주소=2004이므로 M[2004]=2001. (2) 장점: 10비트 주소장보다 큰 메모리 영역을 간접 지정하고 포인터를 통해 주소를 동적으로 변경할 수 있다. 단점: 유효주소 획득에 메모리 읽기 1회가 추가되어 시간이 더 든다.",
+      "oldSolution": "LOAD,0,1000으로 2000을 AC에 적재하고 INCR로 2001로 증가시킨다. STORE,1,1004에서는 M[1004]=2004로부터 유효주소를 얻은 뒤 AC=2001을 해당 위치에 쓴다.",
+      "newAnswer": "(1) 유효 주소 2004, 저장 값(AC) 2001. (2) 장점: 10비트 주소장보다 큰 메모리 영역을 간접 지정하고 포인터를 통해 주소를 동적으로 변경할 수 있다. 단점: 유효주소 획득에 메모리 읽기 1회가 추가되어 시간이 더 든다.",
+      "newSolution": "LOAD,0,1000으로 2000을 AC에 적재하고 INCR로 2001로 증가시킨다. STORE,1,1004에서는 M[1004]=2004로부터 유효주소를 얻은 뒤 AC=2001을 해당 위치에 쓴다.",
+      "oldAnswerSha256": "51bddce5aed0bd2f8a4445a5a2dbbafeb35fad520bd8659b09f53413cca7c37f",
+      "oldSolutionSha256": "72891bdb41b6dfef366fdd07eb848e874793abfd2c6b81f58b73432e61a54d2e",
+      "newAnswerSha256": "5593e319a4793deeaf287f6e16e761ac9bf36fc013a4c061bb0803119bb8ec57",
+      "newSolutionSha256": "72891bdb41b6dfef366fdd07eb848e874793abfd2c6b81f58b73432e61a54d2e",
+      "reason": "문제에서 요구한 순서인 유효주소→저장값에 맞춰 결과를 맨 앞에 명시함. 계산값·장단점은 동일."
+    },
+    "2025-A-02": {
+      "oldAnswer": "출력 Y1 = I3 + I2 (OR).",
+      "oldSolution": "우선순위 인코더에서는 I3가 가장 높고, 다음이 I2이다. 이들 중 하나라도 1이면 우선 입력의 이진 번호는 2 또는 3이므로 상위 출력 비트 Y1=1이다.",
+      "newAnswer": "(1) 우선순위가 가장 높은 입력 변수: I3. (2) Y1 = I3 + I2 (OR).",
+      "newSolution": "우선순위 인코더에서는 I3가 가장 높고, 다음이 I2이다. 이들 중 하나라도 1이면 우선 입력의 이진 번호는 2 또는 3이므로 상위 출력 비트 Y1=1이다.",
+      "oldAnswerSha256": "15a8c55adea67203a1bd1a3f676e0ae45cde985cb17f9ebdbb9b5f6e8b6c6dcf",
+      "oldSolutionSha256": "e24062f411e2fcbe7b0b4c84677ee97d6b9becac401ad2c0450a24d88b28467c",
+      "newAnswerSha256": "682036108646c518cb82dc7e57f99163bb9907ae45116d870206e4967971e076",
+      "newSolutionSha256": "e24062f411e2fcbe7b0b4c84677ee97d6b9becac401ad2c0450a24d88b28467c",
+      "reason": "작성 방법의 첫 번째 요구인 최고 우선순위 입력 변수 I3이 기존 짧은 정답 문자열에 없음."
+    }
+  },
+  "entries": [
+    {
+      "id": "2014-A-05",
+      "sourcePages": [
+        2
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "W(W+X)=W, (X+Y)(Y+Z)=Y+XZ로 흡수법칙을 적용한다.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "9ef39b18b16defb3c685ec0c6854e24f6b9c565f7287710e8500bd0505020fda",
+      "currentAnswerSha256": "9ef39b18b16defb3c685ec0c6854e24f6b9c565f7287710e8500bd0505020fda"
+    },
+    {
+      "id": "2014-B-04",
+      "sourcePages": [
+        8
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "접근 0110은 집합10 hit, 0111은 집합11 빈 way에 BD 적재, 1001은 집합01 LRU 교체.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "1c85f15c2328da6303c9da9ec584785cb2d83fcb60787bf1c38e8ecab2ef2dc8",
+      "currentAnswerSha256": "1c85f15c2328da6303c9da9ec584785cb2d83fcb60787bf1c38e8ecab2ef2dc8"
+    },
+    {
+      "id": "2016-A-06",
+      "sourcePages": [
+        12
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "단일 사이클 3×160=480, 5단계 파이프라인 (5+3−1)×40=280.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "f12ac1d95e8d34f3b3de3a4c8f795b261ba6d210b8c95d94d3425d55b6f700e0",
+      "currentAnswerSha256": "f12ac1d95e8d34f3b3de3a4c8f795b261ba6d210b8c95d94d3425d55b6f700e0"
+    },
+    {
+      "id": "2017-A-06",
+      "sourcePages": [
+        24
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "1111+0001=1 0000이므로 4비트 결과 0000, Z=1, C=1; 표현 범위 −8~7.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "83d566f995d914097e590611b3bce30a5c26709a046f180ee1f99afdca8cda73",
+      "currentAnswerSha256": "83d566f995d914097e590611b3bce30a5c26709a046f180ee1f99afdca8cda73"
+    },
+    {
+      "id": "2017-B-06",
+      "sourcePages": [
+        32
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "4×(256×8비트)=1024바이트. 상위 A9A8로 4개 RAM 선택; 11→0x300~0x3FF, 12번째 주소 0x30B. 병렬 데이터선 4×8=32.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": true,
+      "riskNote": "서술형 표/출력 표기 요건에 따라 채점 방식이 달라질 수 있음.",
+      "originalAnswerSha256": "eec479fae776bccc5564f783739195f00dbdb78e44fd4289c42f686462973f3c",
+      "currentAnswerSha256": "c6f50c0d7402745a5767f461a5b942f1308f461a38d12aec70fb59ce45b3597d"
+    },
+    {
+      "id": "2018-A-07",
+      "sourcePages": [
+        36
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "0→1 때 V=0, 0→0 때 V=1이며 U는 무관(X).",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "c7bd7d977a4a398d3bf51e08a505e1e90b6d09a623f54cef95663f2e6f4ca6b0",
+      "currentAnswerSha256": "c7bd7d977a4a398d3bf51e08a505e1e90b6d09a623f54cef95663f2e6f4ca6b0"
+    },
+    {
+      "id": "2018-B-06",
+      "sourcePages": [
+        43
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "MUX 6개 소스이므로 선택 신호 3비트. 증가 연산은 내부 카운터라 AR←PC 버스와 경합하지 않는다. AR←DR 다음 AC←M[AR].",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "5165ee6147bc29c27007a18af278227c78534ba4617bc8ed53c28cdd493dc3a8",
+      "currentAnswerSha256": "5165ee6147bc29c27007a18af278227c78534ba4617bc8ed53c28cdd493dc3a8"
+    },
+    {
+      "id": "2019-A-07",
+      "sourcePages": [
+        48
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "S=x·A, T=x⊕¬A로부터 A=0,x=0에서는 S0,T1→1; A=1,x=1에서는 S1,T1→¬A=0.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "2bf58f6c6d64be68696fbd4eb5c9f459ae3130740f1f3c0e7ae0079b28483163",
+      "currentAnswerSha256": "2bf58f6c6d64be68696fbd4eb5c9f459ae3130740f1f3c0e7ae0079b28483163"
+    },
+    {
+      "id": "2019-B-03",
+      "sourcePages": [
+        54
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "3200은 1024워드 페이지에서 페이지3 오프셋128. 프레임6이므로 주소6×1024+128=6272; 재배치 주소8192+3200=11392.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": true,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "908a8eedc3fa4c31f8cd3878e3dc3a13b7f07383f1fca453b72c4341d87919aa",
+      "currentAnswerSha256": "14756298e91942c71313d08281de45ef34b0468883888b12cdef2dad960567bd"
+    },
+    {
+      "id": "2019-B-07",
+      "sourcePages": [
+        57
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "0x780 = 레지스터 참조, 흐름도 ②; BSA 직접은 PC=0x11을 M[0x20]에 기록하고 PC=0x21.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "5486a7d3838dd6f14e0a0dc96f925dcafcc8e7e18a0a5cced35d8d95d6f9156a",
+      "currentAnswerSha256": "5486a7d3838dd6f14e0a0dc96f925dcafcc8e7e18a0a5cced35d8d95d6f9156a"
+    },
+    {
+      "id": "2020-A-03",
+      "sourcePages": [
+        60
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "X,Y별 one-hot 디코더 O0~O3와 XOR 선택선으로 MUX 결과는 (0,1,1,0)이다.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "41a249b4db7ea9d44b75a042ecf51b56202d3a70431ce237ed9dfdd08b0aa210",
+      "currentAnswerSha256": "41a249b4db7ea9d44b75a042ecf51b56202d3a70431ce237ed9dfdd08b0aa210"
+    },
+    {
+      "id": "2020-B-11",
+      "sourcePages": [
+        73
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "LOAD R1 완료 D4→클럭5 사용, LOAD R2 완료 D5→클럭6 사용. NOP②로 두 선행 사용을 늦춤. ADD R1 결과 E8과 다음 DEC A8 충돌을 NOP⑤로 해결.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "68e9fbae3764a41ab9ebdc21ecd5c413eb9e87c1dfe2dfdfd4786a681e27dda8",
+      "currentAnswerSha256": "68e9fbae3764a41ab9ebdc21ecd5c413eb9e87c1dfe2dfdfd4786a681e27dda8"
+    },
+    {
+      "id": "2021-A-08",
+      "sourcePages": [
+        77
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "LOAD 직접1000→AC2000, INCR→2001, STORE 간접1004→유효주소 M[1004]=2004; 저장 값2001.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": true,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "51bddce5aed0bd2f8a4445a5a2dbbafeb35fad520bd8659b09f53413cca7c37f",
+      "currentAnswerSha256": "5593e319a4793deeaf287f6e16e761ac9bf36fc013a4c061bb0803119bb8ec57"
+    },
+    {
+      "id": "2021-B-03",
+      "sourcePages": [
+        81
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "X=1010→누적 XOR Y=1100; Y=1010 역산 시 X=1111; Y0는 네 비트 XOR 짝수패리티 검사.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "b68899a44b814c26de3114ae77b2d70b0e8c37371105b758decfb5075fc947f5",
+      "currentAnswerSha256": "b68899a44b814c26de3114ae77b2d70b0e8c37371105b758decfb5075fc947f5"
+    },
+    {
+      "id": "2023-A-02",
+      "sourcePages": [
+        102
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "A,B 선택값10일 때 F=C라 D2=C; 선택값00일 때 F=0이라 D0=0.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "f89f9c38940b4029c0371468097f860bfe5ac1fa3cba3e449d0fd0ebfe737f3a",
+      "currentAnswerSha256": "f89f9c38940b4029c0371468097f860bfe5ac1fa3cba3e449d0fd0ebfe737f3a"
+    },
+    {
+      "id": "2023-A-04",
+      "sourcePages": [
+        103
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "2^31/2^13=2^18블록=262144비트. 비트맵 저장 한 블록은 2^16비트이므로 4블록/비트.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "71b113b3700b4b704444e5395b8f1dab93517e5f92392fed4b3960984e6a6adb",
+      "currentAnswerSha256": "71b113b3700b4b704444e5395b8f1dab93517e5f92392fed4b3960984e6a6adb"
+    },
+    {
+      "id": "2024-B-02",
+      "sourcePages": [
+        123
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "6개의 실명령어를 NOP 없이 ①②⑤⑥④⑧ 순으로 재배치하면 3단계 I,A,E의 총 소요는 6+2=8사이클.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "5b53df97ee9513730f701230289d36a4a162af1acc9017cf92187cd096be337c",
+      "currentAnswerSha256": "5b53df97ee9513730f701230289d36a4a162af1acc9017cf92187cd096be337c"
+    },
+    {
+      "id": "2025-A-02",
+      "sourcePages": [
+        130
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "진리표에서 I3가 모든 입력을 지배하고 Y1은 I3 또는 I2일 때 1.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": true,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "15a8c55adea67203a1bd1a3f676e0ae45cde985cb17f9ebdbb9b5f6e8b6c6dcf",
+      "currentAnswerSha256": "682036108646c518cb82dc7e57f99163bb9907ae45116d870206e4967971e076"
+    },
+    {
+      "id": "2025-B-06",
+      "sourcePages": [
+        140
+      ],
+      "imageSegments": 2,
+      "independentReasoning": "ADD 첫 마이크로명령어 주소0의 다음 주소는1; 인터럽트 조건 판단 후 무발생시 인출32, 발생시 인터럽트40; STORE 시작4=0 001 00.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "서술형 표/출력 표기 요건에 따라 채점 방식이 달라질 수 있음.",
+      "originalAnswerSha256": "8b094644d122001dde6a8ffb2fbb3464ae8afee1b47bc30d04956849184d8a6f",
+      "currentAnswerSha256": "8b094644d122001dde6a8ffb2fbb3464ae8afee1b47bc30d04956849184d8a6f"
+    },
+    {
+      "id": "2026-A-02",
+      "sourcePages": [
+        144
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "1000+1200=2200. 서브루틴 호출 직전 PC를 BR에 보존→AR·PC 설정→BR 스택 저장.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "51a717ab8f507d20c41056cf666479ab66d749dde8b9b8e3a5959ef37e99f7f1",
+      "currentAnswerSha256": "51a717ab8f507d20c41056cf666479ab66d749dde8b9b8e3a5959ef37e99f7f1"
+    },
+    {
+      "id": "2026-B-08",
+      "sourcePages": [
+        155
+      ],
+      "imageSegments": 1,
+      "independentReasoning": "R1 선택01, R3 목적지11; 0110+0100=1010 (signed overflow); carry-in/out XOR.",
+      "matchesStoredCore": true,
+      "correctedAnswerCompleteness": false,
+      "riskNote": "공식 채점 기준 미확인",
+      "originalAnswerSha256": "64519fd0ab18772d0ae03c859248633da7afe7a3d344e63158fdd34fd8b2b813",
+      "currentAnswerSha256": "64519fd0ab18772d0ae03c859248633da7afe7a3d344e63158fdd34fd8b2b813"
+    }
+  ],
+  "validationScope": "Independent rereading of source and major deterministic calculations, not official scoring-guide matching"
+}

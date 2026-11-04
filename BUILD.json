@@ -1,0 +1,32 @@
+{
+  "buildId": "2026.10.27-53",
+  "builtOn": "2026-10-26",
+  "publicVersion": null,
+  "product": "CurriLoop",
+  "releaseChannel": "study",
+  "data": {
+    "curriculum": "v9.0.38-granularity-reaudit",
+    "examSchema": 3,
+    "examCorpus": "major-exams-2014-2026",
+    "aiBasicSource": "[별책10] 인공지능 기초, 별도 원문 계층 110줄",
+    "aiBasicPresentation": "semantic-v4, 296 units, source unchanged",
+    "aiBasicPriority": "priority-v1-evidence-crosswalk: S direct answer, A/B/C editorial"
+  },
+  "compatibility": {
+    "studyStorageKey": "curriloop:v9:study-state",
+    "examUiStorageKey": "curriloop-exam-ui-v1"
+  },
+  "features": [
+    "curriculum-study",
+    "review-srs",
+    "area-memo",
+    "past-exams-browser",
+    "pdf-exam-originals",
+    "exam-year-atlas",
+    "ai-basic-curriculum",
+    "exam-display-whitespace-trimming",
+    "exam-full-width-layout",
+    "concise-source-faithful-cloze-targets",
+    "immediate-wrong-answer-retry-cards"
+  ]
+}

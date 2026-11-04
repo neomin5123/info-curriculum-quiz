@@ -1,0 +1,453 @@
+{
+  "checks": 41,
+  "allPass": true,
+  "results": {
+    "2017-A-12:edge_count": {
+      "actual": 12,
+      "expected": 12,
+      "pass": true
+    },
+    "2017-A-12:adjacent_to_110": {
+      "actual": [
+        "010",
+        "100",
+        "111"
+      ],
+      "expected": [
+        "010",
+        "100",
+        "111"
+      ],
+      "pass": true
+    },
+    "2017-A-12:paths_through_011": {
+      "actual": [
+        [
+          "000",
+          "001",
+          "011",
+          "111"
+        ],
+        [
+          "000",
+          "010",
+          "011",
+          "111"
+        ]
+      ],
+      "expected": [
+        [
+          "000",
+          "001",
+          "011",
+          "111"
+        ],
+        [
+          "000",
+          "010",
+          "011",
+          "111"
+        ]
+      ],
+      "pass": true
+    },
+    "2016-A-11:printed_indices": {
+      "actual": [
+        8,
+        11,
+        10
+      ],
+      "expected": [
+        8,
+        11,
+        10
+      ],
+      "pass": true
+    },
+    "2017-A-11:final_avl": {
+      "actual": [
+        3,
+        [
+          2,
+          null,
+          null
+        ],
+        [
+          8,
+          [
+            5,
+            null,
+            null
+          ],
+          [
+            9,
+            null,
+            null
+          ]
+        ]
+      ],
+      "expected": [
+        3,
+        [
+          2,
+          null,
+          null
+        ],
+        [
+          8,
+          [
+            5,
+            null,
+            null
+          ],
+          [
+            9,
+            null,
+            null
+          ]
+        ]
+      ],
+      "pass": true
+    },
+    "2018-A-13:dfs_visit_order": {
+      "actual": [
+        0,
+        1,
+        4,
+        2,
+        5,
+        6,
+        3,
+        7
+      ],
+      "expected": [
+        0,
+        1,
+        4,
+        2,
+        5,
+        6,
+        3,
+        7
+      ],
+      "pass": true
+    },
+    "2018-A-13:dfs_path_to_7": {
+      "actual": [
+        0,
+        2,
+        5,
+        6,
+        7
+      ],
+      "expected": [
+        0,
+        2,
+        5,
+        6,
+        7
+      ],
+      "pass": true
+    },
+    "2018-B-03:insert_slot": {
+      "actual": 0,
+      "expected": 0,
+      "pass": true
+    },
+    "2018-B-03:search_probes": {
+      "actual": 4,
+      "expected": 4,
+      "pass": true
+    },
+    "2018-B-07:first_bucket2": {
+      "actual": [
+        252,
+        512
+      ],
+      "expected": [
+        252,
+        512
+      ],
+      "pass": true
+    },
+    "2018-B-07:second_bucket2": {
+      "actual": [
+        325,
+        127
+      ],
+      "expected": [
+        325,
+        127
+      ],
+      "pass": true
+    },
+    "2018-B-07:first_list": {
+      "actual": [
+        870,
+        691,
+        471,
+        252,
+        512,
+        145,
+        325,
+        127
+      ],
+      "expected": [
+        870,
+        691,
+        471,
+        252,
+        512,
+        145,
+        325,
+        127
+      ],
+      "pass": true
+    },
+    "2018-B-07:second_list": {
+      "actual": [
+        512,
+        325,
+        127,
+        145,
+        252,
+        870,
+        471,
+        691
+      ],
+      "expected": [
+        512,
+        325,
+        127,
+        145,
+        252,
+        870,
+        471,
+        691
+      ],
+      "pass": true
+    },
+    "2019-B-04:circular_queue_final": {
+      "actual": [
+        2,
+        1
+      ],
+      "expected": [
+        2,
+        1
+      ],
+      "pass": true
+    },
+    "2021-A-12:huffman_preorder_1_3": {
+      "actual": [
+        44,
+        8
+      ],
+      "expected": [
+        44,
+        8
+      ],
+      "pass": true
+    },
+    "2021-B-04:plain_recursion_n1_calls": {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    "2021-B-04:memoized_nonbase_computations": {
+      "actual": 4,
+      "expected": 4,
+      "pass": true
+    },
+    "2021-B-11:Astar_visit_order": {
+      "actual": [
+        "S",
+        "B",
+        "A",
+        "C",
+        "D",
+        "G"
+      ],
+      "expected": [
+        "S",
+        "B",
+        "A",
+        "C",
+        "D",
+        "G"
+      ],
+      "pass": true
+    },
+    "2021-B-11:Astar_max_f_at_visit": {
+      "actual": [
+        "G",
+        15
+      ],
+      "expected": [
+        "G",
+        15
+      ],
+      "pass": true
+    },
+    "2022-A-11:minimum_M_to_prune_F": {
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    "2022-B-07:cache_line1": {
+      "actual": [
+        0,
+        "A0B1"
+      ],
+      "expected": [
+        0,
+        "A0B1"
+      ],
+      "pass": true
+    },
+    "2022-B-07:changed_cache_capacity_bytes": {
+      "actual": 4,
+      "expected": 4,
+      "pass": true
+    },
+    "2022-B-10:Prim_cost": {
+      "actual": 26,
+      "expected": 26,
+      "pass": true
+    },
+    "2022-B-10:Prim_third_edge": {
+      "actual": [
+        1,
+        4
+      ],
+      "expected": [
+        1,
+        4
+      ],
+      "pass": true
+    },
+    "2023-A-08:R4_value": {
+      "actual": 945,
+      "expected": 945,
+      "pass": true
+    },
+    "2023-A-08:stack_top_R4": {
+      "actual": 945,
+      "expected": 945,
+      "pass": true
+    },
+    "2023-B-11:correct_MST_weight": {
+      "actual": 125,
+      "expected": 125,
+      "pass": true
+    },
+    "2023-B-11:verbatim_buggy_union_weight": {
+      "actual": 124,
+      "expected": 124,
+      "pass": true
+    },
+    "2023-B-11:buggy_tree_connects_vertex6": {
+      "actual": false,
+      "expected": false,
+      "pass": true
+    },
+    "2024-A-11:first_pass": {
+      "actual": [
+        22,
+        82,
+        25,
+        45,
+        35,
+        86,
+        67,
+        48
+      ],
+      "expected": [
+        22,
+        82,
+        25,
+        45,
+        35,
+        86,
+        67,
+        48
+      ],
+      "pass": true
+    },
+    "2024-B-11:missing_K_3_5": {
+      "actual": 9,
+      "expected": 9,
+      "pass": true
+    },
+    "2024-B-11:optimal_max_value": {
+      "actual": 19,
+      "expected": 19,
+      "pass": true
+    },
+    "2024-B-11:chosen_item_numbers": {
+      "actual": [
+        2,
+        6,
+        7
+      ],
+      "expected": [
+        2,
+        6,
+        7
+      ],
+      "pass": true
+    },
+    "2025-A-05:binary_exponent_multiplications": {
+      "actual": 8,
+      "expected": 8,
+      "pass": true
+    },
+    "2025-A-05:binary_exponent_value": {
+      "actual": 32768,
+      "expected": 32768,
+      "pass": true
+    },
+    "2025-A-12:dp_final_score": {
+      "actual": 1.8,
+      "expected": 1.8,
+      "pass": true
+    },
+    "2026-A-11:quadratic_total_collisions": {
+      "actual": 10,
+      "expected": 10,
+      "pass": true
+    },
+    "2026-A-11:quadratic_bucket3": {
+      "actual": 25,
+      "expected": 25,
+      "pass": true
+    },
+    "2026-B-04:doubly_list_print": {
+      "actual": [
+        20,
+        30,
+        15,
+        10,
+        5
+      ],
+      "expected": [
+        20,
+        30,
+        15,
+        10,
+        5
+      ],
+      "pass": true
+    },
+    "2026-B-10:heap_built_4th_item": {
+      "actual": 40,
+      "expected": 40,
+      "pass": true
+    },
+    "2026-B-10:index_of_40_after_extract_20": {
+      "actual": 2,
+      "expected": 2,
+      "pass": true
+    }
+  }
+}

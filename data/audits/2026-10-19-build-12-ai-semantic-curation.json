@@ -1,0 +1,157 @@
+{
+  "buildId": "2026.10.19-12",
+  "baselineBuild": "2026.10.19-11",
+  "scope": "AI supplementary course presentation/keyword selection only",
+  "sourceUnchanged": true,
+  "aiOriginalLines": 110,
+  "aiKIWholeList": 11,
+  "oldAiUnits": 118,
+  "newAiUnits": 251,
+  "byFamily": {
+    "핵심 아이디어": {
+      "old": {
+        "lines": 8,
+        "units": 9,
+        "maskedRatio": 0.9955
+      },
+      "new": {
+        "lines": 8,
+        "units": 17,
+        "maskedRatio": 0.5089
+      }
+    },
+    "성취기준": {
+      "old": {
+        "lines": 19,
+        "units": 32,
+        "maskedRatio": 0.9524
+      },
+      "new": {
+        "lines": 19,
+        "units": 41,
+        "maskedRatio": 0.4907
+      }
+    },
+    "과정·기능": {
+      "old": {
+        "lines": 14,
+        "units": 14,
+        "maskedRatio": 1.0
+      },
+      "new": {
+        "lines": 14,
+        "units": 16,
+        "maskedRatio": 0.5593
+      }
+    },
+    "가치·태도": {
+      "old": {
+        "lines": 9,
+        "units": 9,
+        "maskedRatio": 1.0
+      },
+      "new": {
+        "lines": 9,
+        "units": 12,
+        "maskedRatio": 0.503
+      }
+    },
+    "해설": {
+      "old": {
+        "lines": 10,
+        "units": 10,
+        "maskedRatio": 0.4326
+      },
+      "new": {
+        "lines": 10,
+        "units": 37,
+        "maskedRatio": 0.3066
+      }
+    },
+    "고려사항": {
+      "old": {
+        "lines": 10,
+        "units": 10,
+        "maskedRatio": 0.393
+      },
+      "new": {
+        "lines": 10,
+        "units": 40,
+        "maskedRatio": 0.3573
+      }
+    },
+    "성격": {
+      "old": {
+        "lines": 8,
+        "units": 8,
+        "maskedRatio": 0.5831
+      },
+      "new": {
+        "lines": 8,
+        "units": 24,
+        "maskedRatio": 0.3985
+      }
+    },
+    "목표": {
+      "old": {
+        "lines": 5,
+        "units": 10,
+        "maskedRatio": 0.7911
+      },
+      "new": {
+        "lines": 5,
+        "units": 16,
+        "maskedRatio": 0.4679
+      }
+    },
+    "교수·학습": {
+      "old": {
+        "lines": 9,
+        "units": 9,
+        "maskedRatio": 0.5544
+      },
+      "new": {
+        "lines": 9,
+        "units": 30,
+        "maskedRatio": 0.3706
+      }
+    },
+    "평가": {
+      "old": {
+        "lines": 7,
+        "units": 7,
+        "maskedRatio": 0.6252
+      },
+      "new": {
+        "lines": 7,
+        "units": 18,
+        "maskedRatio": 0.3725
+      }
+    }
+  },
+  "legacyDataChecksums": {
+    "data/curriculum/middle-high-v9.0.6.json": "fc8bbdde8e81479ddfe6941c57e55efd89ee809e2037a1606a95cb6a8a653191",
+    "data/generated/study-data.js": "665dda52e24919870804a5ea93376f75a185216360646a4471b80d6aa3398072",
+    "data/exams/major-exams-2014-2026.json": "126a61b85b5b29078cdec6ac90ce193cd6418b58065321d5cc41daf45d125257",
+    "data/generated/exam-data.js": "86565b1abd7946aff85e50929624d3c3d407235e8eb4fa2658afb6dd21431540",
+    "data/generated/exam-display-bounds.json": "d48c309b20172f707dd6c14f75f8b867842b72235b9bf0ab6edfe6161bb0e6fd",
+    "js/core/study-engine.js": "ceee9aabaf1605b9d79b2b9740e57ccfaba606ed7bb946fb83e183b16d041059",
+    "js/core/grading.js": "1d610485d522d3fe95fa8b9d2bc5ab0ef85f6d0834c6443f652bf2e5ad080eaa",
+    "js/core/storage.js": "a6837f744747ae02e31883fa748a356c306a307b327924047f2031bb5333145d"
+  },
+  "examData": {
+    "total": 269,
+    "solutions": 159
+  },
+  "notes": [
+    "AI annotations manually selected as verbatim source substrings, including vocabulary and operations.",
+    "No historical importance grades assigned.",
+    "AI cloze field keys versioned; user cumulative history and storage key preserved.",
+    "Old AI drafts/grades remain stored but are not mapped onto different semantic answer fields."
+  ],
+  "checks": {
+    "npmTest": "PASS",
+    "inMemoryChromiumStudyFlow": "PASS",
+    "deployedWebsiteBrowserE2E": "NOT_RUN"
+  }
+}
