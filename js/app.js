@@ -554,11 +554,14 @@ function completeRetryRecord(id,r){
 function rescheduleRetryRecord(id,r,status){
   r.status=status;
   r.retryAttempts=Number(r.retryAttempts||0)+1;
-  if(r.retryAttempts>=Number(CL.config.maxRetriesPerTaskPerRound||2)){
-    // 결과가 사라지지 않도록 카드 제거는 확인 이후로 연기한다.
-    return false;
-  }
-  r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
+  // 틀린 카드는 횟수 제한으로 삭제하지 않는다. 다시 풀 때까지 오답 카드에 남긴다.
+  // lastWrongSerial은 새 오답 카드와 동일한 정렬 기준이다. 기존 카드의 최댓값보다
+  // 크게 갱신하여 답안 확인 뒤 목록의 맨 아래로 이동하게 한다.
+  const currentMax=Math.max(Number(state.answerSerial||0),0,...Object.values(state.fieldRetries||{})
+    .map(rec=>Number(rec?.lastWrongSerial||0)).filter(Number.isFinite));
+  r.lastWrongSerial=currentMax+1;
+  // 다음 오답을 풀 때에도 이 카드를 표시한다. 기존 지연 재인출 기록은 유지한다.
+  r.dueAt=Number(state.answerSerial||0);
   return true;
 }
 
@@ -580,15 +583,18 @@ function nextRetryCardIdAfter(currentId,orderBefore){
 function acknowledgeRetryCard(id){
   const pending=pendingRetryAcknowledgment;
   if(!pending||pending.id!==id)return;
-  if(pending.removeOnAck)delete state.fieldRetries[id];
+  if(pending.status==='correct'){
+    const record=state.fieldRetries?.[id];
+    if(record)completeRetryRecord(id,record);
+  }else if(pending.removeOnAck)delete state.fieldRetries[id];
   pendingRetryAcknowledgment=null;
   activeRetryCardId=nextRetryCardIdAfter(id,pending.orderBefore)||'';
   CL.storage.save(state);
   renderRetryDock();
   renderReviewPage();
 }
-function showRetryAcknowledgment(id,orderBefore,removeOnAck=false){
-  pendingRetryAcknowledgment={id,orderBefore,removeOnAck};
+function showRetryAcknowledgment(id,orderBefore,removeOnAck=false,status='wrong'){
+  pendingRetryAcknowledgment={id,orderBefore,removeOnAck,status};
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
   if(!panel)return;
   panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
@@ -600,6 +606,7 @@ function showRetryAcknowledgment(id,orderBefore,removeOnAck=false){
     button.dataset.retryAcknowledge=id;
     try{button.focus({preventScroll:true});}catch(_){button.focus();}
   }
+  // 채점 결과는 확인 버튼 또는 Enter를 누르기 전까지 무기한 유지한다.
 }
 function gradeRetryCard(id){
   if(pendingRetryAcknowledgment){if(pendingRetryAcknowledgment.id===id)acknowledgeRetryCard(id);return;}
@@ -645,14 +652,11 @@ function gradeRetryCard(id){
   }
 
   if(status==='correct'){
-    // 정답을 맞힌 오답 카드는 즉시 완료 처리하여 목록에서 제거한다.
-    // 다른 카드는 원래 순서를 유지하고, 남아 있는 다음 카드를 자동으로 연다.
-    completeRetryRecord(id,r);
-    pendingRetryAcknowledgment=null;
-    activeRetryCardId=nextRetryCardIdAfter(id,orderBefore)||'';
-    CL.storage.save(state);
-    renderRetryDock();
-    renderReviewPage();
+    // 공식 표기로 교정된 입력과 정답 판정을 보여준 다음 완료 기록을 삭제한다.
+    // 사용자가 확인/Enter를 누른 뒤에만 정답 카드를 제거한다.
+    showRetryResult(id,'correct','재인출 성공');
+    setRetryFeedback(id,`정답입니다 · 정답: ${expected}`,'good');
+    showRetryAcknowledgment(id,orderBefore,false,'correct');
     return;
   }
 
@@ -661,10 +665,10 @@ function gradeRetryCard(id){
 
   const requeued=rescheduleRetryRecord(id,r,status);
   const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
-  const tail=requeued?' · 잠시 뒤 다시 묻습니다.':' · 취약 기록에 남겼습니다.';
+  const tail=' · 확인하면 카드가 맨 아래로 이동합니다.';
   setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
   CL.storage.save(state);renderReviewPage();
-  showRetryAcknowledgment(id,orderBefore,!requeued);
+  showRetryAcknowledgment(id,orderBefore,false,'wrong');
 }
 function openRetryCard(id){
   if(pendingRetryAcknowledgment)return;
@@ -2091,6 +2095,7 @@ if(el.stage)el.stage.onchange=()=>changeScope(()=>{state.ui.stage='whole';});
 el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
   state.ui.retry=el.retry.checked;
   if(!state.ui.retry){
+      pendingRetryAcknowledgment=null;
     activeRetryCardId='';
     state.fieldRetries={};
     state.fieldRetryCounts={};
