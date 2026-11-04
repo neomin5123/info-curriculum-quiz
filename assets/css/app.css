@@ -1479,3 +1479,28 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 /* Unlimited retry cards — keep the dock inside the viewport and scroll older cards. */
 .retry-dock{max-height:calc(100dvh - 27vh - 12px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;align-content:start;scrollbar-width:thin}
 @media(max-width:760px){.retry-dock{max-height:min(65dvh,550px)}}
+
+
+/* v9.0.46 — study mode segmented button font normalization */
+.mode-study-group .segmented button{
+  font-size:14px;
+  line-height:1.2;
+  letter-spacing:-.01em;
+  min-height:40px;
+  padding:9px 14px;
+  white-space:nowrap;
+}
+@media(max-width:760px){
+  .mode-study-group .segmented button{
+    font-size:13.5px;
+    min-height:38px;
+    padding:8px 12px;
+  }
+}
+@media(max-width:480px){
+  .mode-study-group .segmented button{
+    font-size:13px;
+    min-height:36px;
+    padding:8px 10px;
+  }
+}
