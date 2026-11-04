@@ -1504,3 +1504,20 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
     padding:8px 10px;
   }
 }
+
+
+/* v9.0.47 — reserve space above the bottom-right page jump controls.
+   On desktop the retry dock starts at 26vh. Limit its scrollable height
+   instead of moving or shrinking the page-jump buttons. */
+@media (min-width:761px){
+  .retry-dock{
+    max-height:max(100px, calc(74dvh - 104px));
+  }
+}
+/* On narrow screens the page-jump controls sit at the top-right;
+   preserve their existing position and keep retry cards scrollable. */
+@media (max-width:760px){
+  .retry-dock{
+    max-height:min(65dvh, 550px, calc(100dvh - 118px));
+  }
+}
