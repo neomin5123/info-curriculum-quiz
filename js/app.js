@@ -645,13 +645,14 @@ function gradeRetryCard(id){
   }
 
   if(status==='correct'){
-    showRetryResult(id,'correct','정답 ✓ · 오답카드 유지');
-    setRetryFeedback(id,'정답입니다. 이 카드는 자동으로 삭제되지 않습니다.','good');
-    // 정답을 맞혀도 오답카드는 삭제하지 않는다. 반복 확인할 수 있도록 유지.
-    r.status='correct';
-    r.dueAt=Number(state.answerSerial||0);
-    CL.storage.save(state);renderReviewPage();
-    showRetryAcknowledgment(id,orderBefore,false);
+    // 정답을 맞힌 오답 카드는 즉시 완료 처리하여 목록에서 제거한다.
+    // 다른 카드는 원래 순서를 유지하고, 남아 있는 다음 카드를 자동으로 연다.
+    completeRetryRecord(id,r);
+    pendingRetryAcknowledgment=null;
+    activeRetryCardId=nextRetryCardIdAfter(id,orderBefore)||'';
+    CL.storage.save(state);
+    renderRetryDock();
+    renderReviewPage();
     return;
   }
 
