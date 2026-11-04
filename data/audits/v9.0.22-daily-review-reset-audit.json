@@ -1,0 +1,76 @@
+{
+  "version": "v9.0.22-study-rc.1",
+  "status": "PASS — STUDY RC READY",
+  "dailyReviewIntervalsDays": [
+    1,
+    3,
+    7,
+    14,
+    21,
+    30
+  ],
+  "draftExpiry": "local calendar day change",
+  "manualClear": {
+    "clears": [
+      "drafts",
+      "fieldGrades"
+    ],
+    "keeps": [
+      "reviewSchedule",
+      "itemProgress",
+      "fieldRetries",
+      "scopeRounds",
+      "scopeTasks"
+    ]
+  },
+  "reviewReset": {
+    "clears": [
+      "progress",
+      "itemProgress",
+      "fieldRetries",
+      "fieldRetryCounts",
+      "reviewSchedule",
+      "reviewHistory",
+      "answerSerial"
+    ],
+    "keeps": [
+      "drafts",
+      "fieldGrades",
+      "scopeRounds",
+      "scopeTasks"
+    ]
+  },
+  "retryToggle": {
+    "controls": "field-level delayed retry cards",
+    "delayAnswerChecks": 3,
+    "worksOn": [
+      "Enter per-field grading",
+      "whole Check button"
+    ],
+    "off": "no new cards; dock hidden; pending cards preserved",
+    "dailySrsIndependent": true
+  },
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "presentationDataMutated": false,
+  "packageQA": {
+    "workingTree": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/storage.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "js/core/config.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    },
+    "zipReextract": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/storage.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "js/core/config.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    }
+  }
+}

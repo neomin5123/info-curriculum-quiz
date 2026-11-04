@@ -1,0 +1,19 @@
+{
+  "version": "9.0.53-study-rc.1",
+  "status": "PASS",
+  "stage4Reaudit": true,
+  "stage5FinalQA": true,
+  "aiLines": 104,
+  "legacyLines": 270,
+  "totalLines": 374,
+  "presentationUnits": 557,
+  "aiSourceHash": "417e3b1bafc3faef5e601f9c8d1742bf806a79561d52baa7b06fafa57eda5d98",
+  "legacySourceHash": "bce21b81d787287409c0d52e378970f06f2aa2c9cc58f53c48315b60184da31e",
+  "fixedRecallTarget": {
+    "lineId": "AI-TE-MET-04",
+    "before": "활용에 대한 경험은 높",
+    "after": "활용에 대한 경험은 높일 수 있도록"
+  },
+  "npmTest": "PASS",
+  "domSmoke": "PASS"
+}

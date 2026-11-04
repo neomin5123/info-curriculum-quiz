@@ -1,0 +1,33 @@
+{
+  "version": "v9.0.5",
+  "status": "PASS — KNOWLEDGE·UNDERSTANDING AREA-FULL-LIST RULE IMPLEMENTED",
+  "groups": 10,
+  "officialKnowledgeUnderstandingLines": 32,
+  "groupedItems": 32,
+  "middleItems": 17,
+  "highItems": 15,
+  "groupSizes": {
+    "MI-KI-CS": 3,
+    "MI-KI-DT": 3,
+    "MI-KI-AP": 6,
+    "MI-KI-AI": 2,
+    "MI-KI-DC": 3,
+    "HI-KI-CS": 2,
+    "HI-KI-DT": 2,
+    "HI-KI-AP": 7,
+    "HI-KI-AI": 2,
+    "HI-KI-DC": 2
+  },
+  "minGroupSize": 2,
+  "maxGroupSize": 7,
+  "duplicateWithinGroup": 0,
+  "missingKIFromGroups": 0,
+  "extraGroupItems": 0,
+  "individualMainStudySuppressionMissing": 0,
+  "nonKIOverrideLeakage": 0,
+  "nonProductionGradeInsideKI": 0,
+  "policyCountsChanged": false,
+  "officialTextMutated": false,
+  "grading": "UNORDERED_EXACT_SET + distinct answers + all shown at once + per-item partial mastery",
+  "htmlJavaScriptSyntax": "PASS"
+}

@@ -1,0 +1,27 @@
+{
+  "version": "v9.0.16-study-rc.1",
+  "status": "PASS — STUDY RC READY",
+  "change": "per-field Enter grading",
+  "enterBehavior": "grade focused answer field only",
+  "wholeTaskGrading": "check button only",
+  "unorderedSetFields": "accepted in any order, duplicates rejected",
+  "curriculumDataMutated": false,
+  "policyMutated": false,
+  "presentationDataMutated": false,
+  "packageQA": {
+    "workingTree": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    },
+    "zipReextract": {
+      "js/app.js": "PASS",
+      "js/core/study-engine.js": "PASS",
+      "js/core/grading.js": "PASS",
+      "service-worker.js": "PASS",
+      "npm test": "PASS"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "version": "9.0.51-study-rc.1",
+  "status": "PASS",
+  "sharedRecallPromptModel": true,
+  "dailyReviewOneCardAtATime": true,
+  "dailyActualSourceMeta": true,
+  "knowledgeUnderstandingDailyPerLine": true,
+  "wrongDailyRequiresAcknowledgment": true,
+  "separateSchedulersPreserved": true,
+  "officialLines": 270,
+  "presentationUnits": 370,
+  "browserE2E": false
+}

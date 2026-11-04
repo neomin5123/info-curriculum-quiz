@@ -1,0 +1,61 @@
+{
+  "build": "2026.10.27-52",
+  "verification": [
+    {
+      "id": "2023-A-03",
+      "result": "A-procedural",
+      "officialRubricChecked": false,
+      "sourcePdfPage": [
+        102
+      ],
+      "details": {
+        "undo": [
+          "T1",
+          "T3"
+        ],
+        "B": 2100,
+        "basis": "T0 committed before crash, T2 aborted with compensation; T1 and T3 uncommitted. T0 last committed write B=2100."
+      }
+    },
+    {
+      "id": "2023-A-04",
+      "result": "A-procedural",
+      "officialRubricChecked": false,
+      "sourcePdfPage": [
+        103
+      ],
+      "details": {
+        "disk_bytes": 2147483648,
+        "block_bytes": 8192,
+        "blocks": 262144,
+        "bitmap_bits": 262144,
+        "bitmap_block_capacity_bits": 65536,
+        "minimum_cluster_blocks": 4,
+        "basis": "2GiB / 8KiB = 262144 blocks; 8KiB bitmap holds 65536 bits; ceiling(262144/65536)=4."
+      }
+    }
+  ],
+  "clozeCorrections": [
+    {
+      "id": "MI-03-CS-KI-01",
+      "source": "알고리즘은 다양한 설계 전략을 통해 일상생활의 문제를 해결하는 데 활용된다.",
+      "selected": [
+        "다양한 설계 전략"
+      ]
+    },
+    {
+      "id": "MI-03-CS-KI-02",
+      "source": "자동화를 고려해 설계된 알고리즘은 컴퓨터가 이해할 수 있는 언어로 구현되어 생활을 더욱 편리하게 하는 데 활용된다.",
+      "selected": [
+        "자동화",
+        "컴퓨터가 이해할 수 있는 언어"
+      ]
+    }
+  ],
+  "scope": "two problems independently checked against original uploaded PDF pages; two selected cloze sentences; other content unchanged",
+  "caveats": [
+    "no official rubric",
+    "no browser end-to-end",
+    "prior A-grade records not independently reaudited"
+  ]
+}

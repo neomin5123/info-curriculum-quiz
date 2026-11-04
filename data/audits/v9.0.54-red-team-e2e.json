@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "tests": {
+    "boot_ai": {
+      "version": "v9.0.54 Study RC",
+      "areas": [
+        "전체 영역",
+        "인공지능의 이해",
+        "인공지능과 학습",
+        "인공지능의 사회적 영향",
+        "인공지능 프로젝트"
+      ],
+      "pageErrors": [],
+      "pass": true
+    },
+    "round_isolation": {
+      "r1Expected": "하드웨어와 소프트웨어",
+      "r2Expected": "컴퓨팅 시스템",
+      "r1Key": "CS:middle-info:컴퓨팅 시스템:single|single|cloze|0|round:1",
+      "r2Key": "CS:middle-info:컴퓨팅 시스템:single|single|cloze|0|round:2",
+      "r2Value": "",
+      "r2CorrectClass": false,
+      "pageErrors": [],
+      "pass": true
+    },
+    "retry_persistence": {
+      "initial": 1,
+      "attempts": [
+        {
+          "remaining": 1
+        },
+        {
+          "remaining": 1
+        }
+      ],
+      "final": 1,
+      "pageErrors": [],
+      "pass": true
+    },
+    "single_retry_only": {
+      "retryKinds": [
+        "single"
+      ],
+      "pageErrors": [],
+      "pass": true
+    },
+    "review_ui": {
+      "stat": "오늘의 복습\\n0\\n1·3·7·10·14일 간격 · 이후 14일 반복",
+      "retryText": "현재 예약된 지연 재인출이 없습니다.",
+      "pageErrors": [],
+      "pass": true
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "version": "9.0.42-study-rc.1",
+  "status": "PASS",
+  "bug": "area navigation forced smooth scroll",
+  "fix": "preserve scrollX/scrollY across area render",
+  "forcedScrollIntoViewRemoved": true,
+  "dataChanged": false
+}

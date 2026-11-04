@@ -1,0 +1,59 @@
+{
+  "build": "2026.10.27-51",
+  "newVerificationRecords": [
+    {
+      "id": "2025-B-11",
+      "scope": "all three subparts independently rederived from the stated 32-bit / 4KiB / 4-byte / 600MiB / 30MiB conditions",
+      "status": "A-procedural",
+      "calculation": {
+        "virtualPages": 1048576,
+        "flatBytes": 4194304,
+        "physicalAccessesWithoutTLB": 3,
+        "secondLevelEntries": 1024,
+        "bytesCoveredPerSecondLevelTable": 4194304,
+        "tablesFor600MiB": 150,
+        "tablesFor30MiB": 8
+      },
+      "officialRubricChecked": false
+    },
+    {
+      "id": "2024-A-03",
+      "scope": "both code blanks checked using 8-bit brightness limits and bit shifting",
+      "status": "A-procedural",
+      "calculation": {
+        "saturationCondition": "value > 255",
+        "shiftOperator": ">>",
+        "sampleBoundaryCheck": {
+          "0": 0,
+          "127": 0,
+          "128": 1,
+          "255": 1,
+          "256": 1
+        }
+      },
+      "officialRubricChecked": false
+    }
+  ],
+  "clozeChanges": [
+    {
+      "lineId": "MI-03-AC-ST-03",
+      "old": "알고리즘의 중요성",
+      "new": "다양한 알고리즘",
+      "source": "[9정03-03] 알고리즘의 중요성을 이해하고, 문제를 해결하는 다양한 알고리즘을 비교⋅분석한다.",
+      "index": 36
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "old": "데이터",
+      "new": "문제 해결에 적합한 데이터",
+      "source": "기계학습 기반의 인공지능을 구현하기 위해서는 문제 해결에 적합한 데이터와 기계학습 모델을 활용한다.",
+      "index": 25
+    }
+  ],
+  "unmodified": "base curriculum texts, exam answers, full explanations, pre-existing A-grade IDs",
+  "caveats": [
+    "no official grading rubric",
+    "no browser E2E",
+    "other cloze items not newly certified"
+  ]
+}

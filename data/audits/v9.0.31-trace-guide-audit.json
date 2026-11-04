@@ -1,0 +1,12 @@
+{
+  "version": "v9.0.31-study-rc.1",
+  "status": "PASS — TRACE GUIDE ABOVE INPUT",
+  "guide": {
+    "position": "above input",
+    "fontPx": 11,
+    "koreanWordBreak": "keep-all"
+  },
+  "gradingSemanticsChanged": false,
+  "curriculumDataMutated": false,
+  "reviewLogicMutated": false
+}

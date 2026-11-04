@@ -1,0 +1,10 @@
+{
+  "version": "9.0.52-study-rc.1",
+  "status": "PASS",
+  "aiBasicsLines": 104,
+  "totalOfficialLines": 374,
+  "aiKiGroups": 4,
+  "presentationUnits": 557,
+  "legacySourceFrozen": true,
+  "legacyPolicyFrozen": true
+}

@@ -1,0 +1,13 @@
+{
+  "build": "2026.10.27-47",
+  "basis": "Build 46",
+  "scope": "semantic mask/cloze rendering regression and browser execution feasibility",
+  "browserE2E": "BLOCKED_BY_ENVIRONMENT",
+  "browserDetails": [
+    "Chromium Playwright navigation to local HTTP blocked: net::ERR_BLOCKED_BY_ADMINISTRATOR",
+    "Chromium Playwright navigation to local file URI blocked: net::ERR_BLOCKED_BY_ADMINISTRATOR"
+  ],
+  "sourceCurriculumModified": false,
+  "answerModified": false,
+  "qa": "PASS (static/contract; browser E2E not executed)"
+}

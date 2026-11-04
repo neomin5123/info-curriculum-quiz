@@ -1,0 +1,10 @@
+{
+  "version": "9.0.41-study-rc.1",
+  "status": "PASS",
+  "tailStarvationRemoved": true,
+  "roundAdvanceBlockedUntilRetryDrain": true,
+  "normalRetryDelayPreserved": 3,
+  "officialLines": 270,
+  "presentationUnits": 370,
+  "curriculumDataChanged": false
+}

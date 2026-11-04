@@ -1,0 +1,21 @@
+{
+  "version": "v9.0.35-study-rc.1",
+  "status": "PASS — STICKY / MEMO / RETRY / STANDARD UX REPAIR",
+  "changes": {
+    "stickyControlCard": true,
+    "redundantTaskMetaHidden": true,
+    "bottomOrder": [
+      "이전",
+      "다음",
+      "채점",
+      "정답 보기"
+    ],
+    "gradingControls": "cloze only",
+    "retryToggle": "top mode-row pill",
+    "memoOpenFix": "important transform override + pointerdown",
+    "standardCode": "fixed left column",
+    "answerFields": "more compact, wrap preserved"
+  },
+  "curriculumDataMutated": false,
+  "reviewPolicyMutated": false
+}
