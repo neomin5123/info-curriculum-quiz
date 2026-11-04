@@ -21,6 +21,7 @@ areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
 areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
 examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
+let pendingRetryAcknowledgment=null;
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
 const PRACTICAL_AUTO_ADVANCE_DELAY_MS=950;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -383,9 +384,9 @@ function retryEntries({dueOnly=false}={}){
   const serial=Number(state.answerSerial||0);
   return Object.entries(state.fieldRetries||{})
     .filter(([,r])=>r&&(!dueOnly||Number(r.dueAt)<=serial))
-    // 가장 최근에 틀린 항목을 먼저 보여준다. 오래된 오답은 복습 목록에 보존한다.
-    .sort((a,b)=>Number(b[1].lastWrongSerial??-1)-Number(a[1].lastWrongSerial??-1)
-      || Number(a[1].dueAt)-Number(b[1].dueAt));
+    // 오답 카드: 이전 오답부터 위에 두고 신규 오답은 항상 맨 아래에 추가한다.
+    // 시간 값이 같으면 기존 저장 순서(Object.entries)를 유지한다(안정 정렬).
+    .sort((a,b)=>Number(a[1].lastWrongSerial??-1)-Number(b[1].lastWrongSerial??-1));
 }
 function retryAnswerList(r){
   if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
@@ -452,7 +453,7 @@ function retryCardPanelHtml(id,r){
     </div>`;
 }
 function retryDockVisibleEntries(due){
-  // 카드 표시 수의 상한을 두지 않는다. 최신 오답부터 모든 미해결 카드를 표시한다.
+  // 카드 표시 수의 상한을 두지 않는다. 오래된 오답부터 신규 오답까지 모두 표시한다.
   return due;
 }
 function renderRetryDock(){
@@ -463,6 +464,7 @@ function renderRetryDock(){
     el.retryDock.innerHTML='';
     el.retryDock.classList.remove('has-cards');
     activeRetryCardId='';
+    pendingRetryAcknowledgment=null;
     return;
   }
   if(activeRetryCardId&&!due.some(([id])=>id===activeRetryCardId))activeRetryCardId='';
@@ -509,10 +511,12 @@ function clearRetryResult(id){
   if(overlay){overlay.textContent='';overlay.className='retry-result-overlay';}
 }
 function collapseRetryCard(id=''){
+  if(pendingRetryAcknowledgment)return; // 결과는 명시적 확인 전까지 유지
   if(!id||activeRetryCardId===id)activeRetryCardId='';
   renderRetryDock();
 }
 function deferRetryCard(id){
+  if(pendingRetryAcknowledgment)return;
   const r=state.fieldRetries?.[id];if(!r)return;
   r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
   activeRetryCardId='';
@@ -549,7 +553,7 @@ function rescheduleRetryRecord(id,r,status){
   r.status=status;
   r.retryAttempts=Number(r.retryAttempts||0)+1;
   if(r.retryAttempts>=Number(CL.config.maxRetriesPerTaskPerRound||2)){
-    delete state.fieldRetries[id];
+    // 결과가 사라지지 않도록 카드 제거는 확인 이후로 연기한다.
     return false;
   }
   r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
@@ -571,19 +575,39 @@ function nextRetryCardIdAfter(currentId,orderBefore){
   }
   return '';
 }
-function advanceRetryCardAfter(currentId,orderBefore,delayMs=1000){
-  setTimeout(()=>{
-    activeRetryCardId=nextRetryCardIdAfter(currentId,orderBefore)||'';
-    renderRetryDock();
-  },delayMs);
+function acknowledgeRetryCard(id){
+  const pending=pendingRetryAcknowledgment;
+  if(!pending||pending.id!==id)return;
+  if(pending.removeOnAck)delete state.fieldRetries[id];
+  pendingRetryAcknowledgment=null;
+  activeRetryCardId=nextRetryCardIdAfter(id,pending.orderBefore)||'';
+  CL.storage.save(state);
+  renderRetryDock();
+  renderReviewPage();
+}
+function showRetryAcknowledgment(id,orderBefore,removeOnAck=false){
+  pendingRetryAcknowledgment={id,orderBefore,removeOnAck};
+  const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
+  if(!panel)return;
+  panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
+  panel.querySelectorAll('[data-retry-later],[data-retry-collapse]').forEach(control=>{control.disabled=true;});
+  const button=panel.querySelector('[data-retry-grade]');
+  if(button){
+    button.textContent='확인 · 다음 카드';
+    button.disabled=false;
+    button.dataset.retryAcknowledge=id;
+    try{button.focus({preventScroll:true});}catch(_){button.focus();}
+  }
 }
 function gradeRetryCard(id){
+  if(pendingRetryAcknowledgment){if(pendingRetryAcknowledgment.id===id)acknowledgeRetryCard(id);return;}
   const r=state.fieldRetries?.[id];if(!r)return;
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
   if(!panel||panel.dataset.gradingLock==='1')return;
   panel.dataset.gradingLock='1';
   panel.classList.add('grading-lock');
-  panel.querySelectorAll('input,button').forEach(control=>{control.disabled=true;});
+  // 답안 입력만 잠그고 확인 버튼은 결과 표시 뒤 다시 활성화한다.
+  panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
   const orderBefore=retryCardOrderSnapshot();
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   let status='wrong',expected='',hasWrong=false,hasUnknown=false,hasNear=false;
@@ -623,7 +647,7 @@ function gradeRetryCard(id){
     r.status='correct';
     r.dueAt=Number(state.answerSerial||0);
     CL.storage.save(state);renderReviewPage();
-    advanceRetryCardAfter(id,orderBefore,1000);
+    showRetryAcknowledgment(id,orderBefore,false);
     return;
   }
 
@@ -635,9 +659,10 @@ function gradeRetryCard(id){
   const tail=requeued?' · 잠시 뒤 다시 묻습니다.':' · 취약 기록에 남겼습니다.';
   setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
   CL.storage.save(state);renderReviewPage();
-  advanceRetryCardAfter(id,orderBefore,1000);
+  showRetryAcknowledgment(id,orderBefore,!requeued);
 }
 function openRetryCard(id){
+  if(pendingRetryAcknowledgment)return;
   const r=state.fieldRetries?.[id];if(!r)return;
   // 아직 due가 아니더라도 복습 탭에서 직접 열 수 있게 즉시 활성화한다.
   r.dueAt=Math.min(Number(r.dueAt||0),Number(state.answerSerial||0));
@@ -1996,6 +2021,9 @@ el.retryDock.addEventListener('click',e=>{
   const open=e.target.closest('[data-retry-open]');if(open){openRetryCard(open.dataset.retryOpen);}
 });
 el.retryDock.addEventListener('keydown',e=>{
+  if(pendingRetryAcknowledgment&&e.key==='Enter'&&!e.isComposing&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
+    e.preventDefault();acknowledgeRetryCard(pendingRetryAcknowledgment.id);return;
+  }
   const input=e.target.closest('.retry-card-input');if(!input||e.isComposing||e.keyCode===229)return;
   if(e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey)return;
   const panel=input.closest('[data-retry-panel]');if(!panel)return;
@@ -2004,7 +2032,7 @@ el.retryDock.addEventListener('keydown',e=>{
   e.preventDefault();gradeRetryCard(panel.dataset.retryPanel);
 });
 document.addEventListener('pointerdown',e=>{
-  if(!activeRetryCardId||!el.retryDock)return;
+  if(!activeRetryCardId||!el.retryDock||pendingRetryAcknowledgment)return;
   if(el.retryDock.contains(e.target))return;
   activeRetryCardId='';
   renderRetryDock();

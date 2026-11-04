@@ -14,11 +14,13 @@ assert.equal((dock.innerHTML.match(/<section class="retry-card /g)||[]).length,8
 assert.match(dock.innerHTML,/data-retry-id="field-8\|round:1"/,'newest error visible');
 assert.match(dock.innerHTML,/data-retry-id="field-1\|round:1"/,'older error remains visible');
 assert.doesNotMatch(dock.innerHTML,/retry-card expanded/,'no automatic expansion');
-assert.equal(ctx.retryEntries({dueOnly:true})[0][0],'field-8|round:1');
+assert.equal(ctx.retryEntries({dueOnly:true})[0][0],'field-1|round:1');
+assert.equal(ctx.retryEntries({dueOnly:true}).at(-1)[0],'field-8|round:1');
+assert(dock.innerHTML.indexOf('data-retry-id="field-1|round:1"')<dock.innerHTML.indexOf('data-retry-id="field-8|round:1"'),'new cards appended after older cards');
 // A formerly completed card must be regenerated on a new wrong answer, even after the old count reaches the cap.
 delete ctx.state.fieldRetries['field-8|round:1'];ctx.state.fieldRetryCounts['field-8|round:1']=2;wrong('field-8');
 assert(ctx.state.fieldRetries['field-8|round:1'],'a repeated wrong answer should create a new card');
 assert.match(dock.innerHTML,/data-retry-id="field-8\|round:1"/);
 ctx.activeRetryCardId='field-8|round:1';ctx.renderRetryDock();assert.match(dock.innerHTML,/retry-card expanded/,'manual open still works');
 ctx.state.ui.retry=false;ctx.renderRetryDock();assert.equal(dock.innerHTML,'','OFF hides dock');
-console.log('PASS newest wrong card first, >6 cards visible, repeat error regenerated, manual open, OFF');
+console.log('PASS newest wrong card last, >6 cards visible, repeat error regenerated, manual open, OFF');
