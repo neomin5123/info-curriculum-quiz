@@ -472,16 +472,15 @@ function retryCardPanelHtml(id,r){
           <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
         </div>
       </div>
-      <div class="practical-retry-meta">${esc(retryMeta(r))}</div>
       <div class="practical-retry-prompt">${esc(prompt)}</div>
       <div class="practical-retry-row ${setMode?'set-mode':''}">
         ${inputHtml}
         <div class="practical-retry-actions">
+          <span class="retry-action-note" data-retry-feedback="${esc(id)}" aria-live="polite" hidden></span>
           <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">확인 <span class="retry-grade-shortcut">(Enter)</span></button>
           <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
         </div>
       </div>
-      <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}"><div class="feedback-main">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div><div class="feedback-sub"></div></div>
     </div>`;
 }
 function retryDockVisibleEntries(due){
@@ -520,16 +519,13 @@ function renderRetryDock(){
   }
 }
 function setRetryFeedback(id,mainText='',subText='',status=''){
-  const f=el.retryDock?.querySelector(`[data-retry-feedback="${CSS.escape(id)}"]`);
-  if(!f)return;
-  const main=f.querySelector('.feedback-main');
-  const sub=f.querySelector('.feedback-sub');
-  if(main)main.textContent=mainText;
-  if(sub){
-    sub.textContent=subText;
-    sub.hidden=!subText;
-  }
-  f.className='practical-retry-feedback '+status;
+  const note=el.retryDock?.querySelector(`[data-retry-feedback="${CSS.escape(id)}"]`);
+  if(!note)return;
+  // 성공·실패 여부는 카드 우측 상단 배지, 정답은 입력칸에서 확인한다.
+  // 안내 문구는 확인 버튼과 같은 줄에 표시하고, 공간이 부족할 때만 줄바꿈한다.
+  note.textContent=subText||mainText||'';
+  note.hidden=!note.textContent;
+  note.className='retry-action-note '+status;
 }
 
 function showRetryResult(id,status,text){
@@ -663,7 +659,8 @@ function gradeRetryCard(id){
     status=grade.status;
     grade.results.forEach((g,i)=>{
       const f=fields[i];if(!f)return;
-      if(g.status==='correct'&&g.expected)f.value=g.expected;
+      const canonical=(g.expected||r.setAnswers[i]||'');
+      if(canonical)f.value=canonical;
       const visual=g.status==='duplicate'?'wrong':g.status;
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
       f.classList.add(visual);
@@ -678,7 +675,8 @@ function gradeRetryCard(id){
     const d=CL.grading.classifyDetailed(input.value,r.correctAnswer||'');
     status=d.status;
     expected=r.correctAnswer||d.expected||'';
-    if(status==='correct'&&expected)input.value=expected;
+    // 오답을 확인한 뒤 답안은 아래에 반복하지 않고, 붉은 입력칸 안에서 제시한다.
+    if(expected)input.value=expected;
     const visual=status==='duplicate'?'wrong':status;
     ['correct','near','unknown','wrong'].forEach(c=>input.classList.remove(c));
     input.classList.add(visual);
@@ -700,7 +698,7 @@ function gradeRetryCard(id){
   showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
 
   const requeued=rescheduleRetryRecord(id,r,status);
-  setRetryFeedback(id,`정답: ${expected}`,'확인하면 카드가 맨 아래로 이동합니다.',overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  setRetryFeedback(id,'','확인하면 카드가 맨 아래로 이동합니다.',overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
   CL.storage.save(state);renderReviewPage();
   showRetryAcknowledgment(id,orderBefore,false,'wrong');
 }

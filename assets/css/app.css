@@ -1561,7 +1561,7 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 .retry-dock .practical-retry-set{min-width:0}
 .retry-dock .practical-retry-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;min-width:0}
 .retry-dock .retry-grade-shortcut{font-size:.8em;font-weight:650;opacity:.9}
-.retry-dock .practical-retry-feedback{display:grid;gap:3px;min-height:0;margin-top:9px;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.retry-dock .practical-retry-feedback{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;row-gap:2px;min-height:0;margin-top:9px;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
 .retry-dock .practical-retry-feedback .feedback-main{font-weight:750}
 .retry-dock .practical-retry-feedback .feedback-main:empty{display:none}
 .retry-dock .practical-retry-feedback .feedback-sub{font-weight:500}
@@ -1570,4 +1570,40 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   .retry-dock .practical-retry-actions{justify-content:stretch}
   .retry-dock .practical-retry-actions .retry-card-grade,
   .retry-dock .practical-retry-actions .retry-card-later{flex:1 1 auto}
+}
+
+/* 2026-11-05: retry result visible in-place with a single subject/area header. */
+.retry-dock .practical-retry-panel .practical-retry-prompt{margin-top:10px}
+.retry-dock .practical-retry-actions{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+  min-width:0;
+}
+.retry-dock .retry-action-note{
+  flex:1 1 155px;
+  min-width:0;
+  font-size:11px;
+  font-weight:650;
+  color:var(--muted);
+  line-height:1.35;
+  overflow-wrap:anywhere;
+}
+.retry-dock .retry-action-note[hidden]{display:none!important}
+.retry-dock .retry-action-note.good{color:var(--good)}
+.retry-dock .retry-action-note.near{color:var(--near)}
+.retry-dock .retry-action-note.bad,
+.retry-dock .retry-action-note.unknown{color:var(--bad)}
+.retry-dock .practical-retry-actions .retry-card-grade,
+.retry-dock .practical-retry-actions .retry-card-later{flex:0 0 auto;white-space:nowrap}
+.retry-dock .retry-card-input.wrong,
+.retry-dock .retry-card-input.unknown,
+.retry-dock .retry-card-input.near{overflow:visible;text-overflow:clip}
+@media(max-width:760px){
+  .retry-dock .practical-retry-actions{justify-content:flex-end}
+  .retry-dock .retry-action-note{flex:1 1 100%;}
+  .retry-dock .practical-retry-actions .retry-card-grade,
+  .retry-dock .practical-retry-actions .retry-card-later{flex:0 0 auto}
 }
