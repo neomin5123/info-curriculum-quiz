@@ -1677,10 +1677,29 @@ function renderWholeGroup(g){
   if(g.subject==='ai-basic'&&g.familyGroup==='standards'){
     const task={type:'whole-group',group:g,focus:{kind:'whole',standardLineIds:g.items.map(it=>it.lineId)}};
     el.content.innerHTML=`<div class="whole-wrap"><section class="whole-section standards-section"><div class="section-title">성취기준</div><div class="cs-items">${g.items.map((it,i)=>standardItemHtml(task,it,mode,i)).join('')}</div></section></div>`;
-  }else el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)}</div>${inputRows(s.items,s.family,mode)}</section>`).join('')}</div>`;
+  }else el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)}</div>${s.family==='성취기준'?`<div class="cs-items">${s.items.map((it,i)=>standardItemHtml({focus:{kind:'whole',standardLineIds:s.items.map(x=>x.lineId)}},it,mode,i)).join('')}</div>`:inputRows(s.items,s.family,mode)}</section>`).join('')}</div>`;
   if(mode==='mask')bindMasks();
 }
+function standardLineDisplay(line,mode){
+  const parts=splitStandardText(line.sourceText);
+  const code=parts.code||(String(line.lineId||'').match(/(?:9정|12정|12인기|12데과)\d{2}-\d{2}/)||[])[0];
+  if(!code)return null;
+  const badge=`<span class="standard-code" aria-label="성취기준 코드">${esc(code)}</span>`;
+  const lineBody=`<div class="standard-row standard-cloze-row">${badge}<div class="standard-body cs-cloze-content">`;
+  if(mode==='source')return lineBody+esc(parts.body)+'</div></div>';
+  const selected=engine.selectedSet(line);
+  const raw=mode==='mask'?(line.presentation?.units?.length?line.presentation.units:line.keywords.filter(k=>k.active)):(selected?engine.keywordsForSet(line,selected):[]);
+  const units=(raw||[]).slice().sort((a,b)=>a.start-b.start);
+  const bodyUnits=standardBodyUnits(units,parts.offset,parts.body);
+  if(mode==='mask')return lineBody+renderWithSpans(parts.body,bodyUnits,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)+'</div></div>';
+  if(!bodyUnits.length)return lineBody+esc(parts.body)+'</div></div>';
+  return lineBody+renderWithSpans(parts.body,bodyUnits,(k,i)=>`<input class="inline-input standard-inline-input" data-answer="${esc(k.text)}" aria-label="${esc(code)} 빈칸 ${i+1}" autocomplete="off">`)+'</div></div>';
+}
 function renderLine(line){
+  if(line.family==='성취기준'&&state.ui.mode!=='typing'){
+    const html=standardLineDisplay(line,state.ui.mode);
+    if(html){el.content.innerHTML=html;if(state.ui.mode==='mask')bindMasks();return;}
+  }
   const mode=state.ui.mode;if(mode==='source'){el.content.innerHTML=`<div class="source-text">${esc(line.sourceText)}</div>`;return;}if(mode==='typing'){el.content.innerHTML=`<div class="typing-area trace-typing-area"><div class="trace-guide trace-guide-block">${esc(line.sourceText)}</div><textarea id="typingInput" placeholder="원문을 그대로 입력"></textarea></div>`;return;}
   if(mode==='mask'){const ks=(line.presentation?.units?.length?line.presentation.units:line.keywords.filter(k=>k.active)).slice().sort((a,b)=>a.start-b.start);el.content.innerHTML=`<div class="mask-text">${renderWithSpans(line.sourceText,ks,k=>`<span class="mask" data-reveal>${esc(k.text)}</span>`)}</div>`;bindMasks();return;}
   const set=engine.selectedSet(line),ks=engine.keywordsForSet(line,set);if(!set||!ks.length){el.content.innerHTML=`<div class="source-text">${esc(line.sourceText)}</div>`;return;}el.content.innerHTML=`<div class="cloze-text">${renderWithSpans(line.sourceText,ks,(k,i)=>`<input class="inline-input" data-answer="${esc(k.text)}" aria-label="빈칸 ${i+1}" autocomplete="off">`)}</div>`;
@@ -1869,9 +1888,31 @@ function resizeAnswerField(field){
     return;
   }
   if(field.classList.contains('inline-input')||field.classList.contains('cs-inline-input')||field.classList.contains('standard-inline-input')){
+    // 한글·띄어쓰기·가운뎃점 등 실제 글리프 폭으로 계산한다.
+    // 이전 글자 수 * .76rem 방식은 한글 정답이 잘리는 원인이었다.
     const expected=String(field.dataset.answer||'');
-    const len=Math.max(8,[...expected].length,[...String(field.value||'')].length);
-    field.style.setProperty('--answer-ch',String(Math.min(48,len+1)));
+    const value=String(field.value||'');
+    const longest=[expected,value].sort((a,b)=>[...b].length-[...a].length)[0]||'';
+    const styles=getComputedStyle(field);
+    if(!field.dataset.clozeBaseFont)field.dataset.clozeBaseFont=String(parseFloat(styles.fontSize)||18);
+    const baseSize=Number(field.dataset.clozeBaseFont);
+    const canvas=resizeAnswerField.canvas||(resizeAnswerField.canvas=document.createElement('canvas'));
+    const ctx=canvas.getContext('2d');
+    let needed=150;
+    if(ctx){
+      ctx.font=`${styles.fontWeight||700} ${baseSize}px ${styles.fontFamily||'sans-serif'}`;
+      needed=Math.ceil(ctx.measureText(longest).width+34);
+    }else needed=Math.ceil(Math.max(8,[...longest].length)*baseSize+34);
+    const body=field.closest('.cs-cloze-content,.cloze-text,.standard-body')||field.parentElement?.parentElement;
+    const room=body?.clientWidth||window.innerWidth-44;
+    const maxWidth=Math.max(115,Math.min(680,window.innerWidth-44,room-8));
+    const width=Math.max(115,Math.min(needed,maxWidth));
+    field.style.setProperty('--cloze-width',`${width}px`);
+    // 매우 긴 정답이 화면 최대 폭을 넘어갈 때만 폰트 크기를 축소한다.
+    const available=Math.max(80,width-34);
+    const neededInk=Math.max(1,needed-34);
+    field.style.fontSize=`${Math.max(10,Math.min(baseSize,baseSize*available/neededInk)).toFixed(2)}px`;
+    field.title=value||expected;
   }
 }
 function prepareAnswerFields(){
@@ -2140,6 +2181,7 @@ el.areaMemoClear?.addEventListener('click',e=>{e.preventDefault();clearCurrentAr
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&areaMemoOpen&&!e.isComposing)setAreaMemoOpen(false);
 });
+window.addEventListener('resize',()=>{answerFields().forEach(resizeAnswerField);});
 el.retryDock.addEventListener('click',e=>{
   const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
   const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}

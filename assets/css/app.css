@@ -1696,3 +1696,26 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 }
 /* Keep all fixed standard identifiers visible independently from the answer field. */
 .standard-row .standard-code{display:inline-flex!important;visibility:visible!important;opacity:1!important}
+
+
+/* 2026-11-05: 본문 빈칸 정답 잘림 방지. 측정된 실제 글자 폭 우선. */
+#studyContent .cloze-text .answer-field-wrap.inline,
+#studyContent .cs-cloze-content .answer-field-wrap.inline{
+  max-width:min(100%,calc(100vw - 44px))!important;
+}
+#studyContent .cloze-text .inline-input,
+#studyContent .cs-cloze-content .inline-input,
+#studyContent .cs-cloze-content .cs-inline-input,
+#studyContent .cs-cloze-content .standard-inline-input{
+  width:var(--cloze-width,14rem)!important;
+  max-width:min(100%,calc(100vw - 44px))!important;
+  min-width:0!important;
+  box-sizing:border-box;
+  text-overflow:clip;
+}
+#studyContent .standard-row .standard-code{
+  display:inline-flex!important;
+  flex-shrink:0!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
