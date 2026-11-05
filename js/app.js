@@ -1152,12 +1152,21 @@ function jumpArea(delta){
   cancelPracticalAutoAdvance();
   const nav=areaNavState();if(!nav)return;
   const target=nav.groups[nav.idx+delta];if(!target)return;
+  // 영역 이동 버튼을 누른 자리 그대로 유지한다. 기존 smooth scrollIntoView는
+  // 영역별 내용 높이가 다를 때 화면을 위아래로 흔들었다.
+  const beforeTop=el.areaNav?.getBoundingClientRect().top;
+  const beforeY=window.scrollY;
   if(nav.mode==='queue'){
     engine.goTo(target.index);revealed=false;render();
   }else{
     changeScope(()=>{state.ui.area=target.area;el.area.value=target.area;});
   }
-  document.getElementById('studyCard')?.scrollIntoView({block:'start',behavior:'smooth'});
+  if(Number.isFinite(beforeTop)&&el.areaNav&&!el.areaNav.hidden){
+    const afterTop=el.areaNav.getBoundingClientRect().top;
+    window.scrollBy({top:afterTop-beforeTop,behavior:'instant'});
+  }else{
+    window.scrollTo({top:beforeY,behavior:'instant'});
+  }
 }
 function setMode(m){cancelPracticalAutoAdvance();state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));updateMobileControlSummary();revealed=false;render();persist();}
 function currentTask(){return engine.current();}
