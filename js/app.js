@@ -1239,13 +1239,14 @@ function render(){
   renderProvenance(task);prepareAnswerFields();renderRetryDock();persist();
 }
 function hardClozeUnits(text){
+  // 하드모드: 어절별 조각을 내지 않고 교육과정 내용 요소의 원문 전체를 빈칸 하나로 회상한다.
+  // 성취기준 코드는 호출부에서 이미 분리하므로 빈칸에 포함되지 않는다.
   const source=String(text||'');
-  const words=/[\p{L}\p{N}]+/gu;
-  return [...source.matchAll(words)].map((m,i)=>({start:m.index,end:m.index+m[0].length,text:m[0],unitId:`hard-${i}`}));
+  return source.trim()? [{start:0,end:source.length,text:source,unitId:'hard-whole'}] : [];
 }
 function renderHardClozeText(text,lineId='',label='하드모드 빈칸'){
   const units=hardClozeUnits(text);
-  return renderWithSpans(String(text||''),units,(u,i)=>`<input class="inline-input hard-inline-input" data-line-id="${esc(lineId)}" data-answer="${esc(u.text)}" aria-label="${esc(label)} ${i+1}" autocomplete="off">`);
+  return renderWithSpans(String(text||''),units,(u,i)=>`<input class="inline-input hard-inline-input hard-whole-input" data-line-id="${esc(lineId)}" data-answer="${esc(u.text)}" aria-label="${esc(label)} 전체" autocomplete="off">`);
 }
 function sourceItems(items,masked=false){return `<div class="source-list">${items.map((it,i)=>`<div class="item"><span class="num">${i+1}.</span> ${masked?`<span class="mask" data-reveal>${esc(it.text)}</span>`:esc(it.text)}</div>`).join('')}</div>`;}
 function renderKI(g){
