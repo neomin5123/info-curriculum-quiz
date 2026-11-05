@@ -24,6 +24,8 @@ areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
 examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let pendingRetryAcknowledgment=null;
+// 카드별 미확인 결과. 다른 카드를 열어도 채점 결과는 확인 전까지 유지한다.
+const retryPendingById=new Map();
 let revealed=false,activeRetryCardId='',areaMemoOpen=false,areaMemoSaveTimer=null,mobileControlsCollapsed=false,areaMemoMigrationChecked=false,practicalAdvanceTimer=null;
 const PRACTICAL_AUTO_ADVANCE_DELAY_MS=950;
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -577,9 +579,13 @@ function renderRetryDock(){
     el.retryDock.classList.remove('has-cards');
     activeRetryCardId='';
     pendingRetryAcknowledgment=null;
+    if(!due.length)retryPendingById.clear();
     return;
   }
-  if(activeRetryCardId&&!due.some(([id])=>id===activeRetryCardId))activeRetryCardId='';
+  const dueIds=new Set(due.map(([id])=>id));
+  for(const id of retryPendingById.keys())if(!dueIds.has(id))retryPendingById.delete(id);
+  if(activeRetryCardId&&!dueIds.has(activeRetryCardId))activeRetryCardId='';
+  pendingRetryAcknowledgment=activeRetryCardId?(retryPendingById.get(activeRetryCardId)||null):null;
   const visible=retryDockVisibleEntries(due);
   el.retryDock.classList.add('has-cards');
   el.retryDock.innerHTML=visible.map(([id,r],i)=>{
@@ -596,9 +602,14 @@ function renderRetryDock(){
   if(activeRetryCardId){
     requestAnimationFrame(()=>{
       const panel=el.retryDock.querySelector(`[data-retry-panel="${CSS.escape(activeRetryCardId)}"]`);
-      sizeRetryInputs(panel);
-      const first=panel?.querySelector('.retry-card-input');
-      if(first){try{first.focus({preventScroll:true});}catch(_){first.focus();}}
+      const pending=retryPendingById.get(activeRetryCardId);
+      if(pending){
+        restoreRetryAcknowledgment(activeRetryCardId,pending);
+      }else{
+        sizeRetryInputs(panel);
+        const first=panel?.querySelector('.retry-card-input');
+        if(first){try{first.focus({preventScroll:true});}catch(_){first.focus();}}
+      }
     });
   }
 }
@@ -629,12 +640,15 @@ function clearRetryResult(id){
   if(badge){badge.textContent='';badge.className='retry-result-badge';}
 }
 function collapseRetryCard(id=''){
-  if(pendingRetryAcknowledgment)return; // 결과는 명시적 확인 전까지 유지
-  if(!id||activeRetryCardId===id)activeRetryCardId='';
+  // 접기는 채점 확인이 아니다. 결과/기록은 카드별로 보관하고 다른 카드 선택을 허용한다.
+  if(!id||activeRetryCardId===id){
+    activeRetryCardId='';
+    pendingRetryAcknowledgment=null;
+  }
   renderRetryDock();
 }
 function deferRetryCard(id){
-  if(pendingRetryAcknowledgment)return;
+  if(retryPendingById.has(id))return;
   const r=state.fieldRetries?.[id];if(!r)return;
   r.dueAt=Number(state.answerSerial||0)+Number(CL.config.retryDelay??0);
   activeRetryCardId='';
@@ -702,7 +716,13 @@ function acknowledgeRetryCard(id){
   if(pending.status==='correct'){
     const record=state.fieldRetries?.[id];
     if(record)completeRetryRecord(id,record);
-  }else if(pending.removeOnAck)delete state.fieldRetries[id];
+  }else if(pending.removeOnAck){
+    delete state.fieldRetries[id];
+  }else{
+    const record=state.fieldRetries?.[id];
+    if(record)rescheduleRetryRecord(id,record,pending.status);
+  }
+  retryPendingById.delete(id);
   pendingRetryAcknowledgment=null;
   activeRetryCardId=nextRetryCardIdAfter(id,pending.orderBefore)||'';
   CL.storage.save(state);
@@ -710,11 +730,21 @@ function acknowledgeRetryCard(id){
   renderReviewPage();
 }
 function showRetryAcknowledgment(id,orderBefore,removeOnAck=false,status='wrong'){
-  pendingRetryAcknowledgment={id,orderBefore,removeOnAck,status};
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
   if(!panel)return;
+  const badge=panel.querySelector('[data-retry-result]');
+  const feedback=panel.querySelector('[data-retry-feedback]');
+  const snapshot={
+    fields:[...panel.querySelectorAll('.retry-card-input')].map(x=>({value:x.value,className:x.className})),
+    resultStatus:badge?.classList.contains('result-good')?'correct':badge?.classList.contains('result-near')?'near':'wrong',
+    resultText:badge?.textContent||'',
+    feedbackText:feedback?.textContent||'',
+    feedbackStatus:feedback?.classList.contains('good')?'good':feedback?.classList.contains('near')?'near':'bad'
+  };
+  pendingRetryAcknowledgment={id,orderBefore,removeOnAck,status,snapshot};
+  retryPendingById.set(id,pendingRetryAcknowledgment);
   panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
-  panel.querySelectorAll('[data-retry-later],[data-retry-collapse]').forEach(control=>{control.disabled=true;});
+  panel.querySelectorAll('[data-retry-later]').forEach(control=>{control.disabled=true;});
   const button=panel.querySelector('[data-retry-grade]');
   if(button){
     button.innerHTML='확인 <span class="retry-grade-shortcut">(Enter)</span>';
@@ -723,6 +753,30 @@ function showRetryAcknowledgment(id,orderBefore,removeOnAck=false,status='wrong'
     try{button.focus({preventScroll:true});}catch(_){button.focus();}
   }
   // 채점 결과는 확인 버튼 또는 Enter를 누르기 전까지 무기한 유지한다.
+}
+function restoreRetryAcknowledgment(id,pending){
+  const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
+  if(!panel)return;
+  const snapshot=pending.snapshot||{};
+  const fields=[...panel.querySelectorAll('.retry-card-input')];
+  fields.forEach((input,i)=>{
+    const previous=snapshot.fields?.[i];
+    if(previous){input.value=previous.value;input.className=previous.className;}
+    input.disabled=true;
+  });
+  panel.dataset.gradingLock='1';
+  panel.classList.add('grading-lock');
+  showRetryResult(id,snapshot.resultStatus||pending.status,snapshot.resultText||'');
+  setRetryFeedback(id,'',snapshot.feedbackText||'',snapshot.feedbackStatus||'bad');
+  panel.querySelectorAll('[data-retry-later]').forEach(control=>{control.disabled=true;});
+  const button=panel.querySelector('[data-retry-grade]');
+  if(button){
+    button.innerHTML='확인 <span class="retry-grade-shortcut">(Enter)</span>';
+    button.disabled=false;
+    button.dataset.retryAcknowledge=id;
+    try{button.focus({preventScroll:true});}catch(_){button.focus();}
+  }
+  sizeRetryInputs(panel);
 }
 function gradeRetryCard(id){
   if(pendingRetryAcknowledgment){if(pendingRetryAcknowledgment.id===id)acknowledgeRetryCard(id);return;}
@@ -783,17 +837,16 @@ function gradeRetryCard(id){
   const overallNear=!hasWrong&&!hasUnknown&&(status==='near'||hasNear);
   showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
 
-  const requeued=rescheduleRetryRecord(id,r,status);
+  // 확인 전에는 오답 순서·시도 횟수를 바꾸지 않는다. 카드를 접고 다른 카드를 열 수 있다.
   setRetryFeedback(id,'','확인하면 카드가 맨 아래로 이동합니다.',overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
-  CL.storage.save(state);renderReviewPage();
   showRetryAcknowledgment(id,orderBefore,false,'wrong');
 }
 function openRetryCard(id){
-  if(pendingRetryAcknowledgment)return;
   const r=state.fieldRetries?.[id];if(!r)return;
   // 아직 due가 아니더라도 복습 탭에서 직접 열 수 있게 즉시 활성화한다.
   r.dueAt=Math.min(Number(r.dueAt||0),Number(state.answerSerial||0));
   activeRetryCardId=activeRetryCardId===id?'':id;
+  pendingRetryAcknowledgment=activeRetryCardId?(retryPendingById.get(activeRetryCardId)||null):null;
   persist();
   renderRetryDock();
 }
@@ -2324,9 +2377,10 @@ el.retryDock.addEventListener('keydown',e=>{
   e.preventDefault();gradeRetryCard(panel.dataset.retryPanel);
 });
 document.addEventListener('pointerdown',e=>{
-  if(!activeRetryCardId||!el.retryDock||pendingRetryAcknowledgment)return;
+  if(!activeRetryCardId||!el.retryDock)return;
   if(el.retryDock.contains(e.target))return;
   activeRetryCardId='';
+  pendingRetryAcknowledgment=null;
   renderRetryDock();
 },{capture:true});
 document.addEventListener('pointerdown',e=>{
