@@ -1607,3 +1607,57 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   .retry-dock .practical-retry-actions .retry-card-grade,
   .retry-dock .practical-retry-actions .retry-card-later{flex:0 0 auto}
 }
+
+/* Retry readability + category header + boxed close button (2026-11-05) */
+.retry-dock .practical-retry-panel{position:relative}
+.retry-dock .retry-panel-top{min-height:34px;padding-right:42px;align-items:flex-start}
+.retry-dock .practical-retry-kicker{font-size:14px;font-weight:800;padding-top:5px}
+.retry-dock .retry-panel-top-right{min-height:30px;align-items:center}
+.retry-dock .retry-card-close{
+  position:absolute;top:8px;right:10px;display:grid;place-items:center;
+  width:31px;height:31px;min-width:31px;margin:0;padding:0;
+  border:1px solid #cbd6cf;border-radius:8px;background:#fff;
+  color:#4d5e52;font-size:20px;line-height:1;
+}
+.retry-dock .retry-card-close:hover{background:#f0f5f2;border-color:#92b09c}
+
+.retry-dock .practical-retry-row,.retry-dock .practical-retry-row.set-mode{grid-template-columns:minmax(0,1fr)}
+.retry-dock .practical-retry-set{width:100%}
+@media(max-width:480px){
+}
+
+/* v9.0.49 — one-line retry fields + invisible scrollbars; scroll remains functional. */
+.retry-dock,
+.retry-dock .practical-retry-panel,
+.retry-dock .practical-retry-set{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none;
+}
+.retry-dock::-webkit-scrollbar,
+.retry-dock .practical-retry-panel::-webkit-scrollbar,
+.retry-dock .practical-retry-set::-webkit-scrollbar{
+  display:none;
+  width:0;
+  height:0;
+}
+.retry-dock input.retry-card-input{
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  height:44px;
+  min-height:44px;
+  padding:9px 11px;
+  font-family:inherit;
+  font-size:16px;
+  line-height:1.25;
+  white-space:nowrap;
+  overflow-x:auto;
+  overflow-y:hidden;
+  text-overflow:clip;
+}
+.retry-dock .practical-retry-row,
+.retry-dock .practical-retry-row.set-mode{
+  grid-template-columns:minmax(0,1fr)!important;
+}

@@ -453,6 +453,36 @@ function retryBlankText(text,answer,label='이 항목'){
   if(norm(target)&&norm(masked).includes(norm(target)))return `${safeLabel}의 핵심 표현을 다시 작성하세요.`;
   return masked;
 }
+function retryCategoryLabel(r){
+  const section=String(r.section||r.family||'').replace(/\s+/g,'');
+  if(section.includes('지식')&&section.includes('이해'))return '지식·이해';
+  if(section.includes('과정')&&section.includes('기능'))return '과정·기능';
+  if(section.includes('가치')&&section.includes('태도'))return '가치·태도';
+  if(section.includes('성취기준'))return '성취기준';
+  if(section.includes('핵심아이디어'))return '핵심 아이디어';
+  // 묶음형 재인출은 주로 지식·이해 묶음이다. 나머지는 실제 저장된 범주를 표시한다.
+  if(r.kind==='set'&&(r.taskId||'').startsWith('KI:'))return '지식·이해';
+  return String(r.section||r.family||'다시 꺼내기');
+}
+function sizeRetryInputs(panel){
+  if(!panel)return;
+  // Keep one-line fields: use the full panel width first, then shrink only long answers.
+  const canvas=sizeRetryInputs.canvas||(sizeRetryInputs.canvas=document.createElement('canvas'));
+  const ctx=canvas.getContext('2d');
+  panel.querySelectorAll('input.retry-card-input').forEach(field=>{
+    const text=field.value||field.placeholder||'';
+    const computed=getComputedStyle(field);
+    const baseFont=16;
+    const available=Math.max(40,field.clientWidth-28);
+    let size=baseFont;
+    if(ctx&&text){
+      ctx.font=`${computed.fontWeight||400} ${baseFont}px ${computed.fontFamily}`;
+      const measured=ctx.measureText(text).width;
+      if(measured>available)size=Math.max(10.5,Math.min(baseFont,baseFont*available/measured));
+    }
+    field.style.fontSize=`${size.toFixed(1)}px`;
+  });
+}
 function retryCardPanelHtml(id,r){
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   const answers=retryAnswerList(r);
@@ -466,7 +496,7 @@ function retryCardPanelHtml(id,r){
   return `
     <div class="practical-retry-panel" data-retry-panel="${esc(id)}">
       <div class="retry-panel-top">
-        <div class="practical-retry-kicker">${setMode?'전체 회상 · 다시 꺼내기':'다시 꺼내기'}</div>
+        <div class="practical-retry-kicker">${esc(retryCategoryLabel(r))}</div>
         <div class="retry-panel-top-right">
           <span class="retry-result-badge" data-retry-result="${esc(id)}" aria-live="polite"></span>
           <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
@@ -513,7 +543,9 @@ function renderRetryDock(){
   }).join('');
   if(activeRetryCardId){
     requestAnimationFrame(()=>{
-      const first=el.retryDock.querySelector(`[data-retry-panel="${CSS.escape(activeRetryCardId)}"] .retry-card-input`);
+      const panel=el.retryDock.querySelector(`[data-retry-panel="${CSS.escape(activeRetryCardId)}"]`);
+      sizeRetryInputs(panel);
+      const first=panel?.querySelector('.retry-card-input');
       if(first){try{first.focus({preventScroll:true});}catch(_){first.focus();}}
     });
   }
@@ -684,6 +716,8 @@ function gradeRetryCard(id){
     hasUnknown=visual==='unknown';
     hasNear=visual==='near';
   }
+
+  sizeRetryInputs(panel); // 공식 정답으로 교체된 긴 글도 전체가 보이게 다시 측정
 
   if(status==='correct'){
     // 공식 표기로 교정된 입력과 정답 판정을 보여준 다음 완료 기록을 삭제한다.
@@ -2097,6 +2131,9 @@ el.retryDock.addEventListener('click',e=>{
   const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
   const collapse=e.target.closest('[data-retry-collapse]');if(collapse){collapseRetryCard(collapse.dataset.retryCollapse);return;}
   const open=e.target.closest('[data-retry-open]');if(open){openRetryCard(open.dataset.retryOpen);}
+});
+el.retryDock.addEventListener('input',e=>{
+  if(e.target.matches('input.retry-card-input'))sizeRetryInputs(e.target.closest('[data-retry-panel]'));
 });
 el.retryDock.addEventListener('keydown',e=>{
   if(pendingRetryAcknowledgment&&e.key==='Enter'&&!e.isComposing&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey&&!e.altKey){
