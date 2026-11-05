@@ -464,6 +464,22 @@ function retryCategoryLabel(r){
   if(r.kind==='set'&&(r.taskId||'').startsWith('KI:'))return '지식·이해';
   return String(r.section||r.family||'다시 꺼내기');
 }
+function retryStandardCode(r){
+  const sourceLineIds=[r.lineId,...(r.lineIds||[])].filter(Boolean);
+  for(const lineId of sourceLineIds){
+    const line=engine.lineMap.get(lineId);
+    if(!line)continue;
+    const text=String(line.sourceText||line.text||'');
+    const bracket=text.match(/^\[([^\]]+)\]/);
+    if(bracket&&(line.family==='성취기준'||String(r.section||r.family||'').includes('성취기준')))return bracket[1];
+  }
+  // 기존 저장 기록에서 확인 가능한 코드만 복원하고 번호를 임의 생성하지 않는다.
+  if(String(r.section||r.family||'').includes('성취기준')){
+    const direct=String(r.contextText||'').match(/^\[([^\]]+)\]/);
+    if(direct)return direct[1];
+  }
+  return '';
+}
 function sizeRetryInputs(panel){
   if(!panel)return;
   // Keep one-line fields: use the full panel width first, then shrink only long answers.
@@ -496,11 +512,8 @@ function retryCardPanelHtml(id,r){
   return `
     <div class="practical-retry-panel" data-retry-panel="${esc(id)}">
       <div class="retry-panel-top">
-        <div class="practical-retry-kicker">${esc(retryCategoryLabel(r))}</div>
-        <div class="retry-panel-top-right">
-          <span class="retry-result-badge" data-retry-result="${esc(id)}" aria-live="polite"></span>
-          <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
-        </div>
+        <div class="practical-retry-kicker">${esc(retryCategoryLabel(r))}${retryStandardCode(r)?` <span class="retry-standard-code">${esc(retryStandardCode(r))}</span>`:''}</div>
+        <span class="retry-result-badge" data-retry-result="${esc(id)}" aria-live="polite"></span>
       </div>
       <div class="practical-retry-prompt">${esc(prompt)}</div>
       <div class="practical-retry-row ${setMode?'set-mode':''}">
@@ -536,8 +549,9 @@ function renderRetryDock(){
     return `<section class="retry-card ${expanded?'expanded':''}" data-retry-id="${esc(id)}" style="--stack-i:${i}">
       <button class="retry-card-peek" type="button" data-retry-open="${esc(id)}" aria-expanded="${expanded}">
         <span class="retry-card-dot"></span>
-        <span class="retry-card-body"><strong>다시 풀기</strong><small>${esc(retryMeta(r))}</small></span>
+        <span class="retry-card-body"><strong>다시 꺼내기</strong><small>${esc(retryMeta(r))}</small></span>
       </button>
+      ${expanded?`<button class="retry-card-close retry-card-close-header" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>`:''}
       ${expanded?retryCardPanelHtml(id,r):''}
     </section>`;
   }).join('');
@@ -2182,9 +2196,10 @@ el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
 };
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 el.check.onclick=check;el.reveal.onclick=reveal;
-el.next.onclick=()=>{cancelPracticalAutoAdvance();engine.next();revealed=false;render();};
-el.prev.onclick=()=>{cancelPracticalAutoAdvance();engine.prev();revealed=false;render();};
-el.round.onclick=()=>{cancelPracticalAutoAdvance();engine.nextRound();revealed=false;render();};
+// 이전·다음·처음부터 버튼은 화면에서 제거됨. 구형 페이지와의 호환성만 유지.
+if(el.next)el.next.onclick=()=>{cancelPracticalAutoAdvance();engine.next();revealed=false;render();};
+if(el.prev)el.prev.onclick=()=>{cancelPracticalAutoAdvance();engine.prev();revealed=false;render();};
+if(el.round)el.round.onclick=()=>{cancelPracticalAutoAdvance();engine.nextRound();revealed=false;render();};
 el.source.onclick=sourceInfo;el.closeSource.onclick=()=>el.dialog.close();
 window.addEventListener('pagehide',saveAreaMemoNow);
 if(location.protocol!=='file:')window.addEventListener('load',async()=>{

@@ -1661,3 +1661,38 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 .retry-dock .practical-retry-row.set-mode{
   grid-template-columns:minmax(0,1fr)!important;
 }
+
+
+/* 2026-11-05 — consolidated study actions and retry header */
+.study-card .study-actions.study-actions-consolidated{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:nowrap;margin-top:14px;
+}
+.study-card .study-action-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.study-card .study-actions-consolidated #clearAnswersButton{
+  margin-left:auto;white-space:nowrap;flex:0 0 auto;
+}
+@media(max-width:440px){
+  .study-card .study-actions.study-actions-consolidated{gap:6px}
+  .study-card .study-action-left{gap:5px}
+  .study-card .study-actions-consolidated button{padding:8px 9px;font-size:12px}
+  .study-card .study-actions-consolidated #clearAnswersButton{padding:8px 4px}
+}
+.retry-dock .retry-card.expanded .retry-card-peek{padding-right:54px}
+.retry-dock .retry-card-close.retry-card-close-header{
+  position:absolute;top:12px;right:12px;z-index:151;
+  display:grid;place-items:center;
+  width:34px;height:34px;min-width:34px;padding:0;margin:0;
+  border:1px solid #cbd6cf;border-radius:9px;background:#fff;
+  color:#4d5e52;font-size:21px;line-height:1;
+  box-shadow:0 2px 8px rgba(25,42,33,.08);
+}
+.retry-dock .retry-card-close.retry-card-close-header:hover{background:#f0f5f2;border-color:#92b09c}
+.retry-dock .retry-panel-top{padding-right:0;min-height:24px;align-items:center}
+.retry-dock .retry-standard-code{
+  display:inline-block;margin-left:5px;padding:2px 6px;
+  border:1px solid #d7e0da;border-radius:6px;background:#f4f7f5;
+  color:#456352;font-size:11px;font-weight:800;vertical-align:middle;
+}
+/* Keep all fixed standard identifiers visible independently from the answer field. */
+.standard-row .standard-code{display:inline-flex!important;visibility:visible!important;opacity:1!important}

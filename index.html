@@ -8,7 +8,7 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261105-retry-singleline-v5">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261105-final-actions-retry-header-v1">
 </head>
 <body data-build="2026.10.27-53">
   <header class="app-header">
@@ -77,18 +77,12 @@
       <div class="study-meta"><span id="taskMeta" class="task-meta-hidden" aria-hidden="true"></span><span id="progressMeta"></span></div>
       <div id="studyContent"></div>
       <div id="feedback" class="feedback" aria-live="polite"></div>
-      <div class="study-actions">
-        <button id="checkButton" class="primary">채점</button>
-        <button id="revealButton">정답 보기</button>
-      </div>
-      <div class="study-footer-controls" aria-label="학습 이동 및 초기화">
-        <div class="task-nav-group">
-          <button id="prevButton">이전</button>
-          <button id="nextButton">다음</button>
+      <div class="study-actions study-actions-consolidated">
+        <div class="study-action-left">
+          <button id="checkButton" class="primary">채점</button>
+          <button id="revealButton">정답 보기</button>
         </div>
-        <div class="secondary-actions footer-secondary-actions">
-          <div class="secondary-button-group"><button id="clearAnswersButton" class="text-button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button><button id="nextRoundButton" class="text-button">처음부터</button></div>
-        </div>
+        <button id="clearAnswersButton" class="text-button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button>
       </div>
     </section>
 
@@ -212,6 +206,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261105-retry-singleline-v5"></script>
+  <script src="js/app.js?b=20261105-final-actions-retry-header-v1"></script>
 </body>
 </html>
