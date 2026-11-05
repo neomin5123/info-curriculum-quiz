@@ -640,11 +640,12 @@ function clearRetryResult(id){
   if(badge){badge.textContent='';badge.className='retry-result-badge';}
 }
 function collapseRetryCard(id=''){
-  // 접기는 채점 확인이 아니다. 결과/기록은 카드별로 보관하고 다른 카드 선택을 허용한다.
-  if(!id||activeRetryCardId===id){
-    activeRetryCardId='';
-    pendingRetryAcknowledgment=null;
-  }
+  // 접기 또는 바깥 클릭은 채점 '확인'이 아니다. 미확인 결과를 보존한다.
+  if(id&&activeRetryCardId!==id)return;
+  const focused=document.activeElement;
+  if(focused&&el.retryDock?.contains(focused)&&typeof focused.blur==='function')focused.blur();
+  activeRetryCardId='';
+  pendingRetryAcknowledgment=null;
   renderRetryDock();
 }
 function deferRetryCard(id){
@@ -2050,6 +2051,13 @@ function resizeAnswerField(field){
     field.style.height=`${Math.max(min,field.scrollHeight)}px`;
     return;
   }
+  if(field.classList.contains('hard-whole-input')){
+    // 통빈칸은 일반 단어 빈칸의 190px 제한을 적용하지 않는다.
+    field.style.removeProperty('--cloze-width');
+    field.style.fontSize=window.innerWidth<=480?'13px':'14px';
+    field.title=String(field.value||field.dataset.answer||'');
+    return;
+  }
   if(field.classList.contains('inline-input')||field.classList.contains('cs-inline-input')||field.classList.contains('standard-inline-input')){
     // 빈칸을 과도하게 확장하지 않는다. 짧고 고정적인 폭 안에서 글꼴 크기를 조정한다.
     const expected=String(field.dataset.answer||'');
@@ -2318,7 +2326,20 @@ function resetReviewData(){
   activeRetryCardId='';CL.storage.clearReviewData(state);CL.storage.save(state);renderRetryDock();renderReviewPage();
 }
 function changeScope(mutator){cancelPracticalAutoAdvance();saveAreaMemoNow();persist();mutator();syncFamilies(state.ui.family);state.ui.family=el.family.value;syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);rebuild(CL.storage.scopeTask(state));loadAreaMemo();updateMobileControlSummary();}
-function filterChange(kind){changeScope(()=>{if(kind==='subject'){state.ui.subject=el.subject.value;syncAreaOptions(state.ui.area);}if(kind==='area')state.ui.area=el.area.value;});}
+function filterChange(kind){
+  const resetToFirst=kind==='area'&&el.area.value==='all';
+  changeScope(()=>{
+    if(kind==='subject'){state.ui.subject=el.subject.value;syncAreaOptions(state.ui.area);}
+    if(kind==='area')state.ui.area=el.area.value;
+  });
+  if(resetToFirst&&engine.queue?.length){
+    // 이전에 '전체 영역'에서 보던 위치가 아니라 항상 첫 영역의 첫 항목을 보여 준다.
+    engine.goTo(0);
+    revealed=false;
+    render();
+    persist();
+  }
+}
 initSelectors();initMobileControlCollapse();initExamBrowser();updateRetryToggleUI();state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
@@ -2356,10 +2377,17 @@ document.addEventListener('keydown',e=>{
 window.addEventListener('resize',()=>{answerFields().forEach(resizeAnswerField);});
 el.hardMode?.addEventListener('click',toggleHardMode);
 updateHardModeUI();
+// 닫기 클릭은 채점 후에도 최우선 처리한다. 중첩 버튼·초점 이벤트와 충돌 방지.
+el.retryDock.addEventListener('click',e=>{
+  const close=e.target.closest('[data-retry-collapse]');
+  if(!close)return;
+  e.preventDefault();
+  e.stopPropagation();
+  collapseRetryCard(close.dataset.retryCollapse);
+},true);
 el.retryDock.addEventListener('click',e=>{
   const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
   const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
-  const collapse=e.target.closest('[data-retry-collapse]');if(collapse){collapseRetryCard(collapse.dataset.retryCollapse);return;}
   const open=e.target.closest('[data-retry-open]');if(open){openRetryCard(open.dataset.retryOpen);}
 });
 el.retryDock.addEventListener('input',e=>{
@@ -2379,9 +2407,8 @@ el.retryDock.addEventListener('keydown',e=>{
 document.addEventListener('pointerdown',e=>{
   if(!activeRetryCardId||!el.retryDock)return;
   if(el.retryDock.contains(e.target))return;
-  activeRetryCardId='';
-  pendingRetryAcknowledgment=null;
-  renderRetryDock();
+  // 바깥을 누르면 확인 절차 없이 카드만 접는다. 현재 정답/오답과 순서는 그대로.
+  collapseRetryCard(activeRetryCardId);
 },{capture:true});
 document.addEventListener('pointerdown',e=>{
   if(!areaMemoOpen||!el.areaMemoShell)return;

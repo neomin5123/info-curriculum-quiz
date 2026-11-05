@@ -1761,3 +1761,48 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 /* 2026-11-05: 하드모드 원문 항목당 빈칸 하나, 단어별 다중 입력 제거 */
 .hard-whole-input{display:inline-block;width:min(100%,540px)!important;min-width:0!important;max-width:100%!important;text-align:left!important;padding:9px 12px!important;font-size:13px!important;line-height:1.4!important;vertical-align:middle}
 @media(max-width:760px){.hard-whole-input{width:min(100%,calc(100vw - 100px))!important;font-size:12px!important}}
+
+
+/* 2026-11-05 — whole-recall field and reliable retry close */
+/* 통빈칸은 190px짜리 어휘 빈칸과 구분해 사용 가능한 본문 폭을 활용한다. */
+#studyContent .cs-cloze-content:has(.hard-whole-input),
+#studyContent .cloze-text:has(.hard-whole-input),
+#studyContent .standard-body:has(.hard-whole-input){
+  min-width:0;
+  width:100%;
+}
+#studyContent .cs-cloze-content .answer-field-wrap.inline:has(.hard-whole-input),
+#studyContent .cloze-text .answer-field-wrap.inline:has(.hard-whole-input),
+#studyContent .standard-body .answer-field-wrap.inline:has(.hard-whole-input){
+  display:block;
+  width:min(100%,740px)!important;
+  max-width:100%!important;
+  margin:4px 0;
+}
+#studyContent .hard-whole-input,
+#studyContent .cs-cloze-content .hard-whole-input,
+#studyContent .cloze-text .hard-whole-input,
+#studyContent .standard-body .hard-whole-input{
+  box-sizing:border-box;
+  display:block;
+  width:min(100%,740px)!important;
+  max-width:100%!important;
+  min-width:0!important;
+  min-height:42px;
+  padding:9px 12px!important;
+  text-align:left!important;
+  font-size:14px!important;
+  line-height:1.4!important;
+  white-space:nowrap;
+}
+@media(max-width:480px){
+  #studyContent .hard-whole-input,
+  #studyContent .cs-cloze-content .hard-whole-input,
+  #studyContent .cloze-text .hard-whole-input,
+  #studyContent .standard-body .hard-whole-input{font-size:13px!important}
+}
+.retry-dock .retry-card-close.retry-card-close-header{
+  z-index:250!important;
+  pointer-events:auto!important;
+  cursor:pointer;
+}
