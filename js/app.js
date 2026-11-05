@@ -405,13 +405,39 @@ function retrySafeLabel(text,answers,fallback='해당 항목'){
   });
   return leaks?fallback:value;
 }
+function retryOrigin(r){
+  // 오답 생성 당시의 실제 과목·영역을 우선한다. 학습 필터의 '전체 영역'은 출처가 아니다.
+  const scope=r.scope||{},taskId=String(r.taskId||'');
+  const lineIds=[r.lineId,...(r.lineIds||[])].filter(Boolean);
+  let line=lineIds.map(id=>engine.lineMap.get(id)).find(Boolean)||null;
+  let group=null;
+  if(!line&&taskId.startsWith('LINE:'))line=engine.lineMap.get(taskId.slice(5))||null;
+  if(!line&&taskId.startsWith('KI:')){
+    const gid=taskId.slice(3);
+    group=(engine.data.knowledgeUnderstandingGroups||[]).find(g=>g.groupId===gid)||null;
+  }
+  // 구형 저장 기록에는 lineId가 없을 수 있으므로 taskId의 주제·영역도 복구한다.
+  let taskSubject='',taskArea='';
+  const matched=taskId.match(/^(?:CS|CST):([^:]+):([^:]+)(?::|$)/);
+  if(matched){taskSubject=matched[1];taskArea=matched[2];}
+  const whole=taskId.match(/^WG:[^:]+:([^:]+):(.+)$/);
+  if(whole){taskSubject=whole[1];taskArea=whole[2];}
+  const rawSubject=line?.subject||group?.subject||r.subject||taskSubject||(scope.subject!=='all'?scope.subject:'')||'';
+  const rawArea=line?.area||group?.area||r.area||taskArea||(
+    scope.area&&scope.area!=='all'?scope.area:''
+  );
+  const subject=engine.labels[rawSubject]||line?.subjectLabel||group?.subjectLabel||r.subjectLabel||
+    (rawSubject&&rawSubject!=='all'?rawSubject:'과목 미확인');
+  const area=rawArea&&rawArea!=='all'?rawArea:'영역 미확인';
+  return {subject,area};
+}
 function retryMeta(r){
-  const scope=r.scope||{},answers=retryAnswerList(r);
-  const areaRaw=scope.area&&scope.area!=='all'?scope.area:'전체 영역';
-  const sectionRaw=r.section||r.family||'빈칸';
-  const area=retrySafeLabel(areaRaw,answers,'해당 영역');
-  const section=retrySafeLabel(sectionRaw,answers,'해당 구분');
-  return `${area} · ${section}`;
+  const answers=retryAnswerList(r);
+  const origin=retryOrigin(r);
+  const subject=retrySafeLabel(origin.subject,answers,'해당 과목');
+  const area=retrySafeLabel(origin.area,answers,'해당 영역');
+  const section=retrySafeLabel(r.section||r.family||'빈칸',answers,'해당 구분');
+  return `${subject} · ${area} · ${section}`;
 }
 function retryBlankText(text,answer,label='이 항목'){
   const source=String(text||'').trim(),target=String(answer||'').trim();
@@ -441,17 +467,21 @@ function retryCardPanelHtml(id,r){
     <div class="practical-retry-panel" data-retry-panel="${esc(id)}">
       <div class="retry-panel-top">
         <div class="practical-retry-kicker">${setMode?'전체 회상 · 다시 꺼내기':'다시 꺼내기'}</div>
-        <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
+        <div class="retry-panel-top-right">
+          <span class="retry-result-badge" data-retry-result="${esc(id)}" aria-live="polite"></span>
+          <button class="retry-card-close" type="button" data-retry-collapse="${esc(id)}" aria-label="카드 접기">×</button>
+        </div>
       </div>
       <div class="practical-retry-meta">${esc(retryMeta(r))}</div>
       <div class="practical-retry-prompt">${esc(prompt)}</div>
       <div class="practical-retry-row ${setMode?'set-mode':''}">
         ${inputHtml}
-        <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">확인</button>
-        <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
+        <div class="practical-retry-actions">
+          <button class="retry-card-grade primary" type="button" data-retry-grade="${esc(id)}">확인 <span class="retry-grade-shortcut">(Enter)</span></button>
+          <button class="retry-card-later" type="button" data-retry-later="${esc(id)}">나중에</button>
+        </div>
       </div>
-      <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div>
-      <div class="retry-result-overlay" data-retry-result="${esc(id)}" aria-live="polite"></div>
+      <div class="practical-retry-feedback" data-retry-feedback="${esc(id)}"><div class="feedback-main">아까 헷갈린 부분을 한 번만 다시 꺼내 보세요.</div><div class="feedback-sub"></div></div>
     </div>`;
 }
 function retryDockVisibleEntries(due){
@@ -489,28 +519,34 @@ function renderRetryDock(){
     });
   }
 }
-function setRetryFeedback(id,text,status=''){
+function setRetryFeedback(id,mainText='',subText='',status=''){
   const f=el.retryDock?.querySelector(`[data-retry-feedback="${CSS.escape(id)}"]`);
   if(!f)return;
-  f.textContent=text;
+  const main=f.querySelector('.feedback-main');
+  const sub=f.querySelector('.feedback-sub');
+  if(main)main.textContent=mainText;
+  if(sub){
+    sub.textContent=subText;
+    sub.hidden=!subText;
+  }
   f.className='practical-retry-feedback '+status;
 }
 
 function showRetryResult(id,status,text){
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
-  const overlay=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
-  if(!panel||!overlay)return;
+  const badge=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
+  if(!panel||!badge)return;
   panel.classList.remove('result-good','result-near','result-bad');
   const cls=status==='correct'?'result-good':status==='near'?'result-near':'result-bad';
   panel.classList.add(cls);
-  overlay.textContent=text;
-  overlay.className=`retry-result-overlay show ${cls}`;
+  badge.textContent=text;
+  badge.className=`retry-result-badge show ${cls}`;
 }
 function clearRetryResult(id){
   const panel=el.retryDock?.querySelector(`[data-retry-panel="${CSS.escape(id)}"]`);
-  const overlay=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
+  const badge=panel?.querySelector(`[data-retry-result="${CSS.escape(id)}"]`);
   if(panel)panel.classList.remove('result-good','result-near','result-bad');
-  if(overlay){overlay.textContent='';overlay.className='retry-result-overlay';}
+  if(badge){badge.textContent='';badge.className='retry-result-badge';}
 }
 function collapseRetryCard(id=''){
   if(pendingRetryAcknowledgment)return; // 결과는 명시적 확인 전까지 유지
@@ -601,7 +637,7 @@ function showRetryAcknowledgment(id,orderBefore,removeOnAck=false,status='wrong'
   panel.querySelectorAll('[data-retry-later],[data-retry-collapse]').forEach(control=>{control.disabled=true;});
   const button=panel.querySelector('[data-retry-grade]');
   if(button){
-    button.textContent='확인 · 다음 카드';
+    button.innerHTML='확인 <span class="retry-grade-shortcut">(Enter)</span>';
     button.disabled=false;
     button.dataset.retryAcknowledge=id;
     try{button.focus({preventScroll:true});}catch(_){button.focus();}
@@ -655,7 +691,7 @@ function gradeRetryCard(id){
     // 공식 표기로 교정된 입력과 정답 판정을 보여준 다음 완료 기록을 삭제한다.
     // 사용자가 확인/Enter를 누른 뒤에만 정답 카드를 제거한다.
     showRetryResult(id,'correct','재인출 성공');
-    setRetryFeedback(id,`정답입니다 · 정답: ${expected}`,'good');
+    setRetryFeedback(id,'','확인하면 카드가 삭제됩니다.','good');
     showRetryAcknowledgment(id,orderBefore,false,'correct');
     return;
   }
@@ -664,9 +700,7 @@ function gradeRetryCard(id){
   showRetryResult(id,overallNear?'near':'wrong',overallNear?'표현 확인 필요':'재인출 실패');
 
   const requeued=rescheduleRetryRecord(id,r,status);
-  const label=overallNear?'표기 확인':hasUnknown&&!hasWrong?'모름':'오답';
-  const tail=' · 확인하면 카드가 맨 아래로 이동합니다.';
-  setRetryFeedback(id,`${label} · 정답: ${expected}${tail}`,overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
+  setRetryFeedback(id,`정답: ${expected}`,'확인하면 카드가 맨 아래로 이동합니다.',overallNear?'near':hasUnknown&&!hasWrong?'unknown':'bad');
   CL.storage.save(state);renderReviewPage();
   showRetryAcknowledgment(id,orderBefore,false,'wrong');
 }
@@ -1868,6 +1902,9 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
       lineIds:items.map(x=>x.lineId).filter(Boolean),
       setAnswers:items.map(x=>x.text),
       section,
+      subject:task?.group?.subject||task?.line?.subject||state.ui.subject,
+      subjectLabel:ctx.subject,
+      area:ctx.area,
       contextText:`${ctx.area} 영역의 ${section} 내용 요소`,
       taskId:engine.taskId(task),
       round:Number(state.round||1),
@@ -1888,6 +1925,9 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
     fieldIndex:answerFields().indexOf(field),
     lineId,
     section,
+    subject:line?.subject||task?.group?.subject||task?.line?.subject||state.ui.subject,
+    subjectLabel:ctx.subject,
+    area:line?.area||ctx.area,
     correctAnswer:expected,
     contextText:line?.sourceText||ctx.family||'',
     taskId:engine.taskId(task),

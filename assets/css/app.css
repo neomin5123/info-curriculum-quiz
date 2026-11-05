@@ -1545,3 +1545,29 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   display: block !important;
   transform: none !important;
 }
+
+
+/* Retry card UX: full-width answers, clear actions, separate result badge (2026-11-05) */
+.retry-dock .retry-panel-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.retry-dock .retry-panel-top-right{display:flex;align-items:flex-start;justify-content:flex-end;gap:6px;min-width:0}
+.retry-dock .retry-result-badge{display:none;align-self:flex-start;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:800;line-height:1.25;white-space:nowrap;box-shadow:0 4px 10px rgba(25,42,33,.08)}
+.retry-dock .retry-result-badge.show{display:inline-flex}
+.retry-dock .retry-result-badge.result-good{color:#1f5f3b;background:rgba(230,244,234,.97)}
+.retry-dock .retry-result-badge.result-near{color:#805b10;background:rgba(255,246,221,.97)}
+.retry-dock .retry-result-badge.result-bad{color:#973f37;background:rgba(255,240,238,.97)}
+.retry-dock .practical-retry-row,
+.retry-dock .practical-retry-row.set-mode{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:start}
+.retry-dock .retry-card-input{display:block;width:100%;min-width:0;font-size:14px;line-height:1.35;text-overflow:clip}
+.retry-dock .practical-retry-set{min-width:0}
+.retry-dock .practical-retry-actions{display:flex;justify-content:flex-end;gap:7px;flex-wrap:wrap;min-width:0}
+.retry-dock .retry-grade-shortcut{font-size:.8em;font-weight:650;opacity:.9}
+.retry-dock .practical-retry-feedback{display:grid;gap:3px;min-height:0;margin-top:9px;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.retry-dock .practical-retry-feedback .feedback-main{font-weight:750}
+.retry-dock .practical-retry-feedback .feedback-main:empty{display:none}
+.retry-dock .practical-retry-feedback .feedback-sub{font-weight:500}
+.retry-dock .practical-retry-feedback .feedback-sub[hidden]{display:none}
+@media(max-width:760px){
+  .retry-dock .practical-retry-actions{justify-content:stretch}
+  .retry-dock .practical-retry-actions .retry-card-grade,
+  .retry-dock .practical-retry-actions .retry-card-later{flex:1 1 auto}
+}
