@@ -1719,3 +1719,30 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   visibility:visible!important;
   opacity:1!important;
 }
+
+/* 2026-11-05b: compact single-line cloze fields; keep sentence flow readable. */
+#studyContent .cloze-text .answer-field-wrap.inline,
+#studyContent .cs-cloze-content .answer-field-wrap.inline{
+  max-width:min(190px,calc(100vw - 32px))!important;
+  vertical-align:middle;
+}
+#studyContent .cloze-text .inline-input,
+#studyContent .cs-cloze-content .inline-input,
+#studyContent .cs-cloze-content .cs-inline-input,
+#studyContent .cs-cloze-content .standard-inline-input{
+  width:var(--cloze-width,145px)!important;
+  max-width:min(190px,calc(100vw - 32px))!important;
+  min-width:0!important;
+  font-size:12.5px;
+  white-space:nowrap;
+  text-align:center;
+  padding:4px 7px!important;
+}
+@media(max-width:760px){
+  #studyContent .cloze-text .answer-field-wrap.inline,
+  #studyContent .cs-cloze-content .answer-field-wrap.inline{max-width:156px!important}
+  #studyContent .cloze-text .inline-input,
+  #studyContent .cs-cloze-content .inline-input,
+  #studyContent .cs-cloze-content .cs-inline-input,
+  #studyContent .cs-cloze-content .standard-inline-input{max-width:156px!important}
+}

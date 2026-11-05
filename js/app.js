@@ -453,8 +453,18 @@ function retryBlankText(text,answer,label='이 항목'){
   if(norm(target)&&norm(masked).includes(norm(target)))return `${safeLabel}의 핵심 표현을 다시 작성하세요.`;
   return masked;
 }
+function retrySourceLine(r){
+  const ids=[r.lineId,...(r.lineIds||[])].filter(Boolean);
+  const lines=ids.map(id=>engine.lineMap.get(id)).filter(Boolean);
+  if(lines.length===1)return lines[0];
+  if(lines.length>1&&lines.every(line=>line.family===lines[0].family))return lines[0];
+  return null;
+}
 function retryCategoryLabel(r){
-  const section=String(r.section||r.family||'').replace(/\s+/g,'');
+  // 재인출 저장 당시의 그룹명보다 실제 원문 문항 범주를 우선한다.
+  // 예: 핵심 아이디어 문장이 '성취기준' 묶음에서 복습되더라도 코드가 있다고 오해하지 않는다.
+  const source=retrySourceLine(r);
+  const section=String(source?.family||r.section||r.family||'').replace(/\s+/g,'');
   if(section.includes('지식')&&section.includes('이해'))return '지식·이해';
   if(section.includes('과정')&&section.includes('기능'))return '과정·기능';
   if(section.includes('가치')&&section.includes('태도'))return '가치·태도';
@@ -465,20 +475,18 @@ function retryCategoryLabel(r){
   return String(r.section||r.family||'다시 꺼내기');
 }
 function retryStandardCode(r){
-  const sourceLineIds=[r.lineId,...(r.lineIds||[])].filter(Boolean);
-  for(const lineId of sourceLineIds){
-    const line=engine.lineMap.get(lineId);
-    if(!line)continue;
+  const line=retrySourceLine(r);
+  // 공식 코드가 부여된 성취기준 문항에서만 번호를 출력한다.
+  if(line){
+    if(line.family!=='성취기준')return '';
     const text=String(line.sourceText||line.text||'');
-    const bracket=text.match(/^\[([^\]]+)\]/);
-    if(bracket&&(line.family==='성취기준'||String(r.section||r.family||'').includes('성취기준')))return bracket[1];
+    const match=text.match(/^\[([^\]]+)\]/)
+      ||String(line.lineId||'').match(/((?:9정|12정|12인기|12데과)\d{2}-\d{2})/);
+    return match?match[1]:'';
   }
-  // 기존 저장 기록에서 확인 가능한 코드만 복원하고 번호를 임의 생성하지 않는다.
-  if(String(r.section||r.family||'').includes('성취기준')){
-    const direct=String(r.contextText||'').match(/^\[([^\]]+)\]/);
-    if(direct)return direct[1];
-  }
-  return '';
+  // 원본 lineId가 사라진 구형 기록도, 본문에 명시된 성취기준 코드만 복원.
+  const match=String(r.contextText||'').match(/^\[([^\]]+)\]/);
+  return match&&retryCategoryLabel(r)==='성취기준'?match[1]:'';
 }
 function sizeRetryInputs(panel){
   if(!panel)return;
@@ -1888,30 +1896,32 @@ function resizeAnswerField(field){
     return;
   }
   if(field.classList.contains('inline-input')||field.classList.contains('cs-inline-input')||field.classList.contains('standard-inline-input')){
-    // 한글·띄어쓰기·가운뎃점 등 실제 글리프 폭으로 계산한다.
-    // 이전 글자 수 * .76rem 방식은 한글 정답이 잘리는 원인이었다.
+    // 빈칸을 과도하게 확장하지 않는다. 짧고 고정적인 폭 안에서 글꼴 크기를 조정한다.
     const expected=String(field.dataset.answer||'');
     const value=String(field.value||'');
-    const longest=[expected,value].sort((a,b)=>[...b].length-[...a].length)[0]||'';
-    const styles=getComputedStyle(field);
-    if(!field.dataset.clozeBaseFont)field.dataset.clozeBaseFont=String(parseFloat(styles.fontSize)||18);
-    const baseSize=Number(field.dataset.clozeBaseFont);
+    const target=value||expected;
     const canvas=resizeAnswerField.canvas||(resizeAnswerField.canvas=document.createElement('canvas'));
     const ctx=canvas.getContext('2d');
-    let needed=150;
-    if(ctx){
-      ctx.font=`${styles.fontWeight||700} ${baseSize}px ${styles.fontFamily||'sans-serif'}`;
-      needed=Math.ceil(ctx.measureText(longest).width+34);
-    }else needed=Math.ceil(Math.max(8,[...longest].length)*baseSize+34);
-    const body=field.closest('.cs-cloze-content,.cloze-text,.standard-body')||field.parentElement?.parentElement;
-    const room=body?.clientWidth||window.innerWidth-44;
-    const maxWidth=Math.max(115,Math.min(680,window.innerWidth-44,room-8));
-    const width=Math.max(115,Math.min(needed,maxWidth));
+    const body=field.closest('.cs-cloze-content,.cloze-text,.standard-body')||field.parentElement;
+    const room=body?.clientWidth||window.innerWidth-32;
+    const narrow=window.innerWidth<=760;
+    const widthCap=narrow?156:190;
+    const minWidth=narrow?82:90;
+    const maxWidth=Math.max(minWidth,Math.min(widthCap,window.innerWidth-32,room-8));
+    const styles=getComputedStyle(field);
+    const family=styles.fontFamily||'sans-serif';
+    const weight=styles.fontWeight||'700';
+    const measure=(size,text)=>{
+      if(!ctx)return [...text].length*size;
+      ctx.font=`${weight} ${size}px ${family}`;
+      return ctx.measureText(text).width;
+    };
+    const natural=measure(12.5,target)+16;
+    const width=Math.max(minWidth,Math.min(maxWidth,Math.ceil(natural)));
+    const fontSize=target?Math.max(9.5,Math.min(12.5,12.5*(width-16)/Math.max(1,measure(12.5,target)))):12.5;
     field.style.setProperty('--cloze-width',`${width}px`);
-    // 매우 긴 정답이 화면 최대 폭을 넘어갈 때만 폰트 크기를 축소한다.
-    const available=Math.max(80,width-34);
-    const neededInk=Math.max(1,needed-34);
-    field.style.fontSize=`${Math.max(10,Math.min(baseSize,baseSize*available/neededInk)).toFixed(2)}px`;
+    field.style.fontSize=`${fontSize.toFixed(2)}px`;
+    field.style.fontWeight='650';
     field.title=value||expected;
   }
 }
