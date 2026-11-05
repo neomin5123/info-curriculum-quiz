@@ -8,7 +8,7 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261105-compact-cloze-category-2">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261105-hardmode-v1">
 </head>
 <body data-build="2026.10.27-53">
   <header class="app-header">
@@ -60,6 +60,9 @@
             </nav>
           </div>
           <div class="mode-tools">
+            <button id="hardModeButton" class="hard-mode-toggle" type="button" aria-pressed="false" title="ON: 현재 교육과정 원문의 모든 단어를 빈칸으로 만듭니다. 성취기준 번호와 제목은 유지합니다.">
+              하드모드 <strong id="hardModeState">OFF</strong>
+            </button>
             <label class="retry-pill" title="ON: 틀린 답을 오른쪽의 접힌 카드로 모읍니다. 카드를 누를 때만 재풀이 입력창이 열립니다. OFF로 바꾸면 현재 대기 중인 오답 카드도 삭제됩니다.">
               <input type="checkbox" id="retryToggle" checked>
               <span class="retry-pill-label">오답 카드</span>
@@ -197,7 +200,7 @@
   </dialog>
 
   <script src="data/generated/study-data.js?b=20261027-53"></script>
-  <script src="data/generated/exam-data.js?b=20261027-53"></script>
+  <script src="data/generated/exam-data.js?b=20261105-exam-audit-batch5"></script>
   <script src="data/generated/ai-basic-data.js?b=20261027-53"></script>
   <script src="data/generated/data-science-data.js?b=20261105-ds-goals-1"></script>
   <script src="data/generated/exam-display-bounds.js?b=20261027-53"></script>
@@ -206,6 +209,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261105-area-nav-scroll-stable-1"></script>
+  <script src="js/app.js?b=20261105-hardmode-v1"></script>
 </body>
 </html>

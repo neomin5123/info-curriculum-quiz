@@ -20,7 +20,7 @@ const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
 areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
-areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
+areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),hardMode:$('hardModeButton'),hardModeState:$('hardModeState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
 examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let pendingRetryAcknowledgment=null;
@@ -1168,7 +1168,20 @@ function jumpArea(delta){
     window.scrollTo({top:beforeY,behavior:'instant'});
   }
 }
-function setMode(m){cancelPracticalAutoAdvance();state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));updateMobileControlSummary();revealed=false;render();persist();}
+function hardModeActive(){return !!state.ui.hardMode&&state.ui.mode==='cloze';}
+function updateHardModeUI(){
+  const on=!!state.ui.hardMode;
+  if(el.hardMode){el.hardMode.setAttribute('aria-pressed',String(on));el.hardMode.classList.toggle('active',on);}
+  if(el.hardModeState)el.hardModeState.textContent=on?'ON':'OFF';
+}
+function toggleHardMode(){
+  cancelPracticalAutoAdvance();
+  state.ui.hardMode=!state.ui.hardMode;
+  if(state.ui.hardMode)state.ui.mode='cloze';
+  document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
+  updateHardModeUI();updateMobileControlSummary();revealed=false;render();persist();
+}
+function setMode(m){cancelPracticalAutoAdvance();state.ui.mode=m;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));updateHardModeUI();updateMobileControlSummary();revealed=false;render();persist();}
 function currentTask(){return engine.current();}
 function isGroupTask(t){return t&&['content-system','content-standards','whole-group'].includes(t.type);}
 function isKITask(t){return t&&t.type==='ki';}
@@ -1187,13 +1200,22 @@ function render(){
   else if(task.type==='ki')renderKI(task.group);
   else renderLine(task.line);
   const mode=state.ui.mode;let gradable=mode==='cloze';
-  if(task.type==='line'&&mode==='cloze'){const set=engine.selectedSet(task.line);gradable=!!(set&&engine.keywordsForSet(task.line,set).length);}
-  if(task.type==='whole-group'&&task.group.subject==='data-science'&&task.group.familyGroup==='character-goals'&&mode==='cloze')gradable=false;
+  if(task.type==='line'&&mode==='cloze'&&!hardModeActive()){const set=engine.selectedSet(task.line);gradable=!!(set&&engine.keywordsForSet(task.line,set).length);}
+  if(task.type==='whole-group'&&task.group.subject==='data-science'&&task.group.familyGroup==='character-goals'&&mode==='cloze'&&!hardModeActive())gradable=false;
   el.check.disabled=!gradable;
   el.reveal.disabled=!gradable;
   el.check.hidden=!gradable;
   el.reveal.hidden=!gradable;
   renderProvenance(task);prepareAnswerFields();renderRetryDock();persist();
+}
+function hardClozeUnits(text){
+  const source=String(text||'');
+  const words=/[\p{L}\p{N}]+/gu;
+  return [...source.matchAll(words)].map((m,i)=>({start:m.index,end:m.index+m[0].length,text:m[0],unitId:`hard-${i}`}));
+}
+function renderHardClozeText(text,lineId='',label='하드모드 빈칸'){
+  const units=hardClozeUnits(text);
+  return renderWithSpans(String(text||''),units,(u,i)=>`<input class="inline-input hard-inline-input" data-line-id="${esc(lineId)}" data-answer="${esc(u.text)}" aria-label="${esc(label)} ${i+1}" autocomplete="off">`);
 }
 function sourceItems(items,masked=false){return `<div class="source-list">${items.map((it,i)=>`<div class="item"><span class="num">${i+1}.</span> ${masked?`<span class="mask" data-reveal>${esc(it.text)}</span>`:esc(it.text)}</div>`).join('')}</div>`;}
 function renderKI(g){
@@ -1548,6 +1570,7 @@ function explanationClozeUnits(item){
 }
 function inputRows(items,prefix,mode){
   if(mode==='source')return sourceItems(items,false);
+  if(hardModeActive())return `<div class="group-inputs">${items.map((it,i)=>`<div class="cs-source-item cs-cloze-item"><span class="cs-num">${i+1}</span><div class="cs-cloze-content">${renderHardClozeText(it.text,it.lineId,prefix)}</div></div>`).join('')}</div>`;
   const semantic=['해설','고려사항','적용 시 고려 사항'].includes(prefix);
   if(semantic&&['mask','cloze'].includes(mode)){
     return `<div class="group-inputs semantic-cloze-list">${items.map((it,i)=>{
@@ -1577,6 +1600,7 @@ function valueAttitudeWholeCue(line){
 }
 function contentSystemItemHtml(task,it,family,mode,itemIx){
   const focus=task?.focus||{kind:'whole',lineIds:[it.lineId]},active=!!focus.lineIds?.includes(it.lineId);
+  if(hardModeActive())return `<div class="cs-source-item cs-cloze-item"><span class="cs-num">${itemIx+1}</span><div class="cs-cloze-content">${renderHardClozeText(it.text,it.lineId,family)}</div></div>`;
   if(mode==='source'||!active)return `<div class="cs-source-item"><span class="cs-num">${itemIx+1}</span><span>${esc(it.text)}</span></div>`;
 
   // 지식·이해는 회상 난이도와 무관하게 해당 영역의 항목 전체를 통째로 회상한다.
@@ -1639,6 +1663,9 @@ function standardItemHtml(task,it,mode,itemIx){
   const code=parts.code||(it.lineId.match(/12데과\d{2}-\d{2}/)||[])[0]||String(itemIx+1);
   const codeHtml=`<span class="standard-code" aria-label="성취기준 코드">${esc(code)}</span>`;
 
+  if(hardModeActive()){
+    return `<div class="standard-row standard-cloze-row">${codeHtml}<div class="standard-body cs-cloze-content">${renderHardClozeText(parts.body,it.lineId,`${code} 성취기준`)}</div></div>`;
+  }
   if(mode==='source'||!active){
     return `<div class="standard-row standard-source-row">${codeHtml}<span class="standard-body">${esc(parts.body)}</span></div>`;
   }
@@ -1686,7 +1713,7 @@ function renderWholeGroup(g){
   const mode=state.ui.mode;
   // 데이터 과학의 성격·목표는 현재 원문 보존 전용이다.
   // 빈칸이 아직 선별되지 않은 상태에서 400자짜리 문단 전체를 무힌트로 입력시키지 않는다.
-  if(g.subject==='data-science'&&g.familyGroup==='character-goals'&&mode==='cloze'){
+  if(g.subject==='data-science'&&g.familyGroup==='character-goals'&&mode==='cloze'&&!hardModeActive()){
     el.content.innerHTML=`<div class="whole-wrap">${g.sections.map(s=>`<section class="whole-section"><div class="section-title">${esc(s.family)} · 원문 보기</div>${sourceItems(s.items,false)}</section>`).join('')}</div>`;
     return;
   }
@@ -1704,6 +1731,7 @@ function standardLineDisplay(line,mode){
   const badge=`<span class="standard-code" aria-label="성취기준 코드">${esc(code)}</span>`;
   const lineBody=`<div class="standard-row standard-cloze-row">${badge}<div class="standard-body cs-cloze-content">`;
   if(mode==='source')return lineBody+esc(parts.body)+'</div></div>';
+  if(hardModeActive())return lineBody+renderHardClozeText(parts.body,line.lineId,`${code} 성취기준`)+'</div></div>';
   const selected=engine.selectedSet(line);
   const raw=mode==='mask'?(line.presentation?.units?.length?line.presentation.units:line.keywords.filter(k=>k.active)):(selected?engine.keywordsForSet(line,selected):[]);
   const units=(raw||[]).slice().sort((a,b)=>a.start-b.start);
@@ -1713,6 +1741,7 @@ function standardLineDisplay(line,mode){
   return lineBody+renderWithSpans(parts.body,bodyUnits,(k,i)=>`<input class="inline-input standard-inline-input" data-answer="${esc(k.text)}" aria-label="${esc(code)} 빈칸 ${i+1}" autocomplete="off">`)+'</div></div>';
 }
 function renderLine(line){
+  if(hardModeActive()&&line.family!=='성취기준'){el.content.innerHTML=`<div class="cloze-text hard-cloze-text">${renderHardClozeText(line.sourceText,line.lineId,line.family)}</div>`;return;}
   if(line.family==='성취기준'&&state.ui.mode!=='typing'){
     const html=standardLineDisplay(line,state.ui.mode);
     if(html){el.content.innerHTML=html;if(state.ui.mode==='mask')bindMasks();return;}
@@ -1894,7 +1923,7 @@ function renderProvenance(task){
 }
 function answerField(target){return target?.closest?.('.inline-input,.group-input,.ki-input,#typingInput')||null;}
 function answerFields(){return [...el.content.querySelectorAll('.inline-input,.group-input,.ki-input,#typingInput')].filter(x=>!x.disabled);}
-function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';const subject=task?.group?.subject||task?.line?.subject||'';return [taskId,state.ui.stage,state.ui.mode,index,...(subject==='ai-basic'?['semantic-v4']:[])].join('|');}
+function makeFieldKey(field,index){const task=currentTask(),taskId=task?engine.taskId(task):'none';const subject=task?.group?.subject||task?.line?.subject||'';return [taskId,state.ui.stage,state.ui.mode,...(hardModeActive()?['hard-v1']:[]),index,...(subject==='ai-basic'?['semantic-v4']:[])].join('|');}
 
 function resizeAnswerField(field){
   if(!field)return;
@@ -2201,6 +2230,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&areaMemoOpen&&!e.isComposing)setAreaMemoOpen(false);
 });
 window.addEventListener('resize',()=>{answerFields().forEach(resizeAnswerField);});
+el.hardMode?.addEventListener('click',toggleHardMode);
+updateHardModeUI();
 el.retryDock.addEventListener('click',e=>{
   const grade=e.target.closest('[data-retry-grade]');if(grade){gradeRetryCard(grade.dataset.retryGrade);return;}
   const later=e.target.closest('[data-retry-later]');if(later){deferRetryCard(later.dataset.retryLater);return;}
