@@ -8,7 +8,7 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261109-daily-review-enter-confirm-1">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261110-custom-education-v4">
 </head>
 <body data-build="2026.10.27-53">
   <header class="app-header">
@@ -27,6 +27,7 @@
       <button id="studyMainTab" class="main-tab active" role="tab" aria-selected="true" aria-controls="studyPage">학습</button>
       <button id="reviewMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="reviewPage">복습</button>
       <button id="examMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="examPage">기출문제</button>
+      <button id="educationMainTab" class="main-tab" role="tab" aria-selected="false" aria-controls="educationPage">교육학</button>
     </nav>
 
     <section id="studyPage" role="tabpanel" aria-labelledby="studyMainTab">
@@ -145,6 +146,9 @@
         </div>
       </section>
     </section>
+    <section id="educationPage" class="education-page hidden" role="tabpanel" aria-labelledby="educationMainTab" hidden>
+      <iframe id="educationFrame" title="교육학 개념·문제·복습" src="education/index.html" loading="lazy"></iframe>
+    </section>
   </main>
 
 
@@ -204,6 +208,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261027-53"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261109-clear-answers-no-confirm-1"></script>
+  <script src="js/app.js?b=20261110-custom-education-v4"></script>
 </body>
 </html>

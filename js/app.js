@@ -1207,20 +1207,25 @@ function renderExamAnswerSheet(){
   }).join(''):'<p>수록된 문제지가 없습니다.</p>';
 }
 function showMainTab(tab='study',save=true){
-  const review=tab==='review',exam=tab==='exam',study=!review&&!exam;
-  state.ui.mainTab=exam?'exam':review?'review':'study';
+  const education=tab==='education',review=tab==='review',exam=tab==='exam',study=!review&&!exam&&!education;
+  state.ui.mainTab=education?'education':exam?'exam':review?'review':'study';
   document.body.classList.toggle('exam-wide',exam);
   el.studyPage?.classList.toggle('hidden',!study);
   el.reviewPage?.classList.toggle('hidden',!review);
   el.examPage?.classList.toggle('hidden',!exam);
+  const eduPage=document.getElementById('educationPage');
+  eduPage?.classList.toggle('hidden',!education);
+  if(eduPage)eduPage.hidden=!education;
   el.studyTab?.classList.toggle('active',study);
   el.reviewTab?.classList.toggle('active',review);
   el.examTab?.classList.toggle('active',exam);
+  document.getElementById('educationMainTab')?.classList.toggle('active',education);
   el.studyTab?.setAttribute('aria-selected',String(study));
   el.reviewTab?.setAttribute('aria-selected',String(review));
   el.examTab?.setAttribute('aria-selected',String(exam));
-  el.areaMemoDock?.classList.toggle('hidden',exam);
-  el.retryDock?.classList.toggle('hidden',exam);
+  document.getElementById('educationMainTab')?.setAttribute('aria-selected',String(education));
+  el.areaMemoDock?.classList.toggle('hidden',exam||education);
+  el.retryDock?.classList.toggle('hidden',exam||education);
   if(review)renderReviewPage();
   if(exam)renderExamPage();else examRevealId='';
   if(save)persist();
@@ -2501,6 +2506,7 @@ initSelectors();initMobileControlCollapse();initExamBrowser();state.ui.stage='wh
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
 el.examTab.onclick=()=>showMainTab('exam');
+ document.getElementById('educationMainTab').onclick=()=>showMainTab('education');
 if(el.examYear)el.examYear.onchange=()=>setExamFilter('year',el.examYear.value);
 if(el.examPart)el.examPart.onchange=()=>setExamFilter('part',el.examPart.value);
 if(el.examSubject)el.examSubject.onchange=()=>setExamFilter('subject',el.examSubject.value);
