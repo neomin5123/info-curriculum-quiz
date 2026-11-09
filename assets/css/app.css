@@ -1806,3 +1806,8 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   pointer-events:auto!important;
   cursor:pointer;
 }
+
+/* 2026-11-08 — 오답 카드 항상 표시 / 수동 초기화 버튼 */
+.retry-reset-button{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 12px;border:1px solid #d8c3ae;border-radius:999px;background:#fff8f2;color:#854d24;font-size:11.5px;font-weight:800;white-space:nowrap;cursor:pointer}
+.retry-reset-button:hover{border-color:#b8885d;background:#fff1e6}
+.retry-reset-button:focus-visible{outline:3px solid rgba(142,87,33,.22);outline-offset:2px}

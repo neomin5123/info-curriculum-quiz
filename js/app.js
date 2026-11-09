@@ -15,12 +15,14 @@ const CLOZE46_OVERRIDES={"MI-03-CS-PF-02":{"version":"v9.0.46","units":[{"unitId
 for(const line of DATA.lines){if(CLOZE46_OVERRIDES[line.lineId])line.presentation=CLOZE46_OVERRIDES[line.lineId];}
 const CLOZE52_OVERRIDES={"MI-03-CS-KI-01":{"version":"v9.0.52","units":[{"unitId":"MI-03-CS-KI-01-B52-1","text":"다양한 설계 전략","start":6,"end":15,"unitType":"phrase","sourceKeywordIds":[],"stage3RGrades":["B"],"directHistoricalEvidence":[],"sourceFaithful":true,"presentationBasis":"B52_SELECTED_LEARNING_VALUE"}],"coreSets":[{"setId":"MI-03-CS-KI-01-B52C-1","unitIds":["MI-03-CS-KI-01-B52-1"],"blankCount":1,"basis":"one source-anchored learning target"}],"practicalSets":[{"setId":"MI-03-CS-KI-01-B52P-1","unitIds":["MI-03-CS-KI-01-B52-1"],"blankCount":1,"basis":"independent source spans"}],"usesExpertOverride":true,"legacyKeywordsPreserved":true,"legacySetsPreserved":true},"MI-03-CS-KI-02":{"version":"v9.0.52","units":[{"unitId":"MI-03-CS-KI-02-B52-1","text":"자동화","start":0,"end":3,"unitType":"phrase","sourceKeywordIds":[],"stage3RGrades":["B"],"directHistoricalEvidence":[],"sourceFaithful":true,"presentationBasis":"B52_SELECTED_LEARNING_VALUE"},{"unitId":"MI-03-CS-KI-02-B52-2","text":"컴퓨터가 이해할 수 있는 언어","start":19,"end":35,"unitType":"phrase","sourceKeywordIds":[],"stage3RGrades":["B"],"directHistoricalEvidence":[],"sourceFaithful":true,"presentationBasis":"B52_SELECTED_LEARNING_VALUE"}],"coreSets":[{"setId":"MI-03-CS-KI-02-B52C-1","unitIds":["MI-03-CS-KI-02-B52-1"],"blankCount":1,"basis":"one source-anchored learning target"},{"setId":"MI-03-CS-KI-02-B52C-2","unitIds":["MI-03-CS-KI-02-B52-2"],"blankCount":1,"basis":"one source-anchored learning target"}],"practicalSets":[{"setId":"MI-03-CS-KI-02-B52P-1","unitIds":["MI-03-CS-KI-02-B52-1","MI-03-CS-KI-02-B52-2"],"blankCount":2,"basis":"independent source spans"}],"usesExpertOverride":true,"legacyKeywordsPreserved":true,"legacySetsPreserved":true}};
 for(const line of DATA.lines){if(CLOZE52_OVERRIDES[line.lineId])line.presentation=CLOZE52_OVERRIDES[line.lineId];}
-const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);CL.storage.restoreScopeRound(state);
-const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retry:$('retryToggle'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
+const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);
+// 누적 상태가 OFF였던 기존 사용자는 기존 카드 기록을 보존하면서 오답 카드를 항상 활성화한다.
+state.ui.retry=true;CL.storage.restoreScopeRound(state);
+const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retryReset:$('retryResetButton'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
 areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
-areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),retryState:$('retryToggleState'),hardMode:$('hardModeButton'),hardModeState:$('hardModeState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
+areaMemoClear:$('areaMemoClear'),areaMemoClose:$('areaMemoClose'),hardMode:$('hardModeButton'),hardModeState:$('hardModeState'),areaNav:$('areaNavigator'),prevArea:$('prevAreaButton'),nextArea:$('nextAreaButton'),currentArea:$('currentAreaLabel'),scrollTop:$('scrollTopButton'),scrollBottom:$('scrollBottomButton'),
 controlCard:$('studyControlCard'),controlToggle:$('mobileControlToggle'),controlSummary:$('mobileControlSummary'),controlBody:$('studyControlBody'),
 examPage:$('examPage'),examTab:$('examMainTab'),examCoverage:$('examCoverage'),examSummary:$('examSummary'),examYear:$('examYearSelect'),examPart:$('examPartSelect'),examSubject:$('examSubjectSelect'),examTopic:$('examTopicSelect'),examSolution:$('examSolutionSelect'),examSearch:$('examSearchInput'),examReset:$('examResetFilters'),examResultCount:$('examResultCount'),examList:$('examQuestionList'),examNavBar:$('examNavigationBar'),examQuestionSelect:$('examQuestionSelect'),examSheetButton:$('examAnswerSheetButton'),examSheetDialog:$('examAnswerSheetDialog'),examSheetYear:$('examSheetYear'),examSheetPart:$('examSheetPart'),examSheetContent:$('examSheetContent'),examSheetCount:$('examSheetCount'),examSheetClose:$('examAnswerSheetClose'),examDetail:$('examDetail')};
 let pendingRetryAcknowledgment=null;
@@ -364,7 +366,7 @@ function initSelectors(){
   el.subject.append(option('all','전체 과목'));engine.subjects.forEach(s=>el.subject.append(option(s,engine.labels[s])));
   el.subject.value=[...el.subject.options].some(o=>o.value===state.ui.subject)?state.ui.subject:'middle-info';
   syncAreaOptions(state.ui.area);
-  syncFamilies();syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';el.retry.checked=state.ui.retry;el.zoom.value=String(state.ui.zoom||100);applyZoom();
+  syncFamilies();syncStages('whole');state.ui.stage='whole';if(el.stage)el.stage.value='whole';el.zoom.value=String(state.ui.zoom||100);applyZoom();
   document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('active',b.dataset.mode===state.ui.mode));
 }
 function applyZoom(){const z=Number(el.zoom.value||100);state.ui.zoom=z;document.documentElement.style.setProperty('--ui-zoom',String(z/100));}
@@ -896,26 +898,85 @@ function dailyReviewCardHtml(g){
     <div class="daily-review-feedback"></div>
   </article>`;
 }
+// 오늘의 복습: 채점 결과를 확인할 때까지 원래 카드를 유지한다.
+// 통계/복습 일정은 실제 확인(Enter) 시 한 번만 갱신한다.
+const pendingDailyReviewGrades=new Map();
 function gradeDailyReview(id){
+  if(pendingDailyReviewGrades.has(id)){acknowledgeDailyReview(id);return;}
   const group=dailyReviewGroups().find(g=>g.id===id);if(!group)return;
   const card=el.dailyReviewList?.querySelector(`[data-daily-review="${CSS.escape(id)}"]`);if(!card)return;
-  let status='wrong',expected='';
+  let status='correct',expected='';
   if(group.kind==='ki'){
     const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
     status=grade.status;expected=group.answers.join(' / ');
-    grade.results.forEach((r,i)=>{const f=fields[i];if(!f)return;if(r.status==='correct'&&r.expected)f.value=r.expected;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(r.status==='duplicate'?'wrong':r.status);});
+    grade.results.forEach((r,i)=>{
+      const f=fields[i];if(!f)return;
+      if(r.status==='correct'&&r.expected)f.value=r.expected;
+      ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
+      f.classList.add(r.status==='duplicate'?'wrong':r.status);
+    });
   }else{
     const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
     status=d.status;expected=group.answer;
-    if(f){if(status==='correct'&&expected)f.value=expected;['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));f.classList.add(status==='duplicate'?'wrong':status);}
+    if(f){
+      if(status==='correct'&&expected)f.value=expected;
+      ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
+      f.classList.add(status==='duplicate'?'wrong':status);
+    }
   }
-  const lineIds=group.kind==='ki'?group.lineIds:group.lineIds;
-  lineIds.forEach(lineId=>{CL.storage.recordItem(state,lineId,status);CL.storage.completeDailyReview(state,lineId,status);});
   const fb=card.querySelector('.daily-review-feedback'),label=status==='correct'?'정답':status==='near'?'표기 확인':status==='unknown'?'모름':'오답';
-  fb.textContent=status==='correct'?'오늘 복습 완료 ✓':`${label} · 정답: ${expected}`;
-  fb.className='daily-review-feedback '+statusClass(status);
-  CL.storage.save(state);renderRetryDock();
-  setTimeout(()=>renderReviewPage(),status==='correct'?650:1450);
+  if(fb){
+    fb.textContent=status==='correct'?'오늘 복습 정답 ✓ · 확인(Enter)을 누르면 다음 카드로 이동합니다.':`${label} · 정답: ${expected} · 확인(Enter)을 누르면 다음 카드로 이동합니다.`;
+    fb.className='daily-review-feedback '+statusClass(status);
+  }
+  pendingDailyReviewGrades.set(id,{lineIds:[...group.lineIds],status,feedbackText:fb?.textContent||'',values:[...card.querySelectorAll('.daily-review-input')].map(f=>f.value),visuals:[...card.querySelectorAll('.daily-review-input')].map(f=>['correct','near','unknown','wrong'].find(c=>f.classList.contains(c))||'')});
+  card.dataset.dailyPending='1';
+  card.querySelectorAll('.daily-review-input').forEach(f=>{f.disabled=true;});
+  const button=card.querySelector('[data-daily-grade]');
+  if(button){
+    button.textContent='확인 (Enter)';
+    button.dataset.dailyAcknowledge=id;
+    button.focus({preventScroll:true});
+  }
+}
+function acknowledgeDailyReview(id){
+  const pending=pendingDailyReviewGrades.get(id);
+  if(!pending)return;
+  // 사용자가 확인하기 전에는 복습 기록과 학습 일정이 변경되지 않는다.
+  pendingDailyReviewGrades.delete(id);
+  pending.lineIds.forEach(lineId=>{
+    CL.storage.recordItem(state,lineId,pending.status);
+    CL.storage.completeDailyReview(state,lineId,pending.status);
+  });
+  CL.storage.save(state);
+  renderRetryDock();
+  const container=el.dailyReviewList;
+  // 다른 카드에 미리 적어 둔 답안을 전체 화면 갱신 중에도 보존한다.
+  const drafts=new Map();
+  container?.querySelectorAll('[data-daily-review]').forEach(card=>{
+    const cardId=card.dataset.dailyReview;
+    if(cardId===id)return;
+    drafts.set(cardId,[...card.querySelectorAll('.daily-review-input')].map(f=>f.value));
+  });
+  const cardBefore=container?.querySelector(`[data-daily-review="${CSS.escape(id)}"]`);
+  const cardsBefore=container?[...container.querySelectorAll('[data-daily-review]')]:[];
+  const index=cardsBefore.indexOf(cardBefore);
+  const nextId=(cardsBefore[index+1]||cardsBefore[0])?.dataset.dailyReview||'';
+  renderReviewPage();
+  drafts.forEach((values,cardId)=>{
+    const card=container?.querySelector(`[data-daily-review="${CSS.escape(cardId)}"]`);
+    if(!card)return;
+    card.querySelectorAll('.daily-review-input').forEach((f,i)=>{
+      if(values[i]!==undefined)f.value=values[i];
+    });
+  });
+  const nextCard=nextId?container?.querySelector(`[data-daily-review="${CSS.escape(nextId)}"]`):null;
+  const nextInput=(nextCard&&!pendingDailyReviewGrades.has(nextId)?nextCard.querySelector('.daily-review-input'):null)
+    ||container?.querySelector('[data-daily-review]:not([data-daily-pending]) .daily-review-input');
+  if(nextInput){
+    try{nextInput.focus({preventScroll:true});}catch(_){nextInput.focus();}
+    nextInput.scrollIntoView({block:'nearest',behavior:'instant'});
+  }
 }
 function weakReviewItems(){
   return Object.entries(state.itemProgress||{})
@@ -936,6 +997,21 @@ function renderReviewPage(){
   if(el.reviewRetryCount)el.reviewRetryCount.textContent=String(due.length);
   if(el.reviewWeakCount)el.reviewWeakCount.textContent=String(weak.length);
   if(el.dailyReviewList)el.dailyReviewList.innerHTML=daily.length?daily.map(dailyReviewCardHtml).join(''):`<div class="review-empty">오늘 예정된 장기 복습이 없습니다.</div>`;
+  // 채점 결과가 확인 대기 중일 때 다른 화면 갱신이 발생해도 상태를 보존한다.
+  pendingDailyReviewGrades.forEach((grade,cardId)=>{
+    const card=el.dailyReviewList?.querySelector(`[data-daily-review="${CSS.escape(cardId)}"]`);
+    if(!card)return;
+    card.dataset.dailyPending='1';
+    card.querySelectorAll('.daily-review-input').forEach((f,i)=>{
+      f.value=grade.values[i]??'';
+      if(grade.visuals[i])f.classList.add(grade.visuals[i]);
+      f.disabled=true;
+    });
+    const button=card.querySelector('[data-daily-grade]');
+    if(button){button.textContent='확인 (Enter)';button.dataset.dailyAcknowledge=cardId;}
+    const fb=card.querySelector('.daily-review-feedback');
+    if(fb){fb.textContent=grade.feedbackText;fb.className='daily-review-feedback '+statusClass(grade.status);}
+  });
   if(el.reviewSummary)el.reviewSummary.textContent=daily.length?`오늘의 복습 ${daily.length}개`:(due.length?`지금 다시 풀 수 있는 카드 ${due.length}개`:(retries.length?'재인출 대기 중':'오늘 복습 완료'));
   if(el.reviewRetryList){
     el.reviewRetryList.innerHTML=retries.length?retries.map(([id,r])=>{
@@ -1165,14 +1241,6 @@ function openWeakItem(lineId){
 }
 function persist(){CL.storage.noteScopeRound(state);CL.storage.noteScopeTask(state,engine.current()?engine.taskId(engine.current()):'');CL.storage.save(state);renderRetryDock();if(state.ui.mainTab==='review')renderReviewPage();}
 function rebuild(preferredId=''){const currentId=engine.current()?engine.taskId(engine.current()):'';const id=preferredId||CL.storage.scopeTask(state)||currentId;engine.rebuild(id);revealed=false;render();persist();}
-
-function updateRetryToggleUI(){
-  if(!el.retry)return;
-  const on=!!el.retry.checked;
-  el.retry.closest('.retry-pill')?.classList.toggle('on',on);
-  el.retry.closest('.retry-pill')?.classList.toggle('off',!on);
-  if(el.retryState)el.retryState.textContent=on?'ON':'OFF';
-}
 
 function areaNavState(task=currentTask()){
   if(!task)return null;
@@ -2013,12 +2081,39 @@ function check(){
   CL.storage.record(state,engine.taskId(task),status);persist();
   if(status==='correct')schedulePracticalAutoAdvance();
 }
-function reveal(){
-  cancelPracticalAutoAdvance();
-  const task=currentTask();if(!task)return;revealed=!revealed;document.querySelector('.answer-box')?.remove();if(!revealed)return;let html='';
-  if(isGroupTask(task))html=groupSections(task).map(s=>`<strong>${esc(s.family)}</strong><br>${s.items.map((x,i)=>`${i+1}. ${esc(x.text)}`).join('<br>')}`).join('<br><br>');
-  else if(isKITask(task))html=task.group.items.map((x,i)=>`${i+1}. ${esc(x.text)}`).join('<br>');else html=esc(task.line.sourceText);
-  el.content.insertAdjacentHTML('beforeend',`<div class="answer-box">${html}</div>`);
+function fillAllClozeAnswers(){
+  // 정답 채우기는 학습 화면의 입력값만 채우며 채점 및 오답 기록을 생성하지 않는다.
+  if(state.ui.mode!=='cloze')return;
+  const task=currentTask();if(!task)return;
+  const sections=isGroupTask(task)?groupSections(task):[];
+  const fields=answerFields();
+  const familyPositions=new Map();
+  fields.forEach(field=>{
+    let expected=String(field.dataset.answer||'');
+    if(!expected&&field.classList.contains('group-input')){
+      const family=field.dataset.section||'';
+      const items=sections.find(x=>x.family===family)?.items||[];
+      const pos=familyPositions.get(family)||0;
+      expected=String(items[pos]?.text||'');
+      familyPositions.set(family,pos+1);
+    }
+    if(!expected&&field.classList.contains('ki-input')&&isKITask(task)){
+      const family='지식·이해';
+      const pos=familyPositions.get(family)||0;
+      expected=String(task.group.items[pos]?.text||'');
+      familyPositions.set(family,pos+1);
+    }
+    if(!expected)return;
+    field.value=expected;
+    if(field.dataset.fieldKey){
+      CL.storage.setDraft(state,field.dataset.fieldKey,expected);
+      CL.storage.clearFieldGrade(state,field.dataset.fieldKey);
+    }
+    resetFieldVisual(field);
+    resizeAnswerField(field);
+  });
+  el.feedback.textContent='';el.feedback.className='feedback';
+  persist();
 }
 function sourceInfo(){
   const task=currentTask();if(!task)return;const c=taskContext(task);let official='';
@@ -2340,7 +2435,7 @@ function filterChange(kind){
     persist();
   }
 }
-initSelectors();initMobileControlCollapse();initExamBrowser();updateRetryToggleUI();state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
+initSelectors();initMobileControlCollapse();initExamBrowser();state.ui.stage='whole';if(el.stage)el.stage.value='whole';CL.storage.restoreScopeRound(state);engine.rebuild(CL.storage.scopeTask(state));render();installAnswerInputUX();showMainTab(state.ui.mainTab||'study',false);renderRetryDock();loadAreaMemo();updateMobileControlSummary();
 el.studyTab.onclick=()=>showMainTab('study');
 el.reviewTab.onclick=()=>showMainTab('review');
 el.examTab.onclick=()=>showMainTab('exam');
@@ -2417,29 +2512,44 @@ document.addEventListener('pointerdown',e=>{
 },{capture:true});
 el.reviewRetryList.addEventListener('click',e=>{const row=e.target.closest('[data-retry-id]');if(row){showMainTab('study');openRetryCard(row.dataset.retryId);}});
 el.reviewWeakList.addEventListener('click',e=>{const row=e.target.closest('[data-line-id]');if(row)openWeakItem(row.dataset.lineId);});
-el.dailyReviewList.addEventListener('click',e=>{const b=e.target.closest('[data-daily-grade]');if(b)gradeDailyReview(b.dataset.dailyGrade);});
-el.dailyReviewList.addEventListener('keydown',e=>{const f=e.target.closest('.daily-review-input');if(!f||e.isComposing||e.keyCode===229||e.key!=='Enter')return;const card=f.closest('[data-daily-review]');if(!card)return;const fields=[...card.querySelectorAll('.daily-review-input')],i=fields.indexOf(f);if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}e.preventDefault();gradeDailyReview(card.dataset.dailyReview);});
+el.dailyReviewList.addEventListener('click',e=>{
+  const b=e.target.closest('[data-daily-grade]');
+  if(b)gradeDailyReview(b.dataset.dailyGrade);
+});
+el.dailyReviewList.addEventListener('keydown',e=>{
+  if(e.isComposing||e.keyCode===229||e.key!=='Enter'||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||e.repeat)return;
+  const card=e.target.closest('[data-daily-review]');if(!card)return;
+  const id=card.dataset.dailyReview;
+  if(pendingDailyReviewGrades.has(id)){
+    e.preventDefault();acknowledgeDailyReview(id);return;
+  }
+  const f=e.target.closest('.daily-review-input');if(!f)return;
+  const fields=[...card.querySelectorAll('.daily-review-input')],i=fields.indexOf(f);
+  if(fields.length>1&&i<fields.length-1){e.preventDefault();fields[i+1].focus();return;}
+  e.preventDefault();gradeDailyReview(id);
+});
 el.clearAnswers.onclick=clearFilledAnswers;
 el.resetReview.onclick=resetReviewData;
 el.subject.onchange=()=>filterChange('subject');
 el.area.onchange=()=>filterChange('area');
 el.family.onchange=()=>changeScope(()=>{state.ui.family=el.family.value;});
 if(el.stage)el.stage.onchange=()=>changeScope(()=>{state.ui.stage='whole';});
-el.zoom.onchange=()=>{applyZoom();persist();};el.retry.onchange=()=>{
-  state.ui.retry=el.retry.checked;
-  if(!state.ui.retry){
-      pendingRetryAcknowledgment=null;
-    activeRetryCardId='';
-    state.fieldRetries={};
-    state.fieldRetryCounts={};
-  }
-  updateRetryToggleUI();
-  persist();
+el.zoom.onchange=()=>{applyZoom();persist();};
+el.retryReset?.addEventListener('click',()=>{
+  const count=Object.keys(state.fieldRetries||{}).length;
+  if(!count)return;
+  if(!window.confirm(`누적 오답 카드 ${count}개를 모두 삭제할까요?\n복습 통계와 기존 학습 답안은 유지됩니다.`))return;
+  retryPendingById.clear();
+  pendingRetryAcknowledgment=null;
+  activeRetryCardId='';
+  state.fieldRetries={};
+  state.fieldRetryCounts={};
+  CL.storage.save(state);
   renderRetryDock();
   renderReviewPage();
-};
+});
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-el.check.onclick=check;el.reveal.onclick=reveal;
+el.check.onclick=check;el.reveal.onclick=fillAllClozeAnswers;
 // 이전·다음·처음부터 버튼은 화면에서 제거됨. 구형 페이지와의 호환성만 유지.
 if(el.next)el.next.onclick=()=>{cancelPracticalAutoAdvance();engine.next();revealed=false;render();};
 if(el.prev)el.prev.onclick=()=>{cancelPracticalAutoAdvance();engine.prev();revealed=false;render();};
