@@ -1976,9 +1976,37 @@ function applyFieldGrade(field,detail,expected='',save=true){
 function recordMatchedItem(items,result){
   if(result?.answerIndex!=null&&items[result.answerIndex])CL.storage.recordItem(state,items[result.answerIndex].lineId,result.status==='duplicate'?'wrong':result.status);
 }
+// 집합형(순서 무관) 정답은 맞힌 항목을 먼저 예약하고,
+// 틀렸거나 비운 칸에는 남은 원문 항목을 한 번씩 배정한다.
+// grading 모듈의 정답/오답 판정은 그대로 두고 expected 표시만 교정한다.
+function distinctExpectedResults(results,answers){
+  const reserved=new Set();
+  results.forEach(r=>{
+    if(['correct','near'].includes(r.status)&&Number.isInteger(r.answerIndex)
+       &&r.answerIndex>=0&&r.answerIndex<answers.length)reserved.add(r.answerIndex);
+  });
+  const remainder=answers.map((_,i)=>i).filter(i=>!reserved.has(i));
+  return results.map((r,i)=>{
+    if(['correct','near'].includes(r.status)&&Number.isInteger(r.answerIndex))return {...r,expected:String(answers[r.answerIndex]||'')};
+    const index=remainder.shift();
+    return {...r,expected:String(answers[index]??answers[i]??''),displayAnswerIndex:index??i};
+  });
+}
+function unorderedFieldsFor(field){
+  if(field.classList.contains('ki-input'))return answerFields().filter(f=>f.classList.contains('ki-input'));
+  const section=field.dataset.section||'';
+  return answerFields().filter(f=>f.classList.contains('group-input')&&!f.dataset.answer&&f.dataset.section===section);
+}
+function gradedUnorderedField(field,task){
+  const fields=unorderedFieldsFor(field),index=fields.indexOf(field),items=expectedItemsForField(field,task);
+  if(index<0||!items.length)return null;
+  const results=CL.grading.gradeSetDetailed(fields.map(f=>f.value),items.map(it=>it.text)).results;
+  return {detail:distinctExpectedResults(results,items.map(it=>it.text))[index],items};
+}
 function gradeSetFields(fields,items,save=true){
   const answers=items.map(x=>x.text),grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),answers),matched=new Set();
-  grade.results.forEach((r,i)=>{
+  const displayResults=distinctExpectedResults(grade.results,answers);
+  displayResults.forEach((r,i)=>{
     const f=fields[i];if(!f)return;
     applyFieldGrade(f,r,r.expected,save);
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
@@ -2048,7 +2076,8 @@ function gradeFixedField(field,expected,save=true){
   return detail;
 }
 function gradeUnorderedField(field,task,save=true){
-  const items=expectedItemsForField(field,task),answers=items.map(x=>x.text),claimed=claimedExpectedNorms(field),detail=CL.grading.bestMatch(field.value,answers,claimed);
+  const chosen=gradedUnorderedField(field,task);if(!chosen)return null;
+  const {items,detail}=chosen;
   applyFieldGrade(field,detail,detail.expected,save);recordMatchedItem(items,detail);
   if(detail.status==='correct')cancelFieldRetry(field);else scheduleFieldRetry(field,detail.status,detail,detail.answerIndex!=null?items[detail.answerIndex]:null);
   return detail;
@@ -2213,6 +2242,25 @@ function prepareAnswerFields(){
     const saved=CL.storage.getFieldGrade(state,field.dataset.fieldKey);if(saved)applyFieldGrade(field,saved,saved.expected,false);
     resizeAnswerField(field);
   });
+  // 구버전에서 미입력 2칸 모두 첫 정답으로 저장된 경우도 표시를 재계산한다.
+  const task=currentTask(),groups=new Map();
+  fields.filter(f=>f.classList.contains('ki-input')||(f.classList.contains('group-input')&&!f.dataset.answer)).forEach(f=>{
+    const key=f.classList.contains('ki-input')?'지식·이해':f.dataset.section||'';
+    if(!groups.has(key))groups.set(key,[]);
+    groups.get(key).push(f);
+  });
+  groups.forEach(group=>{
+    if(!group.length)return;
+    const items=expectedItemsForField(group[0],task),answers=items.map(it=>it.text);
+    if(!answers.length)return;
+    const saved=group.map(f=>CL.storage.getFieldGrade(state,f.dataset.fieldKey));
+    const results=saved.map((g,i)=>{
+      const answerIndex=g&&['correct','near'].includes(g.status)?answers.findIndex(a=>CL.grading.norm(a)===CL.grading.norm(g.expected||group[i].value)):-1;
+      return {status:g?.status||'unknown',answerIndex:answerIndex>=0?answerIndex:null,expected:g?.expected||''};
+    });
+    const display=distinctExpectedResults(results,answers);
+    group.forEach((f,i)=>{if(saved[i]&&!['correct','near'].includes(saved[i].status))applyFieldGrade(f,saved[i],display[i].expected,false);});
+  });
   if(fields.length&&state.ui.mode!=='source'&&state.ui.mode!=='mask')requestAnimationFrame(()=>{
     if(!el.content.contains(document.activeElement)){
       const f=fields.find(x=>!CL.storage.getFieldGrade(state,x.dataset.fieldKey))||fields[0];
@@ -2357,8 +2405,8 @@ function gradeSingleAnswerField(field){
     const expected=fixedExpectedForField(field,task);
     if(expected)detail=CL.grading.classifyDetailed(field.value,expected);
     else{
-      const items=expectedItemsForField(field,task),claimed=claimedExpectedNorms(field);detail=CL.grading.bestMatch(field.value,items.map(x=>x.text),claimed);
-      if(detail.answerIndex!=null)matchedItem=items[detail.answerIndex];
+      const chosen=gradedUnorderedField(field,task);
+      if(chosen){detail=chosen.detail;if(detail.answerIndex!=null)matchedItem=chosen.items[detail.answerIndex];}
     }
   }
   if(!detail)return null;
@@ -2425,8 +2473,8 @@ function installAnswerInputUX(){
 }
 
 function clearFilledAnswers(){
-  const ok=window.confirm('저장된 빈칸 입력값과 채점 표시를 모두 비울까요?\n복습 일정·취약 기록·학습 범위는 유지됩니다.');
-  if(!ok)return;
+  // '빈칸 비우기'는 사용자 요청에 따라 확인창 없이 즉시 실행한다.
+  // 복습 일정·취약 통계·학습 범위는 변경하지 않는다.
   CL.storage.clearStudyInputs(state);revealed=false;render();persist();
 }
 function resetReviewData(){
