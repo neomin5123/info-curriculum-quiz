@@ -798,9 +798,19 @@ function gradeRetryCard(id){
     const fields=[...panel.querySelectorAll('.retry-card-input')],values=fields.map(x=>x.value);
     const grade=CL.grading.gradeSetDetailed(values,r.setAnswers);
     status=grade.status;
+    // gradeSetDetailed는 미입력 답안의 expected에 첫 번째 미사용 정답을
+    // 반복 지정할 수 있다. 정답 공개 시 이미 맞힌 항목을 예약하고,
+    // 나머지 빈칸에는 서로 다른 나머지 정답을 하나씩 배정한다.
+    // 채점 판정은 그대로 사용하고, 표시할 정답만 교정한다.
+    const occupied=new Set(grade.results.filter(g=>
+      (g.status==='correct'||g.status==='near')&&Number.isInteger(g.answerIndex)
+    ).map(g=>g.answerIndex));
+    const available=r.setAnswers.map((_,i)=>i).filter(i=>!occupied.has(i));
     grade.results.forEach((g,i)=>{
       const f=fields[i];if(!f)return;
-      const canonical=(g.expected||r.setAnswers[i]||'');
+      const matched=(g.status==='correct'||g.status==='near')&&Number.isInteger(g.answerIndex);
+      const answerIndex=matched?g.answerIndex:available.shift();
+      const canonical=r.setAnswers[answerIndex]||r.setAnswers[i]||'';
       if(canonical)f.value=canonical;
       const visual=g.status==='duplicate'?'wrong':g.status;
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
@@ -1119,7 +1129,7 @@ function examDetailHtml(q,list){
       <div class="exam-detail-nav"><button type="button" data-exam-nav="${prev?esc(prev.id):''}" ${prev?'':'disabled'}>← 이전</button><button type="button" data-exam-nav="${next?esc(next.id):''}" ${next?'':'disabled'}>다음 →</button></div>
     </div>
     <div class="exam-two-pane">${problem}<div class="exam-right-column"><div class="exam-side-navigation"></div>${solution}</div></div>
-    <footer class="exam-source-note">출처 · ${esc(q.source?.file||EXAM_DATA.metadata?.sourceFile||'전공 기출 PDF')} · PDF 원문을 문항 단위로 렌더한 화면입니다. 연도별 atlas에서 해당 문항 영역만 표시합니다.</footer>`;
+    <footer class="exam-source-note">출처 · 한국교육과정평가원(KICE) · ${esc(q.year)}학년도 중등교사 임용시험 · 정보·컴퓨터 전공 ${esc(q.part)} · ${esc(q.questionLabel||`${q.question}번`)}${q.source?.pages?.length?` · 편집본 PDF ${q.source.pages.join(', ')}쪽`:''} · 사용자 제공 기출 편집본에서 발췌한 문제 화면</footer>`;
 }
 function renderExamPage(){
   if(!el.examPage)return;
