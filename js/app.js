@@ -931,12 +931,13 @@ function gradeDailyReview(id){
   }
   pendingDailyReviewGrades.set(id,{lineIds:[...group.lineIds],status,feedbackText:fb?.textContent||'',values:[...card.querySelectorAll('.daily-review-input')].map(f=>f.value),visuals:[...card.querySelectorAll('.daily-review-input')].map(f=>['correct','near','unknown','wrong'].find(c=>f.classList.contains(c))||'')});
   card.dataset.dailyPending='1';
-  card.querySelectorAll('.daily-review-input').forEach(f=>{f.disabled=true;});
+  // Enter로 채점한 바로 그 키 입력이 확인 버튼까지 작동시키지 않게
+  // 입력칸의 포커스를 유지한다. 편집만 차단하여 결과는 보존한다.
+  card.querySelectorAll('.daily-review-input').forEach(f=>{f.readOnly=true;});
   const button=card.querySelector('[data-daily-grade]');
   if(button){
     button.textContent='확인 (Enter)';
     button.dataset.dailyAcknowledge=id;
-    button.focus({preventScroll:true});
   }
 }
 function acknowledgeDailyReview(id){
@@ -974,8 +975,11 @@ function acknowledgeDailyReview(id){
   const nextInput=(nextCard&&!pendingDailyReviewGrades.has(nextId)?nextCard.querySelector('.daily-review-input'):null)
     ||container?.querySelector('[data-daily-review]:not([data-daily-pending]) .daily-review-input');
   if(nextInput){
-    try{nextInput.focus({preventScroll:true});}catch(_){nextInput.focus();}
-    nextInput.scrollIntoView({block:'nearest',behavior:'instant'});
+    requestAnimationFrame(()=>{
+      if(!nextInput.isConnected)return;
+      try{nextInput.focus({preventScroll:true});}catch(_){nextInput.focus();}
+      nextInput.scrollIntoView({block:'nearest',behavior:'instant'});
+    });
   }
 }
 function weakReviewItems(){
@@ -1005,7 +1009,7 @@ function renderReviewPage(){
     card.querySelectorAll('.daily-review-input').forEach((f,i)=>{
       f.value=grade.values[i]??'';
       if(grade.visuals[i])f.classList.add(grade.visuals[i]);
-      f.disabled=true;
+      f.readOnly=true;
     });
     const button=card.querySelector('[data-daily-grade]');
     if(button){button.textContent='확인 (Enter)';button.dataset.dailyAcknowledge=cardId;}
