@@ -1816,3 +1816,12 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 #educationPage{margin:0;min-width:0}.education-page.hidden{display:none!important}
 #educationPage iframe{display:block;width:100%;height:calc(100vh - 150px);min-height:640px;border:0;background:#f7f9f6;border-radius:16px}
 @media(max-width:720px){#educationPage iframe{height:calc(100dvh - 135px);min-height:540px;border-radius:8px}}
+
+/* Process/function retry: several curriculum lines in one card, original cloze spans. */
+.retry-process-lines{display:grid;gap:11px;max-height:min(43vh,380px);overflow:auto;padding:2px 3px 3px 0;scrollbar-width:none}
+.retry-process-lines::-webkit-scrollbar{display:none}
+.retry-process-line{display:grid;grid-template-columns:21px minmax(0,1fr);gap:5px;align-items:start}
+.retry-process-number{font-size:12px;color:var(--muted);padding-top:7px;font-weight:750}
+.retry-process-text{font-size:14px;line-height:2.25;overflow-wrap:anywhere;word-break:keep-all}
+.retry-dock input.retry-process-input{display:inline-block;vertical-align:middle;width:clamp(78px,27vw,140px);max-width:90%;min-width:70px;margin:2px 3px;padding:7px 8px;font-size:13px;line-height:1.2}
+@media(max-width:760px){.retry-dock input.retry-process-input{width:clamp(70px,23vw,125px)}.retry-process-text{font-size:13px}}

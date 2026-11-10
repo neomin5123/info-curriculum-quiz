@@ -395,6 +395,7 @@ function retryEntries({dueOnly=false}={}){
     .sort((a,b)=>Number(a[1].lastWrongSerial??-1)-Number(b[1].lastWrongSerial??-1));
 }
 function retryAnswerList(r){
+  if(r?.kind==='process-bundle')return processBundleItems(r).flatMap(item=>item.units.map(u=>u.text));
   if(r?.kind==='set'&&Array.isArray(r.setAnswers))return r.setAnswers.map(x=>String(x||'').trim()).filter(Boolean);
   return [String(r?.correctAnswer||'').trim()].filter(Boolean);
 }
@@ -511,14 +512,65 @@ function sizeRetryInputs(panel){
     field.style.fontSize=`${size.toFixed(1)}px`;
   });
 }
+// 과정·기능 재인출은 해당 과목·영역에 있는 모든 원문 문장을 한 카드에 묶는다.
+// 지식·이해와 달리 전체 문장을 입력하게 하지 않고 기존 일반모드 빈칸만 재사용한다.
+function processBundleId(subject,area,round){
+  return `PF-BUNDLE:${subject}:${area}|round:${round}`;
+}
+function processBundleItems(r){
+  const lines=[...engine.lineMap.values()].filter(line=>line.family==='과정·기능'&&line.subject===r.subject&&line.area===r.area);
+  return lines.map(line=>{
+    const text=String(line.sourceText||'');
+    const units=(engine.recallUnitsForLine(line,'whole')||[])
+      .filter(u=>Number.isInteger(u.start)&&Number.isInteger(u.end)&&u.start>=0&&u.end<=text.length&&u.end>u.start&&text.slice(u.start,u.end)===u.text)
+      .sort((a,b)=>a.start-b.start)
+      .filter((u,i,arr)=>!i||u.start>=arr[i-1].end);
+    return {lineId:line.lineId,text,units};
+  });
+}
+function scheduleProcessBundle(line,status,oldRecord=null){
+  if(!line||line.family!=='과정·기능')return;
+  state.fieldRetries=state.fieldRetries||{};
+  const round=Number(oldRecord?.round||state.round||1);
+  const id=processBundleId(line.subject,line.area,round);
+  const existing=state.fieldRetries[id]||oldRecord||{};
+  const ctx=taskContext(currentTask());
+  const serial=Number(state.answerSerial||0);
+  state.fieldRetries[id]={...existing,kind:'process-bundle',section:'과정·기능',
+    subject:line.subject,subjectLabel:line.subjectLabel||ctx.subject,area:line.area,
+    lineIds:processBundleItems({subject:line.subject,area:line.area}).map(x=>x.lineId),
+    taskId:engine.taskId(currentTask()),round,
+    dueAt:Math.min(Number(existing.dueAt??Infinity),serial+Number(CL.config.retryDelay??0)),
+    lastWrongSerial:Number(existing.lastWrongSerial??serial+1),status,
+    scope:existing.scope||{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
+  };
+  // 동일 과목·영역의 예전 과정·기능 개별/통회상 카드와 중복 생성하지 않는다.
+  for(const [oldId,old] of Object.entries(state.fieldRetries)){
+    if(oldId===id||!old||old.section!=='과정·기능'||Number(old.round||1)!==round)continue;
+    const origin=retryOrigin(old);
+    const subject=engine.labels[line.subject]||line.subject;
+    if(origin.subject===subject&&origin.area===line.area){
+      state.fieldRetries[id].dueAt=Math.min(state.fieldRetries[id].dueAt,Number(old.dueAt||serial));
+      delete state.fieldRetries[oldId];retryPendingById.delete(oldId);
+      if(activeRetryCardId===oldId)activeRetryCardId=id;
+    }
+  }
+}
+function processBundleHtml(r){
+  return `<div class="retry-process-lines">${processBundleItems(r).map((item,i)=>
+    `<div class="retry-process-line"><span class="retry-process-number">${i+1}</span><div class="retry-process-text">${renderWithSpans(item.text,item.units,(u,j)=>
+      `<input class="retry-card-input retry-process-input" data-retry-bundle-line="${i}" data-retry-bundle-unit="${j}" type="text" autocomplete="off" spellcheck="false" aria-label="과정·기능 ${i+1}번 문장 빈칸 ${j+1}" placeholder="빈칸">`
+    )}</div></div>`).join('')}</div>`;
+}
 function retryCardPanelHtml(id,r){
+  const bundleMode=r.kind==='process-bundle';
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   const answers=retryAnswerList(r);
   const sectionLabel=retrySafeLabel(r.section||'내용 요소',answers,'해당 항목');
-  const prompt=setMode
+  const prompt=bundleMode?'같은 영역의 과정·기능 빈칸을 모두 채우세요.':setMode
     ? `${sectionLabel} 전체를 다시 쓰세요.`
     : retryBlankText(r.contextText||'',r.correctAnswer||'',`${sectionLabel} 항목`);
-  const inputHtml=setMode
+  const inputHtml=bundleMode?processBundleHtml(r):setMode
     ? `<div class="practical-retry-set">${r.setAnswers.map((_,i)=>`<input class="retry-card-input" data-retry-set-index="${i}" type="text" autocomplete="off" spellcheck="false" aria-label="재인출 답 ${i+1}" placeholder="${i+1}번">`).join('')}</div>`
     : `<input class="retry-card-input" type="text" autocomplete="off" spellcheck="false" aria-label="다시 꺼내기 답 입력" placeholder="정답을 다시 떠올려 입력">`;
   return `
@@ -528,7 +580,7 @@ function retryCardPanelHtml(id,r){
         <span class="retry-result-badge" data-retry-result="${esc(id)}" aria-live="polite"></span>
       </div>
       <div class="practical-retry-prompt">${esc(prompt)}</div>
-      <div class="practical-retry-row ${setMode?'set-mode':''}">
+      <div class="practical-retry-row ${setMode||bundleMode?'set-mode':''}">
         ${inputHtml}
         <div class="practical-retry-actions">
           <span class="retry-action-note" data-retry-feedback="${esc(id)}" aria-live="polite" hidden></span>
@@ -543,30 +595,18 @@ function retryDockVisibleEntries(due){
   return due;
 }
 function migrateLegacyProcessFunctionRetries(){
-  // 과거 저장 기록의 '과정·기능 전체 세트'를 항목별 카드로 전환한다.
-  // 이미 맞힌 원문은 제외하고, 지식·이해 세트는 전혀 변경하지 않는다.
+  // 기존 PF 개별 카드/통회상 카드를 같은 과목·영역의 원문 빈칸 묶음 카드로 변환.
+  // 원본 지식·이해 오답 기록과 다른 범주는 그대로 보존한다.
   const retries=state.fieldRetries||{};
   let changed=false;
-  for(const [id,r] of Object.entries(retries)){
-    if(!r||r.kind!=='set'||String(r.section||'').replace(/\s/g,'')!=='과정·기능')continue;
-    if(!Array.isArray(r.lineIds)||!r.lineIds.length||!Array.isArray(r.setAnswers))continue;
-    const alreadyCorrect=new Set((r.sourceFieldKeys||[]).map(key=>CL.storage.getFieldGrade(state,key))
-      .filter(g=>g?.status==='correct'&&g.expected)
-      .map(g=>CL.grading.norm(g.expected)));
-    r.lineIds.forEach((lineId,i)=>{
-      const line=engine.lineMap.get(lineId);
-      if(!line||line.family!=='과정·기능')return;
-      if(alreadyCorrect.has(CL.grading.norm(r.setAnswers[i]||'')))return;
-      const source=String(line.sourceText||r.setAnswers[i]||'');
-      const unit=(engine.recallUnitsForLine(line,'whole')||[]).find(u=>u?.text&&source.includes(u.text));
-      const correctAnswer=String(unit?.text||source).trim();
-      if(!correctAnswer)return;
-      const newId=`PF:${lineId}|round:${r.round||1}`;
-      if(retries[newId])return;
-      retries[newId]={...r,kind:'single',fieldKey:'',lineId,lineIds:[],section:'과정·기능',
-        correctAnswer,contextText:source,setAnswers:undefined,sourceFieldKeys:undefined};
-    });
-    delete retries[id];
+  for(const [id,r] of Object.entries({...retries})){
+    if(!r||r.kind==='process-bundle')continue;
+    const ids=[r.lineId,...(r.lineIds||[])].filter(Boolean);
+    const line=ids.map(lineId=>engine.lineMap.get(lineId)).find(line=>line?.family==='과정·기능');
+    // 구형 기록은 범주명이 '내용체계 + 성취기준'일 수 있으므로 원문 family로 판별한다.
+    if(!line)continue; // 출처가 불명확한 구형 기록은 임의로 변환하지 않는다.
+    scheduleProcessBundle(line,r.status||'wrong',r);
+    if(retries[id]){delete retries[id];retryPendingById.delete(id);}
     changed=true;
   }
   if(changed)CL.storage.save(state);
@@ -660,6 +700,11 @@ function deferRetryCard(id){
   renderReviewPage();
 }
 function completeRetryRecord(id,r){
+  if(r.kind==='process-bundle'){
+    processBundleItems(r).filter(item=>item.units.length).forEach(item=>CL.storage.recordItem(state,item.lineId,'correct'));
+    delete state.fieldRetries[id];
+    return;
+  }
   if(r.kind==='set'){
     if(r.sourceMode==='single-multiline'&&(r.sourceFieldKeys||[])[0]){
       const key=r.sourceFieldKeys[0],expected=(r.setAnswers||[]).join('\n');
@@ -791,10 +836,28 @@ function gradeRetryCard(id){
   // 답안 입력만 잠그고 확인 버튼은 결과 표시 뒤 다시 활성화한다.
   panel.querySelectorAll('.retry-card-input').forEach(control=>{control.disabled=true;});
   const orderBefore=retryCardOrderSnapshot();
+  const bundleMode=r.kind==='process-bundle';
   const setMode=r.kind==='set'&&Array.isArray(r.setAnswers)&&r.setAnswers.length;
   let status='wrong',expected='',hasWrong=false,hasUnknown=false,hasNear=false;
 
-  if(setMode){
+  if(bundleMode){
+    const items=processBundleItems(r),details=[];
+    items.forEach((item,i)=>item.units.forEach((unit,j)=>{
+      const input=panel.querySelector(`[data-retry-bundle-line="${i}"][data-retry-bundle-unit="${j}"]`);
+      if(!input)return;
+      const detail=CL.grading.classifyDetailed(input.value,unit.text);
+      details.push(detail.status);
+      input.value=unit.text;
+      const visual=detail.status==='duplicate'?'wrong':detail.status;
+      ['correct','near','unknown','wrong'].forEach(c=>input.classList.remove(c));
+      input.classList.add(visual);
+      if(visual==='wrong')hasWrong=true;
+      else if(visual==='unknown')hasUnknown=true;
+      else if(visual==='near')hasNear=true;
+    }));
+    status=details.length?CL.grading.aggregateStatus(details):'wrong';
+    expected=items.flatMap(item=>item.units.map(u=>u.text)).join(' / ');
+  }else if(setMode){
     const fields=[...panel.querySelectorAll('.retry-card-input')],values=fields.map(x=>x.value);
     const grade=CL.grading.gradeSetDetailed(values,r.setAnswers);
     status=grade.status;
@@ -2016,7 +2079,7 @@ function gradeSetFields(fields,items,save=true){
     applyFieldGrade(f,r,r.expected,save);
     if(r.answerIndex!=null&&(r.status==='correct'||r.status==='near'))matched.add(r.answerIndex);
     recordMatchedItem(items,r);
-    // 과정·기능의 통째 입력형은 누락된 원문 항목만 개별 재인출한다.
+    // 과정·기능은 영역의 원래 빈칸을 한 카드에서 함께 풀도록 한다.
     // 지식·이해 등 다른 범주의 집합형 재인출은 기존 규칙을 그대로 사용한다.
     const processFunction=fields[0]?.dataset.section==='과정·기능';
     if(r.status==='correct')cancelFieldRetry(f);
@@ -2034,27 +2097,8 @@ function gradeSetFields(fields,items,save=true){
   return {statuses:grade.results.map(r=>r.status),matched:grade.matchedCount,total:grade.total};
 }
 function scheduleProcessFunctionItemRetry(item,field,status){
-  // 내용체계 '과정·기능'에 한정: 지식·이해 통암기 세트는 건드리지 않는다.
-  if(!state.ui.retry||!item?.lineId||!field)return;
-  const line=engine.lineMap.get(item.lineId);
-  if(!line||line.family!=='과정·기능')return;
-  const source=String(line.sourceText||item.text||'');
-  const unit=(engine.recallUnitsForLine(line,'whole')||[]).find(u=>u?.text&&source.includes(u.text));
-  const expected=String(unit?.text||source).trim();
-  if(!expected)return;
-  const id=`PF:${item.lineId}|round:${state.round||1}`;
-  const existing=state.fieldRetries?.[id]||{};
-  const task=currentTask(),ctx=taskContext(task);
-  state.fieldRetries=state.fieldRetries||{};
-  state.fieldRetries[id]={
-    ...existing,kind:'single',fieldKey:'',lineId:item.lineId,
-    section:'과정·기능',subject:line.subject,subjectLabel:line.subjectLabel||ctx.subject,
-    area:line.area,correctAnswer:expected,contextText:source,
-    taskId:engine.taskId(task),round:Number(state.round||1),
-    dueAt:Math.min(Number(existing.dueAt??Infinity),Number(state.answerSerial||0)+Number(CL.config.retryDelay??0)),
-    status,lastWrongSerial:Number(state.answerSerial||0)+1,
-    scope:{subject:state.ui.subject,area:state.ui.area,family:state.ui.family,stage:state.ui.stage,mode:state.ui.mode}
-  };
+  if(!state.ui.retry||!item?.lineId)return;
+  scheduleProcessBundle(engine.lineMap.get(item.lineId),status);
 }
 function expectedItemsForField(field,task){
   if(field.classList.contains('ki-input')||(field.id==='typingInput'&&task?.type==='ki'))return task?.group?.items||[];
@@ -2305,6 +2349,8 @@ function scheduleFieldRetry(field,status,detail=null,matchedItem=null){
   const expected=String(detail?.expected||fixedExpectedForField(field,task)||matchedItem?.text||'').trim();
   const kiTyping=field.id==='typingInput'&&task?.type==='ki';
   const unordered=field.classList.contains('ki-input')||kiTyping||(field.classList.contains('group-input')&&!field.dataset.answer&&section);
+  // 성취기준이나 지식·이해에는 영향 없이 과정·기능 원문만 영역 단위로 묶는다.
+  if(line?.family==='과정·기능'&&state.ui.mode==='cloze'){scheduleProcessBundle(line,status);return;}
 
   if(unordered&&section==='과정·기능'){
     const items=expectedItemsForField(field,task);
