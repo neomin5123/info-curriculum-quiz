@@ -22,6 +22,18 @@
       const p=JSON.parse(raw),base=fresh(),today=localDateKey();
       const storedDraftDate=String(p.draftDate||today);
       const dayChanged=storedDraftDate!==today;
+      // 기존에 오답 이력이 있던 저장 기록도 집중 복습 상태로 안전하게 전환한다.
+      // 이미 새 규칙으로 4연속 정답을 마친 기록(intensive:false)은 재활성화하지 않는다.
+      const schedule=Object.assign({},p.reviewSchedule||{});
+      for(const [id,r] of Object.entries(schedule)){
+        if(!r||Object.prototype.hasOwnProperty.call(r,'intensive'))continue;
+        const stat=p.itemProgress?.[id]||{};
+        const failed=['wrong','near','unknown','duplicate'].some(k=>Number(stat[k]||0)>0);
+        const wasWrong=['wrong','near','unknown','duplicate'].includes(r.lastStatus);
+        if(failed||wasWrong){
+          schedule[id]={...r,intensive:true,correctStreakDays:0,lastStreakCorrectDate:'',dueDate:earlierDate(r.dueDate,today)};
+        }
+      }
       return Object.assign(base,p,{
         ui:Object.assign(base.ui,migrateUi(p.ui)),
         progress:p.progress||{},
@@ -34,7 +46,7 @@
         answerSerial:Number(p.answerSerial||0),
         fieldRetries:p.fieldRetries||{},
         fieldRetryCounts:p.fieldRetryCounts||{},
-        reviewSchedule:p.reviewSchedule||{},
+        reviewSchedule:schedule,
         reviewHistory:p.reviewHistory||{}
       });
     }catch(e){return fresh();}
@@ -53,7 +65,15 @@
       state.reviewSchedule[id]=r;
     }else{
       r.lastStudyDate=today;r.lastStatus=status;r.updatedAt=new Date().toISOString();
-      if(['wrong','unknown','duplicate','near'].includes(status))r.dueDate=earlierDate(r.dueDate,tomorrow);
+    }
+    // 한 번이라도 오답/모름/표기확인 판정을 받으면 4일 연속 정답 집중 복습에 진입.
+    // 기존의 간격 복습은 4일 연속 정답을 마친 뒤에만 재개한다.
+    if(status!=='correct'){
+      r.intensive=true;r.correctStreakDays=0;r.lastStreakCorrectDate='';
+      r.dueDate=earlierDate(r.dueDate,tomorrow);
+    }else if(r.intensive){
+      // 일반 학습에서 다시 맞힌 것은 '오늘의 복습' 연속 일수에 가산하지 않는다.
+      r.dueDate=earlierDate(r.dueDate,tomorrow);
     }
     return r;
   }
@@ -79,11 +99,26 @@
     const today=localDateKey(),status=normalizeStatus(result);
     const r=state.reviewSchedule[id]||{lineId:id,stage:0,dueDate:today,lastReviewedDate:'',lastStudyDate:today,lastStatus:status,reviewCount:0};
     let stage=Math.max(0,Math.min(intervals.length-1,Number(r.stage||0)));
-    if(status==='correct')stage=Math.min(intervals.length-1,stage+1);
-    else if(status==='near')stage=Math.max(0,stage-1);
-    else stage=0;
-    const days=intervals[stage]||1;
-    Object.assign(r,{stage,dueDate:addDays(today,days),lastReviewedDate:today,lastStatus:status,reviewCount:Number(r.reviewCount||0)+1,updatedAt:new Date().toISOString()});
+    // 오답이었던 항목은 '서로 다른 날짜' 기준 4일 연속 정답까지 매일 등장한다.
+    // 날짜를 건너뛰면 연속 기록을 1부터 다시 시작하며, 같은 날짜의 재복습은 중복 가산하지 않는다.
+    let streak=Math.max(0,Number(r.correctStreakDays||0));
+    let lastCorrect=String(r.lastStreakCorrectDate||'');
+    let intensive=!!r.intensive;
+    if(status!=='correct'){
+      intensive=true;streak=0;lastCorrect='';stage=0;
+    }else if(intensive){
+      if(lastCorrect!==today){
+        streak=lastCorrect===addDays(today,-1)?streak+1:1;
+        lastCorrect=today;
+      }
+      if(streak>=4){intensive=false;stage=Math.max(1,stage);}
+    }else{
+      stage=Math.min(intervals.length-1,stage+1);
+    }
+    // 집중 복습 중에는 다음 날 다시 나오고, 4연속 정답 달성 후에만 기존 간격으로 돌아간다.
+    const days=intensive?1:(intervals[stage]||1);
+    Object.assign(r,{stage,intensive,correctStreakDays:streak,lastStreakCorrectDate:lastCorrect,
+      dueDate:addDays(today,days),lastReviewedDate:today,lastStatus:status,reviewCount:Number(r.reviewCount||0)+1,updatedAt:new Date().toISOString()});
     state.reviewSchedule[id]=r;
     const h=state.reviewHistory[today]||{attempts:0,correct:0,near:0,unknown:0,wrong:0,duplicate:0};
     h.attempts++;h[status]=Number(h[status]||0)+1;state.reviewHistory[today]=h;

@@ -933,13 +933,19 @@ function reviewUnitsForLine(line){
   return (line.keywords||[]).filter(k=>k.active).slice().sort((x,y)=>x.start-y.start);
 }
 function dailyReviewGroups(){
-  const due=CL.storage.dueReviewItems(state),groups=[],kiMap=new Map();
+  const due=CL.storage.dueReviewItems(state),groups=[],kiMap=new Map(),pfMap=new Map();
   due.forEach(rec=>{
     const line=engine.lineMap.get(rec.lineId);if(!line)return;
     if(line.family==='지식·이해'){
       const key=`KI:${line.subject}:${line.area}`;
       if(!kiMap.has(key))kiMap.set(key,{id:key,kind:'ki',subject:line.subject,subjectLabel:line.subjectLabel,area:line.area,lineIds:[]});
       kiMap.get(key).lineIds.push(line.lineId);
+      return;
+    }
+    if(line.family==='과정·기능'){
+      const key=`PF:${line.subject}:${line.area}`;
+      if(!pfMap.has(key))pfMap.set(key,{id:key,kind:'process',subject:line.subject,subjectLabel:line.subjectLabel,area:line.area,lineIds:[]});
+      pfMap.get(key).lineIds.push(line.lineId);
       return;
     }
     const units=reviewUnitsForLine(line);
@@ -952,9 +958,25 @@ function dailyReviewGroups(){
     if(!kg)return;
     g.answers=kg.items.map(x=>x.text);g.allLineIds=kg.items.map(x=>x.lineId);groups.unshift(g);
   });
+  pfMap.forEach(g=>{
+    // 해당 영역의 모든 과정·기능 문장을 출제하고, 기존 일반 빈칸을 그대로 유지한다.
+    // 일정 갱신은 오늘 실제로 복습할 차례였던 lineIds에만 적용한다.
+    g.items=processBundleItems({subject:g.subject,area:g.area});
+    if(g.items.some(item=>item.units.length))groups.push(g);
+  });
   return groups;
 }
 function dailyReviewCardHtml(g){
+  if(g.kind==='process'){
+    const inputs=g.items.reduce((sum,item)=>sum+item.units.length,0);
+    return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
+      <div class="daily-review-card-head"><div><strong>${esc(g.subjectLabel)} · ${esc(g.area)} · 과정·기능</strong><small>같은 영역의 과정·기능 문장 전체 복습</small></div><span>${inputs}개 빈칸</span></div>
+      <div class="daily-review-prompt">각 문장의 기존 핵심 빈칸을 모두 채우세요.</div>
+      <div class="daily-review-process-lines">${g.items.map((item,i)=>`<div class="daily-review-process-line"><span class="daily-review-process-index">${i+1}</span><div class="daily-review-process-text">${renderWithSpans(item.text,item.units,(u,j)=>`<input class="daily-review-input daily-review-process-input" data-daily-process-line="${i}" data-daily-process-unit="${j}" autocomplete="off" spellcheck="false" placeholder="빈칸" aria-label="${i+1}번 문장 ${j+1}번 빈칸">`)}</div></div>`).join('')}</div>
+      <div class="daily-review-actions"><button type="button" class="primary" data-daily-grade="${esc(g.id)}">채점</button></div>
+      <div class="daily-review-feedback"></div>
+    </article>`;
+  }
   if(g.kind==='ki'){
     return `<article class="daily-review-card" data-daily-review="${esc(g.id)}">
       <div class="daily-review-card-head"><div><strong>${esc(g.subjectLabel)} · ${esc(g.area)} · 지식·이해</strong><small>영역 전체 회상</small></div><span>${g.lineIds.length}개 예정</span></div>
@@ -979,7 +1001,24 @@ function gradeDailyReview(id){
   const group=dailyReviewGroups().find(g=>g.id===id);if(!group)return;
   const card=el.dailyReviewList?.querySelector(`[data-daily-review="${CSS.escape(id)}"]`);if(!card)return;
   let status='correct',expected='';
-  if(group.kind==='ki'){
+  const lineStatuses={};
+  if(group.kind==='process'){
+    const fields=[...card.querySelectorAll('.daily-review-process-input')],details=[];
+    group.items.forEach((item,i)=>{
+      const grades=[];
+      item.units.forEach((unit,j)=>{
+        const f=card.querySelector(`[data-daily-process-line="${i}"][data-daily-process-unit="${j}"]`);
+        if(!f)return;
+        const d=CL.grading.classifyDetailed(f.value,unit.text);
+        details.push(d);grades.push(d);
+        f.value=unit.text;
+        ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
+        f.classList.add(d.status==='duplicate'?'wrong':d.status);
+      });
+      if(grades.length)lineStatuses[item.lineId]=CL.grading.aggregateStatus(grades);
+    });
+    status=details.length?CL.grading.aggregateStatus(details):'wrong';
+  }else if(group.kind==='ki'){
     const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
     status=grade.status;expected=group.answers.join(' / ');
     // 채점 상태는 입력한 답으로 판정하되, 표시되는 입력값은 항상 공식 정답이다.
@@ -1007,7 +1046,7 @@ function gradeDailyReview(id){
     fb.textContent=`${label} · 확인(Enter)을 누르면 다음 카드로 이동합니다.`;
     fb.className='daily-review-feedback '+statusClass(status);
   }
-  pendingDailyReviewGrades.set(id,{lineIds:[...group.lineIds],status,feedbackText:fb?.textContent||'',values:[...card.querySelectorAll('.daily-review-input')].map(f=>f.value),visuals:[...card.querySelectorAll('.daily-review-input')].map(f=>['correct','near','unknown','wrong'].find(c=>f.classList.contains(c))||'')});
+  pendingDailyReviewGrades.set(id,{lineIds:[...group.lineIds],lineStatuses,status,feedbackText:fb?.textContent||'',values:[...card.querySelectorAll('.daily-review-input')].map(f=>f.value),visuals:[...card.querySelectorAll('.daily-review-input')].map(f=>['correct','near','unknown','wrong'].find(c=>f.classList.contains(c))||'')});
   card.dataset.dailyPending='1';
   // Enter로 채점한 바로 그 키 입력이 확인 버튼까지 작동시키지 않게
   // 입력칸의 포커스를 유지한다. 편집만 차단하여 결과는 보존한다.
@@ -1024,8 +1063,9 @@ function acknowledgeDailyReview(id){
   // 사용자가 확인하기 전에는 복습 기록과 학습 일정이 변경되지 않는다.
   pendingDailyReviewGrades.delete(id);
   pending.lineIds.forEach(lineId=>{
-    CL.storage.recordItem(state,lineId,pending.status);
-    CL.storage.completeDailyReview(state,lineId,pending.status);
+    const lineStatus=pending.lineStatuses?.[lineId]||pending.status;
+    CL.storage.recordItem(state,lineId,lineStatus);
+    CL.storage.completeDailyReview(state,lineId,lineStatus);
   });
   CL.storage.save(state);
   renderRetryDock();
