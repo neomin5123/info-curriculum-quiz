@@ -982,9 +982,12 @@ function gradeDailyReview(id){
   if(group.kind==='ki'){
     const fields=[...card.querySelectorAll('.daily-review-input')],grade=CL.grading.gradeSetDetailed(fields.map(x=>x.value),group.answers);
     status=grade.status;expected=group.answers.join(' / ');
-    grade.results.forEach((r,i)=>{
+    // 채점 상태는 입력한 답으로 판정하되, 표시되는 입력값은 항상 공식 정답이다.
+    // 지식·이해는 순서 무관 채점이므로 같은 정답을 여러 칸에 중복 표시하지 않는다.
+    const displayResults=distinctExpectedResults(grade.results,group.answers);
+    displayResults.forEach((r,i)=>{
       const f=fields[i];if(!f)return;
-      if(r.status==='correct'&&r.expected)f.value=r.expected;
+      f.value=r.expected||group.answers[i]||'';
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
       f.classList.add(r.status==='duplicate'?'wrong':r.status);
     });
@@ -992,14 +995,16 @@ function gradeDailyReview(id){
     const f=card.querySelector('.daily-review-input'),d=CL.grading.classifyDetailed(f?.value||'',group.answer);
     status=d.status;expected=group.answer;
     if(f){
-      if(status==='correct'&&expected)f.value=expected;
+      // 오답·표기 확인도 원래 입력칸 안에서 공식 정답을 확인한다.
+      if(expected)f.value=expected;
       ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
       f.classList.add(status==='duplicate'?'wrong':status);
     }
   }
   const fb=card.querySelector('.daily-review-feedback'),label=status==='correct'?'정답':status==='near'?'표기 확인':status==='unknown'?'모름':'오답';
   if(fb){
-    fb.textContent=status==='correct'?'오늘 복습 정답 ✓ · 확인(Enter)을 누르면 다음 카드로 이동합니다.':`${label} · 정답: ${expected} · 확인(Enter)을 누르면 다음 카드로 이동합니다.`;
+    // 정답은 이미 각 입력칸에 표시된다. 아래에서 같은 정답을 재나열하지 않는다.
+    fb.textContent=`${label} · 확인(Enter)을 누르면 다음 카드로 이동합니다.`;
     fb.className='daily-review-feedback '+statusClass(status);
   }
   pendingDailyReviewGrades.set(id,{lineIds:[...group.lineIds],status,feedbackText:fb?.textContent||'',values:[...card.querySelectorAll('.daily-review-input')].map(f=>f.value),visuals:[...card.querySelectorAll('.daily-review-input')].map(f=>['correct','near','unknown','wrong'].find(c=>f.classList.contains(c))||'')});
