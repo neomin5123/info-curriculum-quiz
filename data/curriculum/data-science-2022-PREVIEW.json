@@ -1547,8 +1547,8 @@
         "units": [
           {
             "unitId": "DS-22-12데과01-03-PU-01",
-            "text": "데이터셋의 집합인 데이터베이스",
-            "start": 0,
+            "text": "데이터베이스",
+            "start": 10,
             "end": 16,
             "unitType": "phrase",
             "sourceKeywordIds": [
@@ -1558,7 +1558,7 @@
               "B"
             ],
             "sourceFaithful": true,
-            "presentationBasis": "STEP11_SOURCE_CLOZE_REVIEW"
+            "presentationBasis": "FINAL_CONSERVATIVE_REVIEW_20261110"
           }
         ],
         "coreSets": [
@@ -1698,14 +1698,27 @@
         "units": [
           {
             "unitId": "DS-22-12데과02-02-PU-01",
-            "text": "이상치와 결측치 탐색 및 정규화",
+            "text": "이상치와 결측치",
             "start": 0,
+            "end": 8,
+            "unitType": "phrase",
+            "stage3RGrades": [
+              "B"
+            ],
+            "sourceFaithful": true,
+            "presentationBasis": "FINAL_CONSERVATIVE_REVIEW_20261110"
+          },
+          {
+            "unitId": "DS-22-12데과02-02-PU-02",
+            "text": "정규화",
+            "start": 14,
             "end": 17,
             "unitType": "phrase",
             "stage3RGrades": [
               "B"
             ],
-            "sourceFaithful": true
+            "sourceFaithful": true,
+            "presentationBasis": "FINAL_CONSERVATIVE_REVIEW_20261110"
           }
         ],
         "coreSets": [
@@ -1716,9 +1729,27 @@
             ],
             "blankCount": 1,
             "basis": "one source-anchored target"
+          },
+          {
+            "setId": "DS-22-12데과02-02-PC-02",
+            "unitIds": [
+              "DS-22-12데과02-02-PU-02"
+            ],
+            "blankCount": 1,
+            "basis": "separate distinct preprocessing concept"
           }
         ],
-        "practicalSets": []
+        "practicalSets": [
+          {
+            "setId": "DS-22-12데과02-02-PP-01",
+            "unitIds": [
+              "DS-22-12데과02-02-PU-01",
+              "DS-22-12데과02-02-PU-02"
+            ],
+            "blankCount": 2,
+            "basis": "paired preprocessing concepts"
+          }
+        ]
       },
       "importanceReview": {
         "grade": "B",
