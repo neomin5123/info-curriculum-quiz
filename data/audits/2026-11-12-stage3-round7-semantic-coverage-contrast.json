@@ -1,0 +1,5230 @@
+{
+  "auditId": "2026-11-12-stage3-round7-semantic-coverage-contrast",
+  "basis": "stage3_round6 canonical runtime version",
+  "scope": {
+    "sourceItems": 449,
+    "subjects": 4,
+    "subjectAreas": 22,
+    "displayUnitsBefore": 578,
+    "displayUnitsAfter": 583,
+    "updatedSourceItems": 9,
+    "newUnits": 6,
+    "retiredUnits": 1,
+    "replacements": 2,
+    "manuallyAdjudicatedThisRound": 19
+  },
+  "qualification": "449 items received structural/heuristic classification. Only 9 edited plus 10 selected keeps received individual rationale; no claim of 449 individual semantic reviews.",
+  "edits": [
+    {
+      "lineId": "MI-03-AC-ST-06",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "action": "add",
+      "before": null,
+      "after": "논리 연산",
+      "reason": "[9정03-06]은 논리 연산과 중첩 제어 구조 두 가지를 병렬로 요구한다. 기존 단일 빈칸은 핵심 개념 한쪽만 회상한다.",
+      "retiredUnitId": null,
+      "newUnitId": "MI-03-AC-ST-06-PU-STAGE3-R7-1"
+    },
+    {
+      "lineId": "HI-01-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "action": "replace",
+      "before": "피지컬 컴퓨팅",
+      "after": "사물인터넷 시스템",
+      "reason": "[12정01-03]은 중학교의 피지컬 컴퓨팅 장치를 선택하여 고등학교에서 사물인터넷 시스템을 설계하는 발전 관계를 묻는다. 구별 대상인 설계 결과를 회상하도록 변경.",
+      "retiredUnitId": "HI-01-AC-ST-03-PU-01",
+      "newUnitId": "HI-01-AC-ST-03-PU-STAGE3-R7-REPLACE-2"
+    },
+    {
+      "lineId": "HI-03-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "action": "add",
+      "before": null,
+      "after": "대규모 데이터",
+      "reason": "정렬·탐색 알고리즘의 효율성을 체험시키기 위한 교수·학습상의 구체적인 수단은 실제 대규모 데이터 적용이다. 기존 0빈칸의 고유 조건만 보완.",
+      "retiredUnitId": null,
+      "newUnitId": "HI-03-AC-CO-02-PU-STAGE3-R7-3"
+    },
+    {
+      "lineId": "HI-02-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "action": "add",
+      "before": null,
+      "after": "탄소중립",
+      "reason": "데이터 압축·암호화 지도 시 컴퓨팅 자원·전기 에너지의 소비와 연결된 범교과적 목적이다. 알고리즘 내용 자체와 구별되는 수업 고려사항.",
+      "retiredUnitId": null,
+      "newUnitId": "HI-02-AC-CO-03-PU-STAGE3-R7-4"
+    },
+    {
+      "lineId": "AI-22-PJ-CN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "action": "add",
+      "before": null,
+      "after": "문제 해결 방식의 창의성",
+      "reason": "프로젝트 평가 루브릭의 네 차원 중 완성도·주제 적절성·협업 능력은 빈칸으로 묻는데 창의성만 노출돼 있었음. 동일 문장 내 구성 요소 누락 보완.",
+      "retiredUnitId": null,
+      "newUnitId": "AI-22-PJ-CN-02-PU-STAGE3-R7-5"
+    },
+    {
+      "lineId": "AI-22-SO-EX-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "action": "replace",
+      "before": "데이터의 편향성",
+      "after": "알고리즘과 데이터의 편향성",
+      "reason": "이 해설은 단순 데이터 편향뿐 아니라 알고리즘 편향과 데이터 편향의 결합을 명시하므로 두 원인을 묶어 회상.",
+      "retiredUnitId": "AI-22-SO-EX-02-PU-01",
+      "newUnitId": "AI-22-SO-EX-02-PU-STAGE3-R7-REPLACE-6"
+    },
+    {
+      "lineId": "DS-22-12데과01-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "action": "add",
+      "before": null,
+      "after": "데이터 기반 의사 결정",
+      "reason": "데이터 과학 첫 성취기준의 중심 목표인 데이터 기반 의사 결정을 직접 회상한다. 핵심 아이디어 통회상과 구별되는 성취기준 고유 맥락에서 1개만 추가.",
+      "retiredUnitId": null,
+      "newUnitId": "DS-22-12데과01-01-PU-STAGE3-R7-7"
+    },
+    {
+      "lineId": "DS-22-12데과04-05",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "action": "add",
+      "before": null,
+      "after": "전 과정을 성찰",
+      "reason": "기존 사회적 영향만 묻는 상태에서 데이터 수집·분석에 이르는 전체 과정의 성찰이라는 별도 수행 기준을 회상하도록 보완.",
+      "retiredUnitId": null,
+      "newUnitId": "DS-22-12데과04-05-PU-STAGE3-R7-8"
+    },
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "action": "remove",
+      "before": "컴퓨팅 시스템",
+      "after": null,
+      "reason": "동일 문장에 ‘피지컬 컴퓨팅 시스템’이 노출되고, 영역명 자체를 회상시키는 일반적 표현. 구체적인 피지컬 컴퓨팅 활용 개념만 남긴다.",
+      "retiredUnitId": "MI-03-AC-CO-03-PU-01",
+      "newUnitId": null
+    }
+  ],
+  "selectedKeepDecisions": [
+    {
+      "lineId": "HI-03-AC-ST-02",
+      "reason": "정렬 알고리즘과 탐색 알고리즘의 대비가 인접 성취기준의 차이를 나타내므로 정렬하는 유지."
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "reason": "탐색하는은 정렬하는과 직접 대비되는 학습 대상이므로 유지."
+    },
+    {
+      "lineId": "MI-03-CS-PF-01",
+      "reason": "초기·현재·목표 상태의 세 항목은 상태 기반 문제 구조화의 핵심 구성 요소이므로 유지."
+    },
+    {
+      "lineId": "MI-TE-EVM-03",
+      "reason": "정량적 평가와 정성적 평가의 대비는 결과물 평가 방식 선택에 중요하므로 모두 유지."
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "reason": "통계적 회귀모델과 기계학습 회귀모델의 비교는 본 성취기준의 고유 학습 내용이므로 유지."
+    },
+    {
+      "lineId": "DS-22-12데과03-03",
+      "reason": "유사성의 측정과 군집의 형성은 순차적 분석 개념이며 무의미한 반복이 아니다."
+    },
+    {
+      "lineId": "DS-22-12데과04-03",
+      "reason": "2개 이상의 방법은 실제로 다른 방법을 적용해 비교하도록 하는 구체적 수행 조건이므로 유지."
+    },
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "reason": "훈련 데이터·테스트 데이터의 역할과 성능 평가를 연계하는 필수 개념쌍이므로 유지."
+    },
+    {
+      "lineId": "HI-04-AC-ST-03",
+      "reason": "기계학습 해결 가능·불가능 문제 대비는 학습 가능한 문제의 경계를 구별하기 위해 유지."
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "reason": "지도학습·비지도학습·강화학습의 유형 대비는 교과 핵심 분류이므로 유지."
+    }
+  ],
+  "lineByLineTriage": [
+    {
+      "lineId": "MI-01-CS-KI-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-KN-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-KN-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-KN-03",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-PF-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-PF-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-PF-03",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-VA-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-CS-VA-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-ST-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-ST-03",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "해설",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-EX-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-CO-01",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-CO-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-CO-03",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-01-AC-CO-04",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KI-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KI-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KN-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KN-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-KN-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-PF-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-PF-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-PF-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-VA-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-CS-VA-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-04",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-ST-05",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-EX-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-EX-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-CO-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-CO-02",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-02-AC-CO-03",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KI-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KI-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-05",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-KN-06",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-PF-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "초기·현재·목표 상태의 세 항목은 상태 기반 문제 구조화의 핵심 구성 요소이므로 유지."
+    },
+    {
+      "lineId": "MI-03-CS-PF-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-PF-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-PF-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-VA-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-VA-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-VA-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-CS-VA-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-05",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-06",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-07",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-08",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-ST-09",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-EX-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-EX-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-CO-01",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-CO-02",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 4,
+      "automatedFlags": [
+        "dense_4plus_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-03-AC-CO-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-KI-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-KN-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-KN-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-PF-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-PF-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-PF-03",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-PF-04",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-VA-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-CS-VA-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-03",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-04",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-ST-05",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-EX-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-EX-03",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-CO-01",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-CO-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-04-AC-CO-03",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-KI-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-KN-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-KN-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-KN-03",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-PF-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-PF-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-PF-03",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-VA-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-CS-VA-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-ST-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-ST-03",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-CO-01",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-05-AC-CO-02",
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-CHAR-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-CHAR-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-CHAR-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-CHAR-04",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-00",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-04",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-CG-GOAL-05",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-05",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-06",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-DIR-04",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-MET-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-MET-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-MET-04",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-MET-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-MET-05",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVD-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVD-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVD-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVD-04",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVM-01",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVM-02",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "MI-TE-EVM-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "정량적 평가와 정성적 평가의 대비는 결과물 평가 방식 선택에 중요하므로 모두 유지."
+    },
+    {
+      "lineId": "HI-01-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-KN-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-KN-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-PF-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-PF-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-VA-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-CS-VA-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-ST-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-ST-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-EX-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-01-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-KI-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-KN-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-KN-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-PF-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-PF-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-PF-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-VA-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-VA-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-CS-VA-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-ST-04",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-EX-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-EX-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-02-AC-CO-04",
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KI-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-04",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-05",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-06",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-KN-07",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-PF-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-PF-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-PF-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-PF-04",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-PF-05",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-VA-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-VA-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-VA-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-CS-VA-04",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "정렬 알고리즘과 탐색 알고리즘의 대비가 인접 성취기준의 차이를 나타내므로 정렬하는 유지."
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "탐색하는은 정렬하는과 직접 대비되는 학습 대상이므로 유지."
+    },
+    {
+      "lineId": "HI-03-AC-ST-04",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-05",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-06",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-07",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-08",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-09",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-ST-10",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-EX-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-EX-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-EX-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-03-AC-CO-04",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-KN-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-KN-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-PF-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-PF-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-VA-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-CS-VA-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-ST-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-ST-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "기계학습 해결 가능·불가능 문제 대비는 학습 가능한 문제의 경계를 구별하기 위해 유지."
+    },
+    {
+      "lineId": "HI-04-AC-EX-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-EX-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-04-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-KN-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-KN-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-PF-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-PF-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-VA-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-CS-VA-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-ST-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-ST-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-ST-03",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-EX-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-CO-02",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-05-AC-CO-03",
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-CHAR-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-CHAR-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-CHAR-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-00",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-04",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-CG-GOAL-05",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-DIR-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-DIR-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-DIR-04",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-DIR-05",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-DIR-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-MET-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-MET-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-MET-04",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-MET-05",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-MET-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVD-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVD-04",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVD-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVD-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVM-01",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVM-02",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVM-03",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVM-05",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "HI-TE-EVM-04",
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-01",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-02",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-03",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-04",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-05",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-06",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-07",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-CH-08",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-GO-01",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-GO-02",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-GO-03",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-GO-04",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-GO-05",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-CI-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-KN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-KN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-KN-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-SK-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-SK-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-SK-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-AT-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-AT-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "가치·태도",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-CI-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-KN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-KN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-KN-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-SK-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-SK-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-SK-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-SK-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-AT-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-AT-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "가치·태도",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-CI-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-KN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-KN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-KN-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-SK-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-SK-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-SK-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-SK-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-AT-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "가치·태도",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-AT-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-CI-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-KN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-KN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-SK-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-SK-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-SK-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-AT-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-AT-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-AT-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-ST-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-ST-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-ST-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-ST-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-ST-05",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-EX-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-EX-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-CN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-AI-CN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-ST-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-ST-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-ST-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "훈련 데이터·테스트 데이터의 역할과 성능 평가를 연계하는 필수 개념쌍이므로 유지."
+    },
+    {
+      "lineId": "AI-22-ML-ST-05",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-ST-06",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-EX-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-EX-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "displayUnitCount": 6,
+      "automatedFlags": [
+        "dense_4plus_units",
+        "possible_source_phrase_repetition"
+      ],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "지도학습·비지도학습·강화학습의 유형 대비는 교과 핵심 분류이므로 유지."
+    },
+    {
+      "lineId": "AI-22-ML-EX-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-CN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-CN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-ML-CN-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-ST-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-ST-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-ST-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-ST-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-EX-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-EX-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-CN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-CN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-SO-CN-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-ST-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-ST-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-ST-03",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-ST-04",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-EX-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-EX-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "displayUnitCount": 5,
+      "automatedFlags": [
+        "dense_4plus_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-CN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-PJ-CN-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "displayUnitCount": 4,
+      "automatedFlags": [
+        "dense_4plus_units"
+      ],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-01",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-02",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-03",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-04",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-05",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-06",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-07",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-08",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-TE-09",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-01",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-02",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-03",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-04",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-05",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 4,
+      "automatedFlags": [
+        "dense_4plus_units"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-06",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "AI-22-GEN-EV-07",
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "displayUnitCount": 3,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-CHARACTER-01",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "성격",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-GOALS-INTRO",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-GOAL-01",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-GOAL-02",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-GOAL-03",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-GOAL-04",
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-01",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-02",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-03",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-04",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-VA-01",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-02-VA-02",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-01",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-02",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-03",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-03-VA-01",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-03-VA-02",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-04",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "과정·기능",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "가치·태도",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과01-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과01-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과01-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과01-04",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과02-01",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과02-02",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과02-03",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과02-04",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과03-01",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "통계적 회귀모델과 기계학습 회귀모델의 비교는 본 성취기준의 고유 학습 내용이므로 유지."
+    },
+    {
+      "lineId": "DS-22-12데과03-03",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "유사성의 측정과 군집의 형성은 순차적 분석 개념이며 무의미한 반복이 아니다."
+    },
+    {
+      "lineId": "DS-22-12데과03-04",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과03-05",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과03-06",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과04-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과04-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과04-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 1,
+      "automatedFlags": [],
+      "semanticAssessment": "selected_keep_with_individual_reason",
+      "manualReason": "2개 이상의 방법은 실제로 다른 방법을 적용해 비교하도록 하는 구체적 수행 조건이므로 유지."
+    },
+    {
+      "lineId": "DS-22-12데과04-04",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-12데과04-05",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "displayUnitCount": 2,
+      "automatedFlags": [],
+      "semanticAssessment": "corrected_with_individual_reason",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-01-KI-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-01-KI-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-01-KU-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-01-KU-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-01-KU-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-02-KI-01",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-02-KI-02",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-02-KU-01",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-02-KU-02",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KI-01",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KI-02",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KU-01",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KU-02",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KU-03",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-03-KU-04",
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-04-KI-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-04-KI-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "핵심 아이디어",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-04-KU-01",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-04-KU-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    },
+    {
+      "lineId": "DS-22-04-KU-03",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "지식·이해",
+      "displayUnitCount": 0,
+      "automatedFlags": [
+        "no_presentation_units",
+        "data_science_other_recall_coverage_check"
+      ],
+      "semanticAssessment": "pending_individual_semantic_certification",
+      "manualReason": null
+    }
+  ],
+  "areaCoverage": [
+    {
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "sourceItems": 28,
+      "activeUnits": 22,
+      "noUnitItems": 17,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "sourceItems": 21,
+      "activeUnits": 28,
+      "noUnitItems": 6,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "sourceItems": 15,
+      "activeUnits": 23,
+      "noUnitItems": 4,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItems": 36,
+      "activeUnits": 38,
+      "noUnitItems": 11,
+      "manualJudgmentItems": 3
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "sourceItems": 16,
+      "activeUnits": 19,
+      "noUnitItems": 6,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItems": 15,
+      "activeUnits": 21,
+      "noUnitItems": 5,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "sourceItems": 6,
+      "activeUnits": 0,
+      "noUnitItems": 6,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "sourceItems": 17,
+      "activeUnits": 7,
+      "noUnitItems": 11,
+      "manualJudgmentItems": 2
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "sourceItems": 15,
+      "activeUnits": 4,
+      "noUnitItems": 11,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "sourceItems": 17,
+      "activeUnits": 8,
+      "noUnitItems": 11,
+      "manualJudgmentItems": 2
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "sourceItems": 14,
+      "activeUnits": 6,
+      "noUnitItems": 9,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "sourceItems": 29,
+      "activeUnits": 82,
+      "noUnitItems": 0,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "sourceItems": 18,
+      "activeUnits": 32,
+      "noUnitItems": 2,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "sourceItems": 24,
+      "activeUnits": 50,
+      "noUnitItems": 3,
+      "manualJudgmentItems": 2
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "sourceItems": 20,
+      "activeUnits": 34,
+      "noUnitItems": 3,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "sourceItems": 19,
+      "activeUnits": 33,
+      "noUnitItems": 3,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "sourceItems": 28,
+      "activeUnits": 25,
+      "noUnitItems": 18,
+      "manualJudgmentItems": 1
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "sourceItems": 22,
+      "activeUnits": 26,
+      "noUnitItems": 8,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "sourceItems": 16,
+      "activeUnits": 20,
+      "noUnitItems": 7,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItems": 33,
+      "activeUnits": 51,
+      "noUnitItems": 9,
+      "manualJudgmentItems": 3
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "sourceItems": 21,
+      "activeUnits": 32,
+      "noUnitItems": 5,
+      "manualJudgmentItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItems": 19,
+      "activeUnits": 22,
+      "noUnitItems": 5,
+      "manualJudgmentItems": 0
+    }
+  ],
+  "openItems": [
+    "③ All 449 source entries have not received a reasoned individual semantic pass; maintain stage-3 in progress.",
+    "④ Official 2022 HWP/source exact-text comparison still pending.",
+    "⑤ Live deployment UI / review grading regression still pending.",
+    "⑥ Final release ZIP after stage 4 and 5."
+  ],
+  "integrity": {
+    "sourceTextChanged": false,
+    "oldKeywordRecordsChanged": false,
+    "lineIdsChanged": false,
+    "staleOverridesReintroduced": false
+  }
+}

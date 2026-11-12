@@ -1,0 +1,383 @@
+{
+  "auditId": "2026-11-12-stage3-semantic-cross-family-round4",
+  "stage": "3/6 (ongoing)",
+  "basis": "CurriLoop_stage3_combined_dropdown_semantic_round3_20261112.zip",
+  "scope": {
+    "sourceLines": 449,
+    "subjectCount": 4,
+    "subjectAreaPairs": 22,
+    "coreTextFamiliesExamined": [
+      "과정·기능",
+      "성취기준",
+      "해설"
+    ],
+    "beforeUnits": 599,
+    "afterUnits": 588,
+    "changedSourceLines": 13,
+    "intentionallyUnchangedSourceLines": 436
+  },
+  "method": "Compare adjacent standards, explanations and process/function text; prioritize curriculum-specific target terms; avoid unhelpful generic terms and exposed answers. Other families screened for context; not all 449 passed individual human semantic certification.",
+  "changes": [
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "lineId": "MI-02-AC-EX-02",
+      "action": "remove",
+      "before": "데이터의 의미",
+      "after": null,
+      "unitId": "MI-02-AC-EX-02-PU-03-SEG02",
+      "reason": "동일 해설의 후반부에 데이터가 가지고 있는 의미가 재등장해 정답이 노출됨; 수집·분류/구분은 유지"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "lineId": "MI-02-AC-EX-03",
+      "action": "remove",
+      "before": "논리적으로 설명",
+      "after": null,
+      "unitId": "MI-02-AC-EX-03-PU-04",
+      "reason": "데이터 구조화·분석 수단보다 일반적인 서술 수행어; 다른 개념 빈칸 2개 유지"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "lineId": "MI-03-AC-ST-09",
+      "action": "remove",
+      "before": "다양한 학문 분야",
+      "after": null,
+      "unitId": "MI-03-AC-ST-09-PU-01",
+      "reason": "다수 성취기준의 범용 배경 표현; 협력하여를 고유 수행 조건으로 유지"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "lineId": "MI-05-CS-PF-03",
+      "action": "remove",
+      "before": "나와 다른 사람",
+      "after": null,
+      "unitId": "MI-05-CS-PF-03-PU-01",
+      "reason": "일반 대상 지칭; 디지털 공간에서 보호하는 방법을 묻는 빈칸 유지"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "lineId": "MI-05-AC-ST-03",
+      "action": "replace",
+      "before": "보호하는 실천 방법",
+      "after": "저작권",
+      "unitId": "MI-05-AC-ST-03-PU-COPYRIGHT-R4",
+      "reason": "개인 정보 및 권리와 구별되는 교과 핵심 보호 대상(저작권)을 묻도록 재선정"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "lineId": "HI-03-AC-EX-01",
+      "action": "remove",
+      "before": "오류가 없는지",
+      "after": null,
+      "unitId": "HI-03-AC-EX-01-PU-04",
+      "reason": "일반적인 점검 표현; 분해 및 단순화/구조화를 보존"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "lineId": "HI-03-AC-EX-03",
+      "action": "remove",
+      "before": "프로그램 구현",
+      "after": null,
+      "unitId": "HI-03-AC-EX-03-PU-03",
+      "reason": "객체 지향·클래스와 객체와 달리 일반적인 결과 수행어; 전문 개념 2개 유지"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "lineId": "HI-04-AC-EX-02",
+      "action": "remove",
+      "before": "실생활 및 사회문제",
+      "after": null,
+      "unitId": "HI-04-AC-EX-02-PU-03",
+      "reason": "적용 맥락의 광범위한 표현; 회귀·분류·군집과 기계학습 유형을 우선 회상"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "lineId": "AI-22-ML-SK-04",
+      "action": "remove",
+      "before": "문제 해결 방법",
+      "after": null,
+      "unitId": "AI-22-ML-SK-04-PU-01-SEG02",
+      "reason": "딥러닝 활용에 종속된 일반적 표현; 딥러닝 빈칸 유지"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "lineId": "AI-22-SO-SK-01",
+      "action": "remove",
+      "before": "인공지능",
+      "after": null,
+      "unitId": "AI-22-SO-SK-01-PU-01",
+      "reason": "과목명 및 영역 문맥으로 정답이 자명함; 사회적 문제는 유지"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "lineId": "AI-22-SO-ST-04",
+      "action": "remove",
+      "before": "활용사례",
+      "after": null,
+      "unitId": "AI-22-SO-ST-04-PU-01",
+      "reason": "포괄적인 예시 용어; 윤리적 딜레마와 윤리 관점을 우선"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "lineId": "AI-22-PJ-EX-01",
+      "action": "remove",
+      "before": "적합한 주제",
+      "after": null,
+      "unitId": "AI-22-PJ-EX-01-PU-04-SEG02",
+      "reason": "같은 영역 성취기준의 반복 수행어; 169개 세부 목표라는 해설 고유 사실은 유지"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "lineId": "DS-22-12데과03-06",
+      "action": "replace",
+      "before": "분석 목적에 가장 적합한",
+      "after": "분석 목적",
+      "unitId": "DS-22-12데과03-06-PU-01",
+      "reason": "막연한 적합성 표현 대신 분석 방법을 선택할 때 기준이 되는 분석 목적에 집중"
+    }
+  ],
+  "subjectAreaInventory": [
+    {
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "sourceLineCount": 28,
+      "currentActiveClozeUnits": 22,
+      "standardsExplanationsProcesses": 0,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "sourceLineCount": 21,
+      "currentActiveClozeUnits": 27,
+      "standardsExplanationsProcesses": 9,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "sourceLineCount": 15,
+      "currentActiveClozeUnits": 23,
+      "standardsExplanationsProcesses": 6,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceLineCount": 36,
+      "currentActiveClozeUnits": 38,
+      "standardsExplanationsProcesses": 18,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "sourceLineCount": 16,
+      "currentActiveClozeUnits": 20,
+      "standardsExplanationsProcesses": 7,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceLineCount": 15,
+      "currentActiveClozeUnits": 21,
+      "standardsExplanationsProcesses": 6,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "sourceLineCount": 6,
+      "currentActiveClozeUnits": 0,
+      "standardsExplanationsProcesses": 0,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "sourceLineCount": 17,
+      "currentActiveClozeUnits": 5,
+      "standardsExplanationsProcesses": 9,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "sourceLineCount": 15,
+      "currentActiveClozeUnits": 3,
+      "standardsExplanationsProcesses": 7,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "sourceLineCount": 17,
+      "currentActiveClozeUnits": 8,
+      "standardsExplanationsProcesses": 9,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "sourceLineCount": 14,
+      "currentActiveClozeUnits": 5,
+      "standardsExplanationsProcesses": 8,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "sourceLineCount": 29,
+      "currentActiveClozeUnits": 82,
+      "standardsExplanationsProcesses": 0,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "sourceLineCount": 18,
+      "currentActiveClozeUnits": 32,
+      "standardsExplanationsProcesses": 9,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "sourceLineCount": 24,
+      "currentActiveClozeUnits": 50,
+      "standardsExplanationsProcesses": 14,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "sourceLineCount": 20,
+      "currentActiveClozeUnits": 36,
+      "standardsExplanationsProcesses": 10,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "sourceLineCount": 19,
+      "currentActiveClozeUnits": 36,
+      "standardsExplanationsProcesses": 10,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "sourceLineCount": 28,
+      "currentActiveClozeUnits": 24,
+      "standardsExplanationsProcesses": 0,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "sourceLineCount": 22,
+      "currentActiveClozeUnits": 27,
+      "standardsExplanationsProcesses": 11,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "sourceLineCount": 16,
+      "currentActiveClozeUnits": 20,
+      "standardsExplanationsProcesses": 7,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceLineCount": 33,
+      "currentActiveClozeUnits": 52,
+      "standardsExplanationsProcesses": 16,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "sourceLineCount": 21,
+      "currentActiveClozeUnits": 34,
+      "standardsExplanationsProcesses": 12,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceLineCount": 19,
+      "currentActiveClozeUnits": 23,
+      "standardsExplanationsProcesses": 8,
+      "reviewState": "cross-line-screened; qualitative approval not yet complete"
+    }
+  ],
+  "unchangedExamples": [
+    {
+      "id": "AI-22-ML-ST-04",
+      "reason": "훈련 데이터·테스트 데이터 및 성능 평가의 연계가 성취 수준의 핵심이라 유지"
+    },
+    {
+      "id": "AI-22-ML-EX-03",
+      "reason": "지도/비지도/강화 및 분류/예측/군집은 서로 다른 학습 개념이므로 단순 중복 삭제 금지"
+    },
+    {
+      "id": "DS-22-12데과03-02",
+      "reason": "통계적 회귀모델과 기계학습 회귀모델 간 대비 유지"
+    },
+    {
+      "id": "DS-22-12데과04-03",
+      "reason": "2개 이상의 방법은 다른 성취기준과 구별되는 정량 조건"
+    },
+    {
+      "id": "MI-03-CS-PF-01",
+      "reason": "초기·현재·목표 상태는 별개 회상 개념"
+    },
+    {
+      "id": "HI-03-AC-ST-02",
+      "reason": "정렬하는과 탐색하는의 대비를 유지"
+    }
+  ],
+  "reviewLimitations": [
+    "자동 구조 감사와 전체 원문의 개별 교육적 품질 검증을 구분",
+    "다른 연도 공식 교육과정 원본 대비는 4단계",
+    "브라우저 배포판 테스트는 5단계",
+    "데이터 과학 성격/목표 및 0빈칸 항목은 source-only 또는 통회상 구조를 유지; 추가 선정은 확정 근거 없어서 보류"
+  ],
+  "validation": {
+    "curriculumSourceUnchanged": true,
+    "keywordRecordsUnchanged": true,
+    "lineIdsUnchanged": true,
+    "noOverlaps": true,
+    "presentationSetReferencesValid": true,
+    "jsonGeneratedJsSynchronized": true
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "stage": "3/6",
+  "round": 2,
+  "reviewedOn": "2026-11-12",
+  "sourcePatch": "CurriLoop_stage3_semantic_adjacent_review_round1_20261112.zip",
+  "scope": "same-line leaked-answer review in middle/high & AI basic",
+  "editedLines": [
+    {
+      "lineId": "MI-01-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "before": [
+        "컴퓨팅 시스템",
+        "운영 체제",
+        "소프트웨어"
+      ],
+      "after": [
+        "소프트웨어"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "MI-01-AC-EX-02",
+      "subject": "middle-info",
+      "family": "해설",
+      "before": [
+        "구성요소",
+        "물리적인 장치",
+        "피지컬 컴퓨팅"
+      ],
+      "after": [
+        "구성요소",
+        "물리적인 장치"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "MI-01-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "before": [
+        "컴퓨팅 시스템"
+      ],
+      "after": [
+        "사회에 주는 영향력"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "MI-01-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "before": [
+        "피지컬 컴퓨팅"
+      ],
+      "after": [
+        "통합적으로 동작"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "MI-01-AC-CO-03",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "before": [
+        "피지컬 컴퓨팅"
+      ],
+      "after": [
+        "프로젝트 형태의 수업"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "MI-04-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "before": [
+        "인공지능의 기초적인 개념",
+        "모델, 학습, 데이터",
+        "인공지능 시스템"
+      ],
+      "after": [
+        "인공지능의 기초적인 개념",
+        "모델, 학습, 데이터"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "HI-01-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "before": [
+        "네트워크",
+        "유⋅무선 통신",
+        "사물인터넷 장치"
+      ],
+      "after": [
+        "유⋅무선 통신",
+        "사물인터넷 장치"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "HI-03-AC-EX-02",
+      "subject": "high-info",
+      "family": "해설",
+      "before": [
+        "정렬, 탐색 알고리즘",
+        "수행 과정",
+        "알고리즘의 효율성"
+      ],
+      "after": [
+        "수행 과정",
+        "알고리즘의 효율성"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    },
+    {
+      "lineId": "AI-22-PJ-EX-01",
+      "subject": "ai-basic",
+      "family": "해설",
+      "before": [
+        "17개의 주요 목표",
+        "169개의 세부 목표",
+        "적합한 주제"
+      ],
+      "after": [
+        "169개의 세부 목표",
+        "적합한 주제"
+      ],
+      "reason": "same-line answer leakage or cue; replace with an instructional-distinctive term where possible"
+    }
+  ],
+  "beforeUnits": {
+    "data/curriculum/middle-high-v9.0.6.json": 346,
+    "data/curriculum/ai-basic-2022.json": 243
+  },
+  "afterUnits": {
+    "data/curriculum/middle-high-v9.0.6.json": 340,
+    "data/curriculum/ai-basic-2022.json": 242
+  },
+  "integrity": {
+    "sourceTextsPreserved": true,
+    "lineIdsPreserved": true,
+    "keywordDataPreserved": true,
+    "unitSetReferencesValid": true,
+    "nonTargetPresentationUnchanged": true
+  },
+  "limitations": [
+    "Automated detection plus selective semantic review; not all 449 lines individually semantic-reviewed.",
+    "Official HWP comparison and real browser validation remain pending."
+  ]
+}

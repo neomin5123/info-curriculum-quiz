@@ -1,0 +1,108 @@
+{
+  "stage": "③/6",
+  "round": 3,
+  "date": "2026-11-12",
+  "basis": "round2 patch applied to current Build53 base",
+  "dropdown": {
+    "id": "content-standards-explanations",
+    "label": "내용체계 + 성취기준 + 성취기준 해설",
+    "includes": [
+      "핵심 아이디어",
+      "지식·이해",
+      "과정·기능",
+      "가치·태도",
+      "성취기준",
+      "해설"
+    ],
+    "excludes": [
+      "고려사항"
+    ],
+    "backwardCompatibility": "original selection and task IDs retained"
+  },
+  "semanticChanges": [
+    {
+      "lineId": "MI-03-AC-ST-05",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "area": "알고리즘과 프로그래밍",
+      "before": [
+        "순차적으로 저장",
+        "구조",
+        "문제 해결 프로그램"
+      ],
+      "after": [
+        "순차적으로 저장",
+        "구조"
+      ],
+      "reason": "인접 9정03-05~06의 반복 일반 수행 대상 제거; 고유 핵심인 순차 저장/구조를 유지",
+      "sourceTextPreserved": true,
+      "legacyKeywordsPreserved": true
+    },
+    {
+      "lineId": "MI-03-AC-ST-06",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "area": "알고리즘과 프로그래밍",
+      "before": [
+        "중첩 제어 구조",
+        "문제를 해결하는 프로그램"
+      ],
+      "after": [
+        "중첩 제어 구조"
+      ],
+      "reason": "인접 9정03-05~06의 반복 일반 표현 제거; 핵심인 중첩 제어 구조 유지",
+      "sourceTextPreserved": true,
+      "legacyKeywordsPreserved": true
+    },
+    {
+      "lineId": "AI-22-AI-ST-01",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "area": "인공지능의 이해",
+      "before": [
+        "지능적 판단",
+        "다양한 학문 분야",
+        "비교⋅분석"
+      ],
+      "after": [
+        "지능적 판단",
+        "비교⋅분석"
+      ],
+      "reason": "인공지능의 이해 성취기준에서 일반 분야 열거의 반복을 줄이고 지능적 판단·비교 분석을 유지",
+      "sourceTextPreserved": true,
+      "legacyKeywordsPreserved": true
+    },
+    {
+      "lineId": "AI-22-ML-ST-06",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "area": "인공지능과 학습",
+      "before": [
+        "딥러닝을 활용하여",
+        "다양한 학문 분야의 문제"
+      ],
+      "after": [
+        "딥러닝을 활용하여"
+      ],
+      "reason": "12인기02-05~06에서 특정적 핵심인 딥러닝의 적용·활용 대비 일반 분야 열거를 제거",
+      "sourceTextPreserved": true,
+      "legacyKeywordsPreserved": true
+    }
+  ],
+  "reviewMethod": "compare adjacent achievement standards within same area; no wholesale blank minimization",
+  "limitations": [
+    "Four manually inspected edits, not 449 semantically certified.",
+    "Full-browser scenario pending phase 5.",
+    "Official curriculum HWP is not yet compared."
+  ],
+  "verification": {
+    "data": "449 curriculum lines preserved; 599 visible presentation units; 4 semantic removals",
+    "newOptions": "14 subject-area groups with official explanation data",
+    "dataScience": "option hidden because no explanation lines",
+    "existingCombined": "original CST task IDs unchanged",
+    "node": "study-engine and app syntax pass; engine task data, render section ordering, grading section mapping validated",
+    "chromiumOfflineDOM": "new option visible, content table/standards/explanations rendered, 25/25 fields filled and graded 전체 정답, original combined remains, data-science option hidden",
+    "fullHostedBrowser": "not performed; phase 5 still pending",
+    "legacyTests": "validate-data and validate-subject-area-b53 pass; validate-ux-v9035 asserts legacy retry pill and fails from original project"
+  }
+}

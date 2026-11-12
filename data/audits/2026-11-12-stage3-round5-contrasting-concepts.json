@@ -1,0 +1,365 @@
+{
+  "auditId": "2026-11-12-stage3-round5-contrasting-concepts",
+  "stage": "3/6; ongoing, not yet certified complete",
+  "appliesAfter": "CurriLoop_stage3_semantic_cross_family_round4_20261112.zip",
+  "scope": {
+    "sourceItems": 449,
+    "subjectCount": 4,
+    "subjectAreaPairs": 22,
+    "unitsBefore": 588,
+    "unitsAfter": 586,
+    "sourceItemsChanged": 9,
+    "unitsRemoved": 4,
+    "unitsReplaced": 3,
+    "unitsAdded": 2
+  },
+  "method": "Context-dependent adjacent standards + their explanations + content system, focusing on distinguishing term rather than length/count; source original, existing historical keywords and line IDs frozen.",
+  "changes": [
+    {
+      "lineId": "MI-01-AC-ST-02",
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "action": "remove",
+      "before": "적용된 사례 조사",
+      "after": null,
+      "oldUnitId": "MI-01-AC-ST-02-PU-02",
+      "reason": "피지컬 컴퓨팅 개념·필요성과 가치는 유지. `적용된 사례 조사`는 수행 방법으로서 이 문항의 고유 회상 대상보다 우선순위가 낮고 과정·기능에서도 사례 조사를 다룸."
+    },
+    {
+      "lineId": "MI-04-AC-EX-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "action": "remove",
+      "before": "학습한 시스템",
+      "after": null,
+      "oldUnitId": "MI-04-AC-EX-02-PU-03",
+      "reason": "같은 문장 앞부분의 `인공지능 시스템을 학습`과 역할이 중복됨. 데이터 종류와 학습 행위는 유지."
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "기계학습",
+      "after": null,
+      "oldUnitId": "HI-04-CS-KI-02-PU-01",
+      "reason": "같은 문장에 기계학습 모델이 있어 문맥에서 쉽게 회복되는 용어. 문제 해결에 적합한 데이터와 기계학습 모델을 대비하는 빈칸 유지."
+    },
+    {
+      "lineId": "AI-22-AI-CN-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "action": "remove",
+      "before": "프로그램을 개발",
+      "after": null,
+      "oldUnitId": "AI-22-AI-CN-01-PU-02-SEG02",
+      "reason": "탐색 알고리즘을 적용한 활동의 일반적 결과 표현. 교수·학습 고려사항 고유 요소인 탐색·추론 및 탐색 알고리즘은 유지."
+    },
+    {
+      "lineId": "MI-03-AC-EX-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "action": "replace",
+      "before": "많은 양의 데이터",
+      "after": "순차적으로 저장",
+      "oldUnitId": "MI-03-AC-EX-03-PU-03",
+      "newUnitId": "MI-03-AC-EX-03-PU-SEMANTIC-R5",
+      "reason": "데이터 양보다 배열·리스트가 갖는 순차적 저장 속성에 초점. 같은 성취기준의 `순차적으로 저장`과 연계되며 원문에서 정확히 한 번 등장."
+    },
+    {
+      "lineId": "MI-03-AC-CO-04",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "action": "replace",
+      "before": "프로그램 작성",
+      "after": "시간, 에너지",
+      "oldUnitId": "MI-03-AC-CO-04-PU-01",
+      "newUnitId": "MI-03-AC-CO-04-PU-SEMANTIC-R5",
+      "reason": "알고리즘 효율이 아끼는 자원 항목을 묻게 변경. `컴퓨팅 시스템`과 함께 시간·에너지·시스템 자원의 세 범주를 회상하게 함."
+    },
+    {
+      "lineId": "HI-03-AC-CO-01",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "action": "replace",
+      "before": "프로그램 작성",
+      "after": "자동화 과정",
+      "oldUnitId": "HI-03-AC-CO-01-PU-03",
+      "newUnitId": "HI-03-AC-CO-01-PU-SEMANTIC-R5",
+      "reason": "프로그램 작성이라는 범용 표현 대신 추상화 과정과 대비되는 자동화 과정을 회상하도록 재선정."
+    },
+    {
+      "lineId": "DS-22-12데과02-03",
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "action": "add",
+      "before": null,
+      "after": "데이터 속성 간의 관계",
+      "newUnitId": "DS-22-12데과02-03-PU-R5-01",
+      "reason": "데이터 통합 전에 파악해야 하는 분석 대상 간 관계. 지식·이해 통회상에 해당 원문이 직접 포함되지는 않아 성취기준 자체의 회상 가치가 있음."
+    },
+    {
+      "lineId": "DS-22-12데과04-02",
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "action": "add",
+      "before": null,
+      "after": "탐색적으로 분석",
+      "newUnitId": "DS-22-12데과04-02-PU-R5-01",
+      "reason": "프로젝트 수행에서 탐색적 데이터 분석을 사용하는 방식은 일반적 `문제 해결`보다 구별 가치가 있음. 기존 과정·기능에 등장하나 해당 과정·기능에는 빈칸이 없어 직접 회상 보완."
+    }
+  ],
+  "deliberatePreservationExamples": [
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "reason": "지도학습은 비지도학습의 부분 문자열이지만 각각이 별도 빈칸이므로 같은 문장의 정답 노출로 판정할 수 없음"
+    },
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "reason": "컴퓨팅 시스템과 피지컬 컴퓨팅 시스템은 영역 연계 관계를 설명하므로 단순 중복 제거 대상이 아님"
+    },
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "reason": "훈련 데이터와 테스트 데이터의 기능 대비 및 성능 평가는 유지"
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "reason": "통계적 회귀모델과 기계학습 회귀모델은 정답의 핵심 대비 관계라 유지"
+    },
+    {
+      "lineId": "DS-22-12데과04-03",
+      "reason": "2개 이상의 방법은 성취기준을 구별하는 정량 조건이므로 유지"
+    },
+    {
+      "lineId": "DS-22-12데과03-01",
+      "reason": "데이터 모델 개념은 영역명 및 지식·이해 통회상과 중첩되어 이번에는 빈칸 추가 보류"
+    },
+    {
+      "lineId": "MI-04-CS-PF-04",
+      "reason": "인공지능 시스템을 선정하여 문제 해결한다는 과정·기능의 수행 목표를 유지"
+    }
+  ],
+  "machineFlaggedRepeatedSubstringsForLater": [
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "unitText": "컴퓨팅 시스템",
+      "context": "프로젝트 활동에서는 실생활의 문제를 해결하기 위한 알고리즘을 설계하고 이를 적용한 소프트웨어를 개발하는 활동을 중점으로 교수⋅학습을 설계하도록 한다. 필요에 따라서는 ‘컴퓨팅 시스템’ 영역과 연계하여 피지컬 컴퓨팅 시스템을 설계, 제작하고 이를 동작하게 하는 소프트웨어",
+      "verdict": "potential repeated substring; NOT automatically an answer leak"
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "unitText": "지도학습",
+      "context": "[12인기02-03] 기계학습의 유형을 지도학습과 비지도학습, 강화학습 등으로 구분하고, 해결해야 하는 문제의 특성을 고려하여 문제 해결에 적합한 유형을 선정할 수 있어야 한다. 또한, 분류, 예측, 군집 등에 활용하는 기계학습 알고리즘을 이해하여 문제 해결에 적합한 ",
+      "verdict": "potential repeated substring; NOT automatically an answer leak"
+    }
+  ],
+  "areaInventory": [
+    {
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "sourceItems": 28,
+      "displayClozeUnits": 22,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "sourceItems": 21,
+      "displayClozeUnits": 27,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "sourceItems": 15,
+      "displayClozeUnits": 23,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItems": 36,
+      "displayClozeUnits": 38,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "sourceItems": 16,
+      "displayClozeUnits": 19,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItems": 15,
+      "displayClozeUnits": 21,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "sourceItems": 6,
+      "displayClozeUnits": 0,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "sourceItems": 17,
+      "displayClozeUnits": 6,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "sourceItems": 15,
+      "displayClozeUnits": 3,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "sourceItems": 17,
+      "displayClozeUnits": 8,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "sourceItems": 14,
+      "displayClozeUnits": 6,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "sourceItems": 29,
+      "displayClozeUnits": 82,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "sourceItems": 18,
+      "displayClozeUnits": 32,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "sourceItems": 24,
+      "displayClozeUnits": 50,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "sourceItems": 20,
+      "displayClozeUnits": 36,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "sourceItems": 19,
+      "displayClozeUnits": 35,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "sourceItems": 28,
+      "displayClozeUnits": 24,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "sourceItems": 22,
+      "displayClozeUnits": 27,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "sourceItems": 16,
+      "displayClozeUnits": 20,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 0
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItems": 33,
+      "displayClozeUnits": 52,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 2
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "sourceItems": 21,
+      "displayClozeUnits": 33,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItems": 19,
+      "displayClozeUnits": 22,
+      "reviewState": "structurally screened, adjacent-family compared; not individually certified",
+      "round5HumanReviewedChangedItems": 1
+    }
+  ],
+  "knownLimitations": [
+    "System-wide structural examination is not a claim that every one of 449 source items was individually approved on semantic grounds.",
+    "Two source-exact data science keywords appended because active keyword status is required by the study engine; all older keywords and original grade reviews retained in priorReview.",
+    "Official HWP side-by-side comparison is stage 4. Real deployed browser interaction is stage 5.",
+    "No changes to exam data, uncertain seven exam items, review/answer grading logic or UI.",
+    "Legacy tools/validate-ai-study.mjs asserts an obsolete fixed presentation count (370), while current 5th-round baseline contains 328 in middle-high data; the old test is not an acceptance gate for new semantic patches. Modernize in stage 5."
+  ],
+  "validation": {
+    "sourceTextsUnchanged": true,
+    "lineIdsUnchanged": true,
+    "allExistingKeywordRecordsPreserved": true,
+    "twoNewActiveDataScienceKeywords": true,
+    "presentationOffsetsAndOverlapsValid": true,
+    "presentationSetsNoDanglingOrEmptyReferences": true,
+    "jsJsonParity": true,
+    "nodeSyntaxAllThreeGeneratedDataScripts": true,
+    "studyEngineManualChecks": 40,
+    "newDataScienceTargetsRecallableInWholeCorePractical": true,
+    "combinedDropdownStillAvailableInThreeSubjects": true,
+    "dataScienceExplanationDropdownCorrectlyHidden": true,
+    "projectDataValidation": "PASS (tools/validate-data.mjs; 270 middle-high lines, presentationUnits 328)"
+  }
+}

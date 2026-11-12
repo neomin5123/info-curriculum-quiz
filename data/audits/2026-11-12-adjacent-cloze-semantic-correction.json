@@ -1,0 +1,49 @@
+{
+  "date": "2026-11-12",
+  "scope": "two adjacent high-school information achievement standards",
+  "changes": [
+    {
+      "lineId": "HI-03-AC-ST-02",
+      "sourceText": "[12정03-02] 데이터를 정렬하는 다양한 알고리즘의 특징과 효율을 비교⋅분석한다.",
+      "previousUnits": [
+        "특징과 효율"
+      ],
+      "currentUnits": [
+        "정렬하는"
+      ],
+      "preservedUnitId": "HI-03-AC-ST-02-PU-01",
+      "removedUnitIds": [],
+      "coreSetIds": [
+        "HI-03-AC-ST-02-PC-01"
+      ]
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "sourceText": "[12정03-03] 데이터를 탐색하는 다양한 알고리즘의 특징과 효율을 비교⋅분석한다.",
+      "previousUnits": [
+        "특징과 효율",
+        "비교⋅분석"
+      ],
+      "currentUnits": [
+        "탐색하는"
+      ],
+      "preservedUnitId": "HI-03-AC-ST-03-PU-02",
+      "removedUnitIds": [
+        "HI-03-AC-ST-03-PU-03"
+      ],
+      "coreSetIds": [
+        "HI-03-AC-ST-03-PC-02"
+      ]
+    }
+  ],
+  "currentStage": "Stage 3 semantic cloze quality review (added; only 2 cases implemented)",
+  "sourceTextPreserved": true,
+  "legacyKeywordPreserved": true,
+  "hoverTooltipRemoved": true,
+  "nextStages": [
+    "semantic cloze review remaining standards",
+    "official HWP curriculum comparison",
+    "browser regression",
+    "final deployment"
+  ]
+}

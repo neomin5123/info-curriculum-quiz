@@ -1,0 +1,467 @@
+{
+  "auditId": "2026-11-12-stage3-round6-canonical-data-and-contrastive-cloze",
+  "stage": "3/6 in progress",
+  "appliesAfter": "CurriLoop_stage3_semantic_distinctive_round5_20261112.zip",
+  "scope": {
+    "curriculumLines": 449,
+    "subjectAreaPairs": 22,
+    "displayClozeUnitsBefore": 586,
+    "displayClozeUnitsAfter": 578,
+    "manuallyEditedItems": 11,
+    "removed": 9,
+    "reselected": 1,
+    "added": 1
+  },
+  "defect": {
+    "type": "stale_app_level_presentation_overrides",
+    "oldOverrideTables": [
+      "CLOZE43_OVERRIDES",
+      "CLOZE44_OVERRIDES",
+      "CLOZE45_OVERRIDES",
+      "CLOZE46_OVERRIDES",
+      "CLOZE52_OVERRIDES"
+    ],
+    "effectiveOverriddenLineIds": 36,
+    "staleComparedWithNewPresentationData": 36,
+    "affectedLineIds": [
+      "MI-01-CS-PF-01",
+      "MI-01-AC-ST-03",
+      "MI-03-CS-KI-03",
+      "MI-03-AC-EX-01",
+      "MI-03-AC-EX-03",
+      "MI-04-CS-KI-02",
+      "HI-01-CS-KI-02",
+      "HI-02-CS-KI-01",
+      "HI-03-AC-ST-02",
+      "HI-03-AC-EX-03",
+      "HI-04-CS-PF-01",
+      "MI-02-CS-KI-03",
+      "MI-02-CS-PF-03",
+      "MI-02-AC-EX-02",
+      "MI-03-CS-PF-02",
+      "MI-04-CS-PF-04",
+      "MI-04-AC-EX-03",
+      "MI-05-AC-ST-02",
+      "HI-02-CS-KI-02",
+      "HI-02-CS-PF-03",
+      "HI-02-AC-EX-02",
+      "HI-03-CS-PF-04",
+      "HI-03-AC-ST-09",
+      "HI-04-CS-PF-02",
+      "MI-04-AC-ST-03",
+      "MI-03-AC-ST-05",
+      "MI-04-AC-ST-02",
+      "HI-03-CS-KI-02",
+      "HI-03-AC-ST-03",
+      "HI-04-CS-KI-02",
+      "HI-04-AC-EX-01",
+      "MI-03-AC-ST-02",
+      "MI-03-AC-ST-03",
+      "HI-03-AC-ST-07",
+      "MI-03-CS-KI-01",
+      "MI-03-CS-KI-02"
+    ],
+    "fix": "remove obsolete override constants/loops; use latest curriculum JSON/JS presentation as sole source of truth in runtime"
+  },
+  "semanticMethod": "Cross-check same subject/area adjacent standards, explanation and core idea; remove generic low-signal targets, preserve meaningful contrasts; add one contrast pair where missing. No raw sourceText changes.",
+  "changes": [
+    {
+      "lineId": "MI-04-CS-KI-02",
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "사용되는 데이터",
+      "after": null,
+      "retiredUnitId": "MI-04-CS-KI-02-PU-02",
+      "reason": "같은 문장 안에서 데이터의 기반성(데이터를 기반으로)과 윤리적 편향성을 이미 직접 묻는다. 두 번째 데이터 언급을 또 가리면 핵심 인과관계보다 단어 반복을 암기시킴."
+    },
+    {
+      "lineId": "MI-03-CS-KI-03",
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "프로그램 개발",
+      "after": null,
+      "retiredUnitId": "MI-03-CS-KI-03-PU-01",
+      "reason": "이 문장의 고유 핵심은 협력과 공유 문화이다. 프로그램 개발은 문장 끝에서 동형 의미(프로그램이 개발된다)가 다시 등장한다."
+    },
+    {
+      "lineId": "MI-02-AC-EX-01",
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "action": "remove",
+      "before": "특징과 장점",
+      "after": null,
+      "retiredUnitId": "MI-02-AC-EX-01-PU-01",
+      "reason": "디지털 데이터 표현의 수업 내용은 문자·이미지·소리·동영상의 형식 차이이며, 이 표현은 대상 없이 일반적인 평가 용어다."
+    },
+    {
+      "lineId": "HI-03-CS-KI-03",
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "학문 분야",
+      "after": null,
+      "retiredUnitId": "HI-03-CS-KI-03-PU-03",
+      "reason": "인접 교과 영역과 다수 문항에 반복되는 일반 적용 범위. 프로그래밍을 통한 자동화라는 핵심 인과 관계는 남긴다."
+    },
+    {
+      "lineId": "AI-22-AI-CI-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "실생활에 도움",
+      "after": null,
+      "retiredUnitId": "AI-22-AI-CI-01-PU-02",
+      "reason": "이 영역을 구별하는 핵심은 지능적인 행동을 모방한다는 점. 일반적 수혜 표현의 기계적 회상은 가치가 낮다."
+    },
+    {
+      "lineId": "AI-22-AI-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "다양한 학문 분야",
+      "after": null,
+      "retiredUnitId": "AI-22-AI-CI-02-PU-03",
+      "reason": "탐색과 추론이라는 인공지능의 구체적인 문제 해결 방법을 우선 회상하도록 일반적인 적용 범위를 제외."
+    },
+    {
+      "lineId": "AI-22-PJ-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "달성하는 데 도움",
+      "after": null,
+      "retiredUnitId": "AI-22-PJ-CI-02-PU-02",
+      "reason": "지속가능발전목표가 유일한 프로젝트 핵심 대상. 기여한다는 일반적 수행 표현은 반복 회상할 필요가 적다."
+    },
+    {
+      "lineId": "AI-22-SO-CI-02",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "action": "remove",
+      "before": "올바르게 활용",
+      "after": null,
+      "retiredUnitId": "AI-22-SO-CI-02-PU-01",
+      "reason": "교육과정 핵심 개념인 윤리적 문제를 남기고 일반적 태도 서술을 제외한다."
+    },
+    {
+      "lineId": "AI-22-SO-ST-01",
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "action": "remove",
+      "before": "인공지능의 발전",
+      "after": null,
+      "retiredUnitId": "AI-22-SO-ST-01-PU-01",
+      "reason": "AI라는 과목명과 앞뒤 맥락에 이미 드러나는 주어 수식. 사회 변화와 사회문제 분석의 대비가 핵심이다."
+    },
+    {
+      "lineId": "HI-01-CS-KI-01",
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "action": "replace",
+      "before": "기술적 가치",
+      "after": "사회적, 기술적 가치",
+      "retiredUnitId": "HI-01-CS-KI-01-PU-03",
+      "newUnitId": "HI-01-CS-KI-01-PU-SEMANTIC-R6",
+      "reason": "같은 핵심 아이디어의 중학교 문장과 대조하면 사회적 가치·기술적 가치를 묶어야 한다. 기존처럼 기술적 가치만 가리면 사회적 가치가 노출되어 반쪽짜리 회상이 된다."
+    },
+    {
+      "lineId": "MI-TE-EVM-03",
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "action": "add",
+      "before": null,
+      "after": "정성적 평가",
+      "newUnitId": "MI-TE-EVM-03-PU-R6-02",
+      "newKeywordId": "MI-TE-EVM-03-K-R6-02",
+      "reason": "정량적 평가는 개념/기능이 명확한 경우, 정성적 평가는 품질/심미적 부분을 평가할 경우라는 서로 대비되는 쌍. 한쪽만 가리고 반대쪽은 노출하면 핵심 평가 방식 비교 학습이 불완전하다."
+    }
+  ],
+  "deliberatelyRetained": [
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "unitTexts": [
+        "훈련 데이터",
+        "테스트 데이터",
+        "성능을 평가"
+      ],
+      "reason": "훈련용/평가용 데이터가 단계에 따라 구별되는 수행 조건. 일반적인 평가 표현이어도 여기는 분리 학습을 유지."
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "unitTexts": [
+        "통계적 회귀모델",
+        "기계학습을 통한 회귀모델"
+      ],
+      "reason": "동일 데이터에 대한 두 모델의 결과 비교는 독립적인 학습 대상."
+    },
+    {
+      "lineId": "DS-22-12데과04-03",
+      "unitTexts": [
+        "2개 이상의 방법"
+      ],
+      "reason": "프로젝트 수행에서 두 방법 이상을 쓰는 정량적 제약을 평가하므로 유지."
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "unitTexts": [
+        "지도학습",
+        "비지도학습",
+        "강화학습",
+        "분류",
+        "예측",
+        "군집"
+      ],
+      "reason": "학습 유형과 활용 방법을 분리하는 대조 관계, 유사 부분 문자열은 정답 노출로 보지 않음."
+    },
+    {
+      "lineId": "MI-TE-MET-01",
+      "unitTexts": [
+        "문제기반학습",
+        "프로젝트 기반학습",
+        "짝 프로그래밍"
+      ],
+      "reason": "교수법의 일부를 회상하고 나머지는 단서로 사용하는 구성이며, 고등학교의 교과 공통 텍스트와 완전 같은 문장을 일괄 공백화하지 않음."
+    },
+    {
+      "lineId": "MI-TE-EVD-01",
+      "unitTexts": [
+        "디지털 문화 소양",
+        "인공지능 소양",
+        "하위 요소"
+      ],
+      "reason": "컴퓨팅 사고력을 원문 단서로 남겨 한 카드에서 전문 소양 세 가지가 모두 가려지는 과밀을 피함. 핵심 3개 전체 회상은 다른 과목 공통 문항에서 가능."
+    },
+    {
+      "lineId": "HI-TE-EVD-01",
+      "unitTexts": [
+        "디지털 문화 소양",
+        "인공지능 소양",
+        "하위 요소"
+      ],
+      "reason": "중학교 동일 문장과 구조를 유지하고 연속 세 빈칸을 더 추가하지 않음. 다른 제시 유형에서 컴퓨팅 사고력을 학습."
+    },
+    {
+      "lineId": "DS-22-12데과03-01",
+      "unitTexts": [],
+      "reason": "데이터 모델 개념은 데이터 모델링과 평가 영역명과 지식·이해 통회상에 등장해 빈칸 추가 유보."
+    },
+    {
+      "lineId": "HI-04-AC-ST-03",
+      "unitTexts": [
+        "해결할 수 있는 문제",
+        "그렇지 않은 문제",
+        "기계학습을 적용"
+      ],
+      "reason": "기계학습으로 가능한/불가능한 문제의 대조 자체가 성취기준의 핵심이므로 공통 구문이라도 유지."
+    }
+  ],
+  "areaInventory": [
+    {
+      "subject": "고등학교 정보",
+      "area": "과목 공통",
+      "sourceItemCount": 28,
+      "displayUnitsNow": 22,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "데이터",
+      "sourceItemCount": 21,
+      "displayUnitsNow": 27,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "디지털 문화",
+      "sourceItemCount": 15,
+      "displayUnitsNow": 23,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItemCount": 36,
+      "displayUnitsNow": 37,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "인공지능",
+      "sourceItemCount": 16,
+      "displayUnitsNow": 19,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "고등학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItemCount": 15,
+      "displayUnitsNow": 21,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "sourceItemCount": 6,
+      "displayUnitsNow": 0,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "sourceItemCount": 17,
+      "displayUnitsNow": 6,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "sourceItemCount": 15,
+      "displayUnitsNow": 3,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "sourceItemCount": 17,
+      "displayUnitsNow": 8,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "sourceItemCount": 14,
+      "displayUnitsNow": 6,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "sourceItemCount": 29,
+      "displayUnitsNow": 82,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "sourceItemCount": 18,
+      "displayUnitsNow": 31,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "sourceItemCount": 24,
+      "displayUnitsNow": 50,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "sourceItemCount": 20,
+      "displayUnitsNow": 34,
+      "stage3Round6Edits": 2,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "sourceItemCount": 19,
+      "displayUnitsNow": 33,
+      "stage3Round6Edits": 2,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "sourceItemCount": 28,
+      "displayUnitsNow": 25,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "sourceItemCount": 22,
+      "displayUnitsNow": 26,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "sourceItemCount": 16,
+      "displayUnitsNow": 20,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "sourceItemCount": 33,
+      "displayUnitsNow": 51,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "sourceItemCount": 21,
+      "displayUnitsNow": 32,
+      "stage3Round6Edits": 1,
+      "individualMeaningCertified": false
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "sourceItemCount": 19,
+      "displayUnitsNow": 22,
+      "stage3Round6Edits": 0,
+      "individualMeaningCertified": false
+    }
+  ],
+  "limits": [
+    "Curriculum source and historic lineIds remain unchanged; not a source-HWP verification (stage 4).",
+    "All 449 lines were structurally inventoried; all 449 were not individually certified for educational cloze quality. Stage 3 remains open.",
+    "The old app-level override tables were discovered to supersede the source JSON presentation values at runtime; removing them restores data/UI parity for 36 affected items without altering answer grading logic.",
+    "Newly added quantitative/qualitative contrast preserves existing keyword records, including the previous inactive instance, and appends a single new active source-aligned keyword.",
+    "Actual hosted site end-to-end testing remains stage 5."
+  ],
+  "validation": {
+    "beforeUnits": 586,
+    "afterUnits": 578,
+    "allSourceTextsPreserved": true,
+    "allLineIdsPreserved": true,
+    "oldKeywordsPreserved": true,
+    "noDanglingSets": true,
+    "noOverlappingPresentationUnits": true,
+    "noAppLevelOverrideAfterPatch": true,
+    "updatedJSJsonParity": true
+  }
+}

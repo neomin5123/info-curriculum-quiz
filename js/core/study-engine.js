@@ -11,16 +11,17 @@
       'content-system':{label:'내용체계',families:['핵심 아이디어','지식·이해','과정·기능','가치·태도'],scope:'area'},
       'standards':{label:'성취기준',families:['성취기준'],scope:'area'},
       'content-standards':{label:'내용체계 + 성취기준',families:['핵심 아이디어','지식·이해','과정·기능','가치·태도','성취기준'],scope:'area'},
+      'content-standards-explanations':{label:'내용체계 + 성취기준 + 성취기준 해설',families:['핵심 아이디어','지식·이해','과정·기능','가치·태도','성취기준','해설'],scope:'area'},
       'explain-consider':{label:'성취기준 해설 + 적용 시 고려사항',families:['해설','고려사항'],scope:'area'},
       'teaching-eval':{label:'교수학습 + 평가',families:['교수·학습','평가'],scope:'common'}
     };
-    const familyGroupOrder=['character-goals','content-system','standards','content-standards','explain-consider','teaching-eval'];
+    const familyGroupOrder=['character-goals','content-system','standards','content-standards','content-standards-explanations','explain-consider','teaching-eval'];
     let queue=[],cursor=0,retryCounts={};
 
     function taskId(t){
       if(t.type==='ki')return `KI:${t.group.groupId}`;
       if(t.type==='content-system')return `CS:${t.group.subject}:${t.group.area}:${t.focus?.id||'whole'}`;
-      if(t.type==='content-standards')return `CST:${t.group.subject}:${t.group.area}`;
+      if(t.type==='content-standards')return t.group.groupId;
       if(t.type==='whole-group')return `WG:${t.group.familyGroup}:${t.group.subject}:${t.group.area}`;
       return `LINE:${t.line.lineId}`;
     }
@@ -40,6 +41,8 @@
         return data.lines.some(l=>subs.includes(l.subject)&&l.area==='과목 공통'&&def.families.includes(l.family));
       }
       const ars=selected?[selected.area]:(areaSel==='all'?contentAreas:[areaSel]);
+      // 성취기준 해설 원문이 없는 과목(예: 데이터 과학)에는 새 통합 옵션을 숨긴다.
+      if(id==='content-standards-explanations')return data.lines.some(l=>subs.includes(l.subject)&&ars.includes(l.area)&&l.family==='해설');
       return data.lines.some(l=>subs.includes(l.subject)&&ars.includes(l.area)&&def.families.includes(l.family));
     }
     function lineMatchesGroup(line,id){const def=groupDef(id);return !!def&&def.families.includes(line.family);}
@@ -71,14 +74,18 @@
       const items=sections.flatMap(s=>s.items);if(!items.length)return null;
       return {groupId:`WG:${familyGroup}:${subject}:${actualArea}`,subject,subjectLabel:labels[subject],area:actualArea,familyGroup,label:def.label,prompt:`${def.label}를 모두 회상하시오.`,sections,items,itemCount:items.length};
     }
-    function buildContentStandardsGroup(subject,area){
+    function buildContentStandardsGroup(subject,area,includeExplanations=false){
       const content=buildContentSystemGroup(subject,area);
       const standards=data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='성취기준').map(itemFromLine);
-      if(!content&&!standards.length)return null;
-      return {groupId:`CST:${subject}:${area}`,subject,subjectLabel:labels[subject],area,familyGroup:'content-standards',label:'내용체계 + 성취기준',prompt:`${area} 영역의 내용체계와 성취기준을 모두 회상하시오.`,content,standards,items:[...(content?.items||[]),...standards]};
+      // 해설은 해당 과목·영역의 실제 '해설' 원문만 포함한다.
+      // 적용 시 고려사항은 기존 별도 드롭다운에서 그대로 제공한다.
+      const explanations=includeExplanations?data.lines.filter(l=>l.subject===subject&&l.area===area&&l.family==='해설').map(itemFromLine):[];
+      if(!content&&!standards.length&&!explanations.length)return null;
+      const label=includeExplanations?'내용체계 + 성취기준 + 성취기준 해설':'내용체계 + 성취기준';
+      return {groupId:`${includeExplanations?'CSTX':'CST'}:${subject}:${area}`,subject,subjectLabel:labels[subject],area,familyGroup:includeExplanations?'content-standards-explanations':'content-standards',label,prompt:`${area} 영역의 ${label}을(를) 함께 학습하시오.`,content,standards,explanations,items:[...(content?.items||[]),...standards,...explanations]};
     }
-    function buildContentStandardsTasks(subject,area,stage){
-      const group=buildContentStandardsGroup(subject,area);if(!group)return[];
+    function buildContentStandardsTasks(subject,area,stage,includeExplanations=false){
+      const group=buildContentStandardsGroup(subject,area,includeExplanations);if(!group)return[];
       const contentLineIds=(group.content?.items||[]).filter(x=>x.recallable||x.family==='지식·이해').map(x=>x.lineId);
       const standardLineIds=(group.standards||[]).filter(x=>x.recallable).map(x=>x.lineId);
       return [{type:'content-standards',group,focus:{id:stage,kind:stage,contentLineIds,standardLineIds}}];
@@ -123,9 +130,9 @@
         selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentSystemTasks(subject,area,state.ui.stage))));
         return out;
       }
-      if(state.ui.family==='content-standards'){
-        const out=[];
-        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentStandardsTasks(subject,area,state.ui.stage))));
+      if(['content-standards','content-standards-explanations'].includes(state.ui.family)){
+        const out=[],includeExplanations=state.ui.family==='content-standards-explanations';
+        selectedSubjects().forEach(subject=>selectedAreas().forEach(area=>out.push(...buildContentStandardsTasks(subject,area,state.ui.stage,includeExplanations))));
         return out;
       }
       return state.ui.stage==='whole'?buildWholeTasks():buildLineTasks();

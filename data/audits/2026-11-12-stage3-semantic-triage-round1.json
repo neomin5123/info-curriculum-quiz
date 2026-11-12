@@ -1,0 +1,1558 @@
+{
+  "date": "2026-11-12",
+  "stage": "3 of 6 / ongoing",
+  "scope": "adjacent standard semantic discrimination, first systematic triage plus selective edits",
+  "baseline": "CurriLoop_two_standards_hover_roadmap_patch_20261112.zip applied to CurriLoop_user_uploaded_Build53_cumulative_patch_20261112.zip",
+  "linesExaminedByAutomatedGroupIndex": 449,
+  "meaningIndividuallyVerified": false,
+  "presentationUnitCounts": {
+    "before": [
+      347,
+      246,
+      21
+    ],
+    "after": [
+      346,
+      243,
+      21
+    ]
+  },
+  "changes": [
+    {
+      "lineId": "MI-01-CS-PF-02",
+      "kind": "replace_generic_target",
+      "before": [
+        [
+          "MI-01-CS-PF-02-PU-01",
+          "적용된 사례"
+        ]
+      ],
+      "after": [
+        [
+          "MI-01-CS-PF-02-PU-01",
+          "피지컬 컴퓨팅"
+        ]
+      ],
+      "reason": "과정·기능의 고유 학습 대상인 피지컬 컴퓨팅 대신 범용적인 ‘적용된 사례’를 회상하던 구성 교정. 같은 영역 성취기준과 대비해 대상 개념 우선."
+    },
+    {
+      "lineId": "MI-01-AC-ST-03",
+      "kind": "remove_low_discrimination",
+      "before": [
+        [
+          "MI-01-AC-ST-03-PU-01",
+          "피지컬 컴퓨팅 구성요소"
+        ],
+        [
+          "MI-01-AC-ST-03-PU-02",
+          "시스템을 구상한다"
+        ]
+      ],
+      "after": [
+        [
+          "MI-01-AC-ST-03-PU-01",
+          "피지컬 컴퓨팅 구성요소"
+        ]
+      ],
+      "reason": "‘피지컬 컴퓨팅 구성요소’를 이미 직접 회상하며 ‘시스템을 구상한다’는 일반적 수행 표현. 이 문항의 고유 개념을 우선하도록 제거."
+    },
+    {
+      "lineId": "MI-04-CS-PF-01",
+      "kind": "replace_generic_target",
+      "before": [
+        [
+          "MI-04-CS-PF-01-PU-01",
+          "인공지능 소프트웨어 구별하기"
+        ]
+      ],
+      "after": [
+        [
+          "MI-04-CS-PF-01-PU-01",
+          "인공지능 소프트웨어"
+        ]
+      ],
+      "reason": "과정·기능 문장 전체를 빈칸 처리하여 문장 회상보다 복붙 암기가 되던 사례. 고유 객체인 인공지능 소프트웨어만 묻도록 조정."
+    },
+    {
+      "lineId": "AI-22-ML-ST-06",
+      "kind": "remove_low_discrimination",
+      "before": [
+        [
+          "AI-22-ML-ST-06-PU-01",
+          "딥러닝을 활용하여"
+        ],
+        [
+          "AI-22-ML-ST-06-PU-02",
+          "다양한 학문 분야의 문제"
+        ],
+        [
+          "AI-22-ML-ST-06-PU-03",
+          "성능을 평가"
+        ]
+      ],
+      "after": [
+        [
+          "AI-22-ML-ST-06-PU-01",
+          "딥러닝을 활용하여"
+        ],
+        [
+          "AI-22-ML-ST-06-PU-02",
+          "다양한 학문 분야의 문제"
+        ]
+      ],
+      "reason": "바로 인접한 [12인기02-04]에 훈련/테스트 데이터 기반 성능 평가가 이미 명시적으로 출제된다. [12인기02-06]에서는 딥러닝 적용과 학문 분야의 문제 해결을 우선."
+    },
+    {
+      "lineId": "AI-22-PJ-ST-03",
+      "kind": "remove_low_discrimination",
+      "before": [
+        [
+          "AI-22-PJ-ST-03-PU-01",
+          "협력적인 문제 해결 자세"
+        ],
+        [
+          "AI-22-PJ-ST-03-PU-02",
+          "소프트웨어를 개발"
+        ]
+      ],
+      "after": [
+        [
+          "AI-22-PJ-ST-03-PU-01",
+          "협력적인 문제 해결 자세"
+        ]
+      ],
+      "reason": "[12인기04-03]과 [12인기04-04]에서 반복되는 범용 결과 동작. 이 항목 고유의 협력적 문제 해결 자세를 유지."
+    },
+    {
+      "lineId": "AI-22-PJ-ST-04",
+      "kind": "remove_low_discrimination",
+      "before": [
+        [
+          "AI-22-PJ-ST-04-PU-01",
+          "사회적 영향"
+        ],
+        [
+          "AI-22-PJ-ST-04-PU-02",
+          "소프트웨어를 개발"
+        ],
+        [
+          "AI-22-PJ-ST-04-PU-03-SEG02",
+          "성능을 개선"
+        ]
+      ],
+      "after": [
+        [
+          "AI-22-PJ-ST-04-PU-01",
+          "사회적 영향"
+        ],
+        [
+          "AI-22-PJ-ST-04-PU-03-SEG02",
+          "성능을 개선"
+        ]
+      ],
+      "reason": "인접 [12인기04-03]과 중복되는 개발 동작 대신 사회적 영향 고려와 평가 결과에 따른 성능 개선을 회상하도록 유지."
+    }
+  ],
+  "flaggedCases": [
+    {
+      "lineId": "MI-01-AC-EX-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "컴퓨팅 시스템",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-01-AC-EX-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "운영 체제",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-01-AC-EX-02",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "피지컬 컴퓨팅",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-01-AC-CO-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "컴퓨팅 시스템",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-01-AC-CO-02",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "피지컬 컴퓨팅",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-01-AC-CO-03",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "피지컬 컴퓨팅",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "컴퓨팅 시스템",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "MI-04-AC-EX-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "인공지능 시스템",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "HI-01-AC-EX-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "네트워크",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "HI-03-AC-EX-02",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "정렬, 탐색 알고리즘",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "기계학습",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "지도학습",
+      "status": "review_later_context_matters"
+    },
+    {
+      "lineId": "AI-22-PJ-EX-01",
+      "pattern": "same_answer_exposed_elsewhere_in_same_line",
+      "answer": "17개의 주요 목표",
+      "status": "review_later_context_matters"
+    },
+    {
+      "area": "인공지능",
+      "family": "과정·기능",
+      "pattern": "repeated_answer_in_area",
+      "answer": "인공지능 시스템",
+      "lineIds": [
+        "MI-04-CS-PF-03",
+        "MI-04-CS-PF-04"
+      ],
+      "status": "review_later_not_automatically_wrong"
+    },
+    {
+      "area": "인공지능",
+      "family": "과정·기능",
+      "pattern": "repeated_answer_in_area",
+      "answer": "해결할 수 있는 문제",
+      "lineIds": [
+        "MI-04-CS-PF-03",
+        "HI-04-CS-PF-02"
+      ],
+      "status": "review_later_not_automatically_wrong"
+    }
+  ],
+  "groupIndex": [
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "핵심 아이디어",
+      "lines": 4,
+      "units": 11,
+      "lineIds": [
+        "MI-01-CS-KI-01",
+        "MI-01-CS-KI-02",
+        "HI-01-CS-KI-01",
+        "HI-01-CS-KI-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "지식·이해",
+      "lines": 5,
+      "units": 0,
+      "lineIds": [
+        "MI-01-CS-KN-01",
+        "MI-01-CS-KN-02",
+        "MI-01-CS-KN-03",
+        "HI-01-CS-KN-01",
+        "HI-01-CS-KN-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "과정·기능",
+      "lines": 5,
+      "units": 8,
+      "lineIds": [
+        "MI-01-CS-PF-01",
+        "MI-01-CS-PF-02",
+        "MI-01-CS-PF-03",
+        "HI-01-CS-PF-01",
+        "HI-01-CS-PF-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "가치·태도",
+      "lines": 4,
+      "units": 0,
+      "lineIds": [
+        "MI-01-CS-VA-01",
+        "MI-01-CS-VA-02",
+        "HI-01-CS-VA-01",
+        "HI-01-CS-VA-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "성취기준",
+      "lines": 6,
+      "units": 12,
+      "lineIds": [
+        "MI-01-AC-ST-01",
+        "MI-01-AC-ST-02",
+        "MI-01-AC-ST-03",
+        "HI-01-AC-ST-01",
+        "HI-01-AC-ST-02",
+        "HI-01-AC-ST-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "해설",
+      "lines": 3,
+      "units": 9,
+      "lineIds": [
+        "MI-01-AC-EX-01",
+        "MI-01-AC-EX-02",
+        "HI-01-AC-EX-01"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "컴퓨팅 시스템",
+      "family": "고려사항",
+      "lines": 7,
+      "units": 8,
+      "lineIds": [
+        "MI-01-AC-CO-01",
+        "MI-01-AC-CO-02",
+        "MI-01-AC-CO-03",
+        "MI-01-AC-CO-04",
+        "HI-01-AC-CO-01",
+        "HI-01-AC-CO-02",
+        "HI-01-AC-CO-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "핵심 아이디어",
+      "lines": 6,
+      "units": 14,
+      "lineIds": [
+        "MI-02-CS-KI-01",
+        "MI-02-CS-KI-02",
+        "MI-02-CS-KI-03",
+        "HI-02-CS-KI-01",
+        "HI-02-CS-KI-02",
+        "HI-02-CS-KI-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "지식·이해",
+      "lines": 5,
+      "units": 0,
+      "lineIds": [
+        "MI-02-CS-KN-01",
+        "MI-02-CS-KN-02",
+        "MI-02-CS-KN-03",
+        "HI-02-CS-KN-01",
+        "HI-02-CS-KN-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "과정·기능",
+      "lines": 6,
+      "units": 7,
+      "lineIds": [
+        "MI-02-CS-PF-01",
+        "MI-02-CS-PF-02",
+        "MI-02-CS-PF-03",
+        "HI-02-CS-PF-01",
+        "HI-02-CS-PF-02",
+        "HI-02-CS-PF-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "가치·태도",
+      "lines": 5,
+      "units": 0,
+      "lineIds": [
+        "MI-02-CS-VA-01",
+        "MI-02-CS-VA-02",
+        "HI-02-CS-VA-01",
+        "HI-02-CS-VA-02",
+        "HI-02-CS-VA-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "성취기준",
+      "lines": 9,
+      "units": 19,
+      "lineIds": [
+        "MI-02-AC-ST-01",
+        "MI-02-AC-ST-02",
+        "MI-02-AC-ST-03",
+        "MI-02-AC-ST-04",
+        "MI-02-AC-ST-05",
+        "HI-02-AC-ST-01",
+        "HI-02-AC-ST-02",
+        "HI-02-AC-ST-03",
+        "HI-02-AC-ST-04"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "해설",
+      "lines": 5,
+      "units": 13,
+      "lineIds": [
+        "MI-02-AC-EX-01",
+        "MI-02-AC-EX-02",
+        "MI-02-AC-EX-03",
+        "HI-02-AC-EX-01",
+        "HI-02-AC-EX-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "데이터",
+      "family": "고려사항",
+      "lines": 7,
+      "units": 3,
+      "lineIds": [
+        "MI-02-AC-CO-01",
+        "MI-02-AC-CO-02",
+        "MI-02-AC-CO-03",
+        "HI-02-AC-CO-01",
+        "HI-02-AC-CO-02",
+        "HI-02-AC-CO-03",
+        "HI-02-AC-CO-04"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "핵심 아이디어",
+      "lines": 6,
+      "units": 12,
+      "lineIds": [
+        "MI-03-CS-KI-01",
+        "MI-03-CS-KI-02",
+        "MI-03-CS-KI-03",
+        "HI-03-CS-KI-01",
+        "HI-03-CS-KI-02",
+        "HI-03-CS-KI-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "지식·이해",
+      "lines": 13,
+      "units": 0,
+      "lineIds": [
+        "MI-03-CS-KN-01",
+        "MI-03-CS-KN-02",
+        "MI-03-CS-KN-03",
+        "MI-03-CS-KN-04",
+        "MI-03-CS-KN-05",
+        "MI-03-CS-KN-06",
+        "HI-03-CS-KN-01",
+        "HI-03-CS-KN-02",
+        "HI-03-CS-KN-03",
+        "HI-03-CS-KN-04",
+        "HI-03-CS-KN-05",
+        "HI-03-CS-KN-06",
+        "HI-03-CS-KN-07"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "과정·기능",
+      "lines": 9,
+      "units": 17,
+      "lineIds": [
+        "MI-03-CS-PF-01",
+        "MI-03-CS-PF-02",
+        "MI-03-CS-PF-03",
+        "MI-03-CS-PF-04",
+        "HI-03-CS-PF-01",
+        "HI-03-CS-PF-02",
+        "HI-03-CS-PF-03",
+        "HI-03-CS-PF-04",
+        "HI-03-CS-PF-05"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "가치·태도",
+      "lines": 8,
+      "units": 1,
+      "lineIds": [
+        "MI-03-CS-VA-01",
+        "MI-03-CS-VA-02",
+        "MI-03-CS-VA-03",
+        "MI-03-CS-VA-04",
+        "HI-03-CS-VA-01",
+        "HI-03-CS-VA-02",
+        "HI-03-CS-VA-03",
+        "HI-03-CS-VA-04"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "성취기준",
+      "lines": 19,
+      "units": 34,
+      "lineIds": [
+        "MI-03-AC-ST-01",
+        "MI-03-AC-ST-02",
+        "MI-03-AC-ST-03",
+        "MI-03-AC-ST-04",
+        "MI-03-AC-ST-05",
+        "MI-03-AC-ST-06",
+        "MI-03-AC-ST-07",
+        "MI-03-AC-ST-08",
+        "MI-03-AC-ST-09",
+        "HI-03-AC-ST-01",
+        "HI-03-AC-ST-02",
+        "HI-03-AC-ST-03",
+        "HI-03-AC-ST-04",
+        "HI-03-AC-ST-05",
+        "HI-03-AC-ST-06",
+        "HI-03-AC-ST-07",
+        "HI-03-AC-ST-08",
+        "HI-03-AC-ST-09",
+        "HI-03-AC-ST-10"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "해설",
+      "lines": 6,
+      "units": 16,
+      "lineIds": [
+        "MI-03-AC-EX-01",
+        "MI-03-AC-EX-02",
+        "MI-03-AC-EX-03",
+        "HI-03-AC-EX-01",
+        "HI-03-AC-EX-02",
+        "HI-03-AC-EX-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "알고리즘과 프로그래밍",
+      "family": "고려사항",
+      "lines": 8,
+      "units": 16,
+      "lineIds": [
+        "MI-03-AC-CO-01",
+        "MI-03-AC-CO-02",
+        "MI-03-AC-CO-03",
+        "MI-03-AC-CO-04",
+        "HI-03-AC-CO-01",
+        "HI-03-AC-CO-02",
+        "HI-03-AC-CO-03",
+        "HI-03-AC-CO-04"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "핵심 아이디어",
+      "lines": 4,
+      "units": 11,
+      "lineIds": [
+        "MI-04-CS-KI-01",
+        "MI-04-CS-KI-02",
+        "HI-04-CS-KI-01",
+        "HI-04-CS-KI-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "지식·이해",
+      "lines": 4,
+      "units": 0,
+      "lineIds": [
+        "MI-04-CS-KN-01",
+        "MI-04-CS-KN-02",
+        "HI-04-CS-KN-01",
+        "HI-04-CS-KN-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "과정·기능",
+      "lines": 6,
+      "units": 8,
+      "lineIds": [
+        "MI-04-CS-PF-01",
+        "MI-04-CS-PF-02",
+        "MI-04-CS-PF-03",
+        "MI-04-CS-PF-04",
+        "HI-04-CS-PF-01",
+        "HI-04-CS-PF-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "가치·태도",
+      "lines": 4,
+      "units": 0,
+      "lineIds": [
+        "MI-04-CS-VA-01",
+        "MI-04-CS-VA-02",
+        "HI-04-CS-VA-01",
+        "HI-04-CS-VA-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "성취기준",
+      "lines": 8,
+      "units": 19,
+      "lineIds": [
+        "MI-04-AC-ST-01",
+        "MI-04-AC-ST-02",
+        "MI-04-AC-ST-03",
+        "MI-04-AC-ST-04",
+        "MI-04-AC-ST-05",
+        "HI-04-AC-ST-01",
+        "HI-04-AC-ST-02",
+        "HI-04-AC-ST-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "해설",
+      "lines": 5,
+      "units": 15,
+      "lineIds": [
+        "MI-04-AC-EX-01",
+        "MI-04-AC-EX-02",
+        "MI-04-AC-EX-03",
+        "HI-04-AC-EX-01",
+        "HI-04-AC-EX-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "인공지능",
+      "family": "고려사항",
+      "lines": 6,
+      "units": 3,
+      "lineIds": [
+        "MI-04-AC-CO-01",
+        "MI-04-AC-CO-02",
+        "MI-04-AC-CO-03",
+        "HI-04-AC-CO-01",
+        "HI-04-AC-CO-02",
+        "HI-04-AC-CO-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "핵심 아이디어",
+      "lines": 4,
+      "units": 11,
+      "lineIds": [
+        "MI-05-CS-KI-01",
+        "MI-05-CS-KI-02",
+        "HI-05-CS-KI-01",
+        "HI-05-CS-KI-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "지식·이해",
+      "lines": 5,
+      "units": 0,
+      "lineIds": [
+        "MI-05-CS-KN-01",
+        "MI-05-CS-KN-02",
+        "MI-05-CS-KN-03",
+        "HI-05-CS-KN-01",
+        "HI-05-CS-KN-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "과정·기능",
+      "lines": 5,
+      "units": 8,
+      "lineIds": [
+        "MI-05-CS-PF-01",
+        "MI-05-CS-PF-02",
+        "MI-05-CS-PF-03",
+        "HI-05-CS-PF-01",
+        "HI-05-CS-PF-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "가치·태도",
+      "lines": 4,
+      "units": 1,
+      "lineIds": [
+        "MI-05-CS-VA-01",
+        "MI-05-CS-VA-02",
+        "HI-05-CS-VA-01",
+        "HI-05-CS-VA-02"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "성취기준",
+      "lines": 6,
+      "units": 16,
+      "lineIds": [
+        "MI-05-AC-ST-01",
+        "MI-05-AC-ST-02",
+        "MI-05-AC-ST-03",
+        "HI-05-AC-ST-01",
+        "HI-05-AC-ST-02",
+        "HI-05-AC-ST-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "해설",
+      "lines": 2,
+      "units": 6,
+      "lineIds": [
+        "MI-05-AC-EX-01",
+        "HI-05-AC-EX-01"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "디지털 문화",
+      "family": "고려사항",
+      "lines": 5,
+      "units": 2,
+      "lineIds": [
+        "MI-05-AC-CO-01",
+        "MI-05-AC-CO-02",
+        "HI-05-AC-CO-01",
+        "HI-05-AC-CO-02",
+        "HI-05-AC-CO-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "성격",
+      "lines": 7,
+      "units": 0,
+      "lineIds": [
+        "MI-CG-CHAR-01",
+        "MI-CG-CHAR-02",
+        "MI-CG-CHAR-03",
+        "MI-CG-CHAR-04",
+        "HI-CG-CHAR-01",
+        "HI-CG-CHAR-02",
+        "HI-CG-CHAR-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "목표",
+      "lines": 12,
+      "units": 3,
+      "lineIds": [
+        "MI-CG-GOAL-00",
+        "MI-CG-GOAL-01",
+        "MI-CG-GOAL-02",
+        "MI-CG-GOAL-03",
+        "MI-CG-GOAL-04",
+        "MI-CG-GOAL-05",
+        "HI-CG-GOAL-00",
+        "HI-CG-GOAL-01",
+        "HI-CG-GOAL-02",
+        "HI-CG-GOAL-03",
+        "HI-CG-GOAL-04",
+        "HI-CG-GOAL-05"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "lines": 21,
+      "units": 17,
+      "lineIds": [
+        "MI-TE-DIR-01",
+        "MI-TE-DIR-05",
+        "MI-TE-DIR-06",
+        "MI-TE-DIR-02",
+        "MI-TE-DIR-03",
+        "MI-TE-DIR-04",
+        "MI-TE-MET-01",
+        "MI-TE-MET-02",
+        "MI-TE-MET-04",
+        "MI-TE-MET-03",
+        "MI-TE-MET-05",
+        "HI-TE-DIR-01",
+        "HI-TE-DIR-03",
+        "HI-TE-DIR-04",
+        "HI-TE-DIR-05",
+        "HI-TE-DIR-02",
+        "HI-TE-MET-01",
+        "HI-TE-MET-02",
+        "HI-TE-MET-04",
+        "HI-TE-MET-05",
+        "HI-TE-MET-03"
+      ]
+    },
+    {
+      "subject": "중학교 정보",
+      "area": "과목 공통",
+      "family": "평가",
+      "lines": 16,
+      "units": 26,
+      "lineIds": [
+        "MI-TE-EVD-01",
+        "MI-TE-EVD-02",
+        "MI-TE-EVD-03",
+        "MI-TE-EVD-04",
+        "MI-TE-EVM-01",
+        "MI-TE-EVM-02",
+        "MI-TE-EVM-03",
+        "HI-TE-EVD-01",
+        "HI-TE-EVD-04",
+        "HI-TE-EVD-02",
+        "HI-TE-EVD-03",
+        "HI-TE-EVM-01",
+        "HI-TE-EVM-02",
+        "HI-TE-EVM-03",
+        "HI-TE-EVM-05",
+        "HI-TE-EVM-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "성격",
+      "lines": 8,
+      "units": 20,
+      "lineIds": [
+        "AI-22-GEN-CH-01",
+        "AI-22-GEN-CH-02",
+        "AI-22-GEN-CH-03",
+        "AI-22-GEN-CH-04",
+        "AI-22-GEN-CH-05",
+        "AI-22-GEN-CH-06",
+        "AI-22-GEN-CH-07",
+        "AI-22-GEN-CH-08"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "목표",
+      "lines": 5,
+      "units": 14,
+      "lineIds": [
+        "AI-22-GEN-GO-01",
+        "AI-22-GEN-GO-02",
+        "AI-22-GEN-GO-03",
+        "AI-22-GEN-GO-04",
+        "AI-22-GEN-GO-05"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 5,
+      "lineIds": [
+        "AI-22-AI-CI-01",
+        "AI-22-AI-CI-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "지식·이해",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "AI-22-AI-KN-01",
+        "AI-22-AI-KN-02",
+        "AI-22-AI-KN-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "과정·기능",
+      "lines": 3,
+      "units": 4,
+      "lineIds": [
+        "AI-22-AI-SK-01",
+        "AI-22-AI-SK-02",
+        "AI-22-AI-SK-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "가치·태도",
+      "lines": 2,
+      "units": 3,
+      "lineIds": [
+        "AI-22-AI-AT-01",
+        "AI-22-AI-AT-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 5,
+      "lineIds": [
+        "AI-22-ML-CI-01",
+        "AI-22-ML-CI-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "지식·이해",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "AI-22-ML-KN-01",
+        "AI-22-ML-KN-02",
+        "AI-22-ML-KN-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "과정·기능",
+      "lines": 4,
+      "units": 6,
+      "lineIds": [
+        "AI-22-ML-SK-01",
+        "AI-22-ML-SK-02",
+        "AI-22-ML-SK-03",
+        "AI-22-ML-SK-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "가치·태도",
+      "lines": 2,
+      "units": 3,
+      "lineIds": [
+        "AI-22-ML-AT-01",
+        "AI-22-ML-AT-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 4,
+      "lineIds": [
+        "AI-22-SO-CI-01",
+        "AI-22-SO-CI-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "지식·이해",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "AI-22-SO-KN-01",
+        "AI-22-SO-KN-02",
+        "AI-22-SO-KN-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "과정·기능",
+      "lines": 4,
+      "units": 5,
+      "lineIds": [
+        "AI-22-SO-SK-01",
+        "AI-22-SO-SK-02",
+        "AI-22-SO-SK-03",
+        "AI-22-SO-SK-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "가치·태도",
+      "lines": 2,
+      "units": 3,
+      "lineIds": [
+        "AI-22-SO-AT-01",
+        "AI-22-SO-AT-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 4,
+      "lineIds": [
+        "AI-22-PJ-CI-01",
+        "AI-22-PJ-CI-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "지식·이해",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "AI-22-PJ-KN-01",
+        "AI-22-PJ-KN-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "과정·기능",
+      "lines": 3,
+      "units": 4,
+      "lineIds": [
+        "AI-22-PJ-SK-01",
+        "AI-22-PJ-SK-02",
+        "AI-22-PJ-SK-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "가치·태도",
+      "lines": 3,
+      "units": 5,
+      "lineIds": [
+        "AI-22-PJ-AT-01",
+        "AI-22-PJ-AT-02",
+        "AI-22-PJ-AT-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "성취기준",
+      "lines": 5,
+      "units": 13,
+      "lineIds": [
+        "AI-22-AI-ST-01",
+        "AI-22-AI-ST-02",
+        "AI-22-AI-ST-03",
+        "AI-22-AI-ST-04",
+        "AI-22-AI-ST-05"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "해설",
+      "lines": 2,
+      "units": 6,
+      "lineIds": [
+        "AI-22-AI-EX-01",
+        "AI-22-AI-EX-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 이해",
+      "family": "고려사항",
+      "lines": 2,
+      "units": 6,
+      "lineIds": [
+        "AI-22-AI-CN-01",
+        "AI-22-AI-CN-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "성취기준",
+      "lines": 6,
+      "units": 14,
+      "lineIds": [
+        "AI-22-ML-ST-01",
+        "AI-22-ML-ST-02",
+        "AI-22-ML-ST-03",
+        "AI-22-ML-ST-04",
+        "AI-22-ML-ST-05",
+        "AI-22-ML-ST-06"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "해설",
+      "lines": 4,
+      "units": 15,
+      "lineIds": [
+        "AI-22-ML-EX-01",
+        "AI-22-ML-EX-02",
+        "AI-22-ML-EX-03",
+        "AI-22-ML-EX-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능과 학습",
+      "family": "고려사항",
+      "lines": 3,
+      "units": 9,
+      "lineIds": [
+        "AI-22-ML-CN-01",
+        "AI-22-ML-CN-02",
+        "AI-22-ML-CN-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "성취기준",
+      "lines": 4,
+      "units": 11,
+      "lineIds": [
+        "AI-22-SO-ST-01",
+        "AI-22-SO-ST-02",
+        "AI-22-SO-ST-03",
+        "AI-22-SO-ST-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "해설",
+      "lines": 2,
+      "units": 6,
+      "lineIds": [
+        "AI-22-SO-EX-01",
+        "AI-22-SO-EX-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능의 사회적 영향",
+      "family": "고려사항",
+      "lines": 3,
+      "units": 9,
+      "lineIds": [
+        "AI-22-SO-CN-01",
+        "AI-22-SO-CN-02",
+        "AI-22-SO-CN-03"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "성취기준",
+      "lines": 4,
+      "units": 7,
+      "lineIds": [
+        "AI-22-PJ-ST-01",
+        "AI-22-PJ-ST-02",
+        "AI-22-PJ-ST-03",
+        "AI-22-PJ-ST-04"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "해설",
+      "lines": 2,
+      "units": 8,
+      "lineIds": [
+        "AI-22-PJ-EX-01",
+        "AI-22-PJ-EX-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "인공지능 프로젝트",
+      "family": "고려사항",
+      "lines": 2,
+      "units": 6,
+      "lineIds": [
+        "AI-22-PJ-CN-01",
+        "AI-22-PJ-CN-02"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "교수·학습",
+      "lines": 9,
+      "units": 26,
+      "lineIds": [
+        "AI-22-GEN-TE-01",
+        "AI-22-GEN-TE-02",
+        "AI-22-GEN-TE-03",
+        "AI-22-GEN-TE-04",
+        "AI-22-GEN-TE-05",
+        "AI-22-GEN-TE-06",
+        "AI-22-GEN-TE-07",
+        "AI-22-GEN-TE-08",
+        "AI-22-GEN-TE-09"
+      ]
+    },
+    {
+      "subject": "인공지능 기초",
+      "area": "과목 공통",
+      "family": "평가",
+      "lines": 7,
+      "units": 22,
+      "lineIds": [
+        "AI-22-GEN-EV-01",
+        "AI-22-GEN-EV-02",
+        "AI-22-GEN-EV-03",
+        "AI-22-GEN-EV-04",
+        "AI-22-GEN-EV-05",
+        "AI-22-GEN-EV-06",
+        "AI-22-GEN-EV-07"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "성격",
+      "lines": 1,
+      "units": 0,
+      "lineIds": [
+        "DS-22-CHARACTER-01"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "과목 공통",
+      "family": "목표",
+      "lines": 5,
+      "units": 0,
+      "lineIds": [
+        "DS-22-GOALS-INTRO",
+        "DS-22-GOAL-01",
+        "DS-22-GOAL-02",
+        "DS-22-GOAL-03",
+        "DS-22-GOAL-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "과정·기능",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "DS-22-DS-01-PF-01",
+        "DS-22-DS-01-PF-02",
+        "DS-22-DS-01-PF-03"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "가치·태도",
+      "lines": 3,
+      "units": 1,
+      "lineIds": [
+        "DS-22-DS-01-VA-01",
+        "DS-22-DS-01-VA-02",
+        "DS-22-DS-01-VA-03"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "과정·기능",
+      "lines": 4,
+      "units": 0,
+      "lineIds": [
+        "DS-22-DS-02-PF-01",
+        "DS-22-DS-02-PF-02",
+        "DS-22-DS-02-PF-03",
+        "DS-22-DS-02-PF-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "가치·태도",
+      "lines": 2,
+      "units": 2,
+      "lineIds": [
+        "DS-22-DS-02-VA-01",
+        "DS-22-DS-02-VA-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "과정·기능",
+      "lines": 3,
+      "units": 1,
+      "lineIds": [
+        "DS-22-DS-03-PF-01",
+        "DS-22-DS-03-PF-02",
+        "DS-22-DS-03-PF-03"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "가치·태도",
+      "lines": 2,
+      "units": 1,
+      "lineIds": [
+        "DS-22-DS-03-VA-01",
+        "DS-22-DS-03-VA-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "과정·기능",
+      "lines": 4,
+      "units": 2,
+      "lineIds": [
+        "DS-22-DS-04-PF-01",
+        "DS-22-DS-04-PF-02",
+        "DS-22-DS-04-PF-03",
+        "DS-22-DS-04-PF-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "가치·태도",
+      "lines": 3,
+      "units": 1,
+      "lineIds": [
+        "DS-22-DS-04-VA-01",
+        "DS-22-DS-04-VA-02",
+        "DS-22-DS-04-VA-03"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "성취기준",
+      "lines": 4,
+      "units": 2,
+      "lineIds": [
+        "DS-22-12데과01-01",
+        "DS-22-12데과01-02",
+        "DS-22-12데과01-03",
+        "DS-22-12데과01-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "성취기준",
+      "lines": 4,
+      "units": 3,
+      "lineIds": [
+        "DS-22-12데과02-01",
+        "DS-22-12데과02-02",
+        "DS-22-12데과02-03",
+        "DS-22-12데과02-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "성취기준",
+      "lines": 6,
+      "units": 6,
+      "lineIds": [
+        "DS-22-12데과03-01",
+        "DS-22-12데과03-02",
+        "DS-22-12데과03-03",
+        "DS-22-12데과03-04",
+        "DS-22-12데과03-05",
+        "DS-22-12데과03-06"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "성취기준",
+      "lines": 5,
+      "units": 2,
+      "lineIds": [
+        "DS-22-12데과04-01",
+        "DS-22-12데과04-02",
+        "DS-22-12데과04-03",
+        "DS-22-12데과04-04",
+        "DS-22-12데과04-05"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "DS-22-01-KI-01",
+        "DS-22-01-KI-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학의 이해",
+      "family": "지식·이해",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "DS-22-01-KU-01",
+        "DS-22-01-KU-02",
+        "DS-22-01-KU-03"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "DS-22-02-KI-01",
+        "DS-22-02-KI-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 준비와 분석",
+      "family": "지식·이해",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "DS-22-02-KU-01",
+        "DS-22-02-KU-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "DS-22-03-KI-01",
+        "DS-22-03-KI-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 모델링과 평가",
+      "family": "지식·이해",
+      "lines": 4,
+      "units": 0,
+      "lineIds": [
+        "DS-22-03-KU-01",
+        "DS-22-03-KU-02",
+        "DS-22-03-KU-03",
+        "DS-22-03-KU-04"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "핵심 아이디어",
+      "lines": 2,
+      "units": 0,
+      "lineIds": [
+        "DS-22-04-KI-01",
+        "DS-22-04-KI-02"
+      ]
+    },
+    {
+      "subject": "데이터 과학",
+      "area": "데이터 과학 프로젝트",
+      "family": "지식·이해",
+      "lines": 3,
+      "units": 0,
+      "lineIds": [
+        "DS-22-04-KU-01",
+        "DS-22-04-KU-02",
+        "DS-22-04-KU-03"
+      ]
+    }
+  ],
+  "sourceTextPreserved": true,
+  "legacyKeywordsPreserved": true,
+  "questionDataUntouched": true,
+  "UIUntouched": true,
+  "officialHWPTextCompared": false,
+  "browserTested": false,
+  "remainingSteps": [
+    "3: targeted semantic candidate review and browser checks",
+    "4: official HWP comparison",
+    "5: browser regression",
+    "6: final deployment"
+  ]
+}
