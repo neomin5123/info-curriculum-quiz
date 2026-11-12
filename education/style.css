@@ -11,3 +11,6 @@
 
 /* v6 merged practice: hint blocks appear only on exam-derived short questions */
 #practiceClues{margin:12px 0}#practiceSource{margin:5px 0 14px;line-height:1.6}#practicePrompt{line-height:1.55}
+
+/* v7: optional hints and more reliable focus state */
+.hint-toggle{margin:8px 0 0;max-width:230px}.keyword:has(input:checked){background:#d5eadb;border-color:#75a58a}.keyword input{accent-color:var(--green)}
