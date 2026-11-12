@@ -13,7 +13,7 @@
     out.stage='whole';
     if(out.area==='과목 공통')out.area='all';
     const z=Number(out.zoom);out.zoom=[85,90,100,110,125].includes(z)?z:100;
-    out.mainTab=['study','review','exam'].includes(out.mainTab)?out.mainTab:'study';
+    out.mainTab=['study','review','exam','education'].includes(out.mainTab)?out.mainTab:'study';
     return out;
   }
   function load(){
