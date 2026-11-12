@@ -632,7 +632,7 @@ function renderRetryDock(){
   el.retryDock.classList.add('has-cards');
   el.retryDock.innerHTML=visible.map(([id,r],i)=>{
     const expanded=activeRetryCardId===id;
-    return `<section class="retry-card ${expanded?'expanded':''}" data-retry-id="${esc(id)}" style="--stack-i:${i}">
+    return `<section class="retry-card ${expanded?'expanded':''} ${r.kind==='process-bundle'?'retry-process-bundle-card':''}" data-retry-id="${esc(id)}" style="--stack-i:${i}">
       <button class="retry-card-peek" type="button" data-retry-open="${esc(id)}" aria-expanded="${expanded}">
         <span class="retry-card-dot"></span>
         <span class="retry-card-body"><strong>다시 꺼내기</strong><small>${esc(retryMeta(r))}</small></span>
@@ -1010,7 +1010,7 @@ function gradeDailyReview(id){
         const f=card.querySelector(`[data-daily-process-line="${i}"][data-daily-process-unit="${j}"]`);
         if(!f)return;
         const d=CL.grading.classifyDetailed(f.value,unit.text);
-        details.push(d);grades.push(d);
+        details.push(d.status);grades.push(d.status);
         f.value=unit.text;
         ['correct','near','unknown','wrong'].forEach(c=>f.classList.remove(c));
         f.classList.add(d.status==='duplicate'?'wrong':d.status);

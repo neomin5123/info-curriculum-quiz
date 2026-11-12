@@ -658,6 +658,20 @@
           "result": "독립 계산 일치",
           "evidence": "ipaddress VLSM 계산: A /25(128), B /26(64), C /27(32); C 블록 .192~.223",
           "officialAnswerConfirmed": false
+        },
+        "continuationReview20261110": {
+          "level": "conditional",
+          "evidence": "VLSM 독립 ipaddress 계산: /25 0~127, /26 128~191, /27 192~223. B 64개; C .192 및 .223. 마지막 주소는 브로드캐스트 주소이므로 CIDR 네트워크 표기의 엄밀성 주의.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "독립 VLSM ipaddress 계산",
+          "evidence": "A=18.14.74.0/25, B=18.14.74.128/26(64개), C=18.14.74.192/27(.192~.223) 재계산 일치",
+          "limitation": "형식상 .223/27은 방송 주소의 CIDR 접미 표현이며 네트워크 식별자는 .192/27; 공식 답안 확인 전 medium 유지",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
         }
       }
     },
@@ -753,7 +767,25 @@
           "evidence": "ABC 후보키 AB,BC 도출; FD A→C 분해의 무손실 조건 확인",
           "officialAnswerConfirmed": false
         },
-        "reviewNote": "ABC 후보키 AB,BC 도출; FD A→C 분해의 무손실 조건 확인; 공식 정답표 미확인."
+        "reviewNote": "ABC 후보키 AB,BC 도출; FD A→C 분해의 무손실 조건 확인; 공식 정답표 미확인.",
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "independent-fd-closure",
+          "evidence": "FD A→C, B→D,F, D→E, BC→A에 대해 (BC)+=ABCDEF이고 (AB)+=ABCDEF. 부분종속 B→D,F,E 제거로 BC 및 AB 관계와 BDEF 분리 가능. BDEF에서 D→E를 별도 분리하고 ABC에서 A→C를 분리한 최종 AB,AC, BDF, DE는 각 분할 교집합 B·D·A가 한쪽 관계의 결정자이므로 순차 무손실 조인임. 단, 손실 없는 분해와 종속성 보존은 별개이며 BC→A의 종속성 보존은 자동 보장되지 않음.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        },
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 7,
+          "method": "Enumerated minimal superkeys via functional-attribute closure and lossless-join tableau chase",
+          "result": "후보키 AB, BC; BCNF 최종 BDF, DE, AB, AC 분해 무손실 확인",
+          "qualification": "BC→A의 종속성 보존은 별개이며 모든 FD의 보존을 보장하지 않음",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
+        }
       }
     },
     {
@@ -1006,7 +1038,28 @@
           "atlasWidth": 4096,
           "atlasHeight": 9754
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "checkedAgainst": "original-question-pdf; independent computation",
+        "reviewedOn": "2026-11-10",
+        "officialAnswerConfirmed": false,
+        "continuationReview20261110": {
+          "level": "confirmed-by-reasoning",
+          "evidence": "공개키 암호의 송신/수신 키 짝과 문제의 부호화·암호화 단계 설명 대조: 암호화, 개인키. 공식 문항별 채점기준은 미확인.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "원문 용어와 공개키 암호 기본 원리 대조",
+          "evidence": "㉠ 암호화, ㉡ 수신자 개인키 일치",
+          "limitation": "공식 채점자료 미확인; 중복 선행 검증과 구분하여 본 차수 요구조건 점검 기록",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
+        }
+      }
     },
     {
       "id": "2016-A-03",
@@ -1040,7 +1093,28 @@
           "atlasWidth": 4096,
           "atlasHeight": 9754
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "checkedAgainst": "original-question-pdf; independent computation",
+        "reviewedOn": "2026-11-10",
+        "officialAnswerConfirmed": false,
+        "continuationReview20261110": {
+          "level": "confirmed-by-execution",
+          "evidence": "C11 GCC 컴파일·실행: sub(5), sub(4) 출력 3 5; static 유지 및 홀수 항의 누적 합 독립 확인.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "C11 GCC 실행과 독립 추적",
+          "evidence": "정적 변수 s 누적으로 sub(5)=3, sub(4)=5; 출력 3 5",
+          "limitation": "원문 void main은 비표준 서명이므로 독립 실행은 int main으로 감싸서 동등한 호출부 확인",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
+        }
+      }
     },
     {
       "id": "2016-A-04",
@@ -1288,7 +1362,15 @@
         "confidence": "medium",
         "checkedAgainst": "원본 문제 PDF p.13 + 지정 당시 법령(제5·25·36·37·38조)",
         "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "question-text-legal-conditional",
+          "evidence": "2차적저작물 정의는 번역·편곡·변형·각색 등의 방법으로 원저작물을 바탕으로 새롭게 창작하는 것과 정합. 수업용 편집 사진의 합법성은 촬영자 권리, 이용 범위, 당시 저작권법의 교육목적 이용 요건, 출처 표시 및 이용 조건에 좌우되므로 무조건 합법·불법으로 단정 불가. 시험에 명시된 2013년 법률 기준을 먼저 확인해야 함.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -1861,9 +1943,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-and-independent-analysis",
-        "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
+        "officialAnswerConfirmed": false,
+        "reviewNote": "2026-11-11 추가 요구사항 대조: 서론·본론·결론 및 전개 과정-활동 대응을 확인. 문제 이해→해결 절차 설계→구현→검증/수정의 4단계가 문항에 주어진 계산적 사고·언어 문법 비중 제한·평가 방침에 부합한다. 반복문은 다음 차시 예고이므로 선행 학습을 전제하지 않음. / 유보: 다른 단계 구성도 논리적이면 허용될 수 있으며 공식 채점기준 부재"
       }
     },
     {
@@ -2238,7 +2321,15 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf-and-independent-analysis",
         "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "2015-curriculum-quoted-table",
+          "evidence": "문제에 인용된 중학교 추상화의 내용 요소는 문제 이해·핵심 요소 추출, 고등학교 추상화는 문제 분석·문제 분해와 모델링이므로 ㉠ 핵심 요소, ㉡ 문제 분해가 표의 문장과 일치. 알고리즘 분석 지도상 유의 사항은 복수의 적절한 서술이 가능해 공식 채점기준 확인 전 단일 문장 확정 불가.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -2506,9 +2597,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-and-independent-analysis",
-        "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
+        "officialAnswerConfirmed": false,
+        "reviewNote": "2026-11-11 추가 요구사항 대조: 요구한 동기유발 1개·자연어 외 알고리즘 표현 방법 1개·협동학습 활동 1개 및 이유 1개가 답안에 모두 등장함. 도입 동기유발과 본시 알고리즘 표현, 모둠 내 설명·수정이 학습 목표와 연결됨. / 유보: 순서도 또는 의사코드 등 복수 표현 가능; 공식 채점기준 부재"
       }
     },
     {
@@ -2813,10 +2905,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-visual-and-text",
-        "reviewedOn": "2026-11-05",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인"
+        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인\n2026-11-11 추가 요구사항 대조: 문항의 (나)④에 따라 상·중·하 모두 순차·선택·반복의 같은 세 구조를 평가함을 확인. 긍정형 수행 동사, 서론의 평가기준 필요성, 본론의 세 수준 및 이유·자동화 연결, 결론의 컴퓨팅 사고력 연결을 점검함. / 유보: 상·중·하 수행의 난이도와 각 배점의 인정 범위는 공식 채점기준 없이는 확정 불가"
       }
     },
     {
@@ -3460,10 +3552,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-visual-and-text",
-        "reviewedOn": "2026-11-05",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인"
+        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인\n2026-11-11 추가 요구사항 대조: 원문 1·3·5단계를 기준으로 ㉠은 주어진 코드 수정·보완, ㉡은 주어진 문제의 알고리즘 설계 및 프로그램 작성으로 점진적 자율성이 증가함을 재확인. 개인차 대응 수업 방법도 2개 제시됨. / 유보: 단계 2·4의 다른 적합한 실습 예시 및 교수학습방법 인정 범위는 복수 가능"
       }
     },
     {
@@ -3512,7 +3604,23 @@
           "evidence": "문제 표의 A→D,C→B 확인; ABC 후보키 AB,AC 도출",
           "officialAnswerConfirmed": false
         },
-        "reviewNote": "문제 표의 A→D,C→B 확인; ABC 후보키 AB,AC 도출; 공식 정답표 미확인."
+        "reviewNote": "문제 표의 A→D,C→B 확인; ABC 후보키 AB,AC 도출; 공식 정답표 미확인.",
+        "continuationReview20261110": {
+          "level": "conditional",
+          "evidence": "FD 폐포 독립 계산: AB+=ABCDE, AC+=ABCDE, A+=ADE, C+=BC, D+=DE. C→B인 ABC의 3NF 허용·BCNF 위반 확인. 교재/공식 정답 미확인.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 41,
+          "method": "Enumerated minimal superkeys via functional-attribute closure and lossless-join tableau chase",
+          "result": "후보키 AB, AC; 3NF ABC, AD, DE; BCNF AC, BC, AD, DE 분해 무손실 확인",
+          "qualification": "BCNF에서 일부 함수 종속의 보존 여부는 별도 조건",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
+        }
       }
     },
     {
@@ -3785,10 +3893,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-visual-and-text",
-        "reviewedOn": "2026-11-05",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인"
+        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인\n2026-11-11 추가 요구사항 대조: 서론의 2015 개정 변화, 본론의 지식정보처리와 정보기술활용·추상화·자동화 하위 요소 연계 및 이유, 타 교과 적용 예시, 결론의 정보교육 강화 방안이 문항 요구 순서대로 답변됨. / 유보: 공식 배점상 요구되는 하위 요소 개수는 별도 명시되지 않아 예시의 인정 범위 불명"
       }
     },
     {
@@ -4788,10 +4896,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf-visual-and-text",
-        "reviewedOn": "2026-11-05",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인"
+        "reviewNote": "작성 조건 대조 및 독립 서술형 예시 답안 검토; 공식 채점기준은 미확인\n2026-11-11 추가 요구사항 대조: 서론의 재구성 필요성 2개, 도입/전개/정리의 주제·학습 조직·평가 조건, 4개 성취기준과 교과 역량의 연계 및 이유, 결론의 재구성 유의점이 모두 포함됨. 2km 반경과 팀 프로젝트 조건도 유지됨. / 유보: 복수 적합 활동 가능; 실제 지도 데이터나 공식 채점기준을 검증한 것은 아님"
       }
     },
     {
@@ -5331,7 +5439,11 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf (text and diagram); independent reasoning",
         "reviewedOn": "2026-11-08",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "independentReviewDate": "2026-11-11",
+        "independentReviewFinding": "독립 도식 대조: 은행(강한 개체)–은행지점(약한 개체)의 식별 관계 1:N은 약한 개체의 외래키로 흡수한다. 은행–고객 가입 1:N도 외래키로 흡수한다. 은행지점–고객 대출 M:N 관계만 별도 릴레이션으로 만들며, 은행·은행지점·고객·대출의 총 4개이다. 은행지점 최소 키는 소유자 은행의 은행이름과 부분키 지점번호의 조합이다. 가입 관계의 차수(degree)는 2다.",
+        "independentReviewScope": "PDF diagram + stated requirements + relational mapping, independent diagram reasoning",
+        "independentReviewLimitations": "공식 채점기준 미확인. 대출 관계 속성의 별도 PK 설계 여부는 본 문항의 요구 답안에 포함되지 않는다."
       }
     },
     {
@@ -6451,7 +6563,20 @@
           "evidence": "속성 폐포 AC+=ABCDEFG, AE+=ABCDEFG; AC와 AE 모두 최소 후보키",
           "officialAnswerConfirmed": false
         },
-        "reviewNote": "속성 폐포 AC+=ABCDEFG, AE+=ABCDEFG; AC와 AE 모두 최소 후보키; 공식 정답표 미확인."
+        "reviewNote": "속성 폐포 AC+=ABCDEFG, AE+=ABCDEFG; AC와 AE 모두 최소 후보키; 공식 정답표 미확인.",
+        "independentReviewDate": "2026-11-10",
+        "independentReviewFinding": "2026-11-10 독립 함수 종속 폐포 재검산: AC+=ABCDEFG, AE+=ABCDEFG이며 A+와 E+는 전체가 아니므로 AC, AE 모두 최소 후보키. 문제의 AC만 후보키라는 조건과 충돌함. 5개 BCNF 무손실 분해의 가능한 예: (D,G),(B,D,F),(A,B),(E,C),(A,E). 분해 순서: R→ABDFG+ACE→DG+ABDF+ACE→DG+BDF+AB+ACE→DG+BDF+AB+EC+AE. 단 공식 채점기준 미대조.",
+        "independentReviewScope": "high-for-contradiction-only",
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 81,
+          "method": "Enumerated all candidate keys from explicitly supplied functional dependencies",
+          "result": "후보키 AC와 AE 모두 존재; 후보키 AC 하나뿐이라는 문제의 명세와 논리적으로 충돌",
+          "qualification": "원문 모순으로 BCNF 결과 개수를 공식 단일 정답으로 확정하지 않음",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
+        }
       },
       "reviewNote": "재검토 주의: 문제는 후보키를 (A,C) 하나라고 제시하지만, 주어진 AC→E와 E→C에 따르면 (A,E)도 모든 속성을 결정하는 최소 결정자여서 후보키가 된다. 따라서 문제의 후보키 1개 조건과 함수 종속 집합은 논리적으로 양립하기 어렵다. 위 1NF·5개 분해 답은 출제 조건을 우선하여 작성한 독립 풀이이며 공식 채점 의도를 확인하지 않았다."
     },
@@ -6838,6 +6963,19 @@
           "result": "초기 클록 포인터 미제시: 해답 비유일",
           "evidence": "프레임 [페이지3,1,0,6], 초기 참조 비트 1, 핸드 0/1/2/3으로 시뮬레이션 시 폴트 6/6/4/4회",
           "officialAnswerConfirmed": false
+        },
+        "independentReviewDate": "2026-11-10",
+        "independentReviewFinding": "2026-11-10 클록 독립 시뮬레이션: 시작 페이지 [3,1,0,6], 참조비트 모두 1 조건을 동일하게 놓고 초기 핸드 위치 0,1,2,3을 바꾸면 폴트 6,6,4,4회. ⑫ 직전 적재 페이지도 {0,3,6,8}, {0,1,6,8}, {0,4,6,8}, {0,4,6,8}로 차이. 따라서 기존 제시 수치의 유일성 입증 불가.",
+        "independentReviewScope": "high-for-underdetermination-only",
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 86,
+          "method": "Four deterministic second-chance simulations with same frames and initial reference bits, varying only starting clock hand",
+          "result": "초기 핸드 프레임 인덱스 0/1/2/3 → 폴트 6/6/4/4회; ⑫ 직전 집합도 상이",
+          "qualification": "참조비트 1 가정에도 초기 포인터 위치 미제시로 답안 비유일; 기존 6회는 가정적 결과",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
         }
       }
     },
@@ -7148,7 +7286,14 @@
         "confidence": "medium",
         "checkedAgainst": "원본 문제 PDF p.90 작성방법·수업 계획 대조",
         "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "review20261112": {
+          "date": "2026-11-12",
+          "method": "source-visual-pedagogy-terms",
+          "evidence": "원본 PDF 90쪽에서 ㉠ 복잡성 제거 및 모델 추출→추상화, ㉡ 추상화의 기법→문제 분해, ㉢ 분류 모델, ㉤ 수업 설계 제안임을 재확인. ㉤ 서술의 구체적 인정 범위는 공식 채점기준 없이는 확정 불가.",
+          "action": "verification-only",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -7605,10 +7750,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf",
-        "reviewedOn": "2026-11-05",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "원본 PDF 96쪽 대조. 과목 분류 자구알고→교교론 수정. 페퍼트 용어의 공식 표기는 미확인."
+        "reviewNote": "원본 PDF 96쪽 대조. 과목 분류 자구알고→교교론 수정. 페퍼트 용어의 공식 표기는 미확인.\n2026-11-11 추가 요구사항 대조: 원문이 요구한 구체적 사고/형식적(추상적) 사고, 짝 프로그래밍, 드라이버의 코드 작성·실행 및 내비게이터의 설계·오류 검토 역할이 기존 답안에 있음. 문항이 요구한 서술 범위와 대응함. / 유보: 교수학습 이론 용어의 허용 표현은 공식 채점기준에서 최종 확인 필요"
       }
     },
     {
@@ -7777,7 +7922,11 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf (text and diagram); independent reasoning",
         "reviewedOn": "2026-11-08",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "independentReviewDate": "2026-11-11",
+        "independentReviewFinding": "독립 도식 대조: 지점–부서 개설 1:N이므로 부서는 기존 3속성에 지점코드를 더해 차수 4. 지점의 위치는 이중 타원으로 표시된 다치 속성이므로 지점위치(지점코드, 위치) 별도 릴레이션을 만든다. 부서–직원 소속 1:N 관계의 발령일은 직원 릴레이션으로 흡수한다. 직원 자기참조 관리의 일반직원 N 측에 관리자직원코드 FK를 둔다. 정규화 미고려·최소 릴레이션 조건 부합.",
+        "independentReviewScope": "PDF diagram + stated requirements + relational mapping, independent diagram reasoning",
+        "independentReviewLimitations": "공식 채점기준 미확인. 지점위치 릴레이션 명칭 및 자기참조 FK 명칭은 조건에 별도 고정되지 않아 동등한 명칭 표기 가능."
       }
     },
     {
@@ -8400,7 +8549,11 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf (text and diagram); independent reasoning",
         "reviewedOn": "2026-11-08",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "independentReviewDate": "2026-11-11",
+        "independentReviewFinding": "독립 도식 대조: CR-01 동아리 동아리명 키와 가입비 속성; 학생–동아리 가입은 N:M이고 가입일은 관계 속성이다. EA-01 보호자는 학생번호와 보호자이름으로 식별하는 약한 개체이며 학생–보호자 1:N 식별 관계가 요구된다. 기존 학생 3속성과 학과 1:N 소속의 학과명 FK를 합쳐 학생 릴레이션 차수 4. 가입·보호자 관련 속성은 학생 릴레이션의 차수에 가산되지 않는다.",
+        "independentReviewScope": "PDF diagram + stated requirements + relational mapping, independent diagram reasoning",
+        "independentReviewLimitations": "공식 채점기준 미확인. E-R 그림 서술형이므로 동등한 도형 배치와 명칭 허용 범위는 공식 기준 없이 확정할 수 없다."
       }
     },
     {
@@ -8873,6 +9026,30 @@
           "result": "프로그램 흐름 독립 검토: 출력 및 UB 주의",
           "evidence": "4층 총 출력 숫자 16개 → n 재설정 1회; ㉠ 삭제 시 k 초기화 경로 소실",
           "officialAnswerConfirmed": false
+        },
+        "continuationReview20261110": {
+          "level": "conditional",
+          "evidence": "4층에서 숫자 출력 총합 1+3+5+7=16, 10 도달 시 리셋 1회. ㉠ 삭제 시 k 초기화 경로가 사라지는 경우 미정의 동작 가능성 유지.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 113,
+          "method": "Independently compiled C11 normal and both-loops-deleted variants using GCC; source control-flow and initialization audit for only-㉠-deleted variant",
+          "result": "3층 정상 출력 **0** / *123* / 45678, ㉠·㉢ 모두 제거 0 / 123 / 45678 확인",
+          "qualification": "㉠만 제거하면 첫 반복에 k 초기화가 사라지므로 ㉢의 k+=m에서 미초기화 읽기; 정의된 단일 출력 없음",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "원본 PDF p.113 코드 위치 및 C 식별자 초기화 규칙",
+          "evidence": "㉠은 별표 출력용 첫 for문 전체이므로 ㉠만 제거하면 첫 반복에서 k가 초기화되지 않은 상태로 ㉢의 k += m에 사용됨; 결과 비보장 확인",
+          "limitation": "시험이 특정 문자열 출력을 요구하더라도 C 표준상 미정의 동작은 고정 출력으로 확정 불가",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
         }
       }
     },
@@ -9016,7 +9193,118 @@
         "checkedAgainst": "original-question-pdf",
         "reviewedOn": "2026-11-05",
         "officialAnswerConfirmed": false,
-        "reviewNote": "독립 최소신장트리 계산 125, 제시 원시 정점 set_union 코드 문자 그대로 시뮬레이션 시 124의 비신장 결과. 공식 채점기준 미확인."
+        "reviewNote": "독립 최소신장트리 계산 125, 제시 원시 정점 set_union 코드 문자 그대로 시뮬레이션 시 124의 비신장 결과. 공식 채점기준 미확인.",
+        "followup20261111": {
+          "method": "original-PDF-p115-graph-and-code-visual-check; independent-implementation",
+          "correctMST": {
+            "weight": 125,
+            "connectedComponents": 1,
+            "edges": [
+              [
+                0,
+                1,
+                11
+              ],
+              [
+                2,
+                5,
+                12
+              ],
+              [
+                1,
+                2,
+                13
+              ],
+              [
+                4,
+                7,
+                14
+              ],
+              [
+                5,
+                8,
+                17
+              ],
+              [
+                3,
+                4,
+                18
+              ],
+              [
+                4,
+                5,
+                19
+              ],
+              [
+                3,
+                6,
+                21
+              ]
+            ]
+          },
+          "literalSuppliedAlgorithm": {
+            "weight": 124,
+            "connectedComponents": 2,
+            "edges": [
+              [
+                0,
+                1,
+                11
+              ],
+              [
+                2,
+                5,
+                12
+              ],
+              [
+                1,
+                2,
+                13
+              ],
+              [
+                4,
+                7,
+                14
+              ],
+              [
+                5,
+                8,
+                17
+              ],
+              [
+                3,
+                4,
+                18
+              ],
+              [
+                4,
+                5,
+                19
+              ],
+              [
+                0,
+                3,
+                20
+              ]
+            ],
+            "finalParent": [
+              0,
+              0,
+              1,
+              0,
+              3,
+              4,
+              6,
+              4,
+              5
+            ]
+          },
+          "criticalDifference": "set_union(parent,v,u)가 find_set으로 계산한 대표자 v_set,u_set 대신 원래 끝점 v,u를 연결하여 집합 대표자가 분리될 수 있음. 8개 간선 선택 시 정점 6이 고립됨.",
+          "earlyParentCheck": "e(2,5) 포함 직후 parent[1]=0, parent[5]=2",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false,
+          "confidenceChanged": false
+        }
       }
     },
     {
@@ -9781,7 +10069,15 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf",
         "reviewedOn": "2026-10-19",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "question-diagram-conditional",
+          "evidence": "전문가 집단으로 이동하여 학습하는 ㉠은 Jigsaw I·II 공통, 개인별 점수 ㉡도 공통으로 설명 가능. 향상점수·모둠별 점수는 Jigsaw II의 평가 요소로 구별. 깊이우선탐색 DFS의 한쪽 경로 우선·막히면 되돌아옴은 문항 설명과 일치. ㉥ 탐색 방문 순서는 PDF 상태공간 트리의 인접 관계를 기준으로 하므로 기존 A→B→D→C→E→F를 유지하며 공식 정답은 미확인.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -9873,7 +10169,35 @@
           "atlasWidth": 4096,
           "atlasHeight": 11690
         }
-      ]
+      ],
+      "verification": {
+        "independentReviewDate": "2026-11-10",
+        "independentReviewFinding": "2026-11-10 PDF 문항 요구조건 재검토: 단일 멘토 조건에서는 사번→이름·연락처·멘토사번·평가부서, 프로젝트명→예산의 부분종속이 존재하며 제거 후 2NF. 다중 멘토 변경 시 (사번,프로젝트명,멘토사번)은 자연스러운 최소 키 후보이나 연락처 유일성, 멘토별 부서 유일성 역함수 등이 주어지지 않아 구별되는 후보키 두 개를 확정할 수 없음. 답안 보류 유지.",
+        "independentReviewScope": "high-for-underdetermination-only",
+        "officialAnswerConfirmed": false,
+        "followup20261111": {
+          "method": "original-PDF-p127-text-and-visual-check; exhaustive-FD-closure; minimal-superkey-search",
+          "status": "pending-retained",
+          "firstPartialDependencyExamples": [
+            "사번 → 이름",
+            "프로젝트명 → 예산"
+          ],
+          "secondNormalForm": "2NF (after removal of partial dependencies)",
+          "multiMentorFDs": [
+            "사번→이름,연락처",
+            "프로젝트명→예산",
+            "멘토사번→평가부서"
+          ],
+          "uniqueMinimalCandidateKeyUnderGivenFDs": "(사번, 프로젝트명, 멘토사번)",
+          "minimalCandidateKeyCount": 1,
+          "missingSecondKey": "문항은 후보키 2개를 요청하지만 주어진 조건에서 서로 다른 최소 후보키 2개가 함의되지 않음. 평가부서는 멘토별 부서이므로 멘토사번을 역결정하지 않음.",
+          "schemaCaveat": "기존 PRIMARY KEY(사번, 프로젝트명)는 동일 직원·프로젝트의 복수 멘토 행을 저장할 수 없어 다중 멘토 요구와 양립하기 어려움. 가상 스키마 변경 또는 분해 전제가 추가로 필요함.",
+          "conditionalCounterexample": "같은 사번 E1·프로젝트 P1에 멘토 M1,M2가 있고 둘 다 평가부서 D1인 경우 (사번,프로젝트명,평가부서)는 유일하지 않음.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false,
+          "reasonForNoFinalAnswer": "3번째 소문항에 필요한 제2 후보키를 문제 조건만으로 정할 수 없음; 부분정답은 감사 기록에 보존."
+        }
+      }
     },
     {
       "id": "2024-B-08",
@@ -10287,8 +10611,8 @@
       ],
       "title": "(가)는 예비 교사가 새로운 교육과정을 적용한 시범ㆍ실습 수업을 계획하기 위해 교육과정 중 정보 수업과 관련된 핵심 개념과 내용 요소 등을 분석한 결과이다.",
       "text": "(가)는 예비 교사가 새로운 교육과정을 적용한 시범ㆍ실습 수업을\n계획하기 위해 교육과정 중 정보 수업과 관련된 핵심 개념과 내용\n요소 등을 분석한 결과이다. (나)는 예비 교사가 분석한 (가)\n내용에 대해 예비 교사와 지도 교사가 나눈 대화이다. <조건>을\n고려하여 <작성 방법>에 따라 서술하시오. [4점]\n(가)\n㉠ ㉡\n핵심\n개념\n내용 요소\n범주\n구분\n내용 요소\n프\n로\n그\n래\n밍\n∙프로그램 개발 환경\n∙변수와 자료형\n∙연산자\n∙표준입출력과\n파일입출력\n∙중첩 제어 구조\n∙배열\n∙함수\n∙프로그래밍 응용\n지식\n․\n이해\n∙문제 추상화\n∙알고리즘 표현 방법\n∙순차적인 데이터 저장\n∙논리 연산\n∙중첩 제어 구조\n∙함수와 디버깅\n(나)\n<조 건>\n◦ ㉠은 2015 개정 정보과 교육과정(교육부 고시 제2020-236호)에\n제시된 ‘문제해결과 프로그래밍’ 영역에 대한 내용 체계의\n일부이다.\n◦ ㉡은 2022 개정 정보과 교육과정(교육부 고시 제2022-33호)에\n제시된 ‘알고리즘과 프로그래밍’ 영역에 대한 내용 체계의\n일부이다.\n<작성 방법>\n◦ (가)에서 ㉠과 ㉡에 제시된 내용 요소에 해당하는 학교급을\n각각 쓸 것.\n◦ (나)의 ⓐ와 같이 말한 이유를 2015 개정 정보과 교육과정과\n2022 개정 정보과 교육과정의 성취기준 해설에 근거하여\n각각 서술할 것.",
-      "answer": "㉠ 고등학교, ㉡ 중학교. ㉢에 대한 지도: 2015 개정 고등학교 「배열」은 텍스트 기반 프로그램에서 동일 자료형 데이터를 배열로 묶어 선언·접근·처리하는 학습을 포함한다. 반면 2022 개정 중학교 「순차적인 데이터 저장」은 여러 데이터를 순서대로 저장·활용하는 기본 원리와 문제 해결을 학생 수준에서 경험하는 내용이므로, 동일한 범위·난이도의 배열 문법을 가르치기보다 저장 원리를 이해하고 간단한 자료를 처리하는 활동을 설계한다.",
-      "solution": "(가)에서 프로그램 개발 환경·파일 입출력·배열·함수 등을 묶은 핵심 개념 표는 2015 개정 고등학교 정보과 「프로그래밍」 내용 체계다. 「문제 추상화/순차적인 데이터 저장/논리 연산/중첩 제어 구조/함수와 디버깅」을 지식·이해로 제시한 표는 2022 개정 중학교 정보과다. (나)의 교사는 명칭이 유사하다고 과거 고등학교 배열 단원을 중학교 수준에 그대로 적용하는 것을 경계한다.",
+      "answer": "㉠ 고등학교, ㉡ 중학교. 2015 개정 고등학교 정보의 「배열」은 동일한 자료형의 여러 값을 배열로 저장하고 원소를 접근·처리하는 프로그래밍 학습을 포함한다. 2022 개정 중학교 정보의 「순차적인 데이터 저장」은 데이터를 순서대로 저장·접근·활용하는 원리를 학생 수준에서 이해하고 적용하는 내용으로, 고등학교의 배열 문법·활용 범위를 그대로 요구하지 않는다.",
+      "solution": "(가)의 ㉠은 프로그램 개발 환경, 파일 입출력, 배열, 함수 등이 제시된 2015 개정 고등학교 정보의 「프로그래밍」 내용체계이다. ㉡은 문제 추상화, 순차적인 데이터 저장, 논리 연산, 중첩 제어 구조 등이 제시된 2022 개정 중학교 정보의 「알고리즘과 프로그래밍」 내용체계이다. (나)의 예비 교사는 「배열」과 「순차적인 데이터 저장」을 같다고 보아 동일하게 가르치려 하지만, 두 교육과정의 학교급과 성취기준 해설에 따른 학습 범위는 다르다. 2015 개정 고등학교는 배열의 자료형·인덱스 활용을 포함한 텍스트 기반 프로그래밍을, 2022 개정 중학교는 순차적인 저장의 기본 원리와 활용을 학생 수준에서 다루는 차이가 있다. 문항의 답변은 ㉠·㉡의 학교급을 순서대로 쓰고 교육과정별 이유를 각각 설명해야 한다. 이전 답안에 등장하던 ㉢은 이 문항의 작성 방법에 없는 표기이므로 제거했다. 원본 기출 PDF 132쪽 확인. 공식 채점기준 미확인.",
       "solutionStatus": "solved",
       "source": {
         "file": "전공 기출_260921_105741.pdf",
@@ -10323,7 +10647,14 @@
         "confidence": "medium",
         "checkedAgainst": "original-question-pdf",
         "reviewedOn": "2026-10-19",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "review20261112": {
+          "date": "2026-11-12",
+          "method": "source-visual-school-level-and-answer-label",
+          "evidence": "원본 PDF 132쪽에서 작성 방법은 ㉠·㉡ 각각의 학교급과 2015/2022 교육과정 성취기준 해설에 근거한 이유를 요구한다. 기존 답안의 ㉢ 표기는 원문 출제 조건에 없으므로 삭제하고 답변을 요구 순서로 정리. 공식 성취기준 해설을 별도 HWP와 전수 비교한 것은 아님.",
+          "action": "answer-and-solution-corrected",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -10382,8 +10713,8 @@
       ],
       "title": "다음은 피지컬 컴퓨팅 수업 상황이다.",
       "text": "다음은 피지컬 컴퓨팅 수업 상황이다. <조건>을 고려하여 <작성\n방법>에 따라 서술하시오. [4점]\n교 사 : 자! 여러분, 오늘은 피지컬 컴퓨팅이 생활 속에서\n적용되는 사례를 구현할 거예요. 주위가 어두워지면,\n현관의 불이 자동으로 켜지는 피지컬 컴퓨팅 시스템을\n만들어 봅시다. 입력 포트에는 빛의 밝기를 입력받을\n수 있는 ( ㉠ )을/를 연결하고, 밝기 정도를 ( ㉡ )에서\n처리하여 판단하고, 어두워지면 LED가 켜지도록\n하드웨어를 연결해 봅시다.\n예시\n선생님이 [아두이노 보드]와 [브레드 보드]에 회로를\n미리 구성해 보았어요. 입력 포트는 아날로그 A0 포트로\n하고 LED는 디지털 10번 포트에 연결합니다. 이제\nLED도 연결해볼까요?\n학생 A : 연결해 보겠습니다.\n교 사 : 이제 하드웨어를 동작시키는 소프트웨어를 작성하기\n전에 자연어로 알고리즘을 적어 봅시다.\n학생 A : 선생님, 이렇게 만들었습니다.\n만약 [주위가 어두워지면]\n[LED가 켜진다]\n아니면\n[LED가 꺼진다]\n교 사 : 네. 잘 했어요. 이제 컴퓨터에서 하드웨어를 구동시킬\n프로그램을 작성하고 실행해서 LED가 켜지는지 확인해\n봅시다.\n학생 B : 선생님! 저는 자연어로 만든 알고리즘에 따라 다음과\n같이 코드를 작성하고, 컴퓨터와 아두이노 보드도 연결\n해서 실행했는데 ⓐ출력 포트에 연결한 LED가 제 것만\n켜지지 않아요.\n...\nvoid loop() {\nif (analogRead(A0) < 512)\ndigitalWrite(10, LOW);\n...\nelse\ndigitalWrite(10, LOW);\n...\n}\n교 사 : 자! 어디 한번 볼까요?\n<조 건>\n◦ [아두이노 보드]와 [브레드 보드]를 포함한 부품과 전선 등은\n불량이 없다.\n◦ 아두이노를 작동시키는 데 필요한 입출력 포트 설정 등 관련된\n코드는 모두 포함된 것으로 가정한다.\n<작성 방법>\n◦ ㉠과 ㉡에 들어갈 용어를 순서대로 쓸 것.\n◦ ⓐ의 상황을 해결하기 위한 교사의 피드백을 코드 수정과 회로\n점검 관점에서 1가지씩 서술할 것.",
-      "answer": "㉠ 조도 센서(빛 센서), ㉡ 마이크로컨트롤러. 코드 수정 피드백: 주변이 어두워 `analogRead(A0) < 512`인 분기에서는 `digitalWrite(10, HIGH);`로 변경해 LED가 켜지도록 한다. 회로 점검 피드백: LED의 양극·음극이 올바른 방향으로 연결되고, D10–저항–LED–GND가 끊김 없는 회로를 구성하는지 브레드보드의 동일 노드·전선·삽입 위치를 확인한다.",
-      "solution": "㉠은 조도 센서(광 센서), ㉡은 마이크로컨트롤러로 해석된다. 아날로그 입력 A0의 값으로 밝기를 측정하고 마이크로컨트롤러가 비교 연산을 수행한 다음 디지털 출력 10번 포트에서 LED를 제어한다. 제시 코드에서는 밝기가 기준보다 낮은 조건(analogRead(A0) < 512)과 그 외 경우 모두 digitalWrite(10, LOW)이므로 조건에 따라 LED의 출력 상태가 달라지지 않는다. LED를 HIGH일 때 켜지도록 배선한 경우에는 어두운 분기를 digitalWrite(10, HIGH)로 수정하고 밝은 분기를 LOW로 유지한다. 회로 측면에서는 LED의 극성과 직렬 저항, 10번 핀과 GND의 연결, 브레드보드의 열·행 연결 관계를 확인해야 한다. 정확한 점등 레벨(HIGH/LOW)은 LED 배선 방식에 의존하므로 하드웨어 연결과 일치하는지를 확인하는 것이 중요하다.",
+      "answer": "㉠ 조도 센서(빛 센서), ㉡ 마이크로컨트롤러. 코드 수정: 두 분기 모두 LOW를 출력하는 오류를 수정해 밝기 조건에 따라 서로 다른 레벨을 출력한다. 예를 들어 LED가 D10에서 전류를 공급받는 능동 HIGH 배선이라면 어두운 경우 digitalWrite(10, HIGH);, 밝은 경우 digitalWrite(10, LOW);로 한다. 회로 점검: LED의 극성, 직렬 저항과 D10·GND 또는 전원 연결, 브레드보드 접점 및 점퍼선의 실제 도통 여부를 확인한다. LED가 능동 LOW 배선인 경우 출력값은 반대로 설정한다.",
+      "solution": "㉠은 조도 센서(광 센서), ㉡은 마이크로컨트롤러이다. 제시 코드의 if와 else가 모두 digitalWrite(10, LOW)이므로 어두움 판정에 따라 출력 상태가 변하지 않는다. **회로의 LED 연결 방식이 주어지지 않으면 LOW 자체가 항상 소등을 의미한다고 일반화할 수 없다.** D10→저항→LED→GND처럼 출력 핀이 전류를 공급하는 능동 HIGH 구성이라면 어두울 때 HIGH, 밝을 때 LOW로 수정한다. 반대로 전원→저항→LED→D10처럼 핀이 전류를 흡수하는 능동 LOW 구성이라면 어두울 때 LOW, 밝을 때 HIGH가 된다. 원본 그림에는 브레드보드 연결과 LED 부품이 함께 나타나므로 LED의 극성, 실제 삽입된 노드, 직렬 저항, 전원·접지 연결을 확인하도록 하는 회로 점검 피드백이 타당하다. 그림이 어느 출력 레벨에서 켜지도록 최종 완성되었는지 단정하기보다 코드 논리와 실제 배선의 일치를 확인한다. 원본 기출 PDF 133쪽 대조. 공식 채점기준 미확인.",
       "solutionStatus": "solved",
       "source": {
         "file": "전공 기출_260921_105741.pdf",
@@ -10419,7 +10750,22 @@
         "checkedAgainst": "original-question-pdf",
         "reviewedOn": "2026-11-05",
         "officialAnswerConfirmed": false,
-        "reviewNote": "PDF 133쪽 코드 조건 및 아두이노 입력·출력 검토. 활성 HIGH 여부는 LED 실제 배선에 좌우됨."
+        "reviewNote": "PDF 133쪽 코드 조건 및 아두이노 입력·출력 검토. 활성 HIGH 여부는 LED 실제 배선에 좌우됨.",
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "arduino-logic-and-wiring-conditional",
+          "evidence": "원본 문제의 조건 analogRead(A0)<512가 참일 때 LED가 켜져야 하므로, 예시처럼 LED 양극이 제어 핀에 연결되는 능동 HIGH 배선이라면 해당 분기를 digitalWrite(10,HIGH)로 바꾸는 것이 타당. 그러나 공통 전원에 연결된 능동 LOW 배선에서는 LOW가 점등 신호일 수 있어 출력 논리만으로 회로 오배선을 단정해서는 안 됨. 회로 방향·저항·접속 상태 확인은 별도의 요구 답안.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        },
+        "review20261112": {
+          "date": "2026-11-12",
+          "method": "source-visual-active-level-dependence",
+          "evidence": "원본 PDF 133쪽에서 if/else 모두 LOW임을 확인. 출력 논리의 결함은 확정적이나 어떤 값이 점등인지는 LED 연결 방향에 의존함. 회로는 LED 극성·접점·저항·출력핀/전원 연결 점검이 핵심. 조건부 HIGH/LOW를 답안에 직접 명시.",
+          "action": "answer-and-solution-qualified",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -10467,6 +10813,19 @@
           "basis": "question PDF visual comparison + independent calculation / semantic reasoning",
           "result": "TCP 그림 시간축·RTO 검산 일치",
           "evidence": "Seq101 t10 → ACK301 t13 RTTM3; RTO6, t19 만료, 재전송 Seq301, 백오프 RTO12",
+          "officialAnswerConfirmed": false
+        },
+        "continuationReview20261110": {
+          "level": "conditional",
+          "evidence": "기록된 시간축 t10~t13 RTT 3초 → RTO 6초, 재전송 지수 백오프 12초 계산 재점검. 그림 자체와 공식 채점기준 추가 검증 필요.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "review20261112": {
+          "date": "2026-11-12",
+          "method": "source-visual-tcp-time-axis",
+          "evidence": "원본 PDF 134쪽 그림에서 t10 Seq101, t13 ACK301/Seq301, t15 B가 Seq301 수신, ACK401이 t21에 A 도착한다. t13 RTT 3초, RTO 6초, t19 타임아웃, Seq301 재전송, 재전송 RTO 12초 계산과 일치. 공식 채점기준 미확인.",
+          "action": "verification-only",
           "officialAnswerConfirmed": false
         }
       }
@@ -10790,7 +11149,15 @@
         "checkedAgainst": "original-question-pdf",
         "reviewedOn": "2026-11-05",
         "officialAnswerConfirmed": false,
-        "reviewNote": "PDF 138쪽의 평가 체크리스트·성취기준 조건 대조. 공식 채점기준 대조는 미완료."
+        "reviewNote": "PDF 138쪽의 평가 체크리스트·성취기준 조건 대조. 공식 채점기준 대조는 미완료.",
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "checklist-competency-mapping",
+          "evidence": "문제의 탐색기반 알고리즘 체크리스트 1·2에 공통으로 들어가는 대상은 상태 공간. [12정과03-04]에 연계되는 부분 문제 분할·결과 결합은 분할정복, [12정과03-05]의 중복 부분 문제 결과 저장은 동적 계획법과 정합. ㉡ 평가 항목은 학습 목표·내용 요소인 알고리즘 복잡도 평가가 드러나야 하나 표현은 다양할 수 있음.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -10843,7 +11210,15 @@
         "confidence": "medium",
         "checkedAgainst": "원본 문제 PDF p.139, 학생 A/B 코드 독립 검산",
         "reviewedOn": "2026-11-05",
-        "officialAnswerConfirmed": false
+        "officialAnswerConfirmed": false,
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "scoring-rubric-logic",
+          "evidence": "평가기준을 학생과 함께 구성하는 ㉠은 문항의 평가 방향 서술과 정합. 3점(중첩 구조 사용·전체 출력), 0점(미사용·출력 실패)의 양 극단 사이 2점(중첩 사용·출력 실패), 1점(중첩 미사용·전체 출력)으로 나눈 기존 루브릭과 모순 없음. B학생에 대한 피드백은 출력 결과만이 아니라 중첩 반복문의 구조적 적용을 구분해야 함.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        }
       }
     },
     {
@@ -11160,7 +11535,21 @@
           "atlasWidth": 4096,
           "atlasHeight": 11687
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "officialAnswerConfirmed": false,
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "question-stem-semantics",
+          "evidence": "문항 (가)의 디지털 공간 사이버폭력 문제와 ‘(㉠) 의식’은 디지털 윤리 의식, (나)의 창작 그림에 관한 권리 주체 질문은 저작권으로 해석되어 기존 ㉠ 디지털 윤리, ㉡ 저작권과 일치. 다만 공식 2022 교육과정 원문과 공인 채점기준을 직접 대조하지 않은 독립 문맥 검토이므로 고신뢰 확정은 보류.",
+          "conclusion": "no-confirmed-answer-change",
+          "officialAnswerConfirmed": false
+        },
+        "reviewedOn": "2026-11-10"
+      }
     },
     {
       "id": "2026-A-02",
@@ -11196,7 +11585,30 @@
           "atlasWidth": 4096,
           "atlasHeight": 11687
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "checkedAgainst": "original-question-pdf; independent computation",
+        "reviewedOn": "2026-11-10",
+        "officialAnswerConfirmed": false,
+        "continuationReview20261110": {
+          "level": "partial",
+          "evidence": "기준주소 1000 + 변위 1200 = 유효주소 2200 독립 산술 검산. 서브루틴 마이크로동작 ②→①→③은 현재 풀이 유지하되 그림·공식 채점기준 확인 전 확정 보류.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "independentCalculationFollowup20261111": {
+          "source": "사용자 제공 전공 기출_260921_105741.pdf",
+          "pdfPage": 144,
+          "method": "Independent address arithmetic plus register-transfer dependency ordering",
+          "result": "유효주소 1000+1200=2200; PC를 BR에 보존한 다음 ②→①→③의 의존관계 유지",
+          "qualification": "원본 문항의 모든 숨은 실행 환경을 실기 테스트한 결과는 아니며 공식 채점기준 미확인",
+          "answerChanged": false,
+          "officialAnswerConfirmed": false,
+          "confidenceChanged": false
+        }
+      }
     },
     {
       "id": "2026-A-03",
@@ -11272,7 +11684,28 @@
           "atlasWidth": 4096,
           "atlasHeight": 11687
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "checkedAgainst": "original-question-pdf; independent computation",
+        "reviewedOn": "2026-11-10",
+        "officialAnswerConfirmed": false,
+        "continuationReview20261110": {
+          "level": "confirmed-by-simulation",
+          "evidence": "EDF 이벤트 단위 1ms 독립 시뮬레이션: 두 번째 P2 작업 시작 55ms, 완료 95ms; P1 t60 선점 및 t75 재개 확인.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "이벤트 기반 선점 EDF 재시뮬레이션",
+          "evidence": "P2 두 번째 작업 구간 55~60 및 75~95, 시작 55ms 완료 95ms",
+          "limitation": "마감 시각 및 동률 해석은 제시 조건 따름",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
+        }
+      }
     },
     {
       "id": "2026-A-05",
@@ -11351,7 +11784,28 @@
           "atlasWidth": 4096,
           "atlasHeight": 11687
         }
-      ]
+      ],
+      "verification": {
+        "status": "derived",
+        "confidence": "medium",
+        "checkedAgainst": "original-question-pdf; independent computation",
+        "reviewedOn": "2026-11-10",
+        "officialAnswerConfirmed": false,
+        "continuationReview20261110": {
+          "level": "confirmed-by-execution",
+          "evidence": "C11 GCC 구현 실행: 정적 변수 문제와 별도로 부울곱 A⊙B, B⊙A 첫 행 출력 각각 0 1 확인; 논리곱 &&, 누적 ||, 0 초기화 검산.",
+          "officialAnswerConfirmed": false,
+          "answerChanged": false
+        },
+        "stage2FocusedReview20261112": {
+          "date": "2026-11-12",
+          "method": "3x3 부울곱 이중 루프 독립 계산",
+          "evidence": "A⊙B 첫 행 (0,0,1), B⊙A 첫 행 (0,1,1); 모두 printf 0 1, 초기화 des[i][j]=0 필수",
+          "limitation": "제시된 논리연산 &&, || 기준 확인",
+          "result": "answer-retained",
+          "officialAnswerConfirmed": false
+        }
+      }
     },
     {
       "id": "2026-A-07",
@@ -11443,6 +11897,14 @@
           "basis": "question PDF visual comparison + independent calculation / semantic reasoning",
           "result": "플래그 검산, 긴급 포인터 해석 주의",
           "evidence": "3-way handshake 공통 SYN, 즉시 전달 PSH, 긴급 URG; TCP urgent pointer는 긴급 경계 상대 오프셋",
+          "officialAnswerConfirmed": false
+        },
+        "followupReview": {
+          "date": "2026-11-10",
+          "basis": "source-PDF text/visual check + independent logical consistency review",
+          "method": "tcp-standard-qualification",
+          "evidence": "SYN은 3-way handshake 첫 두 단계의 공통 플래그, PSH는 대기 없이 전달 지시, URG는 긴급 포인터 유효 지시이므로 제어 플래그 답은 논리적으로 지지됨. 긴급 포인터는 TCP 표준상 긴급 데이터의 경계/끝을 지시하는 상대 오프셋으로 해석 차이가 있을 수 있어 현재 12500을 공식 확정 정답으로 승격하지 않음. 그림 시간축과 공식 채점기준의 추가 대조 필요.",
+          "conclusion": "no-confirmed-answer-change",
           "officialAnswerConfirmed": false
         }
       }
@@ -11908,10 +12370,10 @@
       "verification": {
         "status": "derived",
         "confidence": "medium",
-        "checkedAgainst": "original-question-pdf",
-        "reviewedOn": "2026-10-20",
+        "checkedAgainst": "provided-original-question-pdf-and-explicit-requirements-audit",
+        "reviewedOn": "2026-11-11",
         "officialAnswerConfirmed": false,
-        "reviewNote": "고아/좀비 상황의 가능한 한 가지 실행 순서를 구성했다. 상태와 직전 실행 라인의 다른 합당한 조합이 가능한지 공식 채점기준 대조 필요."
+        "reviewNote": "고아/좀비 상황의 가능한 한 가지 실행 순서를 구성했다. 상태와 직전 실행 라인의 다른 합당한 조합이 가능한지 공식 채점기준 대조 필요.\n2026-11-11 추가 요구사항 대조: 고아 예시는 부모가 11번까지 종료된 사이 자식은 5번 이후 준비 상태인 스케줄이며 문제의 고아 정의와 일치. 좀비 예시는 자식이 11번까지 종료되고 부모가 8번 wait 호출 전에 준비 상태인 스케줄로 구성되어 정의와 일치. 원문은 오류 없음·고아 재부모화 없음으로 한정됨. / 유보: 두 상태 조합은 가능한 한 가지 스케줄에 불과함. 상태도 그림의 정확한 상태명과 공식 채점기준에 따른 다른 정답 허용 여부 미확정"
       }
     },
     {

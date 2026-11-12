@@ -1833,3 +1833,84 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 .daily-review-process-text{min-width:0;line-height:2.4;word-break:keep-all;overflow-wrap:break-word}
 .daily-review-process-input{display:inline-block;vertical-align:middle;width:clamp(105px,16vw,190px);max-width:100%;min-height:37px;padding:7px 9px;margin:2px 3px;border-radius:7px;font-size:12.5px}
 @media(max-width:600px){.daily-review-process-input{width:min(136px,46vw);font-size:12px}}
+
+/* 2026-11-11 — process/function retry cards ONLY.
+   Keep all other retry card geometry and grading visuals unchanged. */
+@media (min-width:761px){
+  .retry-dock:has(> .retry-process-bundle-card.expanded){
+    width:min(700px, calc(100vw - 24px));
+  }
+  .retry-dock .retry-process-bundle-card.expanded{
+    width:min(690px, calc(100vw - 30px));
+  }
+}
+@media (max-width:760px){
+  .retry-dock:has(> .retry-process-bundle-card.expanded){
+    width:min(100vw - 12px, 560px);
+  }
+  .retry-dock .retry-process-bundle-card.expanded{width:100%}
+}
+.retry-dock .retry-process-bundle-card .practical-retry-panel{
+  padding:17px 19px 15px;
+}
+.retry-dock .retry-process-bundle-card .practical-retry-prompt{
+  margin:5px 0 12px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--muted);
+}
+.retry-dock .retry-process-bundle-card .retry-process-lines{
+  display:grid;
+  gap:0;
+  max-height:min(47dvh,470px);
+  overflow-y:auto;
+  padding:0;
+}
+.retry-dock .retry-process-bundle-card .retry-process-line{
+  display:grid;
+  grid-template-columns:25px minmax(0,1fr);
+  column-gap:11px;
+  align-items:start;
+  padding:11px 3px;
+  border-bottom:1px solid var(--line);
+}
+.retry-dock .retry-process-bundle-card .retry-process-line:first-child{padding-top:5px}
+.retry-dock .retry-process-bundle-card .retry-process-line:last-child{border-bottom:0;padding-bottom:6px}
+.retry-dock .retry-process-bundle-card .retry-process-number{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  width:23px;height:23px;
+  margin-top:5px;padding:0;
+  border-radius:7px;
+  background:var(--surface, #f2f5f2);
+  color:var(--muted);
+  font-size:12px;font-weight:700;
+}
+.retry-dock .retry-process-bundle-card .retry-process-text{
+  min-width:0;
+  line-height:2.05;
+  font-size:14px;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.retry-dock .retry-process-bundle-card input.retry-process-input{
+  display:inline-block;
+  box-sizing:border-box;
+  width:clamp(105px, 17vw, 188px);
+  max-width:calc(100% - 7px);
+  min-width:75px;
+  height:38px;min-height:38px;
+  padding:6px 9px;
+  margin:3px 3px 3px 2px;
+  border-radius:8px;
+  vertical-align:middle;
+  font-size:13px;
+  line-height:1.3;
+}
+@media(max-width:760px){
+  .retry-dock .retry-process-bundle-card .practical-retry-panel{padding:14px 14px 12px}
+  .retry-dock .retry-process-bundle-card .retry-process-line{column-gap:7px;padding:9px 1px}
+  .retry-dock .retry-process-bundle-card .retry-process-text{font-size:13px}
+  .retry-dock .retry-process-bundle-card input.retry-process-input{width:clamp(95px, 31vw, 160px)}
+}

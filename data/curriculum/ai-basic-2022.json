@@ -138,14 +138,6 @@
             ],
             "blankCount": 1,
             "basis": "exam focus atomic review"
-          },
-          {
-            "setId": "AI-22-GEN-CH-01-FOCUS-3",
-            "unitIds": [
-              "AI-22-GEN-CH-01-PU-04"
-            ],
-            "blankCount": 1,
-            "basis": "exam focus atomic review"
           }
         ],
         "practicalSets": [],
@@ -572,14 +564,6 @@
             "basis": "exam focus atomic review"
           },
           {
-            "setId": "AI-22-GEN-CH-04-FOCUS-2",
-            "unitIds": [
-              "AI-22-GEN-CH-04-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "exam focus atomic review"
-          },
-          {
             "setId": "AI-22-GEN-CH-04-FOCUS-3",
             "unitIds": [
               "AI-22-GEN-CH-04-PU-05"
@@ -707,14 +691,6 @@
             "setId": "AI-22-GEN-CH-05-FOCUS-2",
             "unitIds": [
               "AI-22-GEN-CH-05-PU-01-SEG02"
-            ],
-            "blankCount": 1,
-            "basis": "exam focus atomic review"
-          },
-          {
-            "setId": "AI-22-GEN-CH-05-FOCUS-3",
-            "unitIds": [
-              "AI-22-GEN-CH-05-PU-03"
             ],
             "blankCount": 1,
             "basis": "exam focus atomic review"
@@ -6610,9 +6586,9 @@
           },
           {
             "unitId": "AI-22-ML-ST-05-PU-03",
-            "text": "활용 분야를 탐색",
+            "text": "활용 분야",
             "start": 40,
-            "end": 49,
+            "end": 45,
             "unitType": "semantic-phrase",
             "sourceKeywordIds": [
               "AI-22-ML-ST-05-K03"
@@ -9516,23 +9492,6 @@
             "evidenceQuestionIds": []
           },
           {
-            "unitId": "AI-22-PJ-ST-01-PU-02",
-            "text": "인공지능",
-            "start": 30,
-            "end": 34,
-            "unitType": "semantic-phrase",
-            "sourceKeywordIds": [
-              "AI-22-PJ-ST-01-K02"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "sourceFaithful": true,
-            "presentationBasis": "LONG_ANSWER_SEMANTIC_SPLIT_20261110",
-            "priorityBasis": "CONSERVATIVE_CURRICULUM_STRUCTURE",
-            "evidenceQuestionIds": []
-          },
-          {
             "unitId": "AI-22-PJ-ST-01-PU-03",
             "text": "적합한 주제를 도출",
             "start": 69,
@@ -9555,14 +9514,6 @@
             "setId": "AI-22-PJ-ST-01-FOCUS-1",
             "unitIds": [
               "AI-22-PJ-ST-01-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "exam focus atomic review"
-          },
-          {
-            "setId": "AI-22-PJ-ST-01-FOCUS-2",
-            "unitIds": [
-              "AI-22-PJ-ST-01-PU-02"
             ],
             "blankCount": 1,
             "basis": "exam focus atomic review"

@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-11",
+  "project": "CurriLoop",
+  "phase": "2/5 기출 정답·해설 검증 진행",
+  "basePatch": "CurriLoop_stage2_exam_rubric_review_20261111.zip",
+  "questionCount": 269,
+  "focusedItems": 6,
+  "answersChanged": 0,
+  "solutionsChanged": 0,
+  "officialAnswerConfirmed": 0,
+  "confidenceElevated": 0,
+  "findings": {
+    "2014-B-02": {
+      "page": 7,
+      "method": "Enumerated minimal superkeys via functional-attribute closure and lossless-join tableau chase",
+      "result": "후보키 AB, BC; BCNF 최종 BDF, DE, AB, AC 분해 무손실 확인",
+      "qualification": "BC→A의 종속성 보존은 별개이며 모든 FD의 보존을 보장하지 않음"
+    },
+    "2018-B-02": {
+      "page": 41,
+      "method": "Enumerated minimal superkeys via functional-attribute closure and lossless-join tableau chase",
+      "result": "후보키 AB, AC; 3NF ABC, AD, DE; BCNF AC, BC, AD, DE 분해 무손실 확인",
+      "qualification": "BCNF에서 일부 함수 종속의 보존 여부는 별도 조건"
+    },
+    "2021-B-02": {
+      "page": 81,
+      "method": "Enumerated all candidate keys from explicitly supplied functional dependencies",
+      "result": "후보키 AC와 AE 모두 존재; 후보키 AC 하나뿐이라는 문제의 명세와 논리적으로 충돌",
+      "qualification": "원문 모순으로 BCNF 결과 개수를 공식 단일 정답으로 확정하지 않음"
+    },
+    "2021-B-10": {
+      "page": 86,
+      "method": "Four deterministic second-chance simulations with same frames and initial reference bits, varying only starting clock hand",
+      "result": "초기 핸드 프레임 인덱스 0/1/2/3 → 폴트 6/6/4/4회; ⑫ 직전 집합도 상이",
+      "qualification": "참조비트 1 가정에도 초기 포인터 위치 미제시로 답안 비유일; 기존 6회는 가정적 결과"
+    },
+    "2023-B-08": {
+      "page": 113,
+      "method": "Independently compiled C11 normal and both-loops-deleted variants using GCC; source control-flow and initialization audit for only-㉠-deleted variant",
+      "result": "3층 정상 출력 **0** / *123* / 45678, ㉠·㉢ 모두 제거 0 / 123 / 45678 확인",
+      "qualification": "㉠만 제거하면 첫 반복에 k 초기화가 사라지므로 ㉢의 k+=m에서 미초기화 읽기; 정의된 단일 출력 없음"
+    },
+    "2026-A-02": {
+      "page": 144,
+      "method": "Independent address arithmetic plus register-transfer dependency ordering",
+      "result": "유효주소 1000+1200=2200; PC를 BR에 보존한 다음 ②→①→③의 의존관계 유지",
+      "qualification": "원본 문항의 모든 숨은 실행 환경을 실기 테스트한 결과는 아니며 공식 채점기준 미확인"
+    }
+  },
+  "limitations": [
+    "공식 정답 또는 채점기준과 대조하지 않음",
+    "미확정 문항을 단일 확정 답으로 강제하지 않음",
+    "이전 집중 검토 이력과 중복될 수 있으므로 누적 검토 문항 수 단순 합산 금지"
+  ],
+  "nextStages": [
+    "2/5 나머지 기출 검증",
+    "3/5 공식 교육과정 HWP 대조",
+    "4/5 브라우저 통합 테스트",
+    "5/5 배포 패치 제작"
+  ]
+}

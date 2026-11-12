@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-11",
+  "stage": "2/5 - exam answer and explanation verification",
+  "batch": "ER diagram and relational mapping independent verification",
+  "inputPatch": "CurriLoop_stage2_independent_calculation_followup_20261111.zip",
+  "scope": [
+    {
+      "id": "2020-A-12",
+      "pdfPage": 66,
+      "finding": "독립 도식 대조: 은행(강한 개체)–은행지점(약한 개체)의 식별 관계 1:N은 약한 개체의 외래키로 흡수한다. 은행–고객 가입 1:N도 외래키로 흡수한다. 은행지점–고객 대출 M:N 관계만 별도 릴레이션으로 만들며, 은행·은행지점·고객·대출의 총 4개이다. 은행지점 최소 키는 소유자 은행의 은행이름과 부분키 지점번호의 조합이다. 가입 관계의 차수(degree)는 2다.",
+      "limitation": "공식 채점기준 미확인. 대출 관계 속성의 별도 PK 설계 여부는 본 문항의 요구 답안에 포함되지 않는다."
+    },
+    {
+      "id": "2022-B-08",
+      "pdfPage": 98,
+      "finding": "독립 도식 대조: 지점–부서 개설 1:N이므로 부서는 기존 3속성에 지점코드를 더해 차수 4. 지점의 위치는 이중 타원으로 표시된 다치 속성이므로 지점위치(지점코드, 위치) 별도 릴레이션을 만든다. 부서–직원 소속 1:N 관계의 발령일은 직원 릴레이션으로 흡수한다. 직원 자기참조 관리의 일반직원 N 측에 관리자직원코드 FK를 둔다. 정규화 미고려·최소 릴레이션 조건 부합.",
+      "limitation": "공식 채점기준 미확인. 지점위치 릴레이션 명칭 및 자기참조 FK 명칭은 조건에 별도 고정되지 않아 동등한 명칭 표기 가능."
+    },
+    {
+      "id": "2023-A-10",
+      "pdfPage": 107,
+      "finding": "독립 도식 대조: CR-01 동아리 동아리명 키와 가입비 속성; 학생–동아리 가입은 N:M이고 가입일은 관계 속성이다. EA-01 보호자는 학생번호와 보호자이름으로 식별하는 약한 개체이며 학생–보호자 1:N 식별 관계가 요구된다. 기존 학생 3속성과 학과 1:N 소속의 학과명 FK를 합쳐 학생 릴레이션 차수 4. 가입·보호자 관련 속성은 학생 릴레이션의 차수에 가산되지 않는다.",
+      "limitation": "공식 채점기준 미확인. E-R 그림 서술형이므로 동등한 도형 배치와 명칭 허용 범위는 공식 기준 없이 확정할 수 없다."
+    }
+  ],
+  "results": {
+    "reviewed": 3,
+    "answersChanged": 0,
+    "solutionsChanged": 0,
+    "confidenceChanged": 0,
+    "questionCount": 269,
+    "high": 230,
+    "medium": 38,
+    "pending": 1,
+    "officialMarkingCriteriaVerified": false
+  },
+  "preservation": "All question content, solutions, IDs, solutionStatus, source pages and non-target items unchanged. Updated verification metadata only.",
+  "next": "Continue medium/pending problem verification, especially 2024-B-07; then curriculum HWP audit, browser integration test and final deployment patch."
+}

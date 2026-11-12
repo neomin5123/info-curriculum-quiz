@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-10",
+  "scope": "기출 위험 문항 표적 검증 1차",
+  "totalQuestions": 269,
+  "solutionRegistered": 268,
+  "pending": 1,
+  "reviewedIds": [
+    "2014-A-08",
+    "2021-B-02",
+    "2021-B-10",
+    "2023-B-11",
+    "2024-B-07",
+    "2025-A-09",
+    "2026-B-03"
+  ],
+  "independentProofs": {
+    "2021-B-02": {
+      "candidateKeys": [
+        "AC",
+        "AE"
+      ],
+      "BCNFWitness": [
+        "DG",
+        "BDF",
+        "AB",
+        "EC",
+        "AE"
+      ],
+      "finding": "문항의 후보키 단일성 진술과 FD 충돌"
+    },
+    "2021-B-10": {
+      "assumption": "초기 페이지 [3,1,0,6], 초기 비트 모두 1",
+      "faultCountByInitialHand": [
+        6,
+        6,
+        4,
+        4
+      ],
+      "finding": "초기 핸드 미지정으로 정답 비유일"
+    },
+    "2024-B-07": {
+      "firstPart": "사번→이름 등, 프로젝트명→예산",
+      "secondPart": "2NF",
+      "thirdPart": "요구사항에서 서로 다른 후보키 두 개를 확정할 근거 부족",
+      "disposition": "pending 유지"
+    }
+  },
+  "crossChecks": {
+    "2014-A-08": "SQL 별칭 충돌 관련 실행상 주의 이미 기존 해설에 존재",
+    "2023-B-11": "주어진 집합 병합 코드와 표준 Kruskal 결과 구분 메모 기존 보존",
+    "2025-A-09": "RTO 6→12초 독립 산술 결과 일치; 그림은 별도 공식 채점기준 미확인",
+    "2026-B-03": "차분 220 발생 위치 3·4 계산 일치"
+  },
+  "limitations": [
+    "공식 정답 및 채점기준 미제공으로 공식 정답 확인은 수행 불가",
+    "전체 269문항 개별 재검증이 아닌 7문항 표적 검증",
+    "2024-B-07 완전한 채점답안 미확정",
+    "실제 배포 URL 브라우저 E2E 미실시",
+    "기존 validate-exam-answers.mjs의 2014-B-05 역사적 해시 불일치가 수정 전에도 존재"
+  ],
+  "unchangedFields": [
+    "id",
+    "year",
+    "part",
+    "question",
+    "text",
+    "answer",
+    "solution",
+    "solutionStatus",
+    "images",
+    "source"
+  ]
+}

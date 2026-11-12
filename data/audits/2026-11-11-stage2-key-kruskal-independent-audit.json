@@ -1,0 +1,151 @@
+{
+  "date": "2026-11-11",
+  "stage": "2/5 exam independent verification",
+  "basedOn": "CurriLoop_stage2_er_diagram_followup_20261111.zip",
+  "reviewed": [
+    "2024-B-07",
+    "2023-B-11"
+  ],
+  "2024-B-07": {
+    "method": "original-PDF-p127-text-and-visual-check; exhaustive-FD-closure; minimal-superkey-search",
+    "status": "pending-retained",
+    "firstPartialDependencyExamples": [
+      "사번 → 이름",
+      "프로젝트명 → 예산"
+    ],
+    "secondNormalForm": "2NF (after removal of partial dependencies)",
+    "multiMentorFDs": [
+      "사번→이름,연락처",
+      "프로젝트명→예산",
+      "멘토사번→평가부서"
+    ],
+    "uniqueMinimalCandidateKeyUnderGivenFDs": "(사번, 프로젝트명, 멘토사번)",
+    "minimalCandidateKeyCount": 1,
+    "missingSecondKey": "문항은 후보키 2개를 요청하지만 주어진 조건에서 서로 다른 최소 후보키 2개가 함의되지 않음. 평가부서는 멘토별 부서이므로 멘토사번을 역결정하지 않음.",
+    "schemaCaveat": "기존 PRIMARY KEY(사번, 프로젝트명)는 동일 직원·프로젝트의 복수 멘토 행을 저장할 수 없어 다중 멘토 요구와 양립하기 어려움. 가상 스키마 변경 또는 분해 전제가 추가로 필요함.",
+    "conditionalCounterexample": "같은 사번 E1·프로젝트 P1에 멘토 M1,M2가 있고 둘 다 평가부서 D1인 경우 (사번,프로젝트명,평가부서)는 유일하지 않음.",
+    "officialAnswerConfirmed": false,
+    "answerChanged": false,
+    "reasonForNoFinalAnswer": "3번째 소문항에 필요한 제2 후보키를 문제 조건만으로 정할 수 없음; 부분정답은 감사 기록에 보존."
+  },
+  "2023-B-11": {
+    "method": "original-PDF-p115-graph-and-code-visual-check; independent-implementation",
+    "correctMST": {
+      "weight": 125,
+      "connectedComponents": 1,
+      "edges": [
+        [
+          0,
+          1,
+          11
+        ],
+        [
+          2,
+          5,
+          12
+        ],
+        [
+          1,
+          2,
+          13
+        ],
+        [
+          4,
+          7,
+          14
+        ],
+        [
+          5,
+          8,
+          17
+        ],
+        [
+          3,
+          4,
+          18
+        ],
+        [
+          4,
+          5,
+          19
+        ],
+        [
+          3,
+          6,
+          21
+        ]
+      ]
+    },
+    "literalSuppliedAlgorithm": {
+      "weight": 124,
+      "connectedComponents": 2,
+      "edges": [
+        [
+          0,
+          1,
+          11
+        ],
+        [
+          2,
+          5,
+          12
+        ],
+        [
+          1,
+          2,
+          13
+        ],
+        [
+          4,
+          7,
+          14
+        ],
+        [
+          5,
+          8,
+          17
+        ],
+        [
+          3,
+          4,
+          18
+        ],
+        [
+          4,
+          5,
+          19
+        ],
+        [
+          0,
+          3,
+          20
+        ]
+      ],
+      "finalParent": [
+        0,
+        0,
+        1,
+        0,
+        3,
+        4,
+        6,
+        4,
+        5
+      ]
+    },
+    "criticalDifference": "set_union(parent,v,u)가 find_set으로 계산한 대표자 v_set,u_set 대신 원래 끝점 v,u를 연결하여 집합 대표자가 분리될 수 있음. 8개 간선 선택 시 정점 6이 고립됨.",
+    "earlyParentCheck": "e(2,5) 포함 직후 parent[1]=0, parent[5]=2",
+    "officialAnswerConfirmed": false,
+    "answerChanged": false,
+    "confidenceChanged": false
+  },
+  "assumptions": "2024 FD enumeration includes only explicitly implied functional dependencies; no guessed inverse uniqueness constraints. 2023 graph weights and function transcribed visually from provided original PDF.",
+  "officialAnswerSheetObtained": false,
+  "counts": {
+    "all": 269,
+    "solved": 268,
+    "pending": 1
+  },
+  "noAnswerOrSolutionModified": true,
+  "next": "Continue remaining medium confidence targeted verification; official curriculum HWP comparison stage 3 follows stage 2."
+}

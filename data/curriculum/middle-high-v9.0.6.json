@@ -4292,9 +4292,9 @@
         "units": [
           {
             "unitId": "MI-01-CS-PF-01-PU-01",
-            "text": "구성요소를 파악하고,",
+            "text": "구성요소",
             "start": 9,
-            "end": 20,
+            "end": 13,
             "unitType": "phrase",
             "sourceKeywordIds": [
               "MI-01-CS-PF-01-K01"
@@ -11474,14 +11474,6 @@
         ],
         "coreSets": [
           {
-            "setId": "MI-03-CS-KI-01-PC-01",
-            "unitIds": [
-              "MI-03-CS-KI-01-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "MI-03-CS-KI-01-PC-02",
             "unitIds": [
               "MI-03-CS-KI-01-PU-02"
@@ -11494,10 +11486,9 @@
           {
             "setId": "MI-03-CS-KI-01-PP-01",
             "unitIds": [
-              "MI-03-CS-KI-01-PU-01",
               "MI-03-CS-KI-01-PU-02"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -11868,14 +11859,6 @@
             "basis": "single presentation unit"
           },
           {
-            "setId": "MI-03-CS-KI-02-PC-02",
-            "unitIds": [
-              "MI-03-CS-KI-02-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "MI-03-CS-KI-02-PC-03",
             "unitIds": [
               "MI-03-CS-KI-02-PU-03"
@@ -11888,10 +11871,9 @@
           {
             "setId": "MI-03-CS-KI-02-PP-01",
             "unitIds": [
-              "MI-03-CS-KI-02-PU-01",
-              "MI-03-CS-KI-02-PU-02"
+              "MI-03-CS-KI-02-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
@@ -11905,20 +11887,18 @@
           {
             "setId": "MI-03-CS-KI-02-PP-03",
             "unitIds": [
-              "MI-03-CS-KI-02-PU-02",
               "MI-03-CS-KI-02-PU-03"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "MI-03-CS-KI-02-PP-04",
             "unitIds": [
               "MI-03-CS-KI-02-PU-01",
-              "MI-03-CS-KI-02-PU-02",
               "MI-03-CS-KI-02-PU-03"
             ],
-            "blankCount": 3,
+            "blankCount": 2,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -15677,14 +15657,6 @@
         ],
         "coreSets": [
           {
-            "setId": "MI-03-AC-EX-01-PC-01",
-            "unitIds": [
-              "MI-03-AC-EX-01-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "MI-03-AC-EX-01-PC-03",
             "unitIds": [
               "MI-03-AC-EX-01-PU-03"
@@ -15702,14 +15674,6 @@
           }
         ],
         "practicalSets": [
-          {
-            "setId": "MI-03-AC-EX-01-PP-01",
-            "unitIds": [
-              "MI-03-AC-EX-01-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "representative pair/triple; no exhaustive combinations"
-          },
           {
             "setId": "MI-03-AC-EX-01-PP-02",
             "unitIds": [
@@ -15730,10 +15694,9 @@
           {
             "setId": "MI-03-AC-EX-01-PP-04",
             "unitIds": [
-              "MI-03-AC-EX-01-PU-01",
               "MI-03-AC-EX-01-PU-03"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -34841,22 +34804,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "LONG_ANSWER_SEMANTIC_SPLIT_20261110"
-          },
-          {
-            "unitId": "HI-02-AC-ST-02-PU-02-SEG02",
-            "text": "사례",
-            "start": 51,
-            "end": 53,
-            "unitType": "phrase",
-            "sourceKeywordIds": [
-              "HI-02-AC-ST-02-K03"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "LONG_ANSWER_SEMANTIC_SPLIT_20261110"
           }
         ],
         "coreSets": [
@@ -34875,14 +34822,6 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-02-AC-ST-02-CS-LONG-01",
-            "unitIds": [
-              "HI-02-AC-ST-02-PU-02-SEG02"
-            ],
-            "blankCount": 1,
-            "basis": "semantic split of long answer; single target"
           }
         ],
         "practicalSets": [
@@ -37022,51 +36961,23 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-CS-KI-01-PC-02",
-            "unitIds": [
-              "HI-03-CS-KI-01-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-CS-KI-01-PC-03",
-            "unitIds": [
-              "HI-03-CS-KI-01-PU-03"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
           {
             "setId": "HI-03-CS-KI-01-PP-01",
             "unitIds": [
-              "HI-03-CS-KI-01-PU-01",
-              "HI-03-CS-KI-01-PU-02"
+              "HI-03-CS-KI-01-PU-01"
             ],
-            "blankCount": 2,
-            "basis": "representative pair/triple; no exhaustive combinations"
-          },
-          {
-            "setId": "HI-03-CS-KI-01-PP-02",
-            "unitIds": [
-              "HI-03-CS-KI-01-PU-02",
-              "HI-03-CS-KI-01-PU-03"
-            ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-CS-KI-01-PP-03",
             "unitIds": [
-              "HI-03-CS-KI-01-PU-01",
-              "HI-03-CS-KI-01-PU-02",
-              "HI-03-CS-KI-01-PU-03"
+              "HI-03-CS-KI-01-PU-01"
             ],
-            "blankCount": 3,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -37283,14 +37194,6 @@
             "basis": "single presentation unit"
           },
           {
-            "setId": "HI-03-CS-KI-02-PC-02",
-            "unitIds": [
-              "HI-03-CS-KI-02-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "HI-03-CS-KI-02-PC-03",
             "unitIds": [
               "HI-03-CS-KI-02-PU-03"
@@ -37303,29 +37206,26 @@
           {
             "setId": "HI-03-CS-KI-02-PP-01",
             "unitIds": [
-              "HI-03-CS-KI-02-PU-01",
-              "HI-03-CS-KI-02-PU-02"
+              "HI-03-CS-KI-02-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-CS-KI-02-PP-02",
             "unitIds": [
-              "HI-03-CS-KI-02-PU-02",
               "HI-03-CS-KI-02-PU-03"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-CS-KI-02-PP-03",
             "unitIds": [
               "HI-03-CS-KI-02-PU-01",
-              "HI-03-CS-KI-02-PU-02",
               "HI-03-CS-KI-02-PU-03"
             ],
-            "blankCount": 3,
+            "blankCount": 2,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -39713,14 +39613,6 @@
         ],
         "coreSets": [
           {
-            "setId": "HI-03-AC-ST-03-PC-01",
-            "unitIds": [
-              "HI-03-AC-ST-03-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "HI-03-AC-ST-03-PC-02",
             "unitIds": [
               "HI-03-AC-ST-03-PU-02"
@@ -39741,10 +39633,9 @@
           {
             "setId": "HI-03-AC-ST-03-PP-01",
             "unitIds": [
-              "HI-03-AC-ST-03-PU-01",
               "HI-03-AC-ST-03-PU-02"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
@@ -39759,11 +39650,10 @@
           {
             "setId": "HI-03-AC-ST-03-PP-03",
             "unitIds": [
-              "HI-03-AC-ST-03-PU-01",
               "HI-03-AC-ST-03-PU-02",
               "HI-03-AC-ST-03-PU-03"
             ],
-            "blankCount": 3,
+            "blankCount": 2,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -39857,22 +39747,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
-            "unitId": "HI-03-AC-ST-04-PU-03",
-            "text": "프로그램을 작성",
-            "start": 42,
-            "end": 50,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-04-K01"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
           }
         ],
         "coreSets": [
@@ -39891,14 +39765,6 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-04-PC-03",
-            "unitIds": [
-              "HI-03-AC-ST-04-PU-03"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
@@ -39914,20 +39780,18 @@
           {
             "setId": "HI-03-AC-ST-04-PP-02",
             "unitIds": [
-              "HI-03-AC-ST-04-PU-02",
-              "HI-03-AC-ST-04-PU-03"
+              "HI-03-AC-ST-04-PU-02"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-AC-ST-04-PP-03",
             "unitIds": [
               "HI-03-AC-ST-04-PU-01",
-              "HI-03-AC-ST-04-PU-02",
-              "HI-03-AC-ST-04-PU-03"
+              "HI-03-AC-ST-04-PU-02"
             ],
-            "blankCount": 3,
+            "blankCount": 2,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -40004,22 +39868,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
-            "unitId": "HI-03-AC-ST-05-PU-02",
-            "text": "프로그램을 작성",
-            "start": 29,
-            "end": 37,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-05-K01"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
           }
         ],
         "coreSets": [
@@ -40030,24 +39878,15 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-05-PC-02",
-            "unitIds": [
-              "HI-03-AC-ST-05-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
           {
             "setId": "HI-03-AC-ST-05-PP-01",
             "unitIds": [
-              "HI-03-AC-ST-05-PU-01",
-              "HI-03-AC-ST-05-PU-02"
+              "HI-03-AC-ST-05-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -40138,22 +39977,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
-            "unitId": "HI-03-AC-ST-06-PU-02",
-            "text": "프로그램을 작성",
-            "start": 27,
-            "end": 35,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-06-K01"
-            ],
-            "stage3RGrades": [
-              "S"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
           }
         ],
         "coreSets": [
@@ -40164,24 +39987,15 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-06-PC-02",
-            "unitIds": [
-              "HI-03-AC-ST-06-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
           {
             "setId": "HI-03-AC-ST-06-PP-01",
             "unitIds": [
-              "HI-03-AC-ST-06-PU-01",
-              "HI-03-AC-ST-06-PU-02"
+              "HI-03-AC-ST-06-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -40274,22 +40088,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
-            "unitId": "HI-03-AC-ST-07-PU-03",
-            "text": "프로그램을 작성",
-            "start": 32,
-            "end": 40,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-07-K01"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
           }
         ],
         "coreSets": [
@@ -40308,14 +40106,6 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-07-PC-03",
-            "unitIds": [
-              "HI-03-AC-ST-07-PU-03"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
@@ -40331,20 +40121,18 @@
           {
             "setId": "HI-03-AC-ST-07-PP-02",
             "unitIds": [
-              "HI-03-AC-ST-07-PU-02",
-              "HI-03-AC-ST-07-PU-03"
+              "HI-03-AC-ST-07-PU-02"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-AC-ST-07-PP-03",
             "unitIds": [
               "HI-03-AC-ST-07-PU-01",
-              "HI-03-AC-ST-07-PU-02",
-              "HI-03-AC-ST-07-PU-03"
+              "HI-03-AC-ST-07-PU-02"
             ],
-            "blankCount": 3,
+            "blankCount": 2,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -40421,22 +40209,6 @@
             "directHistoricalEvidence": [],
             "sourceFaithful": true,
             "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
-            "unitId": "HI-03-AC-ST-08-PU-02",
-            "text": "프로그램을 작성",
-            "start": 36,
-            "end": 44,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-08-K01"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
           }
         ],
         "coreSets": [
@@ -40447,24 +40219,15 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-08-PC-02",
-            "unitIds": [
-              "HI-03-AC-ST-08-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
           {
             "setId": "HI-03-AC-ST-08-PP-01",
             "unitIds": [
-              "HI-03-AC-ST-08-PU-01",
-              "HI-03-AC-ST-08-PU-02"
+              "HI-03-AC-ST-08-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -40594,22 +40357,6 @@
         "version": "semantic-fifth-pass-2026-11-10",
         "units": [
           {
-            "unitId": "HI-03-AC-ST-09-PU-02",
-            "text": "문제 해결",
-            "start": 28,
-            "end": 33,
-            "unitType": "term",
-            "sourceKeywordIds": [
-              "HI-03-AC-ST-09-K01"
-            ],
-            "stage3RGrades": [
-              "A"
-            ],
-            "directHistoricalEvidence": [],
-            "sourceFaithful": true,
-            "presentationBasis": "EXPERT_GRANULARITY_OVERRIDE"
-          },
-          {
             "unitId": "HI-03-AC-ST-09-PU-03",
             "text": "협력적으로 설계⋅구현",
             "start": 44,
@@ -40628,22 +40375,6 @@
         ],
         "coreSets": [
           {
-            "setId": "HI-03-AC-ST-09-PC-01",
-            "unitIds": [
-              "HI-03-AC-ST-09-PU-01"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-03-AC-ST-09-PC-02",
-            "unitIds": [
-              "HI-03-AC-ST-09-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
-          },
-          {
             "setId": "HI-03-AC-ST-09-PC-03",
             "unitIds": [
               "HI-03-AC-ST-09-PU-03"
@@ -40654,31 +40385,19 @@
         ],
         "practicalSets": [
           {
-            "setId": "HI-03-AC-ST-09-PP-01",
-            "unitIds": [
-              "HI-03-AC-ST-09-PU-01",
-              "HI-03-AC-ST-09-PU-02"
-            ],
-            "blankCount": 2,
-            "basis": "representative pair/triple; no exhaustive combinations"
-          },
-          {
             "setId": "HI-03-AC-ST-09-PP-02",
             "unitIds": [
-              "HI-03-AC-ST-09-PU-02",
               "HI-03-AC-ST-09-PU-03"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           },
           {
             "setId": "HI-03-AC-ST-09-PP-03",
             "unitIds": [
-              "HI-03-AC-ST-09-PU-01",
-              "HI-03-AC-ST-09-PU-02",
               "HI-03-AC-ST-09-PU-03"
             ],
-            "blankCount": 3,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],
@@ -43882,8 +43601,8 @@
         "units": [
           {
             "unitId": "HI-04-CS-PF-01-PU-01",
-            "text": "서비스에서 지능 에이전트",
-            "start": 10,
+            "text": "지능 에이전트",
+            "start": 16,
             "end": 23,
             "unitType": "phrase",
             "sourceKeywordIds": [
@@ -45586,24 +45305,15 @@
             ],
             "blankCount": 1,
             "basis": "single presentation unit"
-          },
-          {
-            "setId": "HI-04-AC-CO-01-PC-02",
-            "unitIds": [
-              "HI-04-AC-CO-01-PU-02"
-            ],
-            "blankCount": 1,
-            "basis": "single presentation unit"
           }
         ],
         "practicalSets": [
           {
             "setId": "HI-04-AC-CO-01-PP-01",
             "unitIds": [
-              "HI-04-AC-CO-01-PU-01",
-              "HI-04-AC-CO-01-PU-02"
+              "HI-04-AC-CO-01-PU-01"
             ],
-            "blankCount": 2,
+            "blankCount": 1,
             "basis": "representative pair/triple; no exhaustive combinations"
           }
         ],

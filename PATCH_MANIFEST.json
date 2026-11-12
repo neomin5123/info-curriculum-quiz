@@ -1,0 +1,48 @@
+{
+  "project": "CurriLoop",
+  "base": "user-uploaded info-curriculum-quiz-main.zip",
+  "baseBuild": "2026.10.27-53",
+  "stage": "Stage 2 complete internally; Stage 3 next",
+  "includedPatches": [
+    "CurriLoop_integrated_stage1_regression_20261111.zip",
+    "CurriLoop_stage2_exam_rubric_review_20261111.zip",
+    "CurriLoop_stage2_independent_calculation_followup_20261111.zip",
+    "CurriLoop_stage2_er_diagram_followup_20261111.zip",
+    "CurriLoop_stage2_pending_key_and_kruskal_audit_20261111.zip",
+    "CurriLoop_stage2_semantic_answer_corrections_20261112.zip",
+    "CurriLoop_stage2_medium_triage_and_recheck_20261112.zip",
+    "CurriLoop_stage2_final_internal_audit_20261112.zip"
+  ],
+  "changedFiles": [
+    "assets/css/app.css",
+    "data/audits/2026-11-10-exam-continuation-9-review.json",
+    "data/audits/2026-11-10-exam-evidence-followup.json",
+    "data/audits/2026-11-10-exam-targeted-review.json",
+    "data/audits/2026-11-10-exam-targeted-review.md",
+    "data/audits/2026-11-11-stage2-er-diagram-review.json",
+    "data/audits/2026-11-11-stage2-focused-rubric-review.json",
+    "data/audits/2026-11-11-stage2-independent-calculation-followup.json",
+    "data/audits/2026-11-11-stage2-key-kruskal-independent-audit.json",
+    "data/audits/2026-11-12-stage2-final-audit.json",
+    "data/audits/2026-11-12-stage2-medium-triage.json",
+    "data/audits/2026-11-12-stage2-semantic-answer-corrections.json",
+    "data/curriculum/ai-basic-2022.json",
+    "data/curriculum/data-science-2022-PREVIEW.json",
+    "data/curriculum/middle-high-v9.0.6.json",
+    "data/exams/major-exams-2014-2026.json",
+    "data/generated/ai-basic-data.js",
+    "data/generated/data-science-data.js",
+    "data/generated/exam-data.js",
+    "data/generated/study-data.js",
+    "index.html",
+    "js/app.js"
+  ],
+  "examCount": 269,
+  "solved": 268,
+  "pending": 1,
+  "notes": [
+    "This is a cumulative delta against user-provided Build 53; not a full project archive.",
+    "Original exam source text and the 7 conditional/problematic items remain in the prior reviewed state; no new grading UI was added.",
+    "Official HWP comparison, browser end-to-end test, and final deployment remain outstanding."
+  ]
+}

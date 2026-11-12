@@ -1,0 +1,3560 @@
+{
+  "type": "stage2-final-internal-audit-and-disposition",
+  "auditDate": "2026-11-12",
+  "sourcePatch": "CurriLoop_stage2_medium_triage_and_recheck_20261112.zip",
+  "scope": {
+    "questions": 269,
+    "solved": 268,
+    "pending": 1,
+    "sourcePdfPages": 157,
+    "questionImageCrops": 337,
+    "yearAtlasFiles": 12,
+    "internalHigh": 230,
+    "medium": 38,
+    "officialConfirmed": 0
+  },
+  "qualityChecks": {
+    "uniqueIds": "pass",
+    "idYearPartQuestionConsistency": "pass",
+    "requiredQuestionFields": "pass",
+    "solvedAnswerSolutionNonempty": "pass",
+    "pendingAnswerSolutionEmpty": "pass",
+    "questionPdfSourcePageInRange": "pass",
+    "imageCropInsideAtlas": "pass",
+    "atlasFilesPresentAndRealDimensionsMatch": "pass",
+    "mediumTriageExhaustive": "pass",
+    "sourceExtractTextSampleMatch": "pass",
+    "unresolvedAutomatedStructuralErrors": 0,
+    "unresolvedAutomatedStructuralWarnings": 0
+  },
+  "triageClasses": {
+    "internally-high-derived": 230,
+    "computed-but-official-unconfirmed": 12,
+    "rubric-or-curriculum-dependent": 20,
+    "technical-ambiguity": 6,
+    "pending-insufficient-determinacy": 1
+  },
+  "technicalAndPendingCaseIds": [
+    "2021-B-02",
+    "2021-B-10",
+    "2023-B-08",
+    "2023-B-11",
+    "2024-B-07",
+    "2025-A-08",
+    "2026-A-08"
+  ],
+  "dispositionPolicy": {
+    "retained": "기존 문항 정답·해설·검증 데이터 그대로 유지",
+    "pending": "2024-B-07 계속 보류; 임의 두 번째 후보키 생성 금지",
+    "qualified": "기술적 모호성 6문항은 조건부 해설 유지",
+    "official": "사용자 제공 PDF는 문제지이며 공식 채점기준이 아님; 공식 확인 0건. High=공식 인증 아님",
+    "next": "교육과정 공식 문서 원문 대조(3단계), 브라우저 통합 테스트(4단계), 배포(5단계)"
+  },
+  "allQuestions": [
+    {
+      "id": "2014-A-01",
+      "sourcePages": [
+        1
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-02",
+      "sourcePages": [
+        1
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-03",
+      "sourcePages": [
+        2
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-04",
+      "sourcePages": [
+        2
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-05",
+      "sourcePages": [
+        2
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-06",
+      "sourcePages": [
+        2
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-07",
+      "sourcePages": [
+        3
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-08",
+      "sourcePages": [
+        3
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-09",
+      "sourcePages": [
+        4
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-10",
+      "sourcePages": [
+        4
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-11",
+      "sourcePages": [
+        5
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-12",
+      "sourcePages": [
+        5
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-13",
+      "sourcePages": [
+        6
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-A-14",
+      "sourcePages": [
+        6
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2014-B-01",
+      "sourcePages": [
+        7
+      ],
+      "subject": "소공",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-B-02",
+      "sourcePages": [
+        7
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2014-B-03",
+      "sourcePages": [
+        8
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-B-04",
+      "sourcePages": [
+        8
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2014-B-05",
+      "sourcePages": [
+        9
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2014-B-06",
+      "sourcePages": [
+        9
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2016-A-01",
+      "sourcePages": [
+        10
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-02",
+      "sourcePages": [
+        10
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2016-A-03",
+      "sourcePages": [
+        10
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2016-A-04",
+      "sourcePages": [
+        11
+      ],
+      "subject": "소공",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-05",
+      "sourcePages": [
+        11
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-06",
+      "sourcePages": [
+        12
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-07",
+      "sourcePages": [
+        12
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-08",
+      "sourcePages": [
+        13
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-09",
+      "sourcePages": [
+        13
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2016-A-10",
+      "sourcePages": [
+        14
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-11",
+      "sourcePages": [
+        14
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-12",
+      "sourcePages": [
+        15
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-13",
+      "sourcePages": [
+        15
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-A-14",
+      "sourcePages": [
+        16
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-01",
+      "sourcePages": [
+        17
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-02",
+      "sourcePages": [
+        18
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-03",
+      "sourcePages": [
+        18
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-04",
+      "sourcePages": [
+        19
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-05",
+      "sourcePages": [
+        19
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-06",
+      "sourcePages": [
+        20
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-07",
+      "sourcePages": [
+        20
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2016-B-08",
+      "sourcePages": [
+        21
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2017-A-01",
+      "sourcePages": [
+        22
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-02",
+      "sourcePages": [
+        22
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-03",
+      "sourcePages": [
+        23
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-04",
+      "sourcePages": [
+        23
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-05",
+      "sourcePages": [
+        24
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-06",
+      "sourcePages": [
+        24
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-07",
+      "sourcePages": [
+        25
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-08",
+      "sourcePages": [
+        25
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-09",
+      "sourcePages": [
+        25
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2017-A-10",
+      "sourcePages": [
+        26
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-11",
+      "sourcePages": [
+        26
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-12",
+      "sourcePages": [
+        27
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-13",
+      "sourcePages": [
+        27
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-A-14",
+      "sourcePages": [
+        28
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-01",
+      "sourcePages": [
+        29
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2017-B-02",
+      "sourcePages": [
+        30
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-03",
+      "sourcePages": [
+        30
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-04",
+      "sourcePages": [
+        31
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-05",
+      "sourcePages": [
+        31
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-06",
+      "sourcePages": [
+        32
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-07",
+      "sourcePages": [
+        32
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2017-B-08",
+      "sourcePages": [
+        33
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2018-A-01",
+      "sourcePages": [
+        34
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-02",
+      "sourcePages": [
+        34
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-03",
+      "sourcePages": [
+        35
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-04",
+      "sourcePages": [
+        35
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-05",
+      "sourcePages": [
+        35
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-06",
+      "sourcePages": [
+        35
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-07",
+      "sourcePages": [
+        36
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-08",
+      "sourcePages": [
+        36
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-09",
+      "sourcePages": [
+        37
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-10",
+      "sourcePages": [
+        38
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2018-A-11",
+      "sourcePages": [
+        38
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-12",
+      "sourcePages": [
+        39
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-13",
+      "sourcePages": [
+        39
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-A-14",
+      "sourcePages": [
+        40
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-01",
+      "sourcePages": [
+        41
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2018-B-02",
+      "sourcePages": [
+        41
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2018-B-03",
+      "sourcePages": [
+        42
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-04",
+      "sourcePages": [
+        42
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-05",
+      "sourcePages": [
+        43
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-06",
+      "sourcePages": [
+        43
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-07",
+      "sourcePages": [
+        44
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2018-B-08",
+      "sourcePages": [
+        45
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2019-A-01",
+      "sourcePages": [
+        46
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-02",
+      "sourcePages": [
+        46
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-03",
+      "sourcePages": [
+        46
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-04",
+      "sourcePages": [
+        47
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-05",
+      "sourcePages": [
+        47
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-06",
+      "sourcePages": [
+        48
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-07",
+      "sourcePages": [
+        48
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-08",
+      "sourcePages": [
+        49
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-09",
+      "sourcePages": [
+        49
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-10",
+      "sourcePages": [
+        50
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-11",
+      "sourcePages": [
+        51
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-12",
+      "sourcePages": [
+        51
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-13",
+      "sourcePages": [
+        52
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-A-14",
+      "sourcePages": [
+        52
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-01",
+      "sourcePages": [
+        53
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-02",
+      "sourcePages": [
+        54
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-03",
+      "sourcePages": [
+        54
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-04",
+      "sourcePages": [
+        55
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-05",
+      "sourcePages": [
+        56
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-06",
+      "sourcePages": [
+        56
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-07",
+      "sourcePages": [
+        57
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2019-B-08",
+      "sourcePages": [
+        58,
+        59
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2020-A-01",
+      "sourcePages": [
+        60
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-02",
+      "sourcePages": [
+        60
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-03",
+      "sourcePages": [
+        60
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-04",
+      "sourcePages": [
+        61
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-05",
+      "sourcePages": [
+        61
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-06",
+      "sourcePages": [
+        62
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-07",
+      "sourcePages": [
+        63
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-08",
+      "sourcePages": [
+        64
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-09",
+      "sourcePages": [
+        65
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-10",
+      "sourcePages": [
+        65
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-11",
+      "sourcePages": [
+        66
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-A-12",
+      "sourcePages": [
+        66
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2020-B-01",
+      "sourcePages": [
+        67
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-02",
+      "sourcePages": [
+        67
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-03",
+      "sourcePages": [
+        68
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-04",
+      "sourcePages": [
+        68
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-05",
+      "sourcePages": [
+        69
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-06",
+      "sourcePages": [
+        69
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-07",
+      "sourcePages": [
+        70
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-08",
+      "sourcePages": [
+        71
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-09",
+      "sourcePages": [
+        71
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-10",
+      "sourcePages": [
+        72
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2020-B-11",
+      "sourcePages": [
+        73
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-01",
+      "sourcePages": [
+        74
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-02",
+      "sourcePages": [
+        74
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-03",
+      "sourcePages": [
+        74
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-04",
+      "sourcePages": [
+        75
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-05",
+      "sourcePages": [
+        75
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-06",
+      "sourcePages": [
+        76
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-07",
+      "sourcePages": [
+        77
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-08",
+      "sourcePages": [
+        77
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-09",
+      "sourcePages": [
+        78
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-10",
+      "sourcePages": [
+        79
+      ],
+      "subject": "소공",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-11",
+      "sourcePages": [
+        79
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-A-12",
+      "sourcePages": [
+        80
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-01",
+      "sourcePages": [
+        81
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-02",
+      "sourcePages": [
+        81
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2021-B-03",
+      "sourcePages": [
+        81
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-04",
+      "sourcePages": [
+        82
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-05",
+      "sourcePages": [
+        83
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-06",
+      "sourcePages": [
+        84
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2021-B-07",
+      "sourcePages": [
+        85
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-08",
+      "sourcePages": [
+        85
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-09",
+      "sourcePages": [
+        86
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2021-B-10",
+      "sourcePages": [
+        86
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2021-B-11",
+      "sourcePages": [
+        87
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-01",
+      "sourcePages": [
+        88
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-02",
+      "sourcePages": [
+        88
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-03",
+      "sourcePages": [
+        88
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-04",
+      "sourcePages": [
+        89
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-05",
+      "sourcePages": [
+        89
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-06",
+      "sourcePages": [
+        90
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2022-A-07",
+      "sourcePages": [
+        90
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-08",
+      "sourcePages": [
+        91
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-09",
+      "sourcePages": [
+        92
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-10",
+      "sourcePages": [
+        92
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-11",
+      "sourcePages": [
+        93
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-A-12",
+      "sourcePages": [
+        94
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-01",
+      "sourcePages": [
+        95
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-02",
+      "sourcePages": [
+        95
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-03",
+      "sourcePages": [
+        96
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-04",
+      "sourcePages": [
+        96
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2022-B-05",
+      "sourcePages": [
+        97
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-06",
+      "sourcePages": [
+        97
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-07",
+      "sourcePages": [
+        98
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-08",
+      "sourcePages": [
+        98
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2022-B-09",
+      "sourcePages": [
+        99
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-10",
+      "sourcePages": [
+        100
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2022-B-11",
+      "sourcePages": [
+        101
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-01",
+      "sourcePages": [
+        102
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-02",
+      "sourcePages": [
+        102
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-03",
+      "sourcePages": [
+        102
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-04",
+      "sourcePages": [
+        103
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-05",
+      "sourcePages": [
+        103
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-06",
+      "sourcePages": [
+        104
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-07",
+      "sourcePages": [
+        105
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-08",
+      "sourcePages": [
+        105
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-09",
+      "sourcePages": [
+        106
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-10",
+      "sourcePages": [
+        107
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2023-A-11",
+      "sourcePages": [
+        107
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-A-12",
+      "sourcePages": [
+        108
+      ],
+      "subject": "소공",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-01",
+      "sourcePages": [
+        109
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-02",
+      "sourcePages": [
+        109
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-03",
+      "sourcePages": [
+        110
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-04",
+      "sourcePages": [
+        111
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-05",
+      "sourcePages": [
+        112
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-06",
+      "sourcePages": [
+        112
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-07",
+      "sourcePages": [
+        113
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-08",
+      "sourcePages": [
+        113
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2023-B-09",
+      "sourcePages": [
+        114
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-10",
+      "sourcePages": [
+        114
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2023-B-11",
+      "sourcePages": [
+        115
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2024-A-01",
+      "sourcePages": [
+        116
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-02",
+      "sourcePages": [
+        116
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-03",
+      "sourcePages": [
+        117
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-04",
+      "sourcePages": [
+        117
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-05",
+      "sourcePages": [
+        118
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-06",
+      "sourcePages": [
+        119
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-07",
+      "sourcePages": [
+        119
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-08",
+      "sourcePages": [
+        120
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-09",
+      "sourcePages": [
+        120
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-10",
+      "sourcePages": [
+        121
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-11",
+      "sourcePages": [
+        121
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-A-12",
+      "sourcePages": [
+        122
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-01",
+      "sourcePages": [
+        123
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-02",
+      "sourcePages": [
+        123
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-03",
+      "sourcePages": [
+        124
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-04",
+      "sourcePages": [
+        124
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-05",
+      "sourcePages": [
+        125
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2024-B-06",
+      "sourcePages": [
+        126
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-07",
+      "sourcePages": [
+        127
+      ],
+      "subject": "디비",
+      "answerStatus": "pending",
+      "internalConfidence": null,
+      "officialAnswerConfirmed": false,
+      "auditClass": "pending-insufficient-determinacy",
+      "disposition": "hold-no-unique-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2024-B-08",
+      "sourcePages": [
+        127
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-09",
+      "sourcePages": [
+        128
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-10",
+      "sourcePages": [
+        128
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2024-B-11",
+      "sourcePages": [
+        129
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-01",
+      "sourcePages": [
+        130
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-02",
+      "sourcePages": [
+        130
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-03",
+      "sourcePages": [
+        131
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-04",
+      "sourcePages": [
+        131
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-05",
+      "sourcePages": [
+        131
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-06",
+      "sourcePages": [
+        132
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2025-A-07",
+      "sourcePages": [
+        132
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-08",
+      "sourcePages": [
+        133
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2025-A-09",
+      "sourcePages": [
+        134
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2025-A-10",
+      "sourcePages": [
+        134
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-11",
+      "sourcePages": [
+        135
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-A-12",
+      "sourcePages": [
+        136
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-01",
+      "sourcePages": [
+        137
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-02",
+      "sourcePages": [
+        137
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-03",
+      "sourcePages": [
+        138
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-04",
+      "sourcePages": [
+        138
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2025-B-05",
+      "sourcePages": [
+        139
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2025-B-06",
+      "sourcePages": [
+        140
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-07",
+      "sourcePages": [
+        141
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-08",
+      "sourcePages": [
+        141
+      ],
+      "subject": "소공",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-09",
+      "sourcePages": [
+        142
+      ],
+      "subject": "이산수학",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-10",
+      "sourcePages": [
+        143
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2025-B-11",
+      "sourcePages": [
+        143
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-01",
+      "sourcePages": [
+        144
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-A-02",
+      "sourcePages": [
+        144
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-A-03",
+      "sourcePages": [
+        145
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-04",
+      "sourcePages": [
+        145
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-A-05",
+      "sourcePages": [
+        146
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-06",
+      "sourcePages": [
+        146
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "computed-but-official-unconfirmed",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-A-07",
+      "sourcePages": [
+        147
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-08",
+      "sourcePages": [
+        147
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "technical-ambiguity",
+      "disposition": "retain-qualified-current-answer",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-A-09",
+      "sourcePages": [
+        148
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-10",
+      "sourcePages": [
+        149
+      ],
+      "subject": "데통네트웤",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-11",
+      "sourcePages": [
+        149
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-A-12",
+      "sourcePages": [
+        150
+      ],
+      "subject": "디비",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-01",
+      "sourcePages": [
+        151
+      ],
+      "subject": "인지머러",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-02",
+      "sourcePages": [
+        151
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-03",
+      "sourcePages": [
+        152
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-04",
+      "sourcePages": [
+        153
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-05",
+      "sourcePages": [
+        153
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-06",
+      "sourcePages": [
+        154
+      ],
+      "subject": "운체",
+      "answerStatus": "solved",
+      "internalConfidence": "medium",
+      "officialAnswerConfirmed": false,
+      "auditClass": "rubric-or-curriculum-dependent",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": true
+    },
+    {
+      "id": "2026-B-07",
+      "sourcePages": [
+        154
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-08",
+      "sourcePages": [
+        155
+      ],
+      "subject": "논회컴구",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-09",
+      "sourcePages": [
+        155
+      ],
+      "subject": "교교론",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-10",
+      "sourcePages": [
+        156
+      ],
+      "subject": "자구알고",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    },
+    {
+      "id": "2026-B-11",
+      "sourcePages": [
+        157
+      ],
+      "subject": "프로그래밍",
+      "answerStatus": "solved",
+      "internalConfidence": "high",
+      "officialAnswerConfirmed": false,
+      "auditClass": "internally-high-derived",
+      "disposition": "retain-current-answer-pending-official-check",
+      "needsExternalRubric": false
+    }
+  ],
+  "inputSha256": "e1be8393f3f8b2d41be718a8bc2d8f115c4be6169bf7137d40ac149024acc881",
+  "limitations": [
+    "이번 차수는 269문항 전체의 데이터·근거 구조 감사 및 기존 불확실성 처분 확정이다. 269문항의 독립 학문적 풀이를 모두 새로 수행했다는 뜻이 아님.",
+    "공식 문항별 채점기준 미확보. 특히 서술형 20개와 계산형 12개는 공식 채점 대조 후 최종 확정 가능.",
+    "문제 PDF 텍스트 대조는 기계적 견본 추출 검사이며 모든 그림/기호의 수작업 전수 검증을 의미하지 않는다.",
+    "이후 공식 답안 확보 시 2단계 보류 항목을 재개한다."
+  ]
+}

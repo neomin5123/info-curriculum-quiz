@@ -1,0 +1,91 @@
+{
+  "title": "CurriLoop 기출 검증 근거 보강 후속 차수",
+  "date": "2026-11-10",
+  "base": "CurriLoop_exam_verification_continuation_20261110.zip",
+  "count": 9,
+  "questionCount": 269,
+  "solvedCount": 268,
+  "answerChanged": 0,
+  "solutionChanged": 0,
+  "newOfficialConfirmed": 0,
+  "notes": [
+    "과거 검토 대상과 중복 가능성이 있으므로 이번 9건을 신규 누적 완료 수에 더하지 않음",
+    "검증 근거 보강 및 메타데이터 누락 1건 복원",
+    "공식 채점기준과 2022 교육과정 원문 외부 대조는 별도 미완료",
+    "2024-B-07 보류를 그대로 유지"
+  ],
+  "items": [
+    {
+      "id": "2014-B-02",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "independent-fd-closure",
+      "evidence": "FD A→C, B→D,F, D→E, BC→A에 대해 (BC)+=ABCDEF이고 (AB)+=ABCDEF. 부분종속 B→D,F,E 제거로 BC 및 AB 관계와 BDEF 분리 가능. BDEF에서 D→E를 별도 분리하고 ABC에서 A→C를 분리한 최종 AB,AC, BDF, DE는 각 분할 교집합 B·D·A가 한쪽 관계의 결정자이므로 순차 무손실 조인임. 단, 손실 없는 분해와 종속성 보존은 별개이며 BC→A의 종속성 보존은 자동 보장되지 않음.",
+      "answerChanged": false
+    },
+    {
+      "id": "2016-A-09",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "question-text-legal-conditional",
+      "evidence": "2차적저작물 정의는 번역·편곡·변형·각색 등의 방법으로 원저작물을 바탕으로 새롭게 창작하는 것과 정합. 수업용 편집 사진의 합법성은 촬영자 권리, 이용 범위, 당시 저작권법의 교육목적 이용 요건, 출처 표시 및 이용 조건에 좌우되므로 무조건 합법·불법으로 단정 불가. 시험에 명시된 2013년 법률 기준을 먼저 확인해야 함.",
+      "answerChanged": false
+    },
+    {
+      "id": "2017-A-09",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "2015-curriculum-quoted-table",
+      "evidence": "문제에 인용된 중학교 추상화의 내용 요소는 문제 이해·핵심 요소 추출, 고등학교 추상화는 문제 분석·문제 분해와 모델링이므로 ㉠ 핵심 요소, ㉡ 문제 분해가 표의 문장과 일치. 알고리즘 분석 지도상 유의 사항은 복수의 적절한 서술이 가능해 공식 채점기준 확인 전 단일 문장 확정 불가.",
+      "answerChanged": false
+    },
+    {
+      "id": "2024-B-05",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "question-diagram-conditional",
+      "evidence": "전문가 집단으로 이동하여 학습하는 ㉠은 Jigsaw I·II 공통, 개인별 점수 ㉡도 공통으로 설명 가능. 향상점수·모둠별 점수는 Jigsaw II의 평가 요소로 구별. 깊이우선탐색 DFS의 한쪽 경로 우선·막히면 되돌아옴은 문항 설명과 일치. ㉥ 탐색 방문 순서는 PDF 상태공간 트리의 인접 관계를 기준으로 하므로 기존 A→B→D→C→E→F를 유지하며 공식 정답은 미확인.",
+      "answerChanged": false
+    },
+    {
+      "id": "2025-A-08",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "arduino-logic-and-wiring-conditional",
+      "evidence": "원본 문제의 조건 analogRead(A0)<512가 참일 때 LED가 켜져야 하므로, 예시처럼 LED 양극이 제어 핀에 연결되는 능동 HIGH 배선이라면 해당 분기를 digitalWrite(10,HIGH)로 바꾸는 것이 타당. 그러나 공통 전원에 연결된 능동 LOW 배선에서는 LOW가 점등 신호일 수 있어 출력 논리만으로 회로 오배선을 단정해서는 안 됨. 회로 방향·저항·접속 상태 확인은 별도의 요구 답안.",
+      "answerChanged": false
+    },
+    {
+      "id": "2025-B-04",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "checklist-competency-mapping",
+      "evidence": "문제의 탐색기반 알고리즘 체크리스트 1·2에 공통으로 들어가는 대상은 상태 공간. [12정과03-04]에 연계되는 부분 문제 분할·결과 결합은 분할정복, [12정과03-05]의 중복 부분 문제 결과 저장은 동적 계획법과 정합. ㉡ 평가 항목은 학습 목표·내용 요소인 알고리즘 복잡도 평가가 드러나야 하나 표현은 다양할 수 있음.",
+      "answerChanged": false
+    },
+    {
+      "id": "2025-B-05",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "scoring-rubric-logic",
+      "evidence": "평가기준을 학생과 함께 구성하는 ㉠은 문항의 평가 방향 서술과 정합. 3점(중첩 구조 사용·전체 출력), 0점(미사용·출력 실패)의 양 극단 사이 2점(중첩 사용·출력 실패), 1점(중첩 미사용·전체 출력)으로 나눈 기존 루브릭과 모순 없음. B학생에 대한 피드백은 출력 결과만이 아니라 중첩 반복문의 구조적 적용을 구분해야 함.",
+      "answerChanged": false
+    },
+    {
+      "id": "2026-A-01",
+      "previousConfidence": null,
+      "newConfidence": "medium",
+      "basis": "question-stem-semantics",
+      "evidence": "문항 (가)의 디지털 공간 사이버폭력 문제와 ‘(㉠) 의식’은 디지털 윤리 의식, (나)의 창작 그림에 관한 권리 주체 질문은 저작권으로 해석되어 기존 ㉠ 디지털 윤리, ㉡ 저작권과 일치. 다만 공식 2022 교육과정 원문과 공인 채점기준을 직접 대조하지 않은 독립 문맥 검토이므로 고신뢰 확정은 보류.",
+      "answerChanged": false
+    },
+    {
+      "id": "2026-A-08",
+      "previousConfidence": "medium",
+      "newConfidence": "medium",
+      "basis": "tcp-standard-qualification",
+      "evidence": "SYN은 3-way handshake 첫 두 단계의 공통 플래그, PSH는 대기 없이 전달 지시, URG는 긴급 포인터 유효 지시이므로 제어 플래그 답은 논리적으로 지지됨. 긴급 포인터는 TCP 표준상 긴급 데이터의 경계/끝을 지시하는 상대 오프셋으로 해석 차이가 있을 수 있어 현재 12500을 공식 확정 정답으로 승격하지 않음. 그림 시간축과 공식 채점기준의 추가 대조 필요.",
+      "answerChanged": false
+    }
+  ]
+}

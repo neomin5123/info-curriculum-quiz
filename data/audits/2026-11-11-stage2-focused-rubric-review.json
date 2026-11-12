@@ -1,0 +1,96 @@
+{
+  "phase": "2/5 기출 정답·해설 검증 (서술형 요구사항 및 조건부 문항 후속)",
+  "date": "2026-11-11",
+  "baseline": "CurriLoop_integrated_stage1_regression_20261111.zip",
+  "review_count": 8,
+  "new_unique_completion_count": "검토 이력 중복 가능, 0으로 보수적으로 처리",
+  "changed_answer_count": 0,
+  "changed_solution_count": 0,
+  "confidence_upgrades": 0,
+  "official_answer_confirmations": 0,
+  "method": "업로드 원본 기출 PDF의 해당 문항 내용 및 명시적 작성 방법과 현재 답안의 요구사항 대응을 대조. 수학적 계산 독립 재실행이나 공식 채점기준 확인으로 간주하지 않음.",
+  "items": [
+    {
+      "id": "2016-B-08",
+      "topic": "수업 단계 구성",
+      "verified": "서론·본론·결론 및 전개 과정-활동 대응을 확인. 문제 이해→해결 절차 설계→구현→검증/수정의 4단계가 문항에 주어진 계산적 사고·언어 문법 비중 제한·평가 방침에 부합한다. 반복문은 다음 차시 예고이므로 선행 학습을 전제하지 않음.",
+      "unresolved": "다른 단계 구성도 논리적이면 허용될 수 있으며 공식 채점기준 부재",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2017-B-01",
+      "topic": "협동학습 지도안",
+      "verified": "요구한 동기유발 1개·자연어 외 알고리즘 표현 방법 1개·협동학습 활동 1개 및 이유 1개가 답안에 모두 등장함. 도입 동기유발과 본시 알고리즘 표현, 모둠 내 설명·수정이 학습 목표와 연결됨.",
+      "unresolved": "순서도 또는 의사코드 등 복수 표현 가능; 공식 채점기준 부재",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2017-B-08",
+      "topic": "평가기준 상·중·하",
+      "verified": "문항의 (나)④에 따라 상·중·하 모두 순차·선택·반복의 같은 세 구조를 평가함을 확인. 긍정형 수행 동사, 서론의 평가기준 필요성, 본론의 세 수준 및 이유·자동화 연결, 결론의 컴퓨팅 사고력 연결을 점검함.",
+      "unresolved": "상·중·하 수행의 난이도와 각 배점의 인정 범위는 공식 채점기준 없이는 확정 불가",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2018-B-01",
+      "topic": "프로그래밍 실습 계열",
+      "verified": "원문 1·3·5단계를 기준으로 ㉠은 주어진 코드 수정·보완, ㉡은 주어진 문제의 알고리즘 설계 및 프로그램 작성으로 점진적 자율성이 증가함을 재확인. 개인차 대응 수업 방법도 2개 제시됨.",
+      "unresolved": "단계 2·4의 다른 적합한 실습 예시 및 교수학습방법 인정 범위는 복수 가능",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2018-B-08",
+      "topic": "정보과 교과 역량과 총론",
+      "verified": "서론의 2015 개정 변화, 본론의 지식정보처리와 정보기술활용·추상화·자동화 하위 요소 연계 및 이유, 타 교과 적용 예시, 결론의 정보교육 강화 방안이 문항 요구 순서대로 답변됨.",
+      "unresolved": "공식 배점상 요구되는 하위 요소 개수는 별도 명시되지 않아 예시의 인정 범위 불명",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2019-B-08",
+      "topic": "교육과정 재구성 논술",
+      "verified": "서론의 재구성 필요성 2개, 도입/전개/정리의 주제·학습 조직·평가 조건, 4개 성취기준과 교과 역량의 연계 및 이유, 결론의 재구성 유의점이 모두 포함됨. 2km 반경과 팀 프로젝트 조건도 유지됨.",
+      "unresolved": "복수 적합 활동 가능; 실제 지도 데이터나 공식 채점기준을 검증한 것은 아님",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2022-B-04",
+      "topic": "페퍼트·짝 프로그래밍",
+      "verified": "원문이 요구한 구체적 사고/형식적(추상적) 사고, 짝 프로그래밍, 드라이버의 코드 작성·실행 및 내비게이터의 설계·오류 검토 역할이 기존 답안에 있음. 문항이 요구한 서술 범위와 대응함.",
+      "unresolved": "교수학습 이론 용어의 허용 표현은 공식 채점기준에서 최종 확인 필요",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    },
+    {
+      "id": "2026-B-06",
+      "topic": "고아·좀비 프로세스",
+      "verified": "고아 예시는 부모가 11번까지 종료된 사이 자식은 5번 이후 준비 상태인 스케줄이며 문제의 고아 정의와 일치. 좀비 예시는 자식이 11번까지 종료되고 부모가 8번 wait 호출 전에 준비 상태인 스케줄로 구성되어 정의와 일치. 원문은 오류 없음·고아 재부모화 없음으로 한정됨.",
+      "unresolved": "두 상태 조합은 가능한 한 가지 스케줄에 불과함. 상태도 그림의 정확한 상태명과 공식 채점기준에 따른 다른 정답 허용 여부 미확정",
+      "result": "조건 충족 예시 답안 유지",
+      "confidence_before": "medium",
+      "confidence_after": "medium",
+      "official_answer_confirmed": false
+    }
+  ],
+  "preservation": "269개 문항 원문·정답·해설·상태·ID 유지. 선택된 8개 검증 메타데이터만 추가 보강.",
+  "next": "본 차수에서 medium 정답을 high로 승격하지 않음. 다른 medium·보류 문항, 공식 채점기준 확인은 2단계에 잔존."
+}

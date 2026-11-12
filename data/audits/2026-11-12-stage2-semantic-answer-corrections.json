@@ -1,0 +1,45 @@
+{
+  "auditDate": "2026-11-12",
+  "stage": "2/5 — exam verification (in progress)",
+  "basePatch": "CurriLoop_stage2_pending_key_and_kruskal_audit_20261111.zip",
+  "totalQuestions": 269,
+  "checkedQuestions": [
+    "2025-A-06",
+    "2025-A-08",
+    "2025-A-09",
+    "2022-A-06"
+  ],
+  "correctedAnswers": [
+    "2025-A-06",
+    "2025-A-08"
+  ],
+  "correctedQuestionText": [],
+  "officialAnswerConfirmed": false,
+  "verification": {
+    "2025-A-06": {
+      "method": "source-visual-school-level-and-answer-label",
+      "evidence": "원본 PDF 132쪽에서 작성 방법은 ㉠·㉡ 각각의 학교급과 2015/2022 교육과정 성취기준 해설에 근거한 이유를 요구한다. 기존 답안의 ㉢ 표기는 원문 출제 조건에 없으므로 삭제하고 답변을 요구 순서로 정리. 공식 성취기준 해설을 별도 HWP와 전수 비교한 것은 아님.",
+      "action": "answer-and-solution-corrected"
+    },
+    "2025-A-08": {
+      "method": "source-visual-active-level-dependence",
+      "evidence": "원본 PDF 133쪽에서 if/else 모두 LOW임을 확인. 출력 논리의 결함은 확정적이나 어떤 값이 점등인지는 LED 연결 방향에 의존함. 회로는 LED 극성·접점·저항·출력핀/전원 연결 점검이 핵심. 조건부 HIGH/LOW를 답안에 직접 명시.",
+      "action": "answer-and-solution-qualified"
+    },
+    "2025-A-09": {
+      "method": "source-visual-tcp-time-axis",
+      "evidence": "원본 PDF 134쪽 그림에서 t10 Seq101, t13 ACK301/Seq301, t15 B가 Seq301 수신, ACK401이 t21에 A 도착한다. t13 RTT 3초, RTO 6초, t19 타임아웃, Seq301 재전송, 재전송 RTO 12초 계산과 일치. 공식 채점기준 미확인.",
+      "action": "verification-only"
+    },
+    "2022-A-06": {
+      "method": "source-visual-pedagogy-terms",
+      "evidence": "원본 PDF 90쪽에서 ㉠ 복잡성 제거 및 모델 추출→추상화, ㉡ 추상화의 기법→문제 분해, ㉢ 분류 모델, ㉤ 수업 설계 제안임을 재확인. ㉤ 서술의 구체적 인정 범위는 공식 채점기준 없이는 확정 불가.",
+      "action": "verification-only"
+    }
+  },
+  "caution": [
+    "HWP curriculum interpretation independently pending stage 3",
+    "Official marking rubric not obtained",
+    "UI and curriculum cloze unchanged"
+  ]
+}

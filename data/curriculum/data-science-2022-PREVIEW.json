@@ -5,14 +5,15 @@
     "status": "OFFICIAL_63_ENTRIES_VERIFIED_PLUS_6_ARCHIVED_CHARACTER_GOALS_SOURCE_ONLY",
     "sourceVerification": "기존 63개 원문 완전 일치 결과 보존; 성격 및 목표 6개 항목은 기존 공식 HWP 추출 보관본을 그대로 연결. 신규 6개는 이번 작업에서 HWP 재추출 미실시.",
     "lines": 69,
-    "activeBlankLines": 16,
+    "activeBlankLines": 18,
     "kiGroups": 4,
     "verificationDate": "2026-11-04",
     "exactMatchCount": 63,
     "sourceAttachment": "[별책10] 2022_실과(기술가정)정보과 교육과정_정보과 발췌.hwp",
     "verifiedOriginalEntries": 63,
     "additionalCommonSourceEntries": 6,
-    "coverageLimit": "성취기준 해설·적용 시 고려 사항·교수학습·평가의 전체 원문은 앱에 미수록. 별도 개념문항 생성 없음."
+    "coverageLimit": "성취기준 해설·적용 시 고려 사항·교수학습·평가의 전체 원문은 앱에 미수록. 별도 개념문항 생성 없음.",
+    "scopeAuditNote": "2026-11-11: 기존 통회상·과정기능 중복 비교 후 성취기준 2개 핵심 표현 추가; 공식 HWP 원문 독립 재추출 미실시."
   },
   "lines": [
     {
@@ -1634,22 +1635,69 @@
       "sourceText": "데이터를 편향되지 않도록 수집하고, 수집된 데이터의 특성을 분석한다.",
       "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
       "sourceVerified": true,
-      "keywords": [],
+      "keywords": [
+        {
+          "keywordId": "DS-22-12데과02-01-K01",
+          "text": "편향되지 않도록",
+          "start": 5,
+          "end": 13,
+          "active": true,
+          "importance": "B",
+          "stage3RGrades": [
+            "B"
+          ],
+          "policy": "EXAM_RECALL_SCOPE_GAP_20261111"
+        }
+      ],
       "coreSets": [],
       "practicalSets": [],
       "presentation": {
         "version": "data-science-draft-v1",
-        "units": [],
-        "coreSets": [],
-        "practicalSets": []
+        "units": [
+          {
+            "unitId": "DS-22-12데과02-01-PU-01",
+            "text": "편향되지 않도록",
+            "start": 5,
+            "end": 13,
+            "unitType": "phrase",
+            "sourceKeywordIds": [
+              "DS-22-12데과02-01-K01"
+            ],
+            "stage3RGrades": [
+              "B"
+            ],
+            "sourceFaithful": true,
+            "presentationBasis": "EXAM_RECALL_SCOPE_GAP_20261111"
+          }
+        ],
+        "coreSets": [
+          {
+            "setId": "DS-22-12데과02-01-PC-01",
+            "unitIds": [
+              "DS-22-12데과02-01-PU-01"
+            ],
+            "blankCount": 1,
+            "basis": "distinct source-anchored concept not in knowledge-understanding whole-recall list"
+          }
+        ],
+        "practicalSets": [
+          {
+            "setId": "DS-22-12데과02-01-PP-01",
+            "unitIds": [
+              "DS-22-12데과02-01-PU-01"
+            ],
+            "blankCount": 1,
+            "basis": "same distinctive target in practical stage"
+          }
+        ]
       },
       "importanceReview": {
-        "grade": "C",
-        "basis": "DRAFT_PRIORITIZATION_NOT_OFFICIAL",
-        "reason": "기존 검토표 분류",
+        "grade": "B",
+        "basis": "TARGETED_SEMANTIC_SCOPE_20261111",
+        "reason": "기존 지식·이해 통회상 및 과정·기능의 직접 정답과 비교 후 독립적인 중요 표현으로 선정",
         "officialAnswerConfirmed": false
       },
-      "selection": "보류",
+      "selection": "채택",
       "sourceKind": "성취기준",
       "originType": "official_hwp_verified_curriculum_source",
       "sourceVerification": {
@@ -2574,22 +2622,69 @@
       "sourceText": "분석을 위한 목적부터 데이터 수집 및 분석에 이르는 전 과정을 성찰하고, 사회적 영향을 고려하여 분석 결과의 활용방안을 탐색한다.",
       "sourceDoc": "교육부 고시 제2022-33호 [별책 10] 실과(기술·가정)/정보과 교육과정 — 데이터 과학",
       "sourceVerified": true,
-      "keywords": [],
+      "keywords": [
+        {
+          "keywordId": "DS-22-12데과04-05-K01",
+          "text": "사회적 영향",
+          "start": 41,
+          "end": 47,
+          "active": true,
+          "importance": "B",
+          "stage3RGrades": [
+            "B"
+          ],
+          "policy": "EXAM_RECALL_SCOPE_GAP_20261111"
+        }
+      ],
       "coreSets": [],
       "practicalSets": [],
       "presentation": {
         "version": "data-science-draft-v1",
-        "units": [],
-        "coreSets": [],
-        "practicalSets": []
+        "units": [
+          {
+            "unitId": "DS-22-12데과04-05-PU-01",
+            "text": "사회적 영향",
+            "start": 41,
+            "end": 47,
+            "unitType": "phrase",
+            "sourceKeywordIds": [
+              "DS-22-12데과04-05-K01"
+            ],
+            "stage3RGrades": [
+              "B"
+            ],
+            "sourceFaithful": true,
+            "presentationBasis": "EXAM_RECALL_SCOPE_GAP_20261111"
+          }
+        ],
+        "coreSets": [
+          {
+            "setId": "DS-22-12데과04-05-PC-01",
+            "unitIds": [
+              "DS-22-12데과04-05-PU-01"
+            ],
+            "blankCount": 1,
+            "basis": "distinct source-anchored concept not in knowledge-understanding whole-recall list"
+          }
+        ],
+        "practicalSets": [
+          {
+            "setId": "DS-22-12데과04-05-PP-01",
+            "unitIds": [
+              "DS-22-12데과04-05-PU-01"
+            ],
+            "blankCount": 1,
+            "basis": "same distinctive target in practical stage"
+          }
+        ]
       },
       "importanceReview": {
-        "grade": "C",
-        "basis": "DRAFT_PRIORITIZATION_NOT_OFFICIAL",
-        "reason": "기존 검토표 분류",
+        "grade": "B",
+        "basis": "TARGETED_SEMANTIC_SCOPE_20261111",
+        "reason": "기존 지식·이해 통회상 및 과정·기능의 직접 정답과 비교 후 독립적인 중요 표현으로 선정",
         "officialAnswerConfirmed": false
       },
-      "selection": "보류",
+      "selection": "채택",
       "sourceKind": "성취기준",
       "originType": "official_hwp_verified_curriculum_source",
       "sourceVerification": {
