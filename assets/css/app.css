@@ -1914,3 +1914,9 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
   .retry-dock .retry-process-bundle-card .retry-process-text{font-size:13px}
   .retry-dock .retry-process-bundle-card input.retry-process-input{width:clamp(95px, 31vw, 160px)}
 }
+
+/* Mobile-only: hide the floating top/bottom page-jump shortcuts.
+   Keep the desktop dock and all other navigation controls intact. */
+@media (max-width:760px), (hover:none) and (pointer:coarse){
+  .page-jump-dock{display:none!important}
+}
