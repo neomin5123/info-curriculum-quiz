@@ -1,0 +1,27 @@
+{
+  "auditId": "2026-11-13-stage5-offline-chromium-round11",
+  "date": "2026-11-13",
+  "stage": "⑤/6 오프라인 브라우저 회귀검사",
+  "base": "③단계 11차 데이터 변경본",
+  "offLineChromiumChecks": 21,
+  "passed": 21,
+  "pageErrors": 0,
+  "coverage": [
+    "4개 과목 옵션",
+    "인공지능 기초 과목/성취기준",
+    "내용체계 표시",
+    "원문/따라치기/마스킹/빈칸 학습 모드",
+    "전체 가리기·전체 열기 및 개별 토글",
+    "중학교 디지털 문화 카드 표시",
+    "인공지능과 학습 성취기준 표시",
+    "복습 탭 이동 및 복귀",
+    "빈칸 HTML title 정답 노출 없음"
+  ],
+  "environment": "Playwright Python+Chromium (executable=/usr/bin/chromium), page.set_content/offline embedded JS+CSS",
+  "limitations": [
+    "해당 오프라인 검사는 서비스워커·배포 도메인·영속적 복습 데이터 저장을 실증하지 않음",
+    "localhost HTTP 200이나 Chromium navigator는 ERR_BLOCKED_BY_ADMINISTRATOR",
+    "실제 Vercel 도메인 접근 미검증"
+  ],
+  "legacyTestNotice": "tools/browser-qa-ai-study.py 원본 테스트는 전체 과목 옵션에 데이터 과학이 추가되기 이전의 4옵션 고정 기대 때문에 실패함. 이 테스트 실패는 신규 코드 실행 오류라고 분류하지 않음."
+}

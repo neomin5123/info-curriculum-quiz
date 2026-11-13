@@ -1,0 +1,4115 @@
+{
+  "title": "2022 official curriculum HWP10 to CurriLoop sourceText verification",
+  "date": "2026-11-12",
+  "method": "HWP5 CFB/OLE Section0 raw DEFLATE + paragraph-text extraction; for each app sourceText compare normalized whitespace and middle-dot variants as contiguous substring of HWP10 text",
+  "source": {
+    "HWP10": {
+      "filename": "[별책10] 2022_실과(기술가정)정보과 교육과정_정보과 발췌.hwp",
+      "size": 2693120,
+      "sha256": "49183b90ab752dc30c1405555cef2c5db5071044c48656ae1706e374d05585b2",
+      "relevant": true
+    },
+    "HWP20": {
+      "filename": "[별책20] 과학 계열 선택 과목 교육과정.hwp",
+      "size": 1734656,
+      "sha256": "4b0aaa86a2899b6bbc68b83a8ef66177fc0bbaa827fae35c35851bf27971ef3a",
+      "relevant": false,
+      "note": "Science elective curriculum does not contain these four information subjects; not used as substitute for HWP10"
+    }
+  },
+  "summary": {
+    "appLineCount": 449,
+    "foundNormalizedSourceText": 449,
+    "missing": 0,
+    "bySubject": {
+      "middle-info": 139,
+      "high-info": 131,
+      "ai-basic": 110,
+      "data-science": 69
+    },
+    "uniqueAchievementCodeParity": {
+      "9정": {
+        "hwpUnique": 25,
+        "appUnique": 25,
+        "missingInApp": [],
+        "missingInHwp": []
+      },
+      "12정": {
+        "hwpUnique": 23,
+        "appUnique": 23,
+        "missingInApp": [],
+        "missingInHwp": []
+      },
+      "12인기": {
+        "hwpUnique": 19,
+        "appUnique": 19,
+        "missingInApp": [],
+        "missingInHwp": []
+      },
+      "12데과": {
+        "hwpUnique": 19,
+        "appUnique": 19,
+        "missingInApp": [],
+        "missingInHwp": []
+      }
+    },
+    "textNormalization": [
+      "remove all whitespace",
+      "normalize variants · ･ ㆍ • to ⋅",
+      "full-width comma to comma"
+    ]
+  },
+  "verificationScope": [
+    "line sourceText exact contiguous normalized match",
+    "all unique achievement standard code sets"
+  ],
+  "limitations": [
+    "not byte-for-byte typography/spacing equivalence",
+    "not independent educational importance audit of cloze selection",
+    "does not validate every information table visual/diagram layout or HWP metadata",
+    "does not establish official exam answer grading schemes"
+  ],
+  "lineEvidence": [
+    {
+      "lineId": "MI-01-CS-KI-01",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 49,
+      "found": true,
+      "sourceHash": "675edf639b0539b4",
+      "normalizedOffset": 3381
+    },
+    {
+      "lineId": "MI-01-CS-KI-02",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "0be89c6bc8ffa0bf",
+      "normalizedOffset": 3431
+    },
+    {
+      "lineId": "MI-01-CS-KN-01",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 11,
+      "found": true,
+      "sourceHash": "51ff948d5e813805",
+      "normalizedOffset": 3491
+    },
+    {
+      "lineId": "MI-01-CS-KN-02",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "ac9c74898f9f9f5f",
+      "normalizedOffset": 3503
+    },
+    {
+      "lineId": "MI-01-CS-KN-03",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "1c65f88db6a503fc",
+      "normalizedOffset": 3511
+    },
+    {
+      "lineId": "MI-01-CS-PF-01",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 31,
+      "found": true,
+      "sourceHash": "ecb8d3659ab47c97",
+      "normalizedOffset": 3526
+    },
+    {
+      "lineId": "MI-01-CS-PF-02",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "e4bd95982460bd28",
+      "normalizedOffset": 3558
+    },
+    {
+      "lineId": "MI-01-CS-PF-03",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 13,
+      "found": true,
+      "sourceHash": "8abf7ae0c2681356",
+      "normalizedOffset": 3580
+    },
+    {
+      "lineId": "MI-01-CS-VA-01",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 20,
+      "found": true,
+      "sourceHash": "b3eeaeba4b5ddb40",
+      "normalizedOffset": 3599
+    },
+    {
+      "lineId": "MI-01-CS-VA-02",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 29,
+      "found": true,
+      "sourceHash": "12cdd4d2740a109c",
+      "normalizedOffset": 3620
+    },
+    {
+      "lineId": "MI-01-AC-ST-01",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "d2c0fd9e1fa166ef",
+      "normalizedOffset": 5030
+    },
+    {
+      "lineId": "MI-01-AC-ST-02",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 58,
+      "found": true,
+      "sourceHash": "a39e5497ac00c5c7",
+      "normalizedOffset": 5074
+    },
+    {
+      "lineId": "MI-01-AC-ST-03",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 42,
+      "found": true,
+      "sourceHash": "bf01eb5e2a6b783e",
+      "normalizedOffset": 5132
+    },
+    {
+      "lineId": "MI-01-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 174,
+      "found": true,
+      "sourceHash": "20de4ea36426b3af",
+      "normalizedOffset": 5183
+    },
+    {
+      "lineId": "MI-01-AC-EX-02",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 125,
+      "found": true,
+      "sourceHash": "94044c30722a3ec4",
+      "normalizedOffset": 5357
+    },
+    {
+      "lineId": "MI-01-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 130,
+      "found": true,
+      "sourceHash": "93e3d033e8dc2899",
+      "normalizedOffset": 5496
+    },
+    {
+      "lineId": "MI-01-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 171,
+      "found": true,
+      "sourceHash": "895a443e121e651b",
+      "normalizedOffset": 5626
+    },
+    {
+      "lineId": "MI-01-AC-CO-03",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 75,
+      "found": true,
+      "sourceHash": "f7623706694c1943",
+      "normalizedOffset": 5797
+    },
+    {
+      "lineId": "MI-01-AC-CO-04",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 85,
+      "found": true,
+      "sourceHash": "2dee0a2558ff508a",
+      "normalizedOffset": 5872
+    },
+    {
+      "lineId": "MI-02-CS-KI-01",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 49,
+      "found": true,
+      "sourceHash": "1dbc9cbbe67994ef",
+      "normalizedOffset": 3664
+    },
+    {
+      "lineId": "MI-02-CS-KI-02",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 39,
+      "found": true,
+      "sourceHash": "b9963efc2725e7f9",
+      "normalizedOffset": 3714
+    },
+    {
+      "lineId": "MI-02-CS-KI-03",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 44,
+      "found": true,
+      "sourceHash": "782fb8cd311ed5f0",
+      "normalizedOffset": 3754
+    },
+    {
+      "lineId": "MI-02-CS-KN-01",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 10,
+      "found": true,
+      "sourceHash": "5d3b2abace0989fe",
+      "normalizedOffset": 3815
+    },
+    {
+      "lineId": "MI-02-CS-KN-02",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "37acda1a899e968d",
+      "normalizedOffset": 3826
+    },
+    {
+      "lineId": "MI-02-CS-KN-03",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "d7ee6e09c075e343",
+      "normalizedOffset": 3835
+    },
+    {
+      "lineId": "MI-02-CS-PF-01",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 18,
+      "found": true,
+      "sourceHash": "76917d2ff129979f",
+      "normalizedOffset": 3850
+    },
+    {
+      "lineId": "MI-02-CS-PF-02",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 19,
+      "found": true,
+      "sourceHash": "43d0abe55b818553",
+      "normalizedOffset": 3869
+    },
+    {
+      "lineId": "MI-02-CS-PF-03",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 15,
+      "found": true,
+      "sourceHash": "c30ee34aa27a59d1",
+      "normalizedOffset": 3889
+    },
+    {
+      "lineId": "MI-02-CS-VA-01",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 32,
+      "found": true,
+      "sourceHash": "a0bb1992d7a8133c",
+      "normalizedOffset": 3910
+    },
+    {
+      "lineId": "MI-02-CS-VA-02",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 17,
+      "found": true,
+      "sourceHash": "315817d5f3c8dc3c",
+      "normalizedOffset": 3943
+    },
+    {
+      "lineId": "MI-02-AC-ST-01",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 60,
+      "found": true,
+      "sourceHash": "63bdbbca09b319a8",
+      "normalizedOffset": 5967
+    },
+    {
+      "lineId": "MI-02-AC-ST-02",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "c5a4359b0f56e912",
+      "normalizedOffset": 6027
+    },
+    {
+      "lineId": "MI-02-AC-ST-03",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 37,
+      "found": true,
+      "sourceHash": "1efa2012f3b00947",
+      "normalizedOffset": 6067
+    },
+    {
+      "lineId": "MI-02-AC-ST-04",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "fa3b74e379e4fc40",
+      "normalizedOffset": 6104
+    },
+    {
+      "lineId": "MI-02-AC-ST-05",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "2f58607ecabd3c3b",
+      "normalizedOffset": 6149
+    },
+    {
+      "lineId": "MI-02-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 99,
+      "found": true,
+      "sourceHash": "22bfd928db8b67a1",
+      "normalizedOffset": 6205
+    },
+    {
+      "lineId": "MI-02-AC-EX-02",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 117,
+      "found": true,
+      "sourceHash": "896974592a0dca1f",
+      "normalizedOffset": 6304
+    },
+    {
+      "lineId": "MI-02-AC-EX-03",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 96,
+      "found": true,
+      "sourceHash": "652043820ecc01a5",
+      "normalizedOffset": 6421
+    },
+    {
+      "lineId": "MI-02-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 98,
+      "found": true,
+      "sourceHash": "e0c22b8cd233c22d",
+      "normalizedOffset": 6531
+    },
+    {
+      "lineId": "MI-02-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 87,
+      "found": true,
+      "sourceHash": "b43b6454d04406ae",
+      "normalizedOffset": 6629
+    },
+    {
+      "lineId": "MI-02-AC-CO-03",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 117,
+      "found": true,
+      "sourceHash": "3db85b229b504336",
+      "normalizedOffset": 6716
+    },
+    {
+      "lineId": "MI-03-CS-KI-01",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 33,
+      "found": true,
+      "sourceHash": "4ab458dddc011169",
+      "normalizedOffset": 3982
+    },
+    {
+      "lineId": "MI-03-CS-KI-02",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 49,
+      "found": true,
+      "sourceHash": "af6c2e08432687d7",
+      "normalizedOffset": 4016
+    },
+    {
+      "lineId": "MI-03-CS-KI-03",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 37,
+      "found": true,
+      "sourceHash": "c4a780bfbd135ef9",
+      "normalizedOffset": 4066
+    },
+    {
+      "lineId": "MI-03-CS-KN-01",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 5,
+      "found": true,
+      "sourceHash": "9cc5195dd21815eb",
+      "normalizedOffset": 4120
+    },
+    {
+      "lineId": "MI-03-CS-KN-02",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "6addf9fb6b247852",
+      "normalizedOffset": 4126
+    },
+    {
+      "lineId": "MI-03-CS-KN-03",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "466f60650d2648ba",
+      "normalizedOffset": 4135
+    },
+    {
+      "lineId": "MI-03-CS-KN-04",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 4,
+      "found": true,
+      "sourceHash": "485fa35968f31614",
+      "normalizedOffset": 4145
+    },
+    {
+      "lineId": "MI-03-CS-KN-05",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 6,
+      "found": true,
+      "sourceHash": "f691a9f707fe73ba",
+      "normalizedOffset": 4150
+    },
+    {
+      "lineId": "MI-03-CS-KN-06",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 6,
+      "found": true,
+      "sourceHash": "c0e96a1f75fd9462",
+      "normalizedOffset": 4157
+    },
+    {
+      "lineId": "MI-03-CS-PF-01",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 35,
+      "found": true,
+      "sourceHash": "eb622a5bbda43269",
+      "normalizedOffset": 4169
+    },
+    {
+      "lineId": "MI-03-CS-PF-02",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 23,
+      "found": true,
+      "sourceHash": "f43c88225680a2fa",
+      "normalizedOffset": 4205
+    },
+    {
+      "lineId": "MI-03-CS-PF-03",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 34,
+      "found": true,
+      "sourceHash": "31055844a845f03a",
+      "normalizedOffset": 4229
+    },
+    {
+      "lineId": "MI-03-CS-PF-04",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 34,
+      "found": true,
+      "sourceHash": "fe4f827cb01ae10b",
+      "normalizedOffset": 4264
+    },
+    {
+      "lineId": "MI-03-CS-VA-01",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 34,
+      "found": true,
+      "sourceHash": "e1d2f93eb7663825",
+      "normalizedOffset": 4304
+    },
+    {
+      "lineId": "MI-03-CS-VA-02",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 34,
+      "found": true,
+      "sourceHash": "f2141480cda808e3",
+      "normalizedOffset": 4339
+    },
+    {
+      "lineId": "MI-03-CS-VA-03",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 16,
+      "found": true,
+      "sourceHash": "b0628470b9826c0c",
+      "normalizedOffset": 4374
+    },
+    {
+      "lineId": "MI-03-CS-VA-04",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 29,
+      "found": true,
+      "sourceHash": "37c6c17b4da8b57e",
+      "normalizedOffset": 4391
+    },
+    {
+      "lineId": "MI-03-AC-ST-01",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 33,
+      "found": true,
+      "sourceHash": "d9ca33977320cdd5",
+      "normalizedOffset": 6850
+    },
+    {
+      "lineId": "MI-03-AC-ST-02",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 48,
+      "found": true,
+      "sourceHash": "bf9c6b36b84a5e27",
+      "normalizedOffset": 6883
+    },
+    {
+      "lineId": "MI-03-AC-ST-03",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 46,
+      "found": true,
+      "sourceHash": "27605e233df843cd",
+      "normalizedOffset": 6931
+    },
+    {
+      "lineId": "MI-03-AC-ST-04",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 41,
+      "found": true,
+      "sourceHash": "0ac14b159d31a7a9",
+      "normalizedOffset": 6977
+    },
+    {
+      "lineId": "MI-03-AC-ST-05",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "71c3b2aad16d0edc",
+      "normalizedOffset": 7018
+    },
+    {
+      "lineId": "MI-03-AC-ST-06",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 42,
+      "found": true,
+      "sourceHash": "b9d3908f2ec05a6f",
+      "normalizedOffset": 7063
+    },
+    {
+      "lineId": "MI-03-AC-ST-07",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 50,
+      "found": true,
+      "sourceHash": "3d57306696a66c58",
+      "normalizedOffset": 7105
+    },
+    {
+      "lineId": "MI-03-AC-ST-08",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 38,
+      "found": true,
+      "sourceHash": "767cf23856aa8f0c",
+      "normalizedOffset": 7155
+    },
+    {
+      "lineId": "MI-03-AC-ST-09",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 39,
+      "found": true,
+      "sourceHash": "0c96b7b3a6995483",
+      "normalizedOffset": 7193
+    },
+    {
+      "lineId": "MI-03-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 129,
+      "found": true,
+      "sourceHash": "6e991035a4bfec6b",
+      "normalizedOffset": 7241
+    },
+    {
+      "lineId": "MI-03-AC-EX-02",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 70,
+      "found": true,
+      "sourceHash": "d3e7ed0eac00e0f0",
+      "normalizedOffset": 7370
+    },
+    {
+      "lineId": "MI-03-AC-EX-03",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 104,
+      "found": true,
+      "sourceHash": "ba7d4d8c29917aaa",
+      "normalizedOffset": 7440
+    },
+    {
+      "lineId": "MI-03-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 125,
+      "found": true,
+      "sourceHash": "e30a4371bd87742f",
+      "normalizedOffset": 7558
+    },
+    {
+      "lineId": "MI-03-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 110,
+      "found": true,
+      "sourceHash": "5c152c44d9ef4a4e",
+      "normalizedOffset": 7683
+    },
+    {
+      "lineId": "MI-03-AC-CO-03",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 139,
+      "found": true,
+      "sourceHash": "bbc03653942f896e",
+      "normalizedOffset": 7793
+    },
+    {
+      "lineId": "MI-03-AC-CO-04",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 58,
+      "found": true,
+      "sourceHash": "75037ad291c0fe87",
+      "normalizedOffset": 7932
+    },
+    {
+      "lineId": "MI-04-CS-KI-01",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 56,
+      "found": true,
+      "sourceHash": "9dd5ed3a62c63239",
+      "normalizedOffset": 4436
+    },
+    {
+      "lineId": "MI-04-CS-KI-02",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 58,
+      "found": true,
+      "sourceHash": "a227d56b45cd8536",
+      "normalizedOffset": 4493
+    },
+    {
+      "lineId": "MI-04-CS-KN-01",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 10,
+      "found": true,
+      "sourceHash": "77ca77af9e3a00c5",
+      "normalizedOffset": 4568
+    },
+    {
+      "lineId": "MI-04-CS-KN-02",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "9fc7482121198605",
+      "normalizedOffset": 4579
+    },
+    {
+      "lineId": "MI-04-CS-PF-01",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 13,
+      "found": true,
+      "sourceHash": "97b454ed999c39b8",
+      "normalizedOffset": 4592
+    },
+    {
+      "lineId": "MI-04-CS-PF-02",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 22,
+      "found": true,
+      "sourceHash": "954e0b2a5c136c34",
+      "normalizedOffset": 4606
+    },
+    {
+      "lineId": "MI-04-CS-PF-03",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 24,
+      "found": true,
+      "sourceHash": "833fe4ae32442340",
+      "normalizedOffset": 4629
+    },
+    {
+      "lineId": "MI-04-CS-PF-04",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 18,
+      "found": true,
+      "sourceHash": "fdd9151ae3ab31c1",
+      "normalizedOffset": 4654
+    },
+    {
+      "lineId": "MI-04-CS-VA-01",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 23,
+      "found": true,
+      "sourceHash": "92bc82f69cc5a8be",
+      "normalizedOffset": 4678
+    },
+    {
+      "lineId": "MI-04-CS-VA-02",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 27,
+      "found": true,
+      "sourceHash": "c71bc546458252dd",
+      "normalizedOffset": 4702
+    },
+    {
+      "lineId": "MI-04-AC-ST-01",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 39,
+      "found": true,
+      "sourceHash": "e9360f9f07911228",
+      "normalizedOffset": 8001
+    },
+    {
+      "lineId": "MI-04-AC-ST-02",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 49,
+      "found": true,
+      "sourceHash": "8910bd0763fb9a21",
+      "normalizedOffset": 8040
+    },
+    {
+      "lineId": "MI-04-AC-ST-03",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 37,
+      "found": true,
+      "sourceHash": "4547b4c282253998",
+      "normalizedOffset": 8089
+    },
+    {
+      "lineId": "MI-04-AC-ST-04",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 52,
+      "found": true,
+      "sourceHash": "fd5e0e59ba6e306a",
+      "normalizedOffset": 8126
+    },
+    {
+      "lineId": "MI-04-AC-ST-05",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 51,
+      "found": true,
+      "sourceHash": "6c079f4550abaab3",
+      "normalizedOffset": 8178
+    },
+    {
+      "lineId": "MI-04-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 128,
+      "found": true,
+      "sourceHash": "b128b86134b7c9db",
+      "normalizedOffset": 8238
+    },
+    {
+      "lineId": "MI-04-AC-EX-02",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 72,
+      "found": true,
+      "sourceHash": "730ec2e3a671502e",
+      "normalizedOffset": 8366
+    },
+    {
+      "lineId": "MI-04-AC-EX-03",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 163,
+      "found": true,
+      "sourceHash": "2431e25a4f229d09",
+      "normalizedOffset": 8438
+    },
+    {
+      "lineId": "MI-04-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 66,
+      "found": true,
+      "sourceHash": "3844afae0d61063c",
+      "normalizedOffset": 8615
+    },
+    {
+      "lineId": "MI-04-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 89,
+      "found": true,
+      "sourceHash": "fdeefa32907513c7",
+      "normalizedOffset": 8681
+    },
+    {
+      "lineId": "MI-04-AC-CO-03",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 61,
+      "found": true,
+      "sourceHash": "ad544f9881310c96",
+      "normalizedOffset": 8770
+    },
+    {
+      "lineId": "MI-05-CS-KI-01",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "5412584200e0fca8",
+      "normalizedOffset": 4746
+    },
+    {
+      "lineId": "MI-05-CS-KI-02",
+      "subject": "middle-info",
+      "family": "핵심 아이디어",
+      "length": 51,
+      "found": true,
+      "sourceHash": "e90f9f984c65fe70",
+      "normalizedOffset": 4790
+    },
+    {
+      "lineId": "MI-05-CS-KN-01",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "f159aa9ed3298993",
+      "normalizedOffset": 4858
+    },
+    {
+      "lineId": "MI-05-CS-KN-02",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 5,
+      "found": true,
+      "sourceHash": "fb756c7f24b27da8",
+      "normalizedOffset": 3325
+    },
+    {
+      "lineId": "MI-05-CS-KN-03",
+      "subject": "middle-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "586a7ffaa7a56a78",
+      "normalizedOffset": 4873
+    },
+    {
+      "lineId": "MI-05-CS-PF-01",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "ed39eb9100ecb208",
+      "normalizedOffset": 4887
+    },
+    {
+      "lineId": "MI-05-CS-PF-02",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 18,
+      "found": true,
+      "sourceHash": "1c04deddd8248e1d",
+      "normalizedOffset": 4908
+    },
+    {
+      "lineId": "MI-05-CS-PF-03",
+      "subject": "middle-info",
+      "family": "과정·기능",
+      "length": 24,
+      "found": true,
+      "sourceHash": "375288ac05b07d57",
+      "normalizedOffset": 4927
+    },
+    {
+      "lineId": "MI-05-CS-VA-01",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 32,
+      "found": true,
+      "sourceHash": "91255fcd54f88b5c",
+      "normalizedOffset": 4957
+    },
+    {
+      "lineId": "MI-05-CS-VA-02",
+      "subject": "middle-info",
+      "family": "가치·태도",
+      "length": 21,
+      "found": true,
+      "sourceHash": "b63ab458744ab33a",
+      "normalizedOffset": 4990
+    },
+    {
+      "lineId": "MI-05-AC-ST-01",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 41,
+      "found": true,
+      "sourceHash": "b605797fe4d90f6d",
+      "normalizedOffset": 8843
+    },
+    {
+      "lineId": "MI-05-AC-ST-02",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 57,
+      "found": true,
+      "sourceHash": "e46d119b1a8421bb",
+      "normalizedOffset": 8884
+    },
+    {
+      "lineId": "MI-05-AC-ST-03",
+      "subject": "middle-info",
+      "family": "성취기준",
+      "length": 57,
+      "found": true,
+      "sourceHash": "f581e89406d97543",
+      "normalizedOffset": 8941
+    },
+    {
+      "lineId": "MI-05-AC-EX-01",
+      "subject": "middle-info",
+      "family": "해설",
+      "length": 150,
+      "found": true,
+      "sourceHash": "01f0555b23c550ee",
+      "normalizedOffset": 9007
+    },
+    {
+      "lineId": "MI-05-AC-CO-01",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 78,
+      "found": true,
+      "sourceHash": "e8e6b28d21fdac0b",
+      "normalizedOffset": 9171
+    },
+    {
+      "lineId": "MI-05-AC-CO-02",
+      "subject": "middle-info",
+      "family": "고려사항",
+      "length": 71,
+      "found": true,
+      "sourceHash": "103e783c80ee4ef7",
+      "normalizedOffset": 9249
+    },
+    {
+      "lineId": "MI-CG-CHAR-01",
+      "subject": "middle-info",
+      "family": "성격",
+      "length": 133,
+      "found": true,
+      "sourceHash": "60ab6e9d5c01f725",
+      "normalizedOffset": 2104
+    },
+    {
+      "lineId": "MI-CG-CHAR-02",
+      "subject": "middle-info",
+      "family": "성격",
+      "length": 76,
+      "found": true,
+      "sourceHash": "5909d004c6499a97",
+      "normalizedOffset": 2584
+    },
+    {
+      "lineId": "MI-CG-CHAR-03",
+      "subject": "middle-info",
+      "family": "성격",
+      "length": 68,
+      "found": true,
+      "sourceHash": "56856b80bb429f52",
+      "normalizedOffset": 2727
+    },
+    {
+      "lineId": "MI-CG-CHAR-04",
+      "subject": "middle-info",
+      "family": "성격",
+      "length": 51,
+      "found": true,
+      "sourceHash": "46fa41bbba5e1ed7",
+      "normalizedOffset": 2795
+    },
+    {
+      "lineId": "MI-CG-GOAL-00",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 84,
+      "found": true,
+      "sourceHash": "92af0965bd57bee6",
+      "normalizedOffset": 2889
+    },
+    {
+      "lineId": "MI-CG-GOAL-01",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 68,
+      "found": true,
+      "sourceHash": "a47a23148dcecccc",
+      "normalizedOffset": 2973
+    },
+    {
+      "lineId": "MI-CG-GOAL-02",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 75,
+      "found": true,
+      "sourceHash": "ae40ddc2ac31a0e3",
+      "normalizedOffset": 3041
+    },
+    {
+      "lineId": "MI-CG-GOAL-03",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 87,
+      "found": true,
+      "sourceHash": "160933dc01b86f45",
+      "normalizedOffset": 3116
+    },
+    {
+      "lineId": "MI-CG-GOAL-04",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 62,
+      "found": true,
+      "sourceHash": "27c5a2b0993989be",
+      "normalizedOffset": 3203
+    },
+    {
+      "lineId": "MI-CG-GOAL-05",
+      "subject": "middle-info",
+      "family": "목표",
+      "length": 79,
+      "found": true,
+      "sourceHash": "5ededbffa8d56e64",
+      "normalizedOffset": 3265
+    },
+    {
+      "lineId": "MI-TE-DIR-01",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 95,
+      "found": true,
+      "sourceHash": "54fb34e38efaa27a",
+      "normalizedOffset": 9350
+    },
+    {
+      "lineId": "MI-TE-DIR-05",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 181,
+      "found": true,
+      "sourceHash": "b13e0919b384529c",
+      "normalizedOffset": 9445
+    },
+    {
+      "lineId": "MI-TE-DIR-06",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 98,
+      "found": true,
+      "sourceHash": "8cf4c9fddd4eaa23",
+      "normalizedOffset": 9626
+    },
+    {
+      "lineId": "MI-TE-DIR-02",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 64,
+      "found": true,
+      "sourceHash": "8f7ab0c41881ef98",
+      "normalizedOffset": 9724
+    },
+    {
+      "lineId": "MI-TE-DIR-03",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 110,
+      "found": true,
+      "sourceHash": "81b006ee2661c48e",
+      "normalizedOffset": 9788
+    },
+    {
+      "lineId": "MI-TE-DIR-04",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 52,
+      "found": true,
+      "sourceHash": "2b06122ed6f78ea4",
+      "normalizedOffset": 9898
+    },
+    {
+      "lineId": "MI-TE-MET-01",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 86,
+      "found": true,
+      "sourceHash": "937736963ea4e85f",
+      "normalizedOffset": 9960
+    },
+    {
+      "lineId": "MI-TE-MET-02",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 85,
+      "found": true,
+      "sourceHash": "636b8c6e5ed5ae3f",
+      "normalizedOffset": 10046
+    },
+    {
+      "lineId": "MI-TE-MET-04",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 62,
+      "found": true,
+      "sourceHash": "6ad47b410875155b",
+      "normalizedOffset": 10131
+    },
+    {
+      "lineId": "MI-TE-MET-03",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 67,
+      "found": true,
+      "sourceHash": "fa330c30d00a0c09",
+      "normalizedOffset": 10193
+    },
+    {
+      "lineId": "MI-TE-MET-05",
+      "subject": "middle-info",
+      "family": "교수·학습",
+      "length": 52,
+      "found": true,
+      "sourceHash": "333aa90ed939839b",
+      "normalizedOffset": 10260
+    },
+    {
+      "lineId": "MI-TE-EVD-01",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 45,
+      "found": true,
+      "sourceHash": "e818611d641f9eaf",
+      "normalizedOffset": 10324
+    },
+    {
+      "lineId": "MI-TE-EVD-02",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 74,
+      "found": true,
+      "sourceHash": "6f3ff7a0b456a3f5",
+      "normalizedOffset": 10369
+    },
+    {
+      "lineId": "MI-TE-EVD-03",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 83,
+      "found": true,
+      "sourceHash": "cb8a5a2e16ffe486",
+      "normalizedOffset": 10443
+    },
+    {
+      "lineId": "MI-TE-EVD-04",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 52,
+      "found": true,
+      "sourceHash": "95a3f72d6c09b04b",
+      "normalizedOffset": 10526
+    },
+    {
+      "lineId": "MI-TE-EVM-01",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 106,
+      "found": true,
+      "sourceHash": "fe88d634146fbf3b",
+      "normalizedOffset": 10585
+    },
+    {
+      "lineId": "MI-TE-EVM-02",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 97,
+      "found": true,
+      "sourceHash": "167d2d1b6586db64",
+      "normalizedOffset": 10691
+    },
+    {
+      "lineId": "MI-TE-EVM-03",
+      "subject": "middle-info",
+      "family": "평가",
+      "length": 64,
+      "found": true,
+      "sourceHash": "6ee9e09fd7391a95",
+      "normalizedOffset": 10788
+    },
+    {
+      "lineId": "HI-01-CS-KI-01",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 49,
+      "found": true,
+      "sourceHash": "675edf639b0539b4",
+      "normalizedOffset": 3381
+    },
+    {
+      "lineId": "HI-01-CS-KI-02",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 45,
+      "found": true,
+      "sourceHash": "0d466917c116bf31",
+      "normalizedOffset": 14206
+    },
+    {
+      "lineId": "HI-01-CS-KN-01",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "ceff7255ea072c1f",
+      "normalizedOffset": 14265
+    },
+    {
+      "lineId": "HI-01-CS-KN-02",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 16,
+      "found": true,
+      "sourceHash": "74017ac4eca8ec73",
+      "normalizedOffset": 14273
+    },
+    {
+      "lineId": "HI-01-CS-PF-01",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 22,
+      "found": true,
+      "sourceHash": "63558288d21b3514",
+      "normalizedOffset": 14295
+    },
+    {
+      "lineId": "HI-01-CS-PF-02",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "70ee8c8cce9abdce",
+      "normalizedOffset": 14318
+    },
+    {
+      "lineId": "HI-01-CS-VA-01",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 28,
+      "found": true,
+      "sourceHash": "83dd173452a81c55",
+      "normalizedOffset": 14344
+    },
+    {
+      "lineId": "HI-01-CS-VA-02",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 26,
+      "found": true,
+      "sourceHash": "1b21a3310e1093e0",
+      "normalizedOffset": 14373
+    },
+    {
+      "lineId": "HI-01-AC-ST-01",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 56,
+      "found": true,
+      "sourceHash": "b80a5a7fbd93f750",
+      "normalizedOffset": 15717
+    },
+    {
+      "lineId": "HI-01-AC-ST-02",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 55,
+      "found": true,
+      "sourceHash": "f4236bf3382a52f2",
+      "normalizedOffset": 15773
+    },
+    {
+      "lineId": "HI-01-AC-ST-03",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 48,
+      "found": true,
+      "sourceHash": "4b3792fd901f6f38",
+      "normalizedOffset": 15828
+    },
+    {
+      "lineId": "HI-01-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 92,
+      "found": true,
+      "sourceHash": "84d85972f5bc0781",
+      "normalizedOffset": 15885
+    },
+    {
+      "lineId": "HI-01-AC-CO-01",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 80,
+      "found": true,
+      "sourceHash": "e2dcd0cfcebce5b7",
+      "normalizedOffset": 15991
+    },
+    {
+      "lineId": "HI-01-AC-CO-02",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 77,
+      "found": true,
+      "sourceHash": "2b8a8702acd79dc3",
+      "normalizedOffset": 16071
+    },
+    {
+      "lineId": "HI-01-AC-CO-03",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 134,
+      "found": true,
+      "sourceHash": "fe64cf241468dbc2",
+      "normalizedOffset": 16148
+    },
+    {
+      "lineId": "HI-02-CS-KI-01",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 35,
+      "found": true,
+      "sourceHash": "410b9a3a15252910",
+      "normalizedOffset": 14414
+    },
+    {
+      "lineId": "HI-02-CS-KI-02",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "4cacdc3acada04ee",
+      "normalizedOffset": 14450
+    },
+    {
+      "lineId": "HI-02-CS-KI-03",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 55,
+      "found": true,
+      "sourceHash": "66e5b27eb5ee3be3",
+      "normalizedOffset": 14494
+    },
+    {
+      "lineId": "HI-02-CS-KN-01",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 12,
+      "found": true,
+      "sourceHash": "a89c0b7738e6aedd",
+      "normalizedOffset": 14563
+    },
+    {
+      "lineId": "HI-02-CS-KN-02",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "e4b2658594650836",
+      "normalizedOffset": 14576
+    },
+    {
+      "lineId": "HI-02-CS-PF-01",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "ca33f3617bc9298b",
+      "normalizedOffset": 14591
+    },
+    {
+      "lineId": "HI-02-CS-PF-02",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 11,
+      "found": true,
+      "sourceHash": "2077ecb3d5e35ec7",
+      "normalizedOffset": 14613
+    },
+    {
+      "lineId": "HI-02-CS-PF-03",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 24,
+      "found": true,
+      "sourceHash": "506cc4bcc672b5a5",
+      "normalizedOffset": 14625
+    },
+    {
+      "lineId": "HI-02-CS-VA-01",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 23,
+      "found": true,
+      "sourceHash": "a81d419aae5cfc9e",
+      "normalizedOffset": 14655
+    },
+    {
+      "lineId": "HI-02-CS-VA-02",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 18,
+      "found": true,
+      "sourceHash": "622176e9a71a7e72",
+      "normalizedOffset": 14679
+    },
+    {
+      "lineId": "HI-02-CS-VA-03",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 24,
+      "found": true,
+      "sourceHash": "5a54865b0e8b699f",
+      "normalizedOffset": 14698
+    },
+    {
+      "lineId": "HI-02-AC-ST-01",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "600e644a7b9b5b90",
+      "normalizedOffset": 16292
+    },
+    {
+      "lineId": "HI-02-AC-ST-02",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 53,
+      "found": true,
+      "sourceHash": "d3e229d8c1767176",
+      "normalizedOffset": 16339
+    },
+    {
+      "lineId": "HI-02-AC-ST-03",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 48,
+      "found": true,
+      "sourceHash": "053c7d958b16ddda",
+      "normalizedOffset": 16392
+    },
+    {
+      "lineId": "HI-02-AC-ST-04",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "1ce95223a15f22fd",
+      "normalizedOffset": 16440
+    },
+    {
+      "lineId": "HI-02-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 90,
+      "found": true,
+      "sourceHash": "86534fd616f7e8b3",
+      "normalizedOffset": 16493
+    },
+    {
+      "lineId": "HI-02-AC-EX-02",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 106,
+      "found": true,
+      "sourceHash": "944f8883e9ff6344",
+      "normalizedOffset": 16583
+    },
+    {
+      "lineId": "HI-02-AC-CO-01",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 129,
+      "found": true,
+      "sourceHash": "696f6867475500da",
+      "normalizedOffset": 16703
+    },
+    {
+      "lineId": "HI-02-AC-CO-02",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 122,
+      "found": true,
+      "sourceHash": "4000e9b98f899348",
+      "normalizedOffset": 16832
+    },
+    {
+      "lineId": "HI-02-AC-CO-03",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 87,
+      "found": true,
+      "sourceHash": "a8900b8f444b210b",
+      "normalizedOffset": 16954
+    },
+    {
+      "lineId": "HI-02-AC-CO-04",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 85,
+      "found": true,
+      "sourceHash": "a50dad65ba0a1df0",
+      "normalizedOffset": 17041
+    },
+    {
+      "lineId": "HI-03-CS-KI-01",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "5e9ce1c5f0bc7e9d",
+      "normalizedOffset": 14744
+    },
+    {
+      "lineId": "HI-03-CS-KI-02",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 37,
+      "found": true,
+      "sourceHash": "a77ecdc445e096dd",
+      "normalizedOffset": 14788
+    },
+    {
+      "lineId": "HI-03-CS-KI-03",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 34,
+      "found": true,
+      "sourceHash": "5bd85c2e9be1a652",
+      "normalizedOffset": 14826
+    },
+    {
+      "lineId": "HI-03-CS-KN-01",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "cc3a104376415f60",
+      "normalizedOffset": 14874
+    },
+    {
+      "lineId": "HI-03-CS-KN-02",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "3306f930f4599034",
+      "normalizedOffset": 14883
+    },
+    {
+      "lineId": "HI-03-CS-KN-03",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 3,
+      "found": true,
+      "sourceHash": "fff1619dbd296ca3",
+      "normalizedOffset": 14893
+    },
+    {
+      "lineId": "HI-03-CS-KN-04",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 11,
+      "found": true,
+      "sourceHash": "31dcb22e2182219f",
+      "normalizedOffset": 14897
+    },
+    {
+      "lineId": "HI-03-CS-KN-05",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "7cb61c8df4129dbd",
+      "normalizedOffset": 14909
+    },
+    {
+      "lineId": "HI-03-CS-KN-06",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "71faf80c25a05026",
+      "normalizedOffset": 14918
+    },
+    {
+      "lineId": "HI-03-CS-KN-07",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "9fd2689d98bd7cad",
+      "normalizedOffset": 14926
+    },
+    {
+      "lineId": "HI-03-CS-PF-01",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 12,
+      "found": true,
+      "sourceHash": "91eacbd8d0ee598d",
+      "normalizedOffset": 14940
+    },
+    {
+      "lineId": "HI-03-CS-PF-02",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "c536575d1d331f94",
+      "normalizedOffset": 14953
+    },
+    {
+      "lineId": "HI-03-CS-PF-03",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 30,
+      "found": true,
+      "sourceHash": "8cc174ebddfd522f",
+      "normalizedOffset": 14974
+    },
+    {
+      "lineId": "HI-03-CS-PF-04",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 35,
+      "found": true,
+      "sourceHash": "c9800b4d7602fabe",
+      "normalizedOffset": 15005
+    },
+    {
+      "lineId": "HI-03-CS-PF-05",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 32,
+      "found": true,
+      "sourceHash": "a2c1dcfa378492f5",
+      "normalizedOffset": 15041
+    },
+    {
+      "lineId": "HI-03-CS-VA-01",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 22,
+      "found": true,
+      "sourceHash": "2f22490a736473ef",
+      "normalizedOffset": 15079
+    },
+    {
+      "lineId": "HI-03-CS-VA-02",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 29,
+      "found": true,
+      "sourceHash": "15fb3af41e9ec04d",
+      "normalizedOffset": 15102
+    },
+    {
+      "lineId": "HI-03-CS-VA-03",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 38,
+      "found": true,
+      "sourceHash": "a088486c6f62eed8",
+      "normalizedOffset": 15132
+    },
+    {
+      "lineId": "HI-03-CS-VA-04",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 32,
+      "found": true,
+      "sourceHash": "dd4457549430e264",
+      "normalizedOffset": 15171
+    },
+    {
+      "lineId": "HI-03-AC-ST-01",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 36,
+      "found": true,
+      "sourceHash": "450be3babee4c3dd",
+      "normalizedOffset": 17143
+    },
+    {
+      "lineId": "HI-03-AC-ST-02",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "bdab40b84cefc9dd",
+      "normalizedOffset": 17179
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "f2fad83cf7d3feeb",
+      "normalizedOffset": 17219
+    },
+    {
+      "lineId": "HI-03-AC-ST-04",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "19f0c658e33570f0",
+      "normalizedOffset": 17259
+    },
+    {
+      "lineId": "HI-03-AC-ST-05",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 35,
+      "found": true,
+      "sourceHash": "7934e099bc427e62",
+      "normalizedOffset": 17303
+    },
+    {
+      "lineId": "HI-03-AC-ST-06",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 32,
+      "found": true,
+      "sourceHash": "d2ba1ed7515c9d82",
+      "normalizedOffset": 17338
+    },
+    {
+      "lineId": "HI-03-AC-ST-07",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 36,
+      "found": true,
+      "sourceHash": "3ec3266249728714",
+      "normalizedOffset": 17370
+    },
+    {
+      "lineId": "HI-03-AC-ST-08",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "a2ab5e57ffce534b",
+      "normalizedOffset": 17406
+    },
+    {
+      "lineId": "HI-03-AC-ST-09",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "604573d10229b5fb",
+      "normalizedOffset": 17446
+    },
+    {
+      "lineId": "HI-03-AC-ST-10",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 34,
+      "found": true,
+      "sourceHash": "0f9a2f81c03fbea7",
+      "normalizedOffset": 17493
+    },
+    {
+      "lineId": "HI-03-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 142,
+      "found": true,
+      "sourceHash": "f4d50ed12b16b86a",
+      "normalizedOffset": 17536
+    },
+    {
+      "lineId": "HI-03-AC-EX-02",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 118,
+      "found": true,
+      "sourceHash": "9688b891d591f7ee",
+      "normalizedOffset": 17678
+    },
+    {
+      "lineId": "HI-03-AC-EX-03",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 84,
+      "found": true,
+      "sourceHash": "e9595d4262467d67",
+      "normalizedOffset": 17796
+    },
+    {
+      "lineId": "HI-03-AC-CO-01",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 110,
+      "found": true,
+      "sourceHash": "fe88ddef8621c7a8",
+      "normalizedOffset": 17894
+    },
+    {
+      "lineId": "HI-03-AC-CO-02",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 79,
+      "found": true,
+      "sourceHash": "ad5daf43734216ab",
+      "normalizedOffset": 18004
+    },
+    {
+      "lineId": "HI-03-AC-CO-03",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 95,
+      "found": true,
+      "sourceHash": "a8fec5d371548080",
+      "normalizedOffset": 18083
+    },
+    {
+      "lineId": "HI-03-AC-CO-04",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 155,
+      "found": true,
+      "sourceHash": "b99859921989138c",
+      "normalizedOffset": 18178
+    },
+    {
+      "lineId": "HI-04-CS-KI-01",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 48,
+      "found": true,
+      "sourceHash": "7e29d96a5b385189",
+      "normalizedOffset": 15219
+    },
+    {
+      "lineId": "HI-04-CS-KI-02",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 44,
+      "found": true,
+      "sourceHash": "b8c33e61ff5e33bf",
+      "normalizedOffset": 15268
+    },
+    {
+      "lineId": "HI-04-CS-KN-01",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "023d6659678d0c7d",
+      "normalizedOffset": 15326
+    },
+    {
+      "lineId": "HI-04-CS-KN-02",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 10,
+      "found": true,
+      "sourceHash": "7117845d0024fc3e",
+      "normalizedOffset": 15336
+    },
+    {
+      "lineId": "HI-04-CS-PF-01",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 26,
+      "found": true,
+      "sourceHash": "e82646ce653bcbd4",
+      "normalizedOffset": 15352
+    },
+    {
+      "lineId": "HI-04-CS-PF-02",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "0ce85328f23caa62",
+      "normalizedOffset": 15379
+    },
+    {
+      "lineId": "HI-04-CS-VA-01",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 18,
+      "found": true,
+      "sourceHash": "0cbc4fa720f1d042",
+      "normalizedOffset": 15406
+    },
+    {
+      "lineId": "HI-04-CS-VA-02",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 27,
+      "found": true,
+      "sourceHash": "5149165812dc94fe",
+      "normalizedOffset": 15425
+    },
+    {
+      "lineId": "HI-04-AC-ST-01",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "f37189190c5144a3",
+      "normalizedOffset": 18344
+    },
+    {
+      "lineId": "HI-04-AC-ST-02",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "a702d2fb2ce326a2",
+      "normalizedOffset": 18388
+    },
+    {
+      "lineId": "HI-04-AC-ST-03",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 58,
+      "found": true,
+      "sourceHash": "652a6300dbc55810",
+      "normalizedOffset": 18433
+    },
+    {
+      "lineId": "HI-04-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 82,
+      "found": true,
+      "sourceHash": "ca8cffddb2565263",
+      "normalizedOffset": 18500
+    },
+    {
+      "lineId": "HI-04-AC-EX-02",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 68,
+      "found": true,
+      "sourceHash": "ae4f237b7c1d5a30",
+      "normalizedOffset": 18582
+    },
+    {
+      "lineId": "HI-04-AC-CO-01",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 62,
+      "found": true,
+      "sourceHash": "34fb0537b0d52614",
+      "normalizedOffset": 18664
+    },
+    {
+      "lineId": "HI-04-AC-CO-02",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 155,
+      "found": true,
+      "sourceHash": "2d6db3cd3a04e671",
+      "normalizedOffset": 18726
+    },
+    {
+      "lineId": "HI-04-AC-CO-03",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 62,
+      "found": true,
+      "sourceHash": "992035f20b2dfb88",
+      "normalizedOffset": 18881
+    },
+    {
+      "lineId": "HI-05-CS-KI-01",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 51,
+      "found": true,
+      "sourceHash": "e90f9f984c65fe70",
+      "normalizedOffset": 4790
+    },
+    {
+      "lineId": "HI-05-CS-KI-02",
+      "subject": "high-info",
+      "family": "핵심 아이디어",
+      "length": 42,
+      "found": true,
+      "sourceHash": "8f886e978a40db84",
+      "normalizedOffset": 15521
+    },
+    {
+      "lineId": "HI-05-CS-KN-01",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "ce91c20083777c87",
+      "normalizedOffset": 15577
+    },
+    {
+      "lineId": "HI-05-CS-KN-02",
+      "subject": "high-info",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "1b828458955d4186",
+      "normalizedOffset": 15586
+    },
+    {
+      "lineId": "HI-05-CS-PF-01",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 26,
+      "found": true,
+      "sourceHash": "ced8cc92ea06bacc",
+      "normalizedOffset": 15599
+    },
+    {
+      "lineId": "HI-05-CS-PF-02",
+      "subject": "high-info",
+      "family": "과정·기능",
+      "length": 31,
+      "found": true,
+      "sourceHash": "c4e969d433d67433",
+      "normalizedOffset": 15626
+    },
+    {
+      "lineId": "HI-05-CS-VA-01",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 22,
+      "found": true,
+      "sourceHash": "b3d194afe065f0e6",
+      "normalizedOffset": 15663
+    },
+    {
+      "lineId": "HI-05-CS-VA-02",
+      "subject": "high-info",
+      "family": "가치·태도",
+      "length": 12,
+      "found": true,
+      "sourceHash": "3ab58db8c524c429",
+      "normalizedOffset": 15686
+    },
+    {
+      "lineId": "HI-05-AC-ST-01",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "1d0111dd01c3af1e",
+      "normalizedOffset": 18955
+    },
+    {
+      "lineId": "HI-05-AC-ST-02",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 46,
+      "found": true,
+      "sourceHash": "4d41632ca23c6617",
+      "normalizedOffset": 19002
+    },
+    {
+      "lineId": "HI-05-AC-ST-03",
+      "subject": "high-info",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "5e85ad3e98cd5f2d",
+      "normalizedOffset": 19048
+    },
+    {
+      "lineId": "HI-05-AC-EX-01",
+      "subject": "high-info",
+      "family": "해설",
+      "length": 110,
+      "found": true,
+      "sourceHash": "0071d3afd8ca0a14",
+      "normalizedOffset": 19101
+    },
+    {
+      "lineId": "HI-05-AC-CO-01",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 85,
+      "found": true,
+      "sourceHash": "f3e52cbee55b2f83",
+      "normalizedOffset": 19225
+    },
+    {
+      "lineId": "HI-05-AC-CO-02",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 122,
+      "found": true,
+      "sourceHash": "606eb8091f6fb2ce",
+      "normalizedOffset": 19310
+    },
+    {
+      "lineId": "HI-05-AC-CO-03",
+      "subject": "high-info",
+      "family": "고려사항",
+      "length": 77,
+      "found": true,
+      "sourceHash": "7ee403ca8217e820",
+      "normalizedOffset": 19432
+    },
+    {
+      "lineId": "HI-CG-CHAR-01",
+      "subject": "high-info",
+      "family": "성격",
+      "length": 61,
+      "found": true,
+      "sourceHash": "c9a344294336ebed",
+      "normalizedOffset": 13307
+    },
+    {
+      "lineId": "HI-CG-CHAR-02",
+      "subject": "high-info",
+      "family": "성격",
+      "length": 96,
+      "found": true,
+      "sourceHash": "b30fae2805d529fd",
+      "normalizedOffset": 13368
+    },
+    {
+      "lineId": "HI-CG-CHAR-03",
+      "subject": "high-info",
+      "family": "성격",
+      "length": 84,
+      "found": true,
+      "sourceHash": "26864daafaafed1f",
+      "normalizedOffset": 13464
+    },
+    {
+      "lineId": "HI-CG-GOAL-00",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 125,
+      "found": true,
+      "sourceHash": "f7b23a9467892a12",
+      "normalizedOffset": 13647
+    },
+    {
+      "lineId": "HI-CG-GOAL-01",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 71,
+      "found": true,
+      "sourceHash": "b3c6e2003033efeb",
+      "normalizedOffset": 13772
+    },
+    {
+      "lineId": "HI-CG-GOAL-02",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 72,
+      "found": true,
+      "sourceHash": "eeef17193575cbc5",
+      "normalizedOffset": 13843
+    },
+    {
+      "lineId": "HI-CG-GOAL-03",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 85,
+      "found": true,
+      "sourceHash": "aff45e1e6cd5ca19",
+      "normalizedOffset": 13915
+    },
+    {
+      "lineId": "HI-CG-GOAL-04",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 62,
+      "found": true,
+      "sourceHash": "120911efca7496af",
+      "normalizedOffset": 14000
+    },
+    {
+      "lineId": "HI-CG-GOAL-05",
+      "subject": "high-info",
+      "family": "목표",
+      "length": 57,
+      "found": true,
+      "sourceHash": "ded933b985f31951",
+      "normalizedOffset": 14062
+    },
+    {
+      "lineId": "HI-TE-DIR-01",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 95,
+      "found": true,
+      "sourceHash": "54fb34e38efaa27a",
+      "normalizedOffset": 9350
+    },
+    {
+      "lineId": "HI-TE-DIR-03",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 107,
+      "found": true,
+      "sourceHash": "c782b603acd2ff15",
+      "normalizedOffset": 9445
+    },
+    {
+      "lineId": "HI-TE-DIR-04",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 98,
+      "found": true,
+      "sourceHash": "8cf4c9fddd4eaa23",
+      "normalizedOffset": 9626
+    },
+    {
+      "lineId": "HI-TE-DIR-05",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 63,
+      "found": true,
+      "sourceHash": "75f17d56e8cc4531",
+      "normalizedOffset": 19839
+    },
+    {
+      "lineId": "HI-TE-DIR-02",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 95,
+      "found": true,
+      "sourceHash": "e39bf6d11cf7236f",
+      "normalizedOffset": 19902
+    },
+    {
+      "lineId": "HI-TE-MET-01",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 88,
+      "found": true,
+      "sourceHash": "7af4e0688f621c52",
+      "normalizedOffset": 20007
+    },
+    {
+      "lineId": "HI-TE-MET-02",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 93,
+      "found": true,
+      "sourceHash": "c65354a1f3deb83e",
+      "normalizedOffset": 20095
+    },
+    {
+      "lineId": "HI-TE-MET-04",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 83,
+      "found": true,
+      "sourceHash": "f9bc9662ffd3a7e5",
+      "normalizedOffset": 20188
+    },
+    {
+      "lineId": "HI-TE-MET-05",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 85,
+      "found": true,
+      "sourceHash": "985e6bc323b9ebad",
+      "normalizedOffset": 20271
+    },
+    {
+      "lineId": "HI-TE-MET-03",
+      "subject": "high-info",
+      "family": "교수·학습",
+      "length": 104,
+      "found": true,
+      "sourceHash": "8c760eef6a07df6c",
+      "normalizedOffset": 20356
+    },
+    {
+      "lineId": "HI-TE-EVD-01",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 45,
+      "found": true,
+      "sourceHash": "e818611d641f9eaf",
+      "normalizedOffset": 10324
+    },
+    {
+      "lineId": "HI-TE-EVD-04",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 74,
+      "found": true,
+      "sourceHash": "6f3ff7a0b456a3f5",
+      "normalizedOffset": 10369
+    },
+    {
+      "lineId": "HI-TE-EVD-02",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 83,
+      "found": true,
+      "sourceHash": "cb8a5a2e16ffe486",
+      "normalizedOffset": 10443
+    },
+    {
+      "lineId": "HI-TE-EVD-03",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 72,
+      "found": true,
+      "sourceHash": "3410db8da3ee5fa4",
+      "normalizedOffset": 20674
+    },
+    {
+      "lineId": "HI-TE-EVM-01",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 106,
+      "found": true,
+      "sourceHash": "60942fa7d09d9702",
+      "normalizedOffset": 20753
+    },
+    {
+      "lineId": "HI-TE-EVM-02",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 111,
+      "found": true,
+      "sourceHash": "06b832624de9087f",
+      "normalizedOffset": 20859
+    },
+    {
+      "lineId": "HI-TE-EVM-03",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 90,
+      "found": true,
+      "sourceHash": "257052ac1556a88c",
+      "normalizedOffset": 20970
+    },
+    {
+      "lineId": "HI-TE-EVM-05",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 60,
+      "found": true,
+      "sourceHash": "57129beed9b38829",
+      "normalizedOffset": 21060
+    },
+    {
+      "lineId": "HI-TE-EVM-04",
+      "subject": "high-info",
+      "family": "평가",
+      "length": 62,
+      "found": true,
+      "sourceHash": "ad1662e82e7b136b",
+      "normalizedOffset": 21120
+    },
+    {
+      "lineId": "AI-22-GEN-CH-01",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 133,
+      "found": true,
+      "sourceHash": "60ab6e9d5c01f725",
+      "normalizedOffset": 2104
+    },
+    {
+      "lineId": "AI-22-GEN-CH-02",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 63,
+      "found": true,
+      "sourceHash": "d0bd39e71cda316b",
+      "normalizedOffset": 2237
+    },
+    {
+      "lineId": "AI-22-GEN-CH-03",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 75,
+      "found": true,
+      "sourceHash": "725ebe1dcf3efe08",
+      "normalizedOffset": 2300
+    },
+    {
+      "lineId": "AI-22-GEN-CH-04",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 109,
+      "found": true,
+      "sourceHash": "12d54633786b78cb",
+      "normalizedOffset": 2375
+    },
+    {
+      "lineId": "AI-22-GEN-CH-05",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 100,
+      "found": true,
+      "sourceHash": "789599d69314b7ab",
+      "normalizedOffset": 2484
+    },
+    {
+      "lineId": "AI-22-GEN-CH-06",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 84,
+      "found": true,
+      "sourceHash": "20cc15d3b72654fa",
+      "normalizedOffset": 21723
+    },
+    {
+      "lineId": "AI-22-GEN-CH-07",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 99,
+      "found": true,
+      "sourceHash": "7d696cbbe193835d",
+      "normalizedOffset": 21807
+    },
+    {
+      "lineId": "AI-22-GEN-CH-08",
+      "subject": "ai-basic",
+      "family": "성격",
+      "length": 68,
+      "found": true,
+      "sourceHash": "e53b3596d73c1576",
+      "normalizedOffset": 21906
+    },
+    {
+      "lineId": "AI-22-GEN-GO-01",
+      "subject": "ai-basic",
+      "family": "목표",
+      "length": 123,
+      "found": true,
+      "sourceHash": "fc6e310f82a7b4bd",
+      "normalizedOffset": 21978
+    },
+    {
+      "lineId": "AI-22-GEN-GO-02",
+      "subject": "ai-basic",
+      "family": "목표",
+      "length": 69,
+      "found": true,
+      "sourceHash": "0e51068ebaa8af84",
+      "normalizedOffset": 22104
+    },
+    {
+      "lineId": "AI-22-GEN-GO-03",
+      "subject": "ai-basic",
+      "family": "목표",
+      "length": 67,
+      "found": true,
+      "sourceHash": "1202770108d9f7d1",
+      "normalizedOffset": 22176
+    },
+    {
+      "lineId": "AI-22-GEN-GO-04",
+      "subject": "ai-basic",
+      "family": "목표",
+      "length": 86,
+      "found": true,
+      "sourceHash": "d43a64517073a87f",
+      "normalizedOffset": 22246
+    },
+    {
+      "lineId": "AI-22-GEN-GO-05",
+      "subject": "ai-basic",
+      "family": "목표",
+      "length": 71,
+      "found": true,
+      "sourceHash": "a9bf63acf97b4d7c",
+      "normalizedOffset": 22335
+    },
+    {
+      "lineId": "AI-22-AI-CI-01",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 32,
+      "found": true,
+      "sourceHash": "c68fd7bb8b2dd2b9",
+      "normalizedOffset": 22444
+    },
+    {
+      "lineId": "AI-22-AI-CI-02",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 38,
+      "found": true,
+      "sourceHash": "7c0b843f0d9bfd9e",
+      "normalizedOffset": 22477
+    },
+    {
+      "lineId": "AI-22-AI-KN-01",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "6f81f0b0643ab880",
+      "normalizedOffset": 22008
+    },
+    {
+      "lineId": "AI-22-AI-KN-02",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "c547e8a6be7b60d6",
+      "normalizedOffset": 22537
+    },
+    {
+      "lineId": "AI-22-AI-KN-03",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "ffcff89384c1b08d",
+      "normalizedOffset": 22545
+    },
+    {
+      "lineId": "AI-22-AI-SK-01",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 16,
+      "found": true,
+      "sourceHash": "ce64177b8855eb21",
+      "normalizedOffset": 22559
+    },
+    {
+      "lineId": "AI-22-AI-SK-02",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 16,
+      "found": true,
+      "sourceHash": "e2fcc74616f75bb1",
+      "normalizedOffset": 22576
+    },
+    {
+      "lineId": "AI-22-AI-SK-03",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "93d9f35551442128",
+      "normalizedOffset": 22593
+    },
+    {
+      "lineId": "AI-22-AI-AT-01",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 16,
+      "found": true,
+      "sourceHash": "7ca8e5852d1b04e3",
+      "normalizedOffset": 22620
+    },
+    {
+      "lineId": "AI-22-AI-AT-02",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 30,
+      "found": true,
+      "sourceHash": "646f6527af15514c",
+      "normalizedOffset": 22637
+    },
+    {
+      "lineId": "AI-22-ML-CI-01",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 44,
+      "found": true,
+      "sourceHash": "b8c33e61ff5e33bf",
+      "normalizedOffset": 15268
+    },
+    {
+      "lineId": "AI-22-ML-CI-02",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "08e303cbcfee12cf",
+      "normalizedOffset": 22731
+    },
+    {
+      "lineId": "AI-22-ML-KN-01",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "335a6511e726ed46",
+      "normalizedOffset": 22788
+    },
+    {
+      "lineId": "AI-22-ML-KN-02",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "becef15190267b5f",
+      "normalizedOffset": 22797
+    },
+    {
+      "lineId": "AI-22-ML-KN-03",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "ddd7edd8e032e3b2",
+      "normalizedOffset": 22806
+    },
+    {
+      "lineId": "AI-22-ML-SK-01",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 14,
+      "found": true,
+      "sourceHash": "75c4c637116c6bb1",
+      "normalizedOffset": 22821
+    },
+    {
+      "lineId": "AI-22-ML-SK-02",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "2133e8b64f028ef5",
+      "normalizedOffset": 22836
+    },
+    {
+      "lineId": "AI-22-ML-SK-03",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 26,
+      "found": true,
+      "sourceHash": "e0037c0a94bf6aa8",
+      "normalizedOffset": 22857
+    },
+    {
+      "lineId": "AI-22-ML-SK-04",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "32b65aa35243477b",
+      "normalizedOffset": 22884
+    },
+    {
+      "lineId": "AI-22-ML-AT-01",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 18,
+      "found": true,
+      "sourceHash": "db82da52963b0da1",
+      "normalizedOffset": 22911
+    },
+    {
+      "lineId": "AI-22-ML-AT-02",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 19,
+      "found": true,
+      "sourceHash": "118f8452d9ea4a13",
+      "normalizedOffset": 22930
+    },
+    {
+      "lineId": "AI-22-SO-CI-01",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 42,
+      "found": true,
+      "sourceHash": "c41f075d0d4c4cc3",
+      "normalizedOffset": 22971
+    },
+    {
+      "lineId": "AI-22-SO-CI-02",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 46,
+      "found": true,
+      "sourceHash": "fde297783294828f",
+      "normalizedOffset": 23014
+    },
+    {
+      "lineId": "AI-22-SO-KN-01",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 12,
+      "found": true,
+      "sourceHash": "4d86d9070c4d881a",
+      "normalizedOffset": 23074
+    },
+    {
+      "lineId": "AI-22-SO-KN-02",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "decb9e547b3867f6",
+      "normalizedOffset": 23087
+    },
+    {
+      "lineId": "AI-22-SO-KN-03",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "b0e2bdfeca19baa2",
+      "normalizedOffset": 23095
+    },
+    {
+      "lineId": "AI-22-SO-SK-01",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 21,
+      "found": true,
+      "sourceHash": "2acfab5088758a92",
+      "normalizedOffset": 23108
+    },
+    {
+      "lineId": "AI-22-SO-SK-02",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 25,
+      "found": true,
+      "sourceHash": "c73bcc5e7fe1449a",
+      "normalizedOffset": 23130
+    },
+    {
+      "lineId": "AI-22-SO-SK-03",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 19,
+      "found": true,
+      "sourceHash": "ac1dfa5741b8219f",
+      "normalizedOffset": 23156
+    },
+    {
+      "lineId": "AI-22-SO-SK-04",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 23,
+      "found": true,
+      "sourceHash": "9d1388897c0846df",
+      "normalizedOffset": 23176
+    },
+    {
+      "lineId": "AI-22-SO-AT-01",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 19,
+      "found": true,
+      "sourceHash": "0adf66be6430d5e4",
+      "normalizedOffset": 23205
+    },
+    {
+      "lineId": "AI-22-SO-AT-02",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 24,
+      "found": true,
+      "sourceHash": "536755b85c89ab48",
+      "normalizedOffset": 23225
+    },
+    {
+      "lineId": "AI-22-PJ-CI-01",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 32,
+      "found": true,
+      "sourceHash": "c66e0bc816124fd2",
+      "normalizedOffset": 23269
+    },
+    {
+      "lineId": "AI-22-PJ-CI-02",
+      "subject": "ai-basic",
+      "family": "핵심 아이디어",
+      "length": 25,
+      "found": true,
+      "sourceHash": "4e674486b6ef2f25",
+      "normalizedOffset": 23302
+    },
+    {
+      "lineId": "AI-22-PJ-KN-01",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 13,
+      "found": true,
+      "sourceHash": "657e99910e55f66b",
+      "normalizedOffset": 23341
+    },
+    {
+      "lineId": "AI-22-PJ-KN-02",
+      "subject": "ai-basic",
+      "family": "지식·이해",
+      "length": 10,
+      "found": true,
+      "sourceHash": "1dea758b9c21bb83",
+      "normalizedOffset": 23355
+    },
+    {
+      "lineId": "AI-22-PJ-SK-01",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 14,
+      "found": true,
+      "sourceHash": "b55e70297b0c09b9",
+      "normalizedOffset": 23371
+    },
+    {
+      "lineId": "AI-22-PJ-SK-02",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 16,
+      "found": true,
+      "sourceHash": "7188d22d4026e543",
+      "normalizedOffset": 23386
+    },
+    {
+      "lineId": "AI-22-PJ-SK-03",
+      "subject": "ai-basic",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "92b7330bfd7dadd1",
+      "normalizedOffset": 23403
+    },
+    {
+      "lineId": "AI-22-PJ-AT-01",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 29,
+      "found": true,
+      "sourceHash": "a46538decf86bde1",
+      "normalizedOffset": 23429
+    },
+    {
+      "lineId": "AI-22-PJ-AT-02",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 31,
+      "found": true,
+      "sourceHash": "14beb57ee1c89104",
+      "normalizedOffset": 23459
+    },
+    {
+      "lineId": "AI-22-PJ-AT-03",
+      "subject": "ai-basic",
+      "family": "가치·태도",
+      "length": 25,
+      "found": true,
+      "sourceHash": "70ebb717bbe699d7",
+      "normalizedOffset": 23491
+    },
+    {
+      "lineId": "AI-22-AI-ST-01",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 66,
+      "found": true,
+      "sourceHash": "484f1defa30d336a",
+      "normalizedOffset": 23536
+    },
+    {
+      "lineId": "AI-22-AI-ST-02",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "10c12c9a427d82b9",
+      "normalizedOffset": 23602
+    },
+    {
+      "lineId": "AI-22-AI-ST-03",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "2196985849e5af28",
+      "normalizedOffset": 23647
+    },
+    {
+      "lineId": "AI-22-AI-ST-04",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 50,
+      "found": true,
+      "sourceHash": "9cb4fd9b0f1931d1",
+      "normalizedOffset": 23692
+    },
+    {
+      "lineId": "AI-22-AI-ST-05",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "f17b5df7b7970305",
+      "normalizedOffset": 23742
+    },
+    {
+      "lineId": "AI-22-AI-EX-01",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 94,
+      "found": true,
+      "sourceHash": "5811ea681ed0dc82",
+      "normalizedOffset": 23795
+    },
+    {
+      "lineId": "AI-22-AI-EX-02",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 78,
+      "found": true,
+      "sourceHash": "8c173f9c9bdf4960",
+      "normalizedOffset": 23889
+    },
+    {
+      "lineId": "AI-22-AI-CN-01",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 153,
+      "found": true,
+      "sourceHash": "cbefeb26ed34c305",
+      "normalizedOffset": 23981
+    },
+    {
+      "lineId": "AI-22-AI-CN-02",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 119,
+      "found": true,
+      "sourceHash": "9d6b2435606cb814",
+      "normalizedOffset": 24134
+    },
+    {
+      "lineId": "AI-22-ML-ST-01",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 48,
+      "found": true,
+      "sourceHash": "802eb7287da86007",
+      "normalizedOffset": 24267
+    },
+    {
+      "lineId": "AI-22-ML-ST-02",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 32,
+      "found": true,
+      "sourceHash": "6c7ceb8ee6327ffe",
+      "normalizedOffset": 24315
+    },
+    {
+      "lineId": "AI-22-ML-ST-03",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 37,
+      "found": true,
+      "sourceHash": "58e1f8a113d9815b",
+      "normalizedOffset": 24347
+    },
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 48,
+      "found": true,
+      "sourceHash": "dcc9afd0e79fc5dc",
+      "normalizedOffset": 24384
+    },
+    {
+      "lineId": "AI-22-ML-ST-05",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 43,
+      "found": true,
+      "sourceHash": "a4bedc4a5ec590fe",
+      "normalizedOffset": 24432
+    },
+    {
+      "lineId": "AI-22-ML-ST-06",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "83e6d7019ee340a1",
+      "normalizedOffset": 24475
+    },
+    {
+      "lineId": "AI-22-ML-EX-01",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 144,
+      "found": true,
+      "sourceHash": "18c40c6b8af883bf",
+      "normalizedOffset": 24531
+    },
+    {
+      "lineId": "AI-22-ML-EX-02",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 85,
+      "found": true,
+      "sourceHash": "0bf87c8c5b9ca83b",
+      "normalizedOffset": 24675
+    },
+    {
+      "lineId": "AI-22-ML-EX-03",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 132,
+      "found": true,
+      "sourceHash": "24ef74f2e371c06f",
+      "normalizedOffset": 24760
+    },
+    {
+      "lineId": "AI-22-ML-EX-04",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 143,
+      "found": true,
+      "sourceHash": "3c4aed2f0b4e1b7a",
+      "normalizedOffset": 24892
+    },
+    {
+      "lineId": "AI-22-ML-CN-01",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 100,
+      "found": true,
+      "sourceHash": "57ddade8b7b1d77b",
+      "normalizedOffset": 25049
+    },
+    {
+      "lineId": "AI-22-ML-CN-02",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 229,
+      "found": true,
+      "sourceHash": "b30e40401f3611a0",
+      "normalizedOffset": 25149
+    },
+    {
+      "lineId": "AI-22-ML-CN-03",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 161,
+      "found": true,
+      "sourceHash": "a76c72546d13d52e",
+      "normalizedOffset": 25378
+    },
+    {
+      "lineId": "AI-22-SO-ST-01",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 55,
+      "found": true,
+      "sourceHash": "65a6156bbd74c809",
+      "normalizedOffset": 25556
+    },
+    {
+      "lineId": "AI-22-SO-ST-02",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "72bf1f4aef7d2c5d",
+      "normalizedOffset": 25611
+    },
+    {
+      "lineId": "AI-22-SO-ST-03",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 46,
+      "found": true,
+      "sourceHash": "2c058f80023de6d0",
+      "normalizedOffset": 25658
+    },
+    {
+      "lineId": "AI-22-SO-ST-04",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 45,
+      "found": true,
+      "sourceHash": "7ae3d148d7c1af6b",
+      "normalizedOffset": 25704
+    },
+    {
+      "lineId": "AI-22-SO-EX-01",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 117,
+      "found": true,
+      "sourceHash": "8b932f8940ca5883",
+      "normalizedOffset": 25758
+    },
+    {
+      "lineId": "AI-22-SO-EX-02",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 192,
+      "found": true,
+      "sourceHash": "b03a6b25ed7f0197",
+      "normalizedOffset": 25875
+    },
+    {
+      "lineId": "AI-22-SO-CN-01",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 144,
+      "found": true,
+      "sourceHash": "3f655fdb05eac913",
+      "normalizedOffset": 26081
+    },
+    {
+      "lineId": "AI-22-SO-CN-02",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 78,
+      "found": true,
+      "sourceHash": "5eddefadc114910c",
+      "normalizedOffset": 26225
+    },
+    {
+      "lineId": "AI-22-SO-CN-03",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 131,
+      "found": true,
+      "sourceHash": "825ead10a1796435",
+      "normalizedOffset": 26303
+    },
+    {
+      "lineId": "AI-22-PJ-ST-01",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 67,
+      "found": true,
+      "sourceHash": "94c9f39453cd7de1",
+      "normalizedOffset": 26449
+    },
+    {
+      "lineId": "AI-22-PJ-ST-02",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "22e1c0408587e5cf",
+      "normalizedOffset": 26516
+    },
+    {
+      "lineId": "AI-22-PJ-ST-03",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 58,
+      "found": true,
+      "sourceHash": "ce77d2200e602e7a",
+      "normalizedOffset": 26556
+    },
+    {
+      "lineId": "AI-22-PJ-ST-04",
+      "subject": "ai-basic",
+      "family": "성취기준",
+      "length": 58,
+      "found": true,
+      "sourceHash": "8a4c1e650d24928e",
+      "normalizedOffset": 26614
+    },
+    {
+      "lineId": "AI-22-PJ-EX-01",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 168,
+      "found": true,
+      "sourceHash": "a686ba9d98a43656",
+      "normalizedOffset": 26681
+    },
+    {
+      "lineId": "AI-22-PJ-EX-02",
+      "subject": "ai-basic",
+      "family": "해설",
+      "length": 101,
+      "found": true,
+      "sourceHash": "64797735d9dd5dbe",
+      "normalizedOffset": 26849
+    },
+    {
+      "lineId": "AI-22-PJ-CN-01",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 166,
+      "found": true,
+      "sourceHash": "16cfc184febb4851",
+      "normalizedOffset": 26964
+    },
+    {
+      "lineId": "AI-22-PJ-CN-02",
+      "subject": "ai-basic",
+      "family": "고려사항",
+      "length": 96,
+      "found": true,
+      "sourceHash": "4578c12d1e4184f3",
+      "normalizedOffset": 27130
+    },
+    {
+      "lineId": "AI-22-GEN-TE-01",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 92,
+      "found": true,
+      "sourceHash": "0974426155bdff28",
+      "normalizedOffset": 9353
+    },
+    {
+      "lineId": "AI-22-GEN-TE-02",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 104,
+      "found": true,
+      "sourceHash": "5f1f963cd8bde8f5",
+      "normalizedOffset": 9448
+    },
+    {
+      "lineId": "AI-22-GEN-TE-03",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 99,
+      "found": true,
+      "sourceHash": "a60cbed0172efc81",
+      "normalizedOffset": 27461
+    },
+    {
+      "lineId": "AI-22-GEN-TE-04",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 120,
+      "found": true,
+      "sourceHash": "dc57bcfbabe999db",
+      "normalizedOffset": 27563
+    },
+    {
+      "lineId": "AI-22-GEN-TE-05",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 83,
+      "found": true,
+      "sourceHash": "6fcf1485a8a22abf",
+      "normalizedOffset": 9963
+    },
+    {
+      "lineId": "AI-22-GEN-TE-06",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 90,
+      "found": true,
+      "sourceHash": "43deb971d16bdd80",
+      "normalizedOffset": 20098
+    },
+    {
+      "lineId": "AI-22-GEN-TE-07",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 138,
+      "found": true,
+      "sourceHash": "689b277d7d96e8bd",
+      "normalizedOffset": 27875
+    },
+    {
+      "lineId": "AI-22-GEN-TE-08",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 82,
+      "found": true,
+      "sourceHash": "d13689198ebb5055",
+      "normalizedOffset": 20274
+    },
+    {
+      "lineId": "AI-22-GEN-TE-09",
+      "subject": "ai-basic",
+      "family": "교수·학습",
+      "length": 53,
+      "found": true,
+      "sourceHash": "f5408b089358725c",
+      "normalizedOffset": 28101
+    },
+    {
+      "lineId": "AI-22-GEN-EV-01",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 42,
+      "found": true,
+      "sourceHash": "c961cb78c1bdd1ec",
+      "normalizedOffset": 10327
+    },
+    {
+      "lineId": "AI-22-GEN-EV-02",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 71,
+      "found": true,
+      "sourceHash": "341d6d1555ab176b",
+      "normalizedOffset": 10372
+    },
+    {
+      "lineId": "AI-22-GEN-EV-03",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 80,
+      "found": true,
+      "sourceHash": "492ed3c0192b565c",
+      "normalizedOffset": 10446
+    },
+    {
+      "lineId": "AI-22-GEN-EV-04",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 67,
+      "found": true,
+      "sourceHash": "aaf63070c8c447ed",
+      "normalizedOffset": 28371
+    },
+    {
+      "lineId": "AI-22-GEN-EV-05",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 106,
+      "found": true,
+      "sourceHash": "a56d30dcc686f42a",
+      "normalizedOffset": 28448
+    },
+    {
+      "lineId": "AI-22-GEN-EV-06",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 108,
+      "found": true,
+      "sourceHash": "c64ceffd5b5e3e60",
+      "normalizedOffset": 20862
+    },
+    {
+      "lineId": "AI-22-GEN-EV-07",
+      "subject": "ai-basic",
+      "family": "평가",
+      "length": 116,
+      "found": true,
+      "sourceHash": "13e4ea65deb53596",
+      "normalizedOffset": 28668
+    },
+    {
+      "lineId": "DS-22-CHARACTER-01",
+      "subject": "data-science",
+      "family": "성격",
+      "length": 308,
+      "found": true,
+      "sourceHash": "3d67b568ccbfad48",
+      "normalizedOffset": 29284
+    },
+    {
+      "lineId": "DS-22-GOALS-INTRO",
+      "subject": "data-science",
+      "family": "목표",
+      "length": 103,
+      "found": true,
+      "sourceHash": "48e6f900e027dc0f",
+      "normalizedOffset": 29596
+    },
+    {
+      "lineId": "DS-22-GOAL-01",
+      "subject": "data-science",
+      "family": "목표",
+      "length": 59,
+      "found": true,
+      "sourceHash": "d7592df160abefc5",
+      "normalizedOffset": 29699
+    },
+    {
+      "lineId": "DS-22-GOAL-02",
+      "subject": "data-science",
+      "family": "목표",
+      "length": 63,
+      "found": true,
+      "sourceHash": "80e1df373496d0cf",
+      "normalizedOffset": 29758
+    },
+    {
+      "lineId": "DS-22-GOAL-03",
+      "subject": "data-science",
+      "family": "목표",
+      "length": 79,
+      "found": true,
+      "sourceHash": "74087b9d4560ea68",
+      "normalizedOffset": 29821
+    },
+    {
+      "lineId": "DS-22-GOAL-04",
+      "subject": "data-science",
+      "family": "목표",
+      "length": 64,
+      "found": true,
+      "sourceHash": "1acd3c4d60a490eb",
+      "normalizedOffset": 29900
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-01",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 16,
+      "found": true,
+      "sourceHash": "9c979565459d9cc0",
+      "normalizedOffset": 30122
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-02",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 13,
+      "found": true,
+      "sourceHash": "9cb3e8c0fb845467",
+      "normalizedOffset": 30139
+    },
+    {
+      "lineId": "DS-22-DS-01-PF-03",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 12,
+      "found": true,
+      "sourceHash": "7f613e84192bd0a2",
+      "normalizedOffset": 30153
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-01",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 15,
+      "found": true,
+      "sourceHash": "7a084b1264de1561",
+      "normalizedOffset": 30171
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-02",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 12,
+      "found": true,
+      "sourceHash": "e27c30bfddc20dc6",
+      "normalizedOffset": 30187
+    },
+    {
+      "lineId": "DS-22-DS-01-VA-03",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 14,
+      "found": true,
+      "sourceHash": "2e06bfe8c2c4b785",
+      "normalizedOffset": 30200
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-01",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 12,
+      "found": true,
+      "sourceHash": "23f93e2240122826",
+      "normalizedOffset": 30338
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-02",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 18,
+      "found": true,
+      "sourceHash": "afc5498bb019bb3f",
+      "normalizedOffset": 30351
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-03",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 22,
+      "found": true,
+      "sourceHash": "410b24866d1c42fb",
+      "normalizedOffset": 30370
+    },
+    {
+      "lineId": "DS-22-DS-02-PF-04",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 15,
+      "found": true,
+      "sourceHash": "7888f599ca093438",
+      "normalizedOffset": 30393
+    },
+    {
+      "lineId": "DS-22-DS-02-VA-01",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 17,
+      "found": true,
+      "sourceHash": "5ed8ecdf4d375c14",
+      "normalizedOffset": 30414
+    },
+    {
+      "lineId": "DS-22-DS-02-VA-02",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 16,
+      "found": true,
+      "sourceHash": "3b3098a70c2e95bc",
+      "normalizedOffset": 30432
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-01",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 11,
+      "found": true,
+      "sourceHash": "a02d436ad084962d",
+      "normalizedOffset": 30583
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-02",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 8,
+      "found": true,
+      "sourceHash": "27f02a08912fccbe",
+      "normalizedOffset": 30595
+    },
+    {
+      "lineId": "DS-22-DS-03-PF-03",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 13,
+      "found": true,
+      "sourceHash": "13e0f0f0cbf3ea75",
+      "normalizedOffset": 30604
+    },
+    {
+      "lineId": "DS-22-DS-03-VA-01",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 18,
+      "found": true,
+      "sourceHash": "575b2fb9b253fcfc",
+      "normalizedOffset": 30623
+    },
+    {
+      "lineId": "DS-22-DS-03-VA-02",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 18,
+      "found": true,
+      "sourceHash": "0a7182022ac80f71",
+      "normalizedOffset": 30642
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-01",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 15,
+      "found": true,
+      "sourceHash": "73edd044fed99401",
+      "normalizedOffset": 30805
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-02",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 20,
+      "found": true,
+      "sourceHash": "e80f146c8fe125f0",
+      "normalizedOffset": 30821
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-03",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 12,
+      "found": true,
+      "sourceHash": "678212ee2a4d1cc7",
+      "normalizedOffset": 30842
+    },
+    {
+      "lineId": "DS-22-DS-04-PF-04",
+      "subject": "data-science",
+      "family": "과정·기능",
+      "length": 13,
+      "found": true,
+      "sourceHash": "2519fb76cecc2efc",
+      "normalizedOffset": 30855
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-01",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 22,
+      "found": true,
+      "sourceHash": "f8781effe9b6b328",
+      "normalizedOffset": 30874
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-02",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 25,
+      "found": true,
+      "sourceHash": "c2b2efa79b97e282",
+      "normalizedOffset": 30897
+    },
+    {
+      "lineId": "DS-22-DS-04-VA-03",
+      "subject": "data-science",
+      "family": "가치·태도",
+      "length": 22,
+      "found": true,
+      "sourceHash": "328f888c780f7b84",
+      "normalizedOffset": 30923
+    },
+    {
+      "lineId": "DS-22-12데과01-01",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 38,
+      "found": true,
+      "sourceHash": "f68b7dd3c14ac77c",
+      "normalizedOffset": 30977
+    },
+    {
+      "lineId": "DS-22-12데과01-02",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 40,
+      "found": true,
+      "sourceHash": "1948b0b941a4a4ff",
+      "normalizedOffset": 31026
+    },
+    {
+      "lineId": "DS-22-12데과01-03",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 56,
+      "found": true,
+      "sourceHash": "dd4ce0e70b914f9e",
+      "normalizedOffset": 31077
+    },
+    {
+      "lineId": "DS-22-12데과01-04",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 42,
+      "found": true,
+      "sourceHash": "0b9da448a329a9fe",
+      "normalizedOffset": 31144
+    },
+    {
+      "lineId": "DS-22-12데과02-01",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 31,
+      "found": true,
+      "sourceHash": "380f7aff01f9d021",
+      "normalizedOffset": 31737
+    },
+    {
+      "lineId": "DS-22-12데과02-02",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "af246700c0d16966",
+      "normalizedOffset": 31779
+    },
+    {
+      "lineId": "DS-22-12데과02-03",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 29,
+      "found": true,
+      "sourceHash": "2c05334aa909c233",
+      "normalizedOffset": 31837
+    },
+    {
+      "lineId": "DS-22-12데과02-04",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 30,
+      "found": true,
+      "sourceHash": "ad8a570f4b65f788",
+      "normalizedOffset": 31877
+    },
+    {
+      "lineId": "DS-22-12데과03-01",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 32,
+      "found": true,
+      "sourceHash": "dc118b7d6ce94f30",
+      "normalizedOffset": 32387
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 43,
+      "found": true,
+      "sourceHash": "3a67ba001cafd41f",
+      "normalizedOffset": 32430
+    },
+    {
+      "lineId": "DS-22-12데과03-03",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 44,
+      "found": true,
+      "sourceHash": "d37c8ff62e09e7cc",
+      "normalizedOffset": 32484
+    },
+    {
+      "lineId": "DS-22-12데과03-04",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 33,
+      "found": true,
+      "sourceHash": "093abad5e2632314",
+      "normalizedOffset": 32539
+    },
+    {
+      "lineId": "DS-22-12데과03-05",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 30,
+      "found": true,
+      "sourceHash": "13189cca5e6b1ec6",
+      "normalizedOffset": 32583
+    },
+    {
+      "lineId": "DS-22-12데과03-06",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 36,
+      "found": true,
+      "sourceHash": "c5e4eb5c2bb9b28f",
+      "normalizedOffset": 32624
+    },
+    {
+      "lineId": "DS-22-12데과04-01",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 46,
+      "found": true,
+      "sourceHash": "ef43a63426421c91",
+      "normalizedOffset": 33291
+    },
+    {
+      "lineId": "DS-22-12데과04-02",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 47,
+      "found": true,
+      "sourceHash": "437934be5230ab7e",
+      "normalizedOffset": 33348
+    },
+    {
+      "lineId": "DS-22-12데과04-03",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 35,
+      "found": true,
+      "sourceHash": "5263b01247d68762",
+      "normalizedOffset": 33406
+    },
+    {
+      "lineId": "DS-22-12데과04-04",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 46,
+      "found": true,
+      "sourceHash": "84c7989fa8d90648",
+      "normalizedOffset": 33452
+    },
+    {
+      "lineId": "DS-22-12데과04-05",
+      "subject": "data-science",
+      "family": "성취기준",
+      "length": 55,
+      "found": true,
+      "sourceHash": "65d2a780d8481a30",
+      "normalizedOffset": 33509
+    },
+    {
+      "lineId": "DS-22-01-KI-01",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 32,
+      "found": true,
+      "sourceHash": "8e017a2f784192da",
+      "normalizedOffset": 30003
+    },
+    {
+      "lineId": "DS-22-01-KI-02",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 36,
+      "found": true,
+      "sourceHash": "3d57b7d326b4c256",
+      "normalizedOffset": 30036
+    },
+    {
+      "lineId": "DS-22-01-KU-01",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "17ebef7878eea29e",
+      "normalizedOffset": 30086
+    },
+    {
+      "lineId": "DS-22-01-KU-02",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 9,
+      "found": true,
+      "sourceHash": "d2ec7f6475230533",
+      "normalizedOffset": 30095
+    },
+    {
+      "lineId": "DS-22-01-KU-03",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 11,
+      "found": true,
+      "sourceHash": "926a90a17f1c890e",
+      "normalizedOffset": 30105
+    },
+    {
+      "lineId": "DS-22-02-KI-01",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 30,
+      "found": true,
+      "sourceHash": "064dc46a6c5b0e60",
+      "normalizedOffset": 30234
+    },
+    {
+      "lineId": "DS-22-02-KI-02",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 39,
+      "found": true,
+      "sourceHash": "e1d0178fd38f05e9",
+      "normalizedOffset": 30265
+    },
+    {
+      "lineId": "DS-22-02-KU-01",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 6,
+      "found": true,
+      "sourceHash": "562c449ca1fcceef",
+      "normalizedOffset": 30318
+    },
+    {
+      "lineId": "DS-22-02-KU-02",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "59ee00411330a785",
+      "normalizedOffset": 30325
+    },
+    {
+      "lineId": "DS-22-03-KI-01",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 27,
+      "found": true,
+      "sourceHash": "4f66712123873ed9",
+      "normalizedOffset": 30469
+    },
+    {
+      "lineId": "DS-22-03-KI-02",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 43,
+      "found": true,
+      "sourceHash": "235ef20ce5f30d79",
+      "normalizedOffset": 30497
+    },
+    {
+      "lineId": "DS-22-03-KU-01",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "cbd8aba04a5054da",
+      "normalizedOffset": 30554
+    },
+    {
+      "lineId": "DS-22-03-KU-02",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 4,
+      "found": true,
+      "sourceHash": "7334532247b9eb91",
+      "normalizedOffset": 30563
+    },
+    {
+      "lineId": "DS-22-03-KU-03",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 4,
+      "found": true,
+      "sourceHash": "84a00f475214c0a2",
+      "normalizedOffset": 30568
+    },
+    {
+      "lineId": "DS-22-03-KU-04",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 4,
+      "found": true,
+      "sourceHash": "6b4271c3b5e838a0",
+      "normalizedOffset": 30573
+    },
+    {
+      "lineId": "DS-22-04-KI-01",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 40,
+      "found": true,
+      "sourceHash": "6c64fd66594560c6",
+      "normalizedOffset": 30681
+    },
+    {
+      "lineId": "DS-22-04-KI-02",
+      "subject": "data-science",
+      "family": "핵심 아이디어",
+      "length": 38,
+      "found": true,
+      "sourceHash": "6c2265b5e803ccd6",
+      "normalizedOffset": 30722
+    },
+    {
+      "lineId": "DS-22-04-KU-01",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "70ee3d4c76df6ab0",
+      "normalizedOffset": 30774
+    },
+    {
+      "lineId": "DS-22-04-KU-02",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 8,
+      "found": true,
+      "sourceHash": "3c9e0f04d84807b5",
+      "normalizedOffset": 30783
+    },
+    {
+      "lineId": "DS-22-04-KU-03",
+      "subject": "data-science",
+      "family": "지식·이해",
+      "length": 7,
+      "found": true,
+      "sourceHash": "d68f695d0519c391",
+      "normalizedOffset": 30792
+    }
+  ]
+}

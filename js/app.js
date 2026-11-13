@@ -8,7 +8,7 @@ const DATA=EXTRA_DATA.reduce((acc,d)=>({...acc,lines:[...acc.lines,...d.lines],k
 const $=id=>document.getElementById(id),state=CL.storage.load(),engine=CL.study.makeEngine(DATA,state);
 // 누적 상태가 OFF였던 기존 사용자는 기존 카드 기록을 보존하면서 오답 카드를 항상 활성화한다.
 state.ui.retry=true;CL.storage.restoreScopeRound(state);
-const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retryReset:$('retryResetButton'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
+const el={subject:$('subjectSelect'),area:$('areaSelect'),family:$('familySelect'),stage:$('stageSelect'),zoom:$('zoomSelect'),content:$('studyContent'),feedback:$('feedback'),meta:$('taskMeta'),progress:$('progressMeta'),retryReset:$('retryResetButton'),check:$('checkButton'),reveal:$('revealButton'),prev:$('prevButton'),next:$('nextButton'),round:$('nextRoundButton'),source:$('sourceButton'),dialog:$('sourceDialog'),dialogBody:$('sourceDialogBody'),closeSource:$('closeSource'),provenance:$('provenanceFooter'),studyPage:$('studyPage'),reviewPage:$('reviewPage'),studyTab:$('studyMainTab'),reviewTab:$('reviewMainTab'),retryDock:$('retryDock'),reviewSummary:$('reviewSummary'),reviewRetryCount:$('reviewRetryCount'),reviewWeakCount:$('reviewWeakCount'),reviewRetryList:$('reviewRetryList'),reviewWeakList:$('reviewWeakList'),clearAnswers:$('clearAnswersButton'),maskBulk:$('maskBulkControls'),maskHideAll:$('maskHideAllButton'),maskShowAll:$('maskShowAllButton'),resetReview:$('resetReviewButton'),reviewTodayCount:$('reviewTodayCount'),dailyReviewList:$('dailyReviewList'),
 areaMemoDock:$('areaMemoDock'),areaMemoShell:$('areaMemoShell'),areaMemoTab:$('areaMemoTab'),
 areaMemoPanel:$('areaMemoPanel'),areaMemoTitle:$('areaMemoTitle'),areaMemoScope:$('areaMemoScope'),
 areaMemoText:$('areaMemoText'),areaMemoSaveStatus:$('areaMemoSaveStatus'),
@@ -1461,7 +1461,7 @@ function taskContext(task){
 }
 function render(){
   const task=currentTask(),st=engine.stats();el.feedback.textContent='';el.feedback.className='feedback';
-  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.areaNav)el.areaNav.hidden=true;if(el.provenance)el.provenance.textContent='';return;}
+  if(!task){el.content.innerHTML='<div class="empty">현재 조건에 해당하는 학습 항목이 없습니다.</div>';el.meta.textContent='';el.progress.textContent='';if(el.areaNav)el.areaNav.hidden=true;if(el.provenance)el.provenance.textContent='';updateMaskBulkControls();return;}
   const c=taskContext(task);el.meta.textContent=`${c.subject} · ${c.area} · ${c.family}`;el.progress.textContent=`${st.cursor} / ${st.total}`;renderAreaNavigator(task);
   if(task.type==='content-system')renderContentSystem(task);
   else if(task.type==='content-standards')renderContentStandards(task);
@@ -1475,6 +1475,7 @@ function render(){
   el.reveal.disabled=!gradable;
   el.check.hidden=!gradable;
   el.reveal.hidden=!gradable;
+  updateMaskBulkControls();
   renderProvenance(task);prepareAnswerFields();renderRetryDock();persist();
 }
 function hardClozeUnits(text){
@@ -2022,7 +2023,16 @@ function renderLine(line){
   const set=engine.selectedSet(line),ks=engine.keywordsForSet(line,set);if(!set||!ks.length){el.content.innerHTML=`<div class="source-text">${esc(line.sourceText)}</div>`;return;}el.content.innerHTML=`<div class="cloze-text">${renderWithSpans(line.sourceText,ks,(k,i)=>`<input class="inline-input" data-answer="${esc(k.text)}" aria-label="빈칸 ${i+1}" autocomplete="off">`)}</div>`;
 }
 function renderWithSpans(text,ks,replacer){let out='',cursor=0;ks.forEach((k,i)=>{out+=esc(text.slice(cursor,k.start))+replacer(k,i);cursor=k.end;});return out+esc(text.slice(cursor));}
-function bindMasks(){document.querySelectorAll('[data-reveal]').forEach(x=>x.onclick=()=>x.classList.toggle('revealed'));}
+function bindMasks(){el.content.querySelectorAll('.mask[data-reveal]').forEach(x=>x.onclick=()=>x.classList.toggle('revealed'));}
+function setAllMasks(open){
+  if(state.ui.mode!=='mask')return;
+  el.content.querySelectorAll('.mask[data-reveal]').forEach(mask=>mask.classList.toggle('revealed',open));
+}
+function updateMaskBulkControls(){
+  const maskMode=state.ui.mode==='mask'&&!!currentTask();
+  if(el.maskBulk)el.maskBulk.hidden=!maskMode;
+  if(el.clearAnswers)el.clearAnswers.hidden=maskMode;
+}
 function groupSections(task){
   if(task.type==='content-system')return [...(task.group.coreIdeas?.length?[{family:'핵심 아이디어',items:task.group.coreIdeas}]:[]),...task.group.rows];
   if(task.type==='content-standards')return [...(task.group.content?.coreIdeas?.length?[{family:'핵심 아이디어',items:task.group.content.coreIdeas}]:[]),...(task.group.content?.rows||[]),...(task.group.standards.length?[{family:'성취기준',items:task.group.standards}]:[]),...(task.group.explanations?.length?[{family:'해설',items:task.group.explanations}]:[])];
@@ -2680,6 +2690,8 @@ el.dailyReviewList.addEventListener('keydown',e=>{
   e.preventDefault();gradeDailyReview(id);
 });
 el.clearAnswers.onclick=clearFilledAnswers;
+el.maskHideAll?.addEventListener('click',()=>setAllMasks(false));
+el.maskShowAll?.addEventListener('click',()=>setAllMasks(true));
 el.resetReview.onclick=resetReviewData;
 el.subject.onchange=()=>filterChange('subject');
 el.area.onchange=()=>filterChange('area');

@@ -1,0 +1,49 @@
+{
+  "qaId": "2026-11-12-stage3-round10-stage5-offline-regression",
+  "method": "오프라인 Chromium에서 프로젝트 HTML/CSS/JS 실제 소스를 DOM 주입하여 검증, 주소 접속이 아니므로 실제 배포/새로고침 후 localStorage 테스트가 아님",
+  "tests": [
+    {
+      "file": "_curri_round10_dom_report.json",
+      "passed": 15,
+      "failed": 0,
+      "pageErrors": []
+    },
+    {
+      "file": "_curri_round10_review_report.json",
+      "passed": 13,
+      "failed": 0,
+      "pageErrors": []
+    },
+    {
+      "file": "_curri_round10_mask_report.json",
+      "passed": 18,
+      "failed": 0,
+      "pageErrors": []
+    }
+  ],
+  "totalPassed": 46,
+  "failed": 0,
+  "pageErrors": 0,
+  "dataValidation": {
+    "lines": 449,
+    "activeUnits": 582,
+    "unchangedOfficialSourceTexts": 449,
+    "unitSpanErrors": 0,
+    "setReferenceErrors": 0,
+    "generatedDataParity": "PASS"
+  },
+  "liveSiteStatus": "https://curriloop.vercel.app 및 가상 HTTPS 주소: 실행 환경에서 접근 제한, 미검증",
+  "smokeScenarios": [
+    "내용체계+성취기준+해설 묶음에서 24개 전체 정답",
+    "복습 과정·기능 모든 칸 정답/부분 오답/확인 후 기록 반영",
+    "기출 2024-B-07 보류 문구",
+    "모바일 맨 위/맨 아래 버튼 숨김",
+    "마스킹 전체 열기·전체 가리기·개별 클릭",
+    "기존 마스킹 아닌 모드 빈칸 비우기"
+  ],
+  "remainingQA": [
+    "실제 배포 브라우저 새로고침·학습 범위와 복습 데이터 장기 저장 검사",
+    "모바일 실제 기기 터치 및 오답 재인출",
+    "구형 검사기 고정 카운트 조건 정리"
+  ]
+}

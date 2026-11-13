@@ -8,7 +8,7 @@
   <title>CurriLoop</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/css/app.css?b=20261112-hide-mobile-pagejump-v1">
+  <link rel="stylesheet" href="assets/css/app.css?b=20261112-mask-all-controls-v1">
 </head>
 <body data-build="2026.10.27-53">
   <header class="app-header">
@@ -81,7 +81,11 @@
           <button id="checkButton" class="primary">채점</button>
           <button id="revealButton">정답 채우기</button>
         </div>
-        <button id="clearAnswersButton" class="text-button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button>
+        <div id="maskBulkControls" class="mask-bulk-controls" role="group" aria-label="마스킹 전체 조작" hidden>
+          <button id="maskHideAllButton" type="button" class="mask-bulk-button">전체 가리기</button>
+          <button id="maskShowAllButton" type="button" class="mask-bulk-button">전체 열기</button>
+        </div>
+        <button id="clearAnswersButton" class="text-button" type="button" title="저장된 빈칸 입력과 판정만 비웁니다. 복습 기록은 유지됩니다.">빈칸 비우기</button>
       </div>
     </section>
 
@@ -198,9 +202,9 @@
     <div id="sourceDialogBody"></div>
   </dialog>
 
-  <script src="data/generated/study-data.js?b=20261112-stage3-r8"></script>
+  <script src="data/generated/study-data.js?b=20261113-stage3-r12"></script>
   <script src="data/generated/exam-data.js?b=20261105-exam-audit-batch5"></script>
-  <script src="data/generated/ai-basic-data.js?b=20261112-stage3-r8"></script>
+  <script src="data/generated/ai-basic-data.js?b=20261113-stage3-r12"></script>
   <script src="data/generated/data-science-data.js?b=20261112-stage3-r7"></script>
   <script src="data/generated/exam-display-bounds.js?b=20261027-53"></script>
   <script src="js/core/config.js?b=20261027-53"></script>
@@ -208,6 +212,6 @@
   <script src="js/core/grading.js?b=20261027-53"></script>
   <script src="js/core/study-engine.js?b=20261112-cstx-r3"></script>
   <script src="data/generated/third-pass-explanations.js?b=20261027-53"></script>
-  <script src="js/app.js?b=20261112-semantic-r6-runtime"></script>
+  <script src="js/app.js?b=20261112-mask-all-controls-v1"></script>
 </body>
 </html>

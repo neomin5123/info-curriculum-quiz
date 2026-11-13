@@ -1920,3 +1920,10 @@ body.exam-wide .exam-detail{padding:17px clamp(12px,1.3vw,24px)}
 @media (max-width:760px), (hover:none) and (pointer:coarse){
   .page-jump-dock{display:none!important}
 }
+
+/* 2026-11-12 — masking mode: two explicit whole-card hide/reveal controls */
+.study-card .mask-bulk-controls{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin-left:auto;flex-wrap:wrap}
+.study-card .mask-bulk-controls[hidden],.study-card #clearAnswersButton[hidden]{display:none!important}
+.study-card .mask-bulk-button{border:1px solid #cbd9d1;background:#fff;color:#315e48;padding:8px 12px;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap}
+.study-card .mask-bulk-button:hover{background:#f0f6f2;border-color:#8dae9b}
+@media(max-width:440px){.study-card .mask-bulk-controls{gap:5px}.study-card .mask-bulk-button{padding:7px 9px;font-size:12px}}

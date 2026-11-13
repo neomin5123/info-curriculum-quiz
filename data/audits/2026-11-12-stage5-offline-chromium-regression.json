@@ -1,0 +1,287 @@
+{
+  "title": "CurriLoop stage5 offline browser regression QA",
+  "date": "2026-11-12",
+  "method": "Chromium 144 with actual app HTML/CSS/classic JS, injected into about:blank due runtime policy blocking localhost/file navigation. Test localStorage in-memory shim, touch viewport flags",
+  "summary": {
+    "smokePassed": 15,
+    "reviewPassed": 13,
+    "totalPassed": 28,
+    "failed": 0,
+    "pageErrors": 0,
+    "mode": "offline DOM injection only, NOT deployed site end-to-end"
+  },
+  "positiveCoverage": [
+    "combined dropdown and grouping",
+    "24-blank correct grading",
+    "pending 2024-B-07 availability",
+    "process/function five-blank correct case",
+    "process/function one-wrong case",
+    "record not persisted before acknowledge",
+    "only wrong line marked wrong after acknowledgement",
+    "desktop jump buttons shown",
+    "mobile portrait and landscape jump buttons hidden",
+    "navigation between study, review and exams",
+    "no HTML input title leak",
+    "data science explanation bundle hidden"
+  ],
+  "pendingCoverage": [
+    "actual GitHub deployment and URL navigation",
+    "real browser persistence after reload / service worker cache",
+    "multi-day real-world calendar review cadence",
+    "manual mobile touch and visual/layout review",
+    "legacy auto validators with historical fixed hashes"
+  ],
+  "testSets": {
+    "smoke": {
+      "scenario": "Offline DOM-injected Chromium using actual compiled HTML/CSS/JS; NOT HTTP deployment browser",
+      "passed": 15,
+      "failed": 0,
+      "checks": [
+        {
+          "name": "app initialization (all four subjects)",
+          "pass_": true,
+          "info": [
+            {
+              "value": "all",
+              "text": "전체 과목"
+            },
+            {
+              "value": "middle-info",
+              "text": "중학교 정보"
+            },
+            {
+              "value": "high-info",
+              "text": "고등학교 정보"
+            },
+            {
+              "value": "ai-basic",
+              "text": "인공지능 기초"
+            },
+            {
+              "value": "data-science",
+              "text": "데이터 과학"
+            }
+          ]
+        },
+        {
+          "name": "desktop jump dock visible",
+          "pass_": true,
+          "info": null
+        },
+        {
+          "name": "answer input title absent",
+          "pass_": true,
+          "info": {
+            "inputs": 0
+          }
+        },
+        {
+          "name": "study item dropdown populated",
+          "pass_": true,
+          "info": [
+            {
+              "value": "content-system",
+              "text": "내용체계"
+            },
+            {
+              "value": "standards",
+              "text": "성취기준"
+            },
+            {
+              "value": "content-standards",
+              "text": "내용체계 + 성취기준"
+            },
+            {
+              "value": "content-standards-explanations",
+              "text": "내용체계 + 성취기준 + 성취기준 해설"
+            },
+            {
+              "value": "explain-consider",
+              "text": "성취기준 해설 + 적용 시 고려사항"
+            }
+          ]
+        },
+        {
+          "name": "combined study content",
+          "pass_": true,
+          "info": {
+            "area": {
+              "value": "all",
+              "text": "전체 영역"
+            },
+            "value": {
+              "value": "content-standards-explanations",
+              "text": "내용체계 + 성취기준 + 성취기준 해설"
+            },
+            "start": "핵심 아이디어\n1\n의 유기적 연결을 통해 동작하는 \n은 \n를 높이는 데 활용된다.\n2\n하는 것은 시스템에 대한 전체 흐름과 \n의 가치를 이해하는 데 도움을 준다.\n범주\n내용 요소\n지식·이해\n1\n2\n3\n과정·기능\n1\n컴퓨팅 시스템의 \n를 파악하고, \n를 \n2\n생활 속에서 \n이 적용된 사례 조사하기\n3\n 구성하기\n가치·태도\n1\n컴퓨팅 시스템의 필요성과 가치를 판단하는 자세\n2\n피지컬 컴퓨팅 시스템의 구성요소를 목적에 맞게 선택하는"
+          }
+        },
+        {
+          "name": "combined inputs generated",
+          "pass_": true,
+          "info": 24
+        },
+        {
+          "name": "combined no hover title",
+          "pass_": true,
+          "info": null
+        },
+        {
+          "name": "combined answer check",
+          "pass_": true,
+          "info": "전체 정답"
+        },
+        {
+          "name": "data science no explanation bundle",
+          "pass_": true,
+          "info": [
+            "성격 + 목표",
+            "내용체계",
+            "성취기준",
+            "내용체계 + 성취기준"
+          ]
+        },
+        {
+          "name": "exam tab opens",
+          "pass_": true,
+          "info": "2014–2026학년도 · 269문항 · 미수록 2015학년도 · 사용자 제공 전공 기출 PDF 기반"
+        },
+        {
+          "name": "review tab opens",
+          "pass_": true,
+          "info": "오늘 복습 완료"
+        },
+        {
+          "name": "mobile portrait jump dock hidden",
+          "pass_": true,
+          "info": null
+        },
+        {
+          "name": "mobile portrait app initialized",
+          "pass_": true,
+          "info": null
+        },
+        {
+          "name": "mobile landscape jump dock hidden",
+          "pass_": true,
+          "info": null
+        },
+        {
+          "name": "mobile landscape app initialized",
+          "pass_": true,
+          "info": null
+        }
+      ],
+      "pageErrors": []
+    },
+    "reviewAndExam": {
+      "checks": [
+        {
+          "case": "process review group rendered False",
+          "passed": true,
+          "details": {
+            "cards": 1,
+            "answers": [
+              "구성요소",
+              "동작 원리",
+              "운영 체제와 관계짓기",
+              "피지컬 컴퓨팅",
+              "피지컬 컴퓨팅 시스템"
+            ]
+          }
+        },
+        {
+          "case": "review expected inputs False",
+          "passed": true,
+          "details": {
+            "actual": 5,
+            "expected": 5
+          }
+        },
+        {
+          "case": "review outcome correct",
+          "passed": true,
+          "details": "정답 · 확인(Enter)을 누르면 다음 카드로 이동합니다."
+        },
+        {
+          "case": "acknowledgement gates persistence False",
+          "passed": true,
+          "details": null
+        },
+        {
+          "case": "review acknowledged False",
+          "passed": true,
+          "details": {
+            "MI-01-CS-PF-01": "correct",
+            "MI-01-CS-PF-02": "correct",
+            "MI-01-CS-PF-03": "correct"
+          }
+        },
+        {
+          "case": "review statuses False",
+          "passed": true,
+          "details": null
+        },
+        {
+          "case": "process review group rendered True",
+          "passed": true,
+          "details": {
+            "cards": 1,
+            "answers": [
+              "구성요소",
+              "동작 원리",
+              "운영 체제와 관계짓기",
+              "피지컬 컴퓨팅",
+              "피지컬 컴퓨팅 시스템"
+            ]
+          }
+        },
+        {
+          "case": "review expected inputs True",
+          "passed": true,
+          "details": {
+            "actual": 5,
+            "expected": 5
+          }
+        },
+        {
+          "case": "review outcome wrong",
+          "passed": true,
+          "details": "오답 · 확인(Enter)을 누르면 다음 카드로 이동합니다."
+        },
+        {
+          "case": "acknowledgement gates persistence True",
+          "passed": true,
+          "details": null
+        },
+        {
+          "case": "review acknowledged True",
+          "passed": true,
+          "details": {
+            "MI-01-CS-PF-01": "wrong",
+            "MI-01-CS-PF-02": "correct",
+            "MI-01-CS-PF-03": "correct"
+          }
+        },
+        {
+          "case": "review statuses True",
+          "passed": true,
+          "details": null
+        },
+        {
+          "case": "2024-B-07 pending exam searchable",
+          "passed": true,
+          "details": {
+            "results": "1문항",
+            "preview": "2024학년도 · 전공 B · 7번\n← 이전\n다음 →\n문제 원문\nPDF 127쪽\n검색용 추출 텍스트 보기\n문항 선택\n2024학년도 · 전공 B · 7번\n1문항\n정답표\n초기화\n정답 및 풀이\n풀이 준비중\n\n이 문항의 독립 풀이가 아직 입력되지 않았습니다. 제공된 PDF에는 공식 정답이 없습니다.\n\n출처 · 한국교육과정평가원(KICE) · 2024학년도 중등교사 임용시험 · 정보"
+          }
+        }
+      ],
+      "passed": 13,
+      "failed": 0,
+      "pageErrors": [],
+      "method": "Offline Chromium HTML/CSS/JS injected DOM + in-memory localStorage seeded due records; not live deployment"
+    }
+  },
+  "limitations": "Not a full regression suite or real hosted browser test. These tests verify interactions against current app scripts but browser navigation is blocked by administrator."
+}

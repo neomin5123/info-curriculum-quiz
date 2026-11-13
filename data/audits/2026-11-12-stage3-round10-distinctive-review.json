@@ -1,0 +1,229 @@
+{
+  "auditId": "2026-11-12-stage3-round10-distinctive-review",
+  "stage": "③/6 빈칸 의미 품질 검토, ⑤/6 회귀 검사",
+  "base": "③단계 9차+전체 가리기·전체 열기 패치",
+  "scope": {
+    "structuralLines": 449,
+    "manuallyReviewedThisRound": 32,
+    "modifiedLines": 5,
+    "displayUnitsBefore": 586,
+    "displayUnitsAfter": 582,
+    "curriculumTextsChanged": 0,
+    "existingLineIdsChanged": 0
+  },
+  "decisions": [
+    {
+      "lineId": "MI-03-AC-ST-05",
+      "operation": "remove_generic_or_duplicate",
+      "before": "구조",
+      "after": null,
+      "reason": "「순차적으로 저장」이 이미 학습 대상이고, 단독 「구조」는 두 글자 범용 명사라 같은 성취기준의 핵심어를 추가 측정하지 못함. 배열·리스트는 해설에서 별도 학습함.",
+      "previousUnitId": "MI-03-AC-ST-05-PU-01-SEG02"
+    },
+    {
+      "lineId": "MI-03-CS-PF-02",
+      "operation": "remove_generic_or_duplicate",
+      "before": "다양한 알고리즘",
+      "after": null,
+      "reason": "인접 성취기준의 「다양한 알고리즘을 비교·분석」과 혼동되며, 이 과정·기능의 구별점은 「설계하고 적용」이라는 수행 행동임.",
+      "previousUnitId": "MI-03-CS-PF-02-PU-01"
+    },
+    {
+      "lineId": "MI-03-AC-EX-02",
+      "operation": "remove_generic_or_duplicate",
+      "before": "적절한 전략",
+      "after": null,
+      "reason": "같은 문장 앞부분의 「문제 해결 전략」을 되풀이하는 일반 수식어. 개별 회상 세트로서의 구별력이 낮음.",
+      "previousUnitId": "MI-03-AC-EX-02-PU-02"
+    },
+    {
+      "lineId": "HI-03-CS-KI-02",
+      "operation": "replace_generic_with_core_concept",
+      "before": "정의",
+      "after": "데이터 간의 관계",
+      "reason": "데이터 모델링의 대상인 「데이터 간의 관계」가 실제 핵심이며, 문장 끝 동사 「정의」를 단독 빈칸으로 가리면 문맥으로 추측 가능함.",
+      "previousUnitId": "HI-03-CS-KI-02-PU-03",
+      "newUnitId": "HI-03-CS-KI-02-PU-STAGE3-R10-01"
+    },
+    {
+      "lineId": "HI-05-CS-KI-02",
+      "operation": "remove_generic_or_duplicate",
+      "before": "디지털 사회",
+      "after": null,
+      "reason": "핵심 아이디어의 구별점은 이미 빈칸으로 가려진 「정보 보호와 정보보안」이고, 도입부 「디지털 사회」는 범용 문맥 단서에 불과함.",
+      "previousUnitId": "HI-05-CS-KI-02-PU-01"
+    }
+  ],
+  "retainedCases": [
+    {
+      "lineId": "MI-01-AC-ST-01",
+      "decision": "유지",
+      "reason": "「구성요소와 동작 원리」「운영 체제의 기능」은 컴퓨팅 시스템의 구성과 OS 역할을 구별함."
+    },
+    {
+      "lineId": "MI-02-AC-ST-03",
+      "decision": "유지",
+      "reason": "표·다이어그램은 구조화의 구체적 표현 유형이므로 일반적인 「다양한 형태」와 다름."
+    },
+    {
+      "lineId": "MI-02-AC-ST-04",
+      "decision": "유지",
+      "reason": "데이터 관계 파악과 의미 해석이 별도 수행 요소."
+    },
+    {
+      "lineId": "MI-03-CS-PF-03",
+      "decision": "유지",
+      "reason": "논리 연산·중첩 제어 구조·순차 저장이 각기 다른 핵심 표현."
+    },
+    {
+      "lineId": "MI-03-AC-ST-06",
+      "decision": "유지",
+      "reason": "논리 연산과 중첩 제어 구조 결합이라는 성취기준의 핵심."
+    },
+    {
+      "lineId": "MI-03-AC-EX-03",
+      "decision": "유지",
+      "reason": "「배열이나 리스트」가 성취기준의 순차 저장을 구체화하는 해설 근거."
+    },
+    {
+      "lineId": "MI-04-AC-ST-02",
+      "decision": "유지",
+      "reason": "학습 데이터의 중요성, 선택, 수집·분류를 분리해 회상."
+    },
+    {
+      "lineId": "MI-04-AC-ST-05",
+      "decision": "유지",
+      "reason": "데이터 수집·활용의 윤리 문제를 묻는 별도 성취기준."
+    },
+    {
+      "lineId": "MI-05-AC-ST-03",
+      "decision": "유지",
+      "reason": "개인 정보·권리와 저작권의 서로 다른 보호 대상."
+    },
+    {
+      "lineId": "HI-01-AC-ST-02",
+      "decision": "유지",
+      "reason": "사물인터넷의 구성·동작과 사회적 영향 예측은 별도 인지 수준."
+    },
+    {
+      "lineId": "HI-01-AC-ST-03",
+      "decision": "유지",
+      "reason": "사물인터넷 시스템 설계는 피지컬 컴퓨팅 장치 선정과 구별."
+    },
+    {
+      "lineId": "HI-02-AC-ST-01",
+      "decision": "유지",
+      "reason": "디지털 압축의 개념·필요성과 효율성 평가를 구분."
+    },
+    {
+      "lineId": "HI-03-AC-ST-02",
+      "decision": "유지",
+      "reason": "정렬 알고리즘을 탐색 알고리즘과 구별하는 동사."
+    },
+    {
+      "lineId": "HI-03-AC-ST-03",
+      "decision": "유지",
+      "reason": "탐색 알고리즘을 정렬 알고리즘과 구별하는 동사."
+    },
+    {
+      "lineId": "HI-03-AC-ST-07",
+      "decision": "유지",
+      "reason": "다양한 제어 구조와 복합적 활용 수준은 서로 보완적인 기억 대상."
+    },
+    {
+      "lineId": "HI-03-AC-ST-08",
+      "decision": "유지",
+      "reason": "클래스·인스턴스는 객체지향 프로그램의 고유 핵심어."
+    },
+    {
+      "lineId": "HI-03-AC-ST-10",
+      "decision": "유지",
+      "reason": "성능 평가와 결과 공유는 고등 정보 성취기준의 별도 수행 조건."
+    },
+    {
+      "lineId": "HI-04-AC-ST-02",
+      "decision": "유지",
+      "reason": "지도·비지도학습 비교는 핵심 유형 대비."
+    },
+    {
+      "lineId": "HI-04-AC-ST-03",
+      "decision": "유지",
+      "reason": "기계학습 적용 가능 문제와 부적합 문제의 대비는 중요한 판단 능력."
+    },
+    {
+      "lineId": "AI-22-AI-ST-03",
+      "decision": "유지",
+      "reason": "맹목적 탐색과 정보 이용 탐색은 유형별 원리 비교 대상."
+    },
+    {
+      "lineId": "AI-22-AI-ST-05",
+      "decision": "유지",
+      "reason": "규칙·사실은 지식 표현의 구성요소로 짧아도 핵심 개념."
+    },
+    {
+      "lineId": "AI-22-ML-ST-04",
+      "decision": "유지",
+      "reason": "훈련 데이터와 테스트 데이터의 목적 차이를 묻는 대비."
+    },
+    {
+      "lineId": "AI-22-ML-ST-05",
+      "decision": "유지",
+      "reason": "인공신경망과 딥러닝을 구별하고 활용 분야를 묻는 성취기준."
+    },
+    {
+      "lineId": "AI-22-SO-ST-04",
+      "decision": "유지",
+      "reason": "윤리적 딜레마와 인공지능 윤리 관점을 함께 다룸."
+    },
+    {
+      "lineId": "AI-22-PJ-ST-04",
+      "decision": "유지",
+      "reason": "사회적 영향과 평가 반영 후 성능 개선의 차이가 중요."
+    },
+    {
+      "lineId": "DS-22-12데과02-02",
+      "decision": "유지",
+      "reason": "이상치·결측치와 정규화는 전처리의 서로 다른 유형."
+    },
+    {
+      "lineId": "DS-22-12데과03-02",
+      "decision": "유지",
+      "reason": "통계적·기계학습 회귀모델의 대비가 핵심."
+    },
+    {
+      "lineId": "DS-22-12데과03-03",
+      "decision": "유지",
+      "reason": "유사성 측정과 군집 형성이 순차적 분석 단계."
+    },
+    {
+      "lineId": "DS-22-12데과04-02",
+      "decision": "유지",
+      "reason": "탐색적 분석은 기존 내용체계 회상과 성취기준 수행 연결."
+    },
+    {
+      "lineId": "DS-22-12데과04-05",
+      "decision": "유지",
+      "reason": "전 과정 성찰과 사회적 영향은 서로 다른 학습 요소."
+    },
+    {
+      "lineId": "DS-22-12데과03-01",
+      "decision": "유지(빈칸 미추가)",
+      "reason": "데이터 모델의 개념은 동일 영역 지식·이해 통회상으로 다루므로 중복 추가하지 않음."
+    },
+    {
+      "lineId": "DS-22-12데과03-05",
+      "decision": "유지(빈칸 미추가)",
+      "reason": "데이터 모델 비교·평가는 내용체계와 관련 성취기준에서 다뤄져 자동 추가하지 않음."
+    }
+  ],
+  "limits": [
+    "이번 차수에서 449개 전수 구조 검사와 32개 개별 교육적 판단을 수행했으나, 449개 전체의 개별 의미 확정은 아님.",
+    "구형 검사기의 고정된 빈칸 개수 기대는 별도 보수 필요.",
+    "실제 Vercel 사이트 새로고침·장기 저장 상태 검증은 실행 환경의 접속 제한으로 미완료."
+  ],
+  "next": [
+    "③ 나머지 항목별 의미 판정 및 종료 기준 확인",
+    "⑤ 실배포 환경 회귀 검사",
+    "⑥ 최종 배포 기준본 확정"
+  ]
+}
